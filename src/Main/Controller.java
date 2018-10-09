@@ -14,8 +14,8 @@ public class Controller {
     private Button btnTest;
     @FXML
     void test() {
-        CreateDirectory createDirectory = new CreateDirectory();
-        createDirectory.CreateFolder();
+        CreateDirectory test = new CreateDirectory();
+        test.CreateFolder();
     }
 
 }

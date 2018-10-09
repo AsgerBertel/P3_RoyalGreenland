@@ -7,10 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class CreateDirectory {
-
     public void CreateFolder() {
 
-        String fileName = "C:\\p3_folders";
+        String fileName = "C:\\p3_folders/hello";
 
         Path path = Paths.get(fileName);
 
