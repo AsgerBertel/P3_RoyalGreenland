@@ -6,6 +6,8 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/vcs.xml
+.idea/**/misc.xml
 
 # Generated files
 .idea/**/contentModel.xml
@@ -31,6 +33,7 @@
 
 # IntelliJ
 out/
+P3.iml
 
 # Editor-based Rest Client
 .idea/httpRequests
