@@ -1,15 +1,15 @@
 package Directory;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public abstract class AbstractDocFolder
 {
-    private Path path;
+    protected Path path;
+    protected String name;
 
-    public AbstractDocFolder(Path path) {
+    public AbstractDocFolder(String name, Path path) {
+        this.name = name;
         this.path = path;
-    }
-    public Path getPath() {
-        return path;
     }
 }

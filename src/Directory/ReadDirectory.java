@@ -1,6 +1,7 @@
 package Directory;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class ReadDirectory
 {
-
-    public ArrayList<Document> readAllDocuments(Path path)
+    /*
+    public ArrayList<Document> readAllDocuments(Path path) throws IOException
     {
         ArrayList<Document> documents = new ArrayList<>();
 
@@ -20,7 +21,7 @@ public class ReadDirectory
 
         return documents;
     }
-    public ArrayList<Folder> readAllFolders(Path path)
+    public ArrayList<Folder> readAllFolders(Path path) throws IOException
     {
         ArrayList<Folder> folders = new ArrayList<>();
 
@@ -29,5 +30,5 @@ public class ReadDirectory
                 .forEach(path1 -> folders.add(new Folder(path1)));
 
         return folders;
-    }
+    } */
 }
