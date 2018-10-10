@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DirectoryManager {
-    public void CreateFolder(String Path, String Name) {
+    public void createDirectory(String Path, String Name) {
 
         String fileName = Path + Name;
 
@@ -25,5 +25,18 @@ public class DirectoryManager {
             System.out.println("Directory already exists");
         }
     }
+
+    public void deleteDirectory(Folder folder){
+        if(Files.exists(folder.getPath())) {
+            try {
+                Files.delete(folder.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Directory deleted");
+        }
+    }
+
+
     
 }

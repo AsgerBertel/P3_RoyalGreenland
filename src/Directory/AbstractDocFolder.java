@@ -14,4 +14,7 @@ public abstract class AbstractDocFolder
         this.name = name;
         this.path = path;
     }
+    public Path getPath(){
+        return path;
+    }
 }
