@@ -1,17 +1,16 @@
 package Directory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CreateDirectory {
+public class DirectoryManager {
     public void CreateFolder(String Path, String Name) {
 
         String fileName = Path + Name;
 
-        Path path = Paths.get(fileName);
+        java.nio.file.Path path = Paths.get(fileName);
 
         if (!Files.exists(path)) {
 
@@ -26,4 +25,5 @@ public class CreateDirectory {
             System.out.println("Directory already exists");
         }
     }
+    
 }
