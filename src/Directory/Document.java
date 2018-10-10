@@ -10,6 +10,7 @@ public class Document extends AbstractDocFolder
     public Document(String name, Path path) {
         super(name, path);
     }
+
     public void openDocument() throws IOException {
         File file = new File(path.toAbsolutePath().toString()+name);
         Desktop.getDesktop().open(file);
