@@ -17,4 +17,8 @@ public abstract class AbstractDocFolder
     public Path getPath(){
         return path;
     }
+    public Path setPath(Path newPath){
+        this.path = newPath;
+        return path;
+    }
 }

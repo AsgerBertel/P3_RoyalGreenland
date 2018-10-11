@@ -35,8 +35,12 @@ public class DirectoryManager {
             }
             System.out.println("Directory deleted");
         }
-    }
 
+    }
+    public void moveDirectory(Folder movingFolder, Folder folder){
+
+
+    }
 
     
 }
