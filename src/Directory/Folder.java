@@ -1,5 +1,9 @@
 package Directory;
 
+
+
+import javafx.scene.image.ImageView;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,12 +13,12 @@ import java.util.ArrayList;
 
 public class Folder extends AbstractDocFolder
 {
-    private ArrayList<AbstractDocFolder> folderContents;
+    public ArrayList<AbstractDocFolder> folderContents;
 
-    public Folder(String name, Path path) {
-        super(name, path);
+    public Folder(String name,  ImageView image) {
+        super(name,image);
     }
-
+/*
     public void readContent () throws IOException {
         ArrayList<AbstractDocFolder> content = new ArrayList<>();
 
@@ -41,5 +45,6 @@ public class Folder extends AbstractDocFolder
         }
         else
             return folderContents;
-    }
+    }*/
+
 }
