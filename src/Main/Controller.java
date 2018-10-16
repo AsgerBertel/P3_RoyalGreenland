@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class Controller {
     DirectoryManager directoryManager = new DirectoryManager();

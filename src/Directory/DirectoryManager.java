@@ -72,15 +72,10 @@ public class DirectoryManager {
 
     public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files){
         AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
-        Image folderImg = new Image("Images/folder.png");
-        Image documentImg = new Image("Images/document.png");
+        String test = chosenRow.getFileType();
         ArrayList<MenuItem> menuItems = new ArrayList<>();
 
-
-        ImageView folderImgv = new ImageView();
-        folderImgv.setImage(folderImg);
-        //Must revise for proper if statement
-        if(chosenRow.getFileType() == "folder"){
+        if(test == "folder"){
             menuItems.add(new MenuItem("Open"));
             menuItems.add(new MenuItem("Rename"));
             menuItems.add(new MenuItem("Upload File"));
