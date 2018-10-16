@@ -55,12 +55,12 @@ public class DirectoryManager {
 
 
 
-        listOfFiles.add(new Folder("test",new ImageView(folderImg)));
-        listOfFiles.add(new Folder("test",new ImageView(folderImg)));
-        listOfFiles.add(new Document("test",new ImageView(folderImg)));
-        listOfFiles.add(new Document("test",new ImageView(documentImg)));
-        listOfFiles.add(new Document("test",new ImageView(documentImg)));
-        listOfFiles.add(new Document("test",new ImageView(documentImg)));
+        listOfFiles.add(new Folder("test",new ImageView(folderImg),"folder"));
+        listOfFiles.add(new Folder("test",new ImageView(folderImg),"folder"));
+        listOfFiles.add(new Document("test",new ImageView(folderImg),"folder"));
+        listOfFiles.add(new Document("test",new ImageView(documentImg),"document"));
+        listOfFiles.add(new Document("test",new ImageView(documentImg),"document"));
+        listOfFiles.add(new Document("test",new ImageView(documentImg),"document"));
 
 
         image.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, ImageView>("image"));
@@ -78,9 +78,9 @@ public class DirectoryManager {
 
 
         ImageView folderImgv = new ImageView();
-        folderImgv.setImage(documentImg);
+        folderImgv.setImage(folderImg);
         //Must revise for proper if statement
-        if(chosenRow.getImage() == folderImgv){
+        if(chosenRow.getFileType() == "folder"){
             menuItems.add(new MenuItem("Open"));
             menuItems.add(new MenuItem("Rename"));
             menuItems.add(new MenuItem("Upload File"));

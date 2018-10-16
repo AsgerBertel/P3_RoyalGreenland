@@ -15,8 +15,8 @@ public class Folder extends AbstractDocFolder
 {
     public ArrayList<AbstractDocFolder> folderContents;
 
-    public Folder(String name,  ImageView image) {
-        super(image,name);
+    public Folder(String name,  ImageView image, String filetype) {
+        super(image,name, filetype );
     }
 /*
     public void readContent () throws IOException {
