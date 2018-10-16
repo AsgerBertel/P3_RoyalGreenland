@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ListView;
@@ -24,7 +25,7 @@ import javafx.scene.layout.Pane;
 
 
 public class DirectoryManager {
-
+    ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
     public void CreateFolder(String Path, String Name) {
 
         String fileName = Path + Name;
@@ -52,7 +53,7 @@ public class DirectoryManager {
         //ImageView imgv = new ImageView();
         //.setImage(folderImg);
 
-        ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
+
 
         listOfFiles.add(new Folder("test",new ImageView(folderImg)));
         listOfFiles.add(new Folder("test",new ImageView(folderImg)));
@@ -67,6 +68,29 @@ public class DirectoryManager {
         name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, String>("name"));
         files.setItems(listOfFiles);
 
+    }
+
+    public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files){
+        AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
+        Image folderImg = new Image("Images/folder.png");
+        Image documentImg = new Image("Images/document.png");
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
+
+
+        ImageView folderImgv = new ImageView();
+        folderImgv.setImage(documentImg);
+        //Must revise for proper if statement
+        if(chosenRow.getImage() == folderImgv){
+            menuItems.add(new MenuItem("Open"));
+            menuItems.add(new MenuItem("Rename"));
+            menuItems.add(new MenuItem("Upload File"));
+            menuItems.add(new MenuItem("Delete Folder"));
+        }else{
+            menuItems.add(new MenuItem("Open"));
+            menuItems.add(new MenuItem("Rename"));
+            menuItems.add(new MenuItem("Delete File"));
+        }
+        return menuItems;
     }
 
 

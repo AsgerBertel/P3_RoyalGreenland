@@ -57,5 +57,12 @@ public class Controller {
 
         directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
     }
+    @FXML
+    void ContextMenu(){
+        ContextMenu context = new ContextMenu();
+        tblFiles.setContextMenu(context);
+        context.getItems().addAll( directoryManager.ContextMenuItems(tblFiles));
+    }
+
 
 }
