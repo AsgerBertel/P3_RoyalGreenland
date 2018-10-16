@@ -1,7 +1,9 @@
 package Directory;
 
 
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
@@ -11,32 +13,36 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Folder extends AbstractDocFolder
-{
-    public ArrayList<AbstractDocFolder> folderContents;
+public class Folder extends AbstractDocFolder {
 
-    public Folder(String name,  ImageView image, String filetype) {
-        super(image,name, filetype );
+    public ObservableList<AbstractDocFolder> folderContents = FXCollections.observableArrayList();
+
+
+    Image documentImg = new Image("Images/document.png");
+
+    public Folder(String name, Path path) {
+        super(new ImageView(new Image("Images/folder.png")), name, "folder");
+        setPath(path);
     }
-/*
-    public void readContent () throws IOException {
-        ArrayList<AbstractDocFolder> content = new ArrayList<>();
+
+    public void readContent() throws IOException {
 
         Files.walk(path, 1)
                 .filter(Files::isDirectory)
-                .forEach(file -> content.add(new Folder(file.getFileName().toString(), file.getFileName())));
+
+                .forEach(file -> folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath())));
 
         Files.walk(path, 1)
                 .filter(Files::isRegularFile)
-                .forEach(file -> content.add(new Document(file.getFileName().toString(), file.getFileName())));
-
-        folderContents = content;
+                .forEach(file -> folderContents.add(new Document(file.getFileName().toString(), new ImageView(documentImg), "document", file.toAbsolutePath())));
     }
 
-    public Folder openFolder(String name, Path path) {
+    // virker mulighvis ikke
+    public Folder getSubFolder(String name, Path path) {
         return new Folder(name, path);
     }
 
+/*
     public ArrayList<AbstractDocFolder> getFolderContents() throws IOException {
 
         if (folderContents.isEmpty()) {
@@ -45,6 +51,6 @@ public class Folder extends AbstractDocFolder
         }
         else
             return folderContents;
-    }*/
-
+    }
+*/
 }

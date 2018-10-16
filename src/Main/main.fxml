@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -29,20 +28,15 @@
                   <TextField fx:id="txtFolderName" />
                </graphic></Button>
             <Text layoutX="76.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder Navn" />
-            <Button layoutX="76.0" layoutY="62.0" mnemonicParsing="false" onAction="#Display" text="Display" />
             <Pane layoutX="264.0" layoutY="24.0" prefHeight="414.0" prefWidth="298.0">
                <children>
-                  <TableView fx:id="tblFiles" onContextMenuRequested="#ContextMenu" prefHeight="417.0" prefWidth="296.0">
+                  <TableView fx:id="tblFiles" onContextMenuRequested="#ContextMenu" onMouseClicked="#clickElement" prefHeight="417.0" prefWidth="296.0">
                     <columns>
                       <TableColumn fx:id="tblImg" prefWidth="117.5999755859375" text="icon" />
                       <TableColumn fx:id="tblName" prefWidth="176.7999267578125" text="name" />
                     </columns>
                      <contextMenu>
-                        <ContextMenu fx:id="context">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                          </items>
-                        </ContextMenu>
+                        <ContextMenu fx:id="context" />
                      </contextMenu>
                   </TableView>
                </children>
