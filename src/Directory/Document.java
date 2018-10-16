@@ -11,7 +11,7 @@ import java.nio.file.Path;
 public class Document extends AbstractDocFolder
 {
     public Document(String name, ImageView image) {
-        super(name, image);
+        super(image,name);
     }
 
     public void openDocument() throws IOException {

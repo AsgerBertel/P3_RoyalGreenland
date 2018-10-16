@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -35,6 +37,16 @@
                       <TableColumn fx:id="tblImg" prefWidth="117.5999755859375" text="icon" />
                       <TableColumn fx:id="tblName" prefWidth="176.7999267578125" text="name" />
                     </columns>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Open" />
+                              <MenuItem mnemonicParsing="false" text="Delete" />
+                              <MenuItem mnemonicParsing="false" text="Edit" />
+                              <MenuItem mnemonicParsing="false" text="Rename" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
                </children>
             </Pane>

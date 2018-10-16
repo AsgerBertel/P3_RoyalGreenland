@@ -24,14 +24,15 @@ public class Controller {
     @FXML
     private TableView tblFiles;
     @FXML
-    private TableColumn tblImg;
+    private TableColumn<AbstractDocFolder,ImageView> tblImg;
 
     @FXML
-    private TableColumn tblName;
+    private TableColumn<AbstractDocFolder, String > tblName;
+
 
     @FXML
     public void initialize() {
-
+/*
         // Column 0 (Icon)
         TableColumn<AbstractDocFolder, ImageView> iconColumn = new TableColumn<>("Icon");
         iconColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
@@ -40,7 +41,7 @@ public class Controller {
         TableColumn<AbstractDocFolder, ImageView> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        this.tblFiles.getColumns().addAll(iconColumn, nameColumn);
+        this.tblFiles.getColumns().addAll(iconColumn, nameColumn);*/
 
     }
 

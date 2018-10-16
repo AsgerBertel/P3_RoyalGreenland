@@ -11,7 +11,7 @@ public abstract class AbstractDocFolder {
     protected ImageView image;
 
 
-    public AbstractDocFolder(String name, ImageView image) {
+    public AbstractDocFolder(ImageView image,String name ) {
         this.name = name;
 
         this.image = image;

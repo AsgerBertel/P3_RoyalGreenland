@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,80 +46,26 @@ public class DirectoryManager {
     }
 
     public void DisplayFiles(TableColumn name, TableColumn image, TableView files) {
-
-
         Image folderImg = new Image("Images/folder.png");
+        Image documentImg = new Image("Images/document.png");
 
-        ImageView imgv = new ImageView();
-        imgv.setImage(folderImg);
+        //ImageView imgv = new ImageView();
+        //.setImage(folderImg);
 
-        ObservableList<AbstractDocFolder> ListOfFiles = FXCollections.observableArrayList(
-                new Folder("Jacob", imgv),
-                new Folder("Jacob", imgv),
-                new Folder("Jacob", imgv),
-                new Folder("Jacob", imgv),
-                new Folder("Jacob", imgv),
-                new Folder("Jacob", imgv));
+        ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
 
-        /*
-        name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder,String>("name"));
-        image.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder,ImageView>("image"));
+        listOfFiles.add(new Folder("test",new ImageView(folderImg)));
+        listOfFiles.add(new Folder("test",new ImageView(folderImg)));
+        listOfFiles.add(new Document("test",new ImageView(folderImg)));
+        listOfFiles.add(new Document("test",new ImageView(documentImg)));
+        listOfFiles.add(new Document("test",new ImageView(documentImg)));
+        listOfFiles.add(new Document("test",new ImageView(documentImg)));
 
 
-        files.setItems(ListOfFiles);
-        files.getColumns().addAll(name,image);
+        image.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, ImageView>("image"));
 
-        */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      /*  Controller controller = new Controller();
-        ListView<AbstractDocFolder> ListOfFiles = controller.listviewTest;
-        Path path = Paths.get("C:\\p3_folders");
-        ObservableList<AbstractDocFolder> files = controller.processingList;*/
-
-            /*    files.add(new Folder("Test",path));
-        files.add(new Folder("shit",path));
-        files.add(new Folder("waffel",path));
-        files.add(new Folder("jelly",path));
-        files.add(new Folder("ludo",path));
-        files.add(new Document("jelly",path));
-        files.add(new Document("ludo",path));*/
-
-        //ListOfFiles.getItems();
-        /*   ListView<AbstractDocFolder> ListOfFiles;
-        ListView lv = (ListView) findViewById(id.listview);
-        ListOfFiles = new ListView<>(files);
-        ListOfFiles.setItems(files);
-      //  ListOfFiles.getItems();
-        ListView listView1 = (ListView) findViewById(R.id.listView1);
-        ListOfFiles.setCellFactory(ComboBoxListCell.forListView(files));
-      //  controller.paneTest.getChildren().add(ListOfFiles);
-    if(controller.paneTest == null){
-
-        System.out.println("shit");
-    }
-    else {
-
-    }*/
-
-
-        //  Folder folder = new Folder("hej", "C:\p3_folders");
-        // ObservableList<AbstractDocFolder> files;
-
+        name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, String>("name"));
+        files.setItems(listOfFiles);
 
     }
 
