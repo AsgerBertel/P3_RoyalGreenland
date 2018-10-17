@@ -42,15 +42,20 @@ public class Controller {
         directoryManager.CreateFolder("C:\\p3_folders/", txtFolderName.getText());
     }
 
-    @FXML
+   /* @FXML
     void ContextMenu(){
-        ContextMenu context = new ContextMenu();
+      /*  ContextMenu context = new ContextMenu();
         tblFiles.setContextMenu(context);
         context.getItems().addAll( directoryManager.ContextMenuItems(tblFiles));
-    }
+    }*/
 
     @FXML
     void clickElement(MouseEvent event) {
+
+        ContextMenu context = new ContextMenu();
+        tblFiles.setContextMenu(context);
+        context.getItems().addAll( directoryManager.ContextMenuItems(tblFiles));
+
         if(event.getClickCount() == 2){
             AbstractDocFolder chosenRow = (AbstractDocFolder) tblFiles.getSelectionModel().getSelectedItem();
             if(chosenRow.getFileType() == "folder"){
