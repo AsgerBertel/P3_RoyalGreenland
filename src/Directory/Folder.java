@@ -30,7 +30,12 @@ public class Folder extends AbstractDocFolder {
         Files.walk(path, 1)
                 .filter(Files::isDirectory)
 
-                .forEach(file -> folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath())));
+                .forEach(
+                         file ->
+
+                                     folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath()))
+
+                         );
 
         Files.walk(path, 1)
                 .filter(Files::isRegularFile)
