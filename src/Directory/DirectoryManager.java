@@ -84,5 +84,9 @@ public class DirectoryManager {
     public void openFolder(Path path) {
         folder.setPath(path);
     }
+    public void openPrevFolder(Path path){
+        folder.setPath(path.getParent());
+        System.out.println(path.getParent());
+    }
 
 }
