@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class Folder extends AbstractDocFolder {
 
@@ -28,11 +29,14 @@ public class Folder extends AbstractDocFolder {
     public void readContent() throws IOException {
 
         Files.walk(path, 1)
-                .filter(Files::isDirectory)
-
+                .filter(new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path1) {
+                        return Files.isDirectory(path1) && !path1.equals(path);
+                    }
+                })
                 .forEach(
                          file ->
-
                                      folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath()))
 
                          );

@@ -46,11 +46,11 @@ public class DirectoryManager {
     }
 
     public void DisplayFiles(TableColumn name, TableColumn image, TableView files) {
-       files.getItems().clear();
+        files.getItems().clear();
         try {
             folder.readContent();
         } catch (IOException e) {
-            System.out.println("");
+
         }
 
         listOfFiles = folder.folderContents;
@@ -59,11 +59,11 @@ public class DirectoryManager {
 
         name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, String>("name"));
         files.setItems(listOfFiles);
-
-
     }
 
     public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files) {
+
+
         AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
         String fileType = chosenRow.getFileType();
         ArrayList<MenuItem> menuItems = new ArrayList<>();

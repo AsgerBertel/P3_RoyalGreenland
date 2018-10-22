@@ -62,8 +62,6 @@ public class Controller {
                 directoryManager.openFolder(chosenRow.getPath());
                 directoryManager.DisplayFiles(tblName,tblImg,tblFiles);
             }
-
-
         }
     }
 }
