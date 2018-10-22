@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+
 import java.nio.file.Path;
 
 public class Document extends AbstractDocFolder

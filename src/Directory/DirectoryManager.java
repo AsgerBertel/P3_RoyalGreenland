@@ -20,6 +20,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 
 public class DirectoryManager {
     ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
@@ -30,7 +32,6 @@ public class DirectoryManager {
     public void CreateFolder(String Path, String Name) {
         String fileName = Path + Name;
         Path path = Paths.get(fileName);
-
         if (!Files.exists(path)) {
 
             try {
@@ -42,6 +43,14 @@ public class DirectoryManager {
         } else {
 
             System.out.println("Directory already exists");
+        }
+    }
+    public void renameFile(AbstractDocFolder oldFile, String newFileName){
+        Path newFilePath = Paths.get(oldFile.getPath().getParent() + newFileName);
+        try {
+            Files.move(oldFile.getPath(), newFilePath, REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,6 +87,7 @@ public class DirectoryManager {
             menuItems.add(new MenuItem("Rename"));
             menuItems.add(new MenuItem("Delete File"));
         }
+        menuItems.get(1).addEventHandler();
         return menuItems;
     }
 
