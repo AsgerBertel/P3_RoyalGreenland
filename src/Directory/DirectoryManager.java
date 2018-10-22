@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.spi.AbstractResourceBundleProvider;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,6 +20,8 @@ import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
 public class DirectoryManager {
@@ -42,6 +45,14 @@ public class DirectoryManager {
         } else {
 
             System.out.println("Directory already exists");
+        }
+    }
+    public void renameFile(AbstractDocFolder oldFile, String newFileName){
+        Path newFilePath = Paths.get(oldFile.getPath().getParent() + newFileName);
+        try {
+            Files.move(oldFile.getPath(), newFilePath, REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
