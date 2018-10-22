@@ -23,7 +23,7 @@
    <children>
       <Pane prefHeight="470.0" prefWidth="582.0" GridPane.columnIndex="1">
          <children>
-            <Button fx:id="btnTest" layoutX="26.0" layoutY="238.0" mnemonicParsing="false" onAction="#test" text="Save">
+            <Button fx:id="btnTest" layoutX="26.0" layoutY="238.0" mnemonicParsing="false" text="Save">
                <graphic>
                   <TextField fx:id="txtFolderName" />
                </graphic></Button>

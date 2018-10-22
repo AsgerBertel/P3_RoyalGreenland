@@ -27,23 +27,6 @@ public class DirectoryManager {
 
     public Folder folder = new Folder("p3_folders", path);
 
-    public void CreateFolder(String Path, String Name) {
-        String fileName = Path + Name;
-        Path path = Paths.get(fileName);
-
-        if (!Files.exists(path)) {
-
-            try {
-                Files.createDirectory(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Directory created");
-        } else {
-
-            System.out.println("Directory already exists");
-        }
-    }
 
     public void DisplayFiles(TableColumn name, TableColumn image, TableView files) {
         files.getItems().clear();
@@ -61,30 +44,11 @@ public class DirectoryManager {
         files.setItems(listOfFiles);
     }
 
-    public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files) {
-
-
-        AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
-        String fileType = chosenRow.getFileType();
-        ArrayList<MenuItem> menuItems = new ArrayList<>();
-
-        if (fileType == "folder") {
-            menuItems.add(new MenuItem("Open"));
-            menuItems.add(new MenuItem("Rename"));
-            menuItems.add(new MenuItem("Upload File"));
-            menuItems.add(new MenuItem("Delete Folder"));
-        } else {
-            menuItems.add(new MenuItem("Open"));
-            menuItems.add(new MenuItem("Rename"));
-            menuItems.add(new MenuItem("Delete File"));
-        }
-        return menuItems;
-    }
-
     public void openFolder(Path path) {
         folder.setPath(path);
     }
-    public void openPrevFolder(Path path){
+
+    public void openPrevFolder(Path path) {
         folder.setPath(path.getParent());
         System.out.println(path.getParent());
     }
