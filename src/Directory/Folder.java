@@ -21,45 +21,21 @@ public class Folder extends AbstractDocFolder {
 
     Image documentImg = new Image("Images/document.png");
 
+    //Constructer
     public Folder(String name, Path path) {
         super(new ImageView(new Image("Images/folder.png")), name, "folder");
         setPath(path);
     }
 
+    //Reads the content of the of det path its given
     public void readContent() throws IOException {
 
         Files.walk(path, 1)
-                .filter(new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path1) {
-                        return Files.isDirectory(path1) && !path1.equals(path);
-                    }
-                })
-                .forEach(
-                         file ->
-                                     folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath()))
-
-                         );
+                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
+                .forEach(file -> folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath())));
 
         Files.walk(path, 1)
                 .filter(Files::isRegularFile)
                 .forEach(file -> folderContents.add(new Document(file.getFileName().toString(), new ImageView(documentImg), "document", file.toAbsolutePath())));
     }
-
-    // virker mulighvis ikke
-    public Folder getSubFolder(String name, Path path) {
-        return new Folder(name, path);
-    }
-
-/*
-    public ArrayList<AbstractDocFolder> getFolderContents() throws IOException {
-
-        if (folderContents.isEmpty()) {
-            readContent();
-            return folderContents;
-        }
-        else
-            return folderContents;
-    }
-*/
 }
