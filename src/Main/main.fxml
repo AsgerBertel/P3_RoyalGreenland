@@ -41,6 +41,7 @@
                   </TableView>
                </children>
             </Pane>
+            <Button fx:id="btnReturn" layoutX="193.0" layoutY="24.0" mnemonicParsing="false" onAction="#prevDir" text="Tilbage" />
          </children>
       </Pane>
    </children>

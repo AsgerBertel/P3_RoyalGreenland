@@ -26,7 +26,7 @@ public class DirectoryManager {
     Path path = Paths.get("C:/p3_folders/");
 
     public Folder folder = new Folder("p3_folders", path);
-
+    //Creates a folder in Path
     public void CreateFolder(String Path, String Name) {
         String fileName = Path + Name;
         Path path = Paths.get(fileName);
@@ -40,11 +40,10 @@ public class DirectoryManager {
             }
             System.out.println("Directory created");
         } else {
-
             System.out.println("Directory already exists");
         }
     }
-
+        //Displays what the reader method in folder reads
     public void DisplayFiles(TableColumn name, TableColumn image, TableView files) {
         files.getItems().clear();
         try {
@@ -52,18 +51,13 @@ public class DirectoryManager {
         } catch (IOException e) {
 
         }
-
         listOfFiles = folder.folderContents;
-
         image.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, ImageView>("image"));
-
         name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, String>("name"));
         files.setItems(listOfFiles);
     }
 
     public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files) {
-
-
         AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
         String fileType = chosenRow.getFileType();
         ArrayList<MenuItem> menuItems = new ArrayList<>();
@@ -80,9 +74,15 @@ public class DirectoryManager {
         }
         return menuItems;
     }
-
+    //Sets the path of the folder to the clicked folder
     public void openFolder(Path path) {
         folder.setPath(path);
+    }
+
+    public void openPrevFolder(Path path) {
+        folder.setPath(path.getParent());
+        System.out.println(path.getParent());
+
     }
 
 }
