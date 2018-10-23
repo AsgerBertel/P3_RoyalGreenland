@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 public class ContextMenuHandler {
 
-    public void createFolder(TableView<AbstractDocFolder> files, Path currentPath, Path selectedPath) {
+    public void createFolder(TableView<abstractDocFolder> files, Path currentPath, Path selectedPath) {
         if (selectedPath == null) {
             Path filename = Paths.get(currentPath + "/" + "New Folder");
             if (!Files.exists(filename)) {
@@ -47,9 +47,9 @@ public class ContextMenuHandler {
         }
     }
 
-    public void renameFile(TableColumn<AbstractDocFolder, String> tblcName, TableView files) {
+    public void renameFile(TableColumn<abstractDocFolder, String> tblcName, TableView files) {
         TextField txtRename = new TextField();
-        AbstractDocFolder chosenRow = (AbstractDocFolder) files.getSelectionModel().getSelectedItem();
+        abstractDocFolder chosenRow = (abstractDocFolder) files.getSelectionModel().getSelectedItem();
 
         String ChosenRowName = chosenRow.getName();
         txtRename.setText(ChosenRowName);

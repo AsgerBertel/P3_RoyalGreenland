@@ -17,9 +17,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
 public class DirectoryManager {
-    ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
-    Path path = Paths.get(".").toAbsolutePath().normalize();
+    ObservableList<abstractDocFolder> listOfFiles = FXCollections.observableArrayList();
+    Path path = Paths.get("C:/p3_folders/");
+
     public Folder folder = new Folder("p3_folders", path);
+
 
     public void createFolder(String Path, String Name) {
         String fileName = Path + Name;
@@ -38,7 +40,7 @@ public class DirectoryManager {
             System.out.println("Directory already exists");
         }
     }
-    public void renameFile(AbstractDocFolder oldFile, String newFileName){
+    public void renameFile(abstractDocFolder oldFile, String newFileName){
         Path newFilePath = Paths.get(oldFile.getPath().getParent() + newFileName);
         try {
             Files.move(oldFile.getPath(), newFilePath, REPLACE_EXISTING);
@@ -53,35 +55,15 @@ public class DirectoryManager {
         try {
             folder.readContent();
         } catch (IOException e) {
-            System.out.println("");
+
         }
 
         listOfFiles = folder.folderContents;
 
-        image.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, ImageView>("image"));
-        name.setCellValueFactory(new PropertyValueFactory<AbstractDocFolder, String>("name"));
+        image.setCellValueFactory(new PropertyValueFactory<abstractDocFolder, ImageView>("image"));
 
+        name.setCellValueFactory(new PropertyValueFactory<abstractDocFolder, String>("name"));
         files.setItems(listOfFiles);
-
-
-    }
-
-    public ArrayList ContextMenuItems(TableView<AbstractDocFolder> files) {
-        AbstractDocFolder chosenRow = files.getSelectionModel().getSelectedItem();
-        String fileType = chosenRow.getFileType();
-        ArrayList<MenuItem> menuItems = new ArrayList<>();
-
-        if (fileType == "folder") {
-            menuItems.add(new MenuItem("Open"));
-            menuItems.add(new MenuItem("Rename"));
-            menuItems.add(new MenuItem("Upload File"));
-            menuItems.add(new MenuItem("Delete Folder"));
-        } else {
-            menuItems.add(new MenuItem("Open"));
-            menuItems.add(new MenuItem("Rename"));
-            menuItems.add(new MenuItem("Delete File"));
-        }
-        return menuItems;
     }
 
     public void openFolder(Path path) {
