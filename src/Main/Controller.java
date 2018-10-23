@@ -1,26 +1,17 @@
 package Main;
 
-import Directory.AbstractDocFolder;
+import Directory.abstractDocFolder;
 import Directory.ContextMenuHandler;
 import Directory.DirectoryManager;
-import Directory.Folder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 
-import javax.swing.text.TabExpander;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class Controller {
     ContextMenu folderContextMenu = new ContextMenu();
@@ -35,17 +26,17 @@ public class Controller {
     @FXML
     private TableView tblFiles;
     @FXML
-    private TableColumn<AbstractDocFolder, ImageView> tblImg;
+    private TableColumn<abstractDocFolder, ImageView> tblImg;
 
     @FXML
-    private TableColumn<AbstractDocFolder, String> tblName;
+    private TableColumn<abstractDocFolder, String> tblName;
 
     @FXML
     private Button btnReturn;
 
     @FXML
     public void initialize() {
-        directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+        directoryManager.displayFiles(tblName, tblImg, tblFiles);
     }
 
     @FXML
@@ -53,7 +44,7 @@ public class Controller {
         fileContextMenu.getItems().clear();
         folderContextMenu.getItems().clear();
 
-        AbstractDocFolder chosenRow = (AbstractDocFolder) tblFiles.getSelectionModel().getSelectedItem();
+        abstractDocFolder chosenRow = (abstractDocFolder) tblFiles.getSelectionModel().getSelectedItem();
         if(chosenRow == null)
         {
             return;
@@ -72,7 +63,7 @@ public class Controller {
                 public void handle(ActionEvent event) {
                     currentPath = chosenRow.getPath();
                     directoryManager.openFolder(chosenRow.getPath());
-                    directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
                 }
             });
 
@@ -81,7 +72,7 @@ public class Controller {
                 @Override
                 public void handle(ActionEvent event) {
                     contextMenuHandler.renameFile(tblName, tblFiles);
-                    directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
 
                 }
             });
@@ -90,8 +81,8 @@ public class Controller {
             createFolder.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    contextMenuHandler.CreateFolder(tblFiles, currentPath, chosenRow.getPath());
-                    directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+                    contextMenuHandler.createFolder(tblFiles, currentPath, chosenRow.getPath());
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
                 }
             });
             MenuItem uploadFile = new MenuItem("Upload File");
@@ -124,7 +115,7 @@ public class Controller {
             if (chosenRow.getFileType() == "folder") {
                 currentPath = chosenRow.getPath();
                 directoryManager.openFolder(chosenRow.getPath());
-                directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+                directoryManager.displayFiles(tblName, tblImg, tblFiles);
             }
         }
     }
@@ -134,7 +125,7 @@ public class Controller {
         try {
             if (!(currentPath.equals(rootDirectory))) {
                 directoryManager.openPrevFolder(currentPath);
-                directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+                directoryManager.displayFiles(tblName, tblImg, tblFiles);
                 currentPath = currentPath.getParent();
             } else {
                 System.out.println("you are in root directory");

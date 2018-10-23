@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import java.nio.file.Path;
 
-public class Document extends AbstractDocFolder
+public class Document extends abstractDocFolder
 {
     public Document(String name, ImageView image, String filetype,Path path) {
         super(image, name,filetype);

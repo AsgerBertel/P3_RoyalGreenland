@@ -6,17 +6,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.function.Predicate;
 
-public class Folder extends AbstractDocFolder {
+public class Folder extends abstractDocFolder {
 
-    public ObservableList<AbstractDocFolder> folderContents = FXCollections.observableArrayList();
+    public ObservableList<abstractDocFolder> folderContents = FXCollections.observableArrayList();
 
 
     Image documentImg = new Image("Images/document.png");
