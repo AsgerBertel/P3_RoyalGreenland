@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import javax.swing.text.TabExpander;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,10 +52,16 @@ public class Controller {
     void clickElement(MouseEvent event) {
         fileContextMenu.getItems().clear();
         folderContextMenu.getItems().clear();
+
         AbstractDocFolder chosenRow = (AbstractDocFolder) tblFiles.getSelectionModel().getSelectedItem();
+        if(chosenRow == null)
+        {
+            return;
+        }
 
         String fileType = chosenRow.getFileType();
 
+        TextField txttest = new TextField();
 
         if (fileType == "folder") {
 
@@ -68,11 +75,14 @@ public class Controller {
                     directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
                 }
             });
+
             MenuItem renameFolder = new MenuItem("Rename");
             renameFolder.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println("Rename");
+                    contextMenuHandler.renameFile(tblName, tblFiles);
+                    directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
+
                 }
             });
 
@@ -80,7 +90,7 @@ public class Controller {
             createFolder.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    contextMenuHandler.CreateFolder(tblFiles, currentPath,chosenRow.getPath());
+                    contextMenuHandler.CreateFolder(tblFiles, currentPath, chosenRow.getPath());
                     directoryManager.DisplayFiles(tblName, tblImg, tblFiles);
                 }
             });
