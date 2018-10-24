@@ -2,16 +2,18 @@ package Directory;
 
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class AbstractDocFolder {
+public abstract class abstractDocFolder {
     protected Path path;
     protected String name;
     protected String fileType;
     protected ImageView image;
 
-    public AbstractDocFolder(ImageView image,String name,String filetype ) {
+
+    public abstractDocFolder(ImageView image, String name, String filetype) {
         this.name = name;
         this.fileType = filetype;
         this.image = image;
@@ -34,7 +36,19 @@ public abstract class AbstractDocFolder {
         return image;
     }
 
+
     public String getName() {
         return name;
+    }
+
+    public void deleteFile(Path path) throws IOException {
+        if (Files.isRegularFile(path)) {
+            Files.deleteIfExists(path);
+        } else {
+            if (Files.size(path) == 0) {
+                Files.deleteIfExists(path);
+            }
+            //Delete all files in a directory via Files.Walk
+        }
     }
 }
