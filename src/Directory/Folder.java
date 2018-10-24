@@ -16,20 +16,17 @@ import java.util.ArrayList;
 public class Folder extends AbstractDocFolder {
 
     public ObservableList<AbstractDocFolder> folderContents = FXCollections.observableArrayList();
-
-
-    Image documentImg = new Image("Images/document.png");
+    Image documentImg = new Image("file:///"+Paths.get(".").toAbsolutePath().normalize().toString()+"/Images/document.png");
 
     public Folder(String name, Path path) {
-        super(new ImageView(new Image("Images/folder.png")), name, "folder");
-        setPath(path);
+        super(new ImageView(new Image("file:///"+Paths.get(".").toAbsolutePath().normalize().toString()+"/Images/folder.png")), name, "folder");
+        this.path = path;
     }
 
     public void readContent() throws IOException {
 
         Files.walk(path, 1)
                 .filter(Files::isDirectory)
-
                 .forEach(file -> folderContents.add(new Folder(file.getFileName().toString(), file.toAbsolutePath())));
 
         Files.walk(path, 1)

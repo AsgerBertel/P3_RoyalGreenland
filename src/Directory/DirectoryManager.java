@@ -23,7 +23,8 @@ import javafx.scene.layout.Pane;
 
 public class DirectoryManager {
     ObservableList<AbstractDocFolder> listOfFiles = FXCollections.observableArrayList();
-    Path path = Paths.get("C:/p3_folders/");
+    //Path path = Paths.get("C:/p3_folders/");
+    Path path = Paths.get(".").toAbsolutePath().normalize();
     public Folder folder = new Folder("p3_folders", path);
 
     public void CreateFolder(String Path, String Name) {

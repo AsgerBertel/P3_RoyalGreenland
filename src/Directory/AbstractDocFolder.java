@@ -11,7 +11,6 @@ public abstract class AbstractDocFolder {
     protected String fileType;
     protected ImageView image;
 
-
     public AbstractDocFolder(ImageView image,String name,String filetype ) {
         this.name = name;
         this.fileType = filetype;
@@ -34,7 +33,6 @@ public abstract class AbstractDocFolder {
     public ImageView getImage() {
         return image;
     }
-
 
     public String getName() {
         return name;
