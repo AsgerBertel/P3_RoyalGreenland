@@ -17,12 +17,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
 public class DirectoryManager {
-    ObservableList<abstractDocFolder> listOfFiles = FXCollections.observableArrayList();
     Path path = Paths.get("C:/p3_folders/");
 
-    public Folder folder = new Folder("p3_folders", path);
-
-
+/*
     public void createFolder(String Path, String Name) {
         String fileName = Path + Name;
         Path path = Paths.get(fileName);
@@ -40,7 +37,7 @@ public class DirectoryManager {
             System.out.println("Directory already exists");
         }
     }
-    public void renameFile(abstractDocFolder oldFile, String newFileName){
+    public void renameFile(AbstractFile oldFile, String newFileName){
         Path newFilePath = Paths.get(oldFile.getPath().getParent() + newFileName);
         try {
             Files.move(oldFile.getPath(), newFilePath, REPLACE_EXISTING);
@@ -51,19 +48,7 @@ public class DirectoryManager {
 
 
     public void displayFiles(TableColumn name, TableColumn image, TableView files) {
-        files.getItems().clear();
-        try {
-            folder.readContent();
-        } catch (IOException e) {
 
-        }
-
-        listOfFiles = folder.folderContents;
-
-        image.setCellValueFactory(new PropertyValueFactory<abstractDocFolder, ImageView>("image"));
-
-        name.setCellValueFactory(new PropertyValueFactory<abstractDocFolder, String>("name"));
-        files.setItems(listOfFiles);
     }
 
     public void openFolder(Path path) {
@@ -73,6 +58,6 @@ public class DirectoryManager {
     public void openPrevFolder(Path path) {
         folder.setPath(path.getParent());
         System.out.println(path.getParent());
-    }
+    }*/
 
 }

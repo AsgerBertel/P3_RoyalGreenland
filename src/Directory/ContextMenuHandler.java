@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 public class ContextMenuHandler {
 
-    public void createFolder(TableView<abstractDocFolder> files, Path currentPath, Path selectedPath) {
+    public void createFolder(TableView<AbstractFile> files, Path currentPath, Path selectedPath) {
         if (selectedPath == null) {
             Path filename = Paths.get(currentPath + "/" + "New Folder");
             if (!Files.exists(filename)) {
@@ -47,9 +47,9 @@ public class ContextMenuHandler {
         }
     }
 
-    public void renameFile(TableColumn<abstractDocFolder, String> tblcName, TableView files) {
+    public void renameFile(TableColumn<AbstractFile, String> tblcName, TableView files) {
         TextField txtRename = new TextField();
-        abstractDocFolder chosenRow = (abstractDocFolder) files.getSelectionModel().getSelectedItem();
+        AbstractFile chosenRow = (AbstractFile) files.getSelectionModel().getSelectedItem();
 
         String ChosenRowName = chosenRow.getName();
         txtRename.setText(ChosenRowName);
@@ -65,11 +65,77 @@ public class ContextMenuHandler {
                     File newFileName = new File(path + "/" + txtRename.getText());
                     File oldFIleName = new File(chosenRow.getPath().toString());
                     oldFIleName.renameTo(newFileName);
-
-
                 }
             }
         });
     }
+
+    /* //todo add context menu somewhere
+        fileContextMenu.getItems().clear();
+        folderContextMenu.getItems().clear();
+
+
+        if(chosenRow == null)
+        {
+            return;
+        }
+
+        String fileType = chosenRow.getFileType();
+
+        TextField txttest = new TextField();
+
+        if (fileType == "folder") {
+            MenuItem openFolder = new MenuItem("Open");
+            openFolder.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    currentPath = chosenRow.getPath();
+                    directoryManager.openFolder(chosenRow.getPath());
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
+                }
+            });
+
+            MenuItem renameFolder = new MenuItem("Rename");
+            renameFolder.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    contextMenuHandler.renameFile(tblName, tblFiles);
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
+
+                }
+            });
+
+            MenuItem createFolder = new MenuItem("New Folder");
+            createFolder.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    contextMenuHandler.createFolder(tblFiles, currentPath, chosenRow.getPath());
+                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
+                }
+            });
+            MenuItem uploadFile = new MenuItem("Upload File");
+            uploadFile.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("Upload File");
+                }
+            });
+            MenuItem deleteFolder = new MenuItem("Delete");
+            deleteFolder.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("Delete");
+                }
+            });
+            tblFiles.setContextMenu(folderContextMenu);
+            folderContextMenu.getItems().addAll(openFolder, renameFolder, createFolder, uploadFile, deleteFolder);
+        } else {
+            MenuItem openFile = new MenuItem("Open");
+            MenuItem renameFile = new MenuItem("Rename");
+            MenuItem deleteFile = new MenuItem("Delete");
+
+            tblFiles.setContextMenu(fileContextMenu);
+            fileContextMenu.getItems().addAll(openFile, renameFile, deleteFile);
+        }*/ // todo reimplement context menu elsewhere
 
 }
