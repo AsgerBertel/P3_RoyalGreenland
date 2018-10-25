@@ -40,24 +40,22 @@ public class Controller {
     @FXML
     private Button btnReturn;
 
-    @FXML
+    @FXML // Called upon loading the fxml and constructing the controller
     public void initialize() {
-        fileExplorer = new FileExplorer(new Folder(rootDirectory), new AccessModifier()); // todo Add appropriate accessmodifier
+        fileExplorer = new FileExplorer(new Folder(rootDirectory), new AccessModifier()); // todo Add appropriate accessModifier
         updateDisplayedFiles();
     }
 
-    @FXML // Called when an tableview object is (left)clicked
+    @FXML // Called when an tableView element is (left or right)clicked
     void clickElement(MouseEvent event) {
         AbstractFile chosenRow = (AbstractFile) tblFiles.getSelectionModel().getSelectedItem();
 
         if (event.getClickCount() == 2) {
-            if (chosenRow instanceof Folder) { // todo does this work after cast to (AbstractFile) ?
+            if (chosenRow instanceof Folder) {
                 fileExplorer.navigateTo((Folder) chosenRow);
                 updateDisplayedFiles();
             }
         }
-
-
     }
 
     @FXML
@@ -66,8 +64,8 @@ public class Controller {
         updateDisplayedFiles();
     }
 
-    //
-    public void updateDisplayedFiles(){
+    // Updates the window to show the current files from the file explorer
+    private void updateDisplayedFiles(){
         tblFiles.getItems().clear();
 
         ObservableList<AbstractFile> shownFiles = FXCollections.observableArrayList(fileExplorer.getShownFiles());

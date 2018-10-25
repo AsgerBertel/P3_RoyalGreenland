@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javax.naming.InvalidNameException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ public class Folder extends AbstractFile {
 
     // Reads the list of files within the folder
     public void updateContents() throws IOException{
+        // todo add access modifier into filter
         Files.walk(path, 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
                 .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath())));

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import javax.naming.InvalidNameException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,61 +17,35 @@ import java.nio.file.Paths;
 public class ContextMenuHandler {
 
     public void createFolder(TableView<AbstractFile> files, Path currentPath, Path selectedPath) {
-        if (selectedPath == null) {
-            Path filename = Paths.get(currentPath + "/" + "New Folder");
-            if (!Files.exists(filename)) {
-
-                try {
-                    Files.createDirectory(filename);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Directory created");
-            } else {
-
-                System.out.println("Directory already exists");
-            }
-        } else {
-            Path filename = Paths.get(selectedPath + "/" + "New Folder");
-            if (!Files.exists(filename)) {
-
-                try {
-                    Files.createDirectory(filename);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Dirxectory created");
-            } else {
-
-                System.out.println("Directory already exists");
-            }
-        }
+        // todo Add new folder through filemanager
     }
+
 
     public void renameFile(TableColumn<AbstractFile, String> tblcName, TableView files) {
         TextField txtRename = new TextField();
-        AbstractFile chosenRow = (AbstractFile) files.getSelectionModel().getSelectedItem();
+        AbstractFile selectedFile = (AbstractFile) files.getSelectionModel().getSelectedItem();
 
-        String ChosenRowName = chosenRow.getName();
+        String ChosenRowName = selectedFile.getName();
         txtRename.setText(ChosenRowName);
-        Path path = chosenRow.getPath().getParent();
+        Path path = selectedFile.getPath().getParent();
 
         tblcName.setGraphic(txtRename);
 
-        txtRename.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.ENTER)) {
-                    File newFileName = new File(path + "/" + txtRename.getText());
-                    File oldFIleName = new File(chosenRow.getPath().toString());
-                    oldFIleName.renameTo(newFileName);
+        txtRename.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                try {
+                    selectedFile.renameFile(txtRename.getText());
+                } catch (InvalidNameException e) {
+                    // todo Show error popup
                 }
+            }else if(event.getCode().equals(KeyCode.ESCAPE)){
+                // todo cancel renaming - hide txtField
             }
         });
     }
 
-    /* //todo add context menu somewhere
+    /* //todo split into multiple functions - Maybe have creation of context menu seperate from the corresponding event handling? Create context menu
+       //todo maybe create seperate context menu classes for folder, document and empty?
         fileContextMenu.getItems().clear();
         folderContextMenu.getItems().clear();
 
@@ -136,6 +111,6 @@ public class ContextMenuHandler {
 
             tblFiles.setContextMenu(fileContextMenu);
             fileContextMenu.getItems().addAll(openFile, renameFile, deleteFile);
-        }*/ // todo reimplement context menu elsewhere
+        }*/
 
 }
