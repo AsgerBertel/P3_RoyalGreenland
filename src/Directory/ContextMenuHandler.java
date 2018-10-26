@@ -1,6 +1,7 @@
 package Directory;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -44,66 +45,13 @@ public class ContextMenuHandler {
         });
     }
 
+    public ContextMenu createContextMenu(){
+
+    }
     /* //todo split into multiple functions - Maybe have creation of context menu seperate from the corresponding event handling? Create context menu
        //todo maybe create seperate context menu classes for folder, document and empty?
         fileContextMenu.getItems().clear();
-        folderContextMenu.getItems().clear();
 
-
-        if(chosenRow == null)
-        {
-            return;
-        }
-
-        String fileType = chosenRow.getFileType();
-
-        TextField txttest = new TextField();
-
-        if (fileType == "folder") {
-            MenuItem openFolder = new MenuItem("Open");
-            openFolder.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    currentPath = chosenRow.getPath();
-                    directoryManager.openFolder(chosenRow.getPath());
-                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
-                }
-            });
-
-            MenuItem renameFolder = new MenuItem("Rename");
-            renameFolder.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    contextMenuHandler.renameFile(tblName, tblFiles);
-                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
-
-                }
-            });
-
-            MenuItem createFolder = new MenuItem("New Folder");
-            createFolder.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    contextMenuHandler.createFolder(tblFiles, currentPath, chosenRow.getPath());
-                    directoryManager.displayFiles(tblName, tblImg, tblFiles);
-                }
-            });
-            MenuItem uploadFile = new MenuItem("Upload File");
-            uploadFile.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    System.out.println("Upload File");
-                }
-            });
-            MenuItem deleteFolder = new MenuItem("Delete");
-            deleteFolder.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    System.out.println("Delete");
-                }
-            });
-            tblFiles.setContextMenu(folderContextMenu);
-            folderContextMenu.getItems().addAll(openFolder, renameFolder, createFolder, uploadFile, deleteFolder);
         } else {
             MenuItem openFile = new MenuItem("Open");
             MenuItem renameFile = new MenuItem("Rename");

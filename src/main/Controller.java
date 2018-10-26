@@ -1,23 +1,17 @@
-package Main;
+package main;
 
 import Directory.*;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class Controller {
     ContextMenu folderContextMenu = new ContextMenu();
@@ -65,7 +59,7 @@ public class Controller {
     }
 
     // Updates the window to show the current files from the file explorer
-    private void updateDisplayedFiles(){
+    public void updateDisplayedFiles(){
         tblFiles.getItems().clear();
 
         ObservableList<AbstractFile> shownFiles = FXCollections.observableArrayList(fileExplorer.getShownFiles());
