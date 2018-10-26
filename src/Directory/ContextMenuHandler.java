@@ -44,10 +44,6 @@ public class ContextMenuHandler {
             }
         });
     }
-
-    public ContextMenu createContextMenu(){
-
-    }
     /* //todo split into multiple functions - Maybe have creation of context menu seperate from the corresponding event handling? Create context menu
        //todo maybe create seperate context menu classes for folder, document and empty?
         fileContextMenu.getItems().clear();
