@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.file_administration.AdminFilesController">
+    <left>
+        <BorderPane stylesheets="@/styles/menubar.css" styleClass="verticalMenu">
+            <top>
+                <VBox>
+                    <Button onAction="#addDocument">
+                        <graphic>
+                            <ImageView>
+                                <Image url="/icons/menu/adddocument.png" />
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#createFolder">
+                        <graphic>
+                            <ImageView>
+                                <Image url="/icons/menu/addfolder.png" />
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#deleteFile">
+                        <graphic>
+                            <ImageView>
+                                <Image url="/icons/menu/delete.png" />
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </top>
+            <bottom>
+
+            </bottom>
+        </BorderPane>
+    </left>
+    <center>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Administration af filer her" />
+    </center>
+
+
+</BorderPane>

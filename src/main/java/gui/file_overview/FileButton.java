@@ -1,4 +1,4 @@
-package controller.file_overview;
+package gui.file_overview;
 
 import directory.files.AbstractFile;
 import directory.files.Document;

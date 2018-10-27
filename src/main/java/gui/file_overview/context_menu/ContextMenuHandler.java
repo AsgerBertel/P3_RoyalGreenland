@@ -1,4 +1,4 @@
-package controller.file_overview.context_menu;
+package gui.file_overview.context_menu;
 
 import directory.files.AbstractFile;
 import javafx.scene.control.TableColumn;

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
+   <left>
+      <HBox>
+         <children>
+             <Button text="Administrer Dokumenter" onAction="#administrateDocuments">
+                 <graphic>
+                     <ImageView>
+                         <Image url="/icons/menu/admin_documents.png" />
+                     </ImageView>
+                 </graphic>
+             </Button>
+
+             <Button text="Se Dokumenter" onAction="#viewDocuments">
+                 <graphic>
+                     <ImageView>
+                         <Image url="/icons/menu/view_documents.png" />
+                     </ImageView>
+                 </graphic>
+             </Button>
+
+             <Button text="Administrer Fabrikker" onAction="#administratePlants">
+                 <graphic>
+                     <ImageView>
+                         <Image url="/icons/menu/admin_plants.png" />
+                     </ImageView>
+                 </graphic>
+             </Button>
+
+             <Button text="Slettede Filer" onAction="#deletedFiles">
+                 <graphic>
+                     <ImageView>
+                         <Image url="/icons/menu/deleted_files.png" />
+                     </ImageView>
+                 </graphic>
+             </Button>
+
+             <Button text="Historik" onAction="#log">
+                 <graphic>
+                     <ImageView>
+                         <Image url="/icons/menu/view_documents.png" />
+                     </ImageView>
+                 </graphic>
+             </Button>
+
+         </children>
+      </HBox>
+   </left>
+
+   <right>
+      <HBox>
+         <children>
+            <Button onAction="#changeToDanish">
+                <graphic>
+                    <ImageView>
+                        <Image url="/icons/menu/danish.png"  />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button onAction="#changeToGreenlandish">
+                <graphic >
+                    <ImageView>
+                        <Image url="/icons/menu/greenlandic.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+         </children>
+      </HBox>
+   </right>
+</BorderPane>

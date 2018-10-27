@@ -1,0 +1,54 @@
+.horizontalMenu {
+    -fx-min-height: 44px;
+    -fx-max-height: 44px;
+    -fx-pref-height: 44px;
+    -fx-background-color: #303841;
+    -fx-padding: 0;
+}
+
+.verticalMenu{
+    -fx-min-width: 60px;
+    -fx-max-width: 60px;
+    -fx-pref-width: 60px;
+    -fx-background-color: #303841;
+    -fx-padding: 0;
+}
+
+
+.button {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-background-color: #303841;
+    -fx-background-radius: 0;
+    -fx-text-fill: #ffffff;
+    -fx-text-alignment: center;
+    -fx-background-insets: 0, 0, 0, 0, 0, 0, 0;
+}
+
+.button:hover{
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+}
+
+
+.button:focused {
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+}
+
+.button:pressed{
+    -fx-background-color: #576474;
+    -fx-background-radius: 0;
+}
+
+.horizontalMenu .button{
+    -fx-min-height: 44px;
+    -fx-max-height: 44px;
+    -fx-pref-height: 44px;
+}
+
+.verticalMenu .button{
+    -fx-min-width: 60px;
+    -fx-max-width: 60px;
+    -fx-pref-width: 60px;
+}
