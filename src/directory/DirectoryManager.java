@@ -1,19 +1,4 @@
-package Directory;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+package directory;
 
 
 public class DirectoryManager {
@@ -31,10 +16,10 @@ public class DirectoryManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Directory created");
+            System.out.println("directory created");
         } else {
 
-            System.out.println("Directory already exists");
+            System.out.println("directory already exists");
         }
     }
 */

@@ -1,6 +1,7 @@
-package Directory;
+package directory.files;
 
 
+import directory.files.AbstractFile;
 import javafx.scene.image.Image;
 
 import javax.naming.InvalidNameException;
@@ -13,12 +14,30 @@ import java.nio.file.Path;
 
 public class Document extends AbstractFile
 {
-
-    private static Image standardDocIcon = new Image("icons/document.png");
-
     public Document(Path path) {
         super(path);
-        this.image = standardDocIcon; // todo add more icons for different kinds of documents
+    }
+
+    // Returns the files extension without the punctuation
+    public String getFileExtension(){
+        String fileName = getName();
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+        return "";
+    }
+
+    public void moveFile(Path targetPath) throws IOException{
+        Path temp = Files.move(path, targetPath);
+
+        if(temp == null){ // todo temp always null? Implement differently
+            throw new IOException("Failed to move file");
+        }
+    }
+
+    // Opens the document in windows
+    public void openDocument() throws IOException {
+        File file = new File(path.toAbsolutePath().toString()); // todo is this correctly implemented??
+        Desktop.getDesktop().open(file);
     }
 
     @Override
@@ -31,25 +50,10 @@ public class Document extends AbstractFile
             throw new InvalidNameException();
     }
 
-
-    public void moveFile(Path targetPath) throws IOException{
-        Path temp = Files.move(path, targetPath);
-
-        if(temp == null){
-            throw new IOException("Failed to move file");
-        }
-    }
-
     @Override
     public void deleteFile(Path path) throws IOException {
         // todo - add delete functionality. This method should probably just delete the file entirely?
         // todo - Then moving a copy of the file to the trash would be handled from directoryManager/fileManager
-    }
-
-    // Opens the document in windows
-    public void openDocument() throws IOException {
-        File file = new File(path.toAbsolutePath().toString()); // todo is this correctly implemented??
-        Desktop.getDesktop().open(file);
     }
 
 }

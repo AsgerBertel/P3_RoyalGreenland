@@ -1,25 +1,25 @@
 /*
-package Directory.contextMenu;
+package controller.file_overview.context_menu;
 
-import Directory.AbstractFile;
-import Directory.ContextMenuHandler;
-import Directory.FileExplorer;
+import directory.files.AbstractFile;
+import controller.file_overview.context_menu.ContextMenuHandler;
+import directory.FileExplorer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
+import javafx.scene.control.context_menu;
 import javafx.scene.control.MenuItem;
-import main.Controller;
+import controller.file_overview.FileOverviewController;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class folderContextMenu extends ContextMenu {
-    Controller controller;
+public class folderContextMenu extends context_menu {
+    FileOverviewController controller;
     FileExplorer fileExplorer;
     ContextMenuHandler contextMenuHandler;
     Path currentPath;
 
-    folderContextMenu(Controller controller, FileExplorer fileExplorer) {
+    folderContextMenu(FileOverviewController controller, FileExplorer fileExplorer) {
         this.controller = controller;
         this.fileExplorer = fileExplorer;
         setFolderContextMenu(null); //todo: Make method to get selected item

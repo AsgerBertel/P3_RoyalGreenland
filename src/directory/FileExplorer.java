@@ -1,7 +1,13 @@
-package Directory;
+package directory;
+
+import directory.files.AbstractFile;
+import directory.files.Folder;
 
 import java.io.IOException;
 import java.util.List;
+
+// Represents a file explorer that maneuvers through the file system
+// and provides a list of the files in the current folder
 
 public class FileExplorer {
 
@@ -23,16 +29,15 @@ public class FileExplorer {
         return null;
     }
 
+    public void navigateTo(Folder newFolder){
+        currentFolder = newFolder; // todo error check
+    }
+
     // Navigates to the parent directory
     public boolean navigateBack(){
         currentFolder = new Folder(currentFolder.getParentPath());
         // Todo add error handling in case it cant navigate further back
         return false;
-    }
-
-
-    public void navigateTo(Folder newFolder){
-        currentFolder = newFolder; // todo error check
     }
 
 

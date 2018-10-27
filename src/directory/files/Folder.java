@@ -1,26 +1,18 @@
-package Directory;
+package directory.files;
 
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import javax.naming.InvalidNameException;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Folder extends AbstractFile {
 
     public List<AbstractFile> folderContents = FXCollections.observableArrayList();
-
-    private static Image folderImage = new Image("icons/folder.png"); // todo add image shit (maybe in superclass)
 
     public Folder(Path path) {
         super(path);
@@ -44,7 +36,7 @@ public class Folder extends AbstractFile {
     }
 
     // Reads the list of files within the folder
-    public void updateContents() throws IOException{
+    private void updateContents() throws IOException{
         // todo add access modifier into filter
         Files.walk(path, 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="center" hgap="10" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+<GridPane alignment="center" hgap="10" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.file_overview.FileOverviewController">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -30,25 +30,7 @@
                </graphic></Button>
             <Text layoutX="76.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder Navn" />
             <Pane layoutX="264.0" layoutY="24.0" prefHeight="414.0" prefWidth="298.0">
-               <children>
-                  <TableView fx:id="tblFiles" onMouseClicked="#clickElement" prefHeight="417.0" prefWidth="296.0">
-                    <columns>
-                      <TableColumn fx:id="tblImg" prefWidth="117.5999755859375" text="icon" />
-                      <TableColumn fx:id="tblName" prefWidth="176.7999267578125" text="name">
-                           <contextMenu>
-                              <ContextMenu>
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                </items>
-                              </ContextMenu>
-                           </contextMenu>
-                        </TableColumn>
-                    </columns>
-                     <contextMenu>
-                        <ContextMenu fx:id="context" />
-                     </contextMenu>
-                  </TableView>
-               </children>
+
             </Pane>
             <Button fx:id="btnReturn" layoutX="193.0" layoutY="24.0" mnemonicParsing="false" onAction="#prevDir" text="Tilbage" />
          </children>

@@ -1,19 +1,13 @@
-package Directory;
+package controller.file_overview.context_menu;
 
-import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
+import directory.files.AbstractFile;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 import javax.naming.InvalidNameException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class ContextMenuHandler {
 
