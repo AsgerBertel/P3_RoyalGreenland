@@ -4,16 +4,23 @@ import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class DMSApplication extends Application {
 
+    private static Stage primaryStage = new Stage();
+
     private BorderPane root;
+
+    public static Locale locale = new Locale("da", "DK");
 
     private static final int MIN_WIDTH = 800;
     private static final int MIN_HEIGHT = 600;
@@ -24,8 +31,8 @@ public class DMSApplication extends Application {
 
     private Node mainMenu, fileOverview, fileAdministration, plantAdministration, log;
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void main() {
+        launch();
     }
 
     @Override
@@ -34,8 +41,10 @@ public class DMSApplication extends Application {
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
 
-        fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource(fxmlPath + "MainMenu.fxml"));
+        // Load the language properties into the FXML loader
+        ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
+        fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
+
         mainMenu = fxmlLoader.load();
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
@@ -43,6 +52,8 @@ public class DMSApplication extends Application {
 
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
+
+        this.primaryStage = primaryStage;
         primaryStage.show();
 
         switchWindow(ProgramPart.FILE_ADMINISTRATION);
@@ -59,8 +70,13 @@ public class DMSApplication extends Application {
         root.setCenter(newNode);
     }
 
+    public static void restartApp() throws Exception{
+        DMSApplication main = new DMSApplication();
+        primaryStage.close();
+        main.start(new Stage());
+    }
 
-
-
-
+    public static void setLocale(Locale locale) {
+        DMSApplication.locale = locale;
+    }
 }

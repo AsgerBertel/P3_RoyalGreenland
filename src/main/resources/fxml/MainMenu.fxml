@@ -10,7 +10,7 @@
    <left>
       <HBox>
          <children>
-             <Button text="Administrer Dokumenter" onAction="#administrateDocuments">
+             <Button text="%MainMenuAdminDoc" onAction="#administrateDocuments">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/admin_documents.png" />
@@ -18,7 +18,7 @@
                  </graphic>
              </Button>
 
-             <Button text="Se Dokumenter" onAction="#viewDocuments">
+             <Button text="%MainMenuSeeDoc" onAction="#viewDocuments">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/view_documents.png" />
@@ -26,7 +26,7 @@
                  </graphic>
              </Button>
 
-             <Button text="Administrer Fabrikker" onAction="#administratePlants">
+             <Button text="%MainMenuAdminPlant" onAction="#administratePlants">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/admin_plants.png" />
@@ -34,7 +34,7 @@
                  </graphic>
              </Button>
 
-             <Button text="Slettede Filer" onAction="#deletedFiles">
+             <Button text="%MainMenuDeletedFiles" onAction="#deletedFiles">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/deleted_files.png" />
@@ -42,7 +42,7 @@
                  </graphic>
              </Button>
 
-             <Button text="Historik" onAction="#log">
+             <Button text="%MainMenuDeletedFiles" onAction="#log">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/view_documents.png" />
@@ -65,7 +65,7 @@
                 </graphic>
             </Button>
 
-            <Button onAction="#changeToGreenlandish">
+            <Button onAction="#changeToGreenlandic">
                 <graphic >
                     <ImageView>
                         <Image url="/icons/menu/greenlandic.png"/>

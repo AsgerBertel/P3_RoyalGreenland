@@ -3,8 +3,10 @@ package gui.menu;
 import gui.DMSApplication;
 import gui.ProgramPart;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class MainMenuController {
 
@@ -34,9 +36,13 @@ public class MainMenuController {
         dmsApplication.switchWindow(ProgramPart.LOG);
     }
 
-    public void changeToDanish(ActionEvent actionEvent) {
+    public void changeToDanish(Event actionEvent) throws Exception{
+        DMSApplication.setLocale(new Locale("da", "DK"));
+        DMSApplication.restartApp();
     }
 
-    public void changeToGreenlandish(ActionEvent actionEvent) {
+    public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
+        DMSApplication.setLocale(new Locale("kl", "GL"));
+        DMSApplication.restartApp();
     }
 }
