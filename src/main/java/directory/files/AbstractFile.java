@@ -7,6 +7,7 @@ import java.nio.file.Path;
 public abstract class AbstractFile {
     protected Path path;
 
+
     public AbstractFile(Path path) {
         this.path = path;
     }

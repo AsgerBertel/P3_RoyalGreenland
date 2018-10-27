@@ -44,5 +44,7 @@ public class FileButton extends Button {
         }
     }
 
-
+    public AbstractFile getFile() {
+        return file;
+    }
 }

@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 
-public class DMSApplication extends Application {
+public class    DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
