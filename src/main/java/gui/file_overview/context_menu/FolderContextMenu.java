@@ -16,56 +16,48 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FolderContextMenu extends ContextMenu {
-    FileOverviewController fileOverviewController;
+    private FileOverviewController fileOverviewController;
+    private FileButton fileButton;
 
 
-
-    public FolderContextMenu(FileOverviewController fileOverviewController) {
-        //  this.gui = gui;
+    public FolderContextMenu(FileOverviewController fileOverviewController, FileButton fileButton) {
         this.fileOverviewController = fileOverviewController;
-        //this.fileExplorer = fileExplorer;
-        // setFolderContextMenu(); //todo: Make method to get selected item
+        this.fileButton = fileButton;
+        initFolderContextMenu(); // todo throw exception if document and not folder
     }
 
-    public void setFolderContextMenu(AbstractFile selectedItem) {
+    public void initFolderContextMenu() {
 
-        if (Files.isDirectory(selectedItem.getPath())) {
-            MenuItem openFolder = new MenuItem("Open");
-            openFolder.setOnAction(event -> {
-                openFolder(event);
 
-            });
+        MenuItem openFolder = new MenuItem("Open");
+        openFolder.setOnAction(event -> openFolder());
 
-            MenuItem renameFolder = new MenuItem("Rename");
-            renameFolder.setOnAction(event -> {
+        MenuItem renameFolder = new MenuItem("Rename");
+        renameFolder.setOnAction(event -> {
 
-            });
+        });
 
-            MenuItem createFolder = new MenuItem("New Folder");
-            createFolder.setOnAction(event -> {
+        MenuItem createFolder = new MenuItem("New Folder");
+        createFolder.setOnAction(event -> {
 
-            });
-            MenuItem deleteFolder = new MenuItem("Delete");
-            deleteFolder.setOnAction(event -> {
+        });
+        MenuItem deleteFolder = new MenuItem("Delete");
+        deleteFolder.setOnAction(event -> {
 
-                    }
-            );
-            MenuItem uploadFile = new MenuItem("Upload");
-            deleteFolder.setOnAction(event -> {
+                }
+        );
+        MenuItem uploadFile = new MenuItem("Upload");
+        deleteFolder.setOnAction(event -> {
 
-                    }
-            );
+                }
+        );
 
-            //  fileButton.setContextMenu(this.folderContextMenu(selectedItem));
-            this.getItems().addAll(openFolder, renameFolder, createFolder, uploadFile, deleteFolder);
-        }
-
+        //  fileButton.setContextMenu(this.folderContextMenu(selectedItem));
+        this.getItems().addAll(openFolder, renameFolder, createFolder, uploadFile, deleteFolder);
     }
-    public void openFolder(Event event){
 
-        FileButton fileButton =  (FileButton) event.getSource();
+    public void openFolder() {
         fileOverviewController.open(fileButton);
-       // fileExplorer.navigateTo((Folder) fileButton.getFile());
     }
 
 

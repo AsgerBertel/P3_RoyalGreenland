@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,7 +25,7 @@ public class FileOverviewController {
     private Document document;
     private Folder folder;
     @FXML
-    private FlowPane flpFileExplorer;
+    private FlowPane flpFileView;
     @FXML
     private Button btnReturn;
 
@@ -44,29 +43,40 @@ public class FileOverviewController {
     }
 
     // Updates the window to show the current files from the file explorer
-    public void updateDisplayedFiles() {
-        flpFileExplorer.getChildren().clear();
+    private void updateDisplayedFiles() {
+        // Remove all currently shown files
+        flpFileView.getChildren().clear();
+
         List<AbstractFile> filesToShow = fileExplorer.getShownFiles();
-        for (int i = 0; i < filesToShow.size(); i++) {
-            FileButton filebutton = new FileButton(filesToShow.get(i));
-            filebutton.getStyleClass().add("FileButton");
-            filebutton.setContentDisplay(ContentDisplay.TOP);
-            filebutton.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) {
-                    open(filebutton);
-                } else {
-                    if (filebutton.getFile() instanceof Folder) {
-                        folder = new Folder(filebutton.getFile().getPath());
-                        FolderContextMenu folderContextMenu = new FolderContextMenu(this);
-                        folderContextMenu.setFolderContextMenu(folder);
-                        filebutton.setContextMenu(folderContextMenu);
-                    }
-                }
-            });
-            flpFileExplorer.getChildren().add(filebutton);
+        for (AbstractFile file : filesToShow) {
+            FileButton fileButton = createFileButton(file);
+            flpFileView.getChildren().add(fileButton);
         }
+    }
+
+    // Creates a FileButton from a File and adds
+    private FileButton createFileButton(AbstractFile file){
+        FileButton filebutton = new FileButton(file);
+
+        filebutton.getStyleClass().add("FileButton");
+        filebutton.setContentDisplay(ContentDisplay.TOP);
+
+        // Handle click events
+        filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
+        return filebutton;
+    }
 
 
+   private void onFileButtonClick(MouseEvent event){
+        FileButton clickedButton = (FileButton) event.getSource();
+        if (event.getClickCount() == 2) {
+            open(clickedButton);
+        } else {
+            if (clickedButton.getFile() instanceof Folder) {
+                folder = new Folder(clickedButton.getFile().getPath());
+                clickedButton.setContextMenu(new FolderContextMenu(this, clickedButton));
+            }
+        }
     }
 
     // Opens the folder that is double clicked and displays its content
