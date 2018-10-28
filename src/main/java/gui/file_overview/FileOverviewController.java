@@ -56,7 +56,9 @@ public class FileOverviewController {
                     openFolder(filebutton);
                 }
                 else {
-                    FolderContextMenu folderContextMenu = new FolderContextMenu(filebutton,fileExplorer,folder);
+                    folder = new Folder(filebutton.getFile().getPath());
+                    FolderContextMenu folderContextMenu = new FolderContextMenu(this);
+                    folderContextMenu.setFolderContextMenu(folder);
                     filebutton.setContextMenu(folderContextMenu);
                 }
             });
