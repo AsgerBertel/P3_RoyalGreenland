@@ -55,27 +55,28 @@ public class FileOverviewController {
     }
 
     // Creates a FileButton from a File and adds
-    private FileButton createFileButton(AbstractFile file){
+    private FileButton createFileButton(AbstractFile file) {
         FileButton filebutton = new FileButton(file);
 
         filebutton.getStyleClass().add("FileButton");
         filebutton.setContentDisplay(ContentDisplay.TOP);
 
-        // Handle click events
         filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
+        // Add appropriate context menu
+        if (file instanceof Folder) {
+            filebutton.setContextMenu(new FolderContextMenu(this, filebutton));
+        } else {
+            // todo set document context menu
+        }
+
         return filebutton;
     }
 
 
-   private void onFileButtonClick(MouseEvent event){
+    private void onFileButtonClick(MouseEvent event) {
         FileButton clickedButton = (FileButton) event.getSource();
         if (event.getClickCount() == 2) {
             open(clickedButton);
-        } else {
-            if (clickedButton.getFile() instanceof Folder) {
-                folder = new Folder(clickedButton.getFile().getPath());
-                clickedButton.setContextMenu(new FolderContextMenu(this, clickedButton));
-            }
         }
     }
 
