@@ -42,7 +42,7 @@
                  </graphic>
              </Button>
 
-             <Button text="%MainMenuDeletedFiles" onAction="#log">
+             <Button text="%MainMenuHistory" onAction="#log">
                  <graphic>
                      <ImageView>
                          <Image url="/icons/menu/view_documents.png" />
