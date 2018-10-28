@@ -7,6 +7,7 @@ import gui.file_overview.FileButton;
 import directory.FileExplorer;
 
 import gui.file_overview.FileOverviewController;
+import javafx.event.Event;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
@@ -16,9 +17,8 @@ import java.nio.file.Path;
 
 public class FolderContextMenu extends ContextMenu {
     FileOverviewController fileOverviewController;
-    FileExplorer fileExplorer;
-    Folder folder;
-    Path currentPath;
+
+
 
     public FolderContextMenu(FileOverviewController fileOverviewController) {
         //  this.gui = gui;
@@ -32,7 +32,7 @@ public class FolderContextMenu extends ContextMenu {
         if (Files.isDirectory(selectedItem.getPath())) {
             MenuItem openFolder = new MenuItem("Open");
             openFolder.setOnAction(event -> {
-                openFolder();
+                openFolder(event);
 
             });
 
@@ -61,8 +61,11 @@ public class FolderContextMenu extends ContextMenu {
         }
 
     }
-    public void openFolder(){
-        fileExplorer.navigateTo(folder);
+    public void openFolder(Event event){
+
+        FileButton fileButton =  (FileButton) event.getSource();
+        fileOverviewController.open(fileButton);
+       // fileExplorer.navigateTo((Folder) fileButton.getFile());
     }
 
 

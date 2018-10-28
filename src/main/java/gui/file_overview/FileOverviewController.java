@@ -53,30 +53,35 @@ public class FileOverviewController {
             filebutton.setContentDisplay(ContentDisplay.TOP);
             filebutton.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
-                    openFolder(filebutton);
-                }
-                else {
-                    folder = new Folder(filebutton.getFile().getPath());
-                    FolderContextMenu folderContextMenu = new FolderContextMenu(this);
-                    folderContextMenu.setFolderContextMenu(folder);
-                    filebutton.setContextMenu(folderContextMenu);
+                    open(filebutton);
+                } else {
+                    if (filebutton.getFile() instanceof Folder) {
+                        folder = new Folder(filebutton.getFile().getPath());
+                        FolderContextMenu folderContextMenu = new FolderContextMenu(this);
+                        folderContextMenu.setFolderContextMenu(folder);
+                        filebutton.setContextMenu(folderContextMenu);
+                    }
                 }
             });
             flpFileExplorer.getChildren().add(filebutton);
         }
-        // Opens the folder that is double clicked and displays its content
+
 
     }
 
+    // Opens the folder that is double clicked and displays its content
+    public void open(FileButton fileButton) {
 
-    public void openFolder(FileButton fileButton) {
+        if (fileButton.getFile() instanceof Folder) {
 
-        if (Files.isDirectory(fileButton.getFile().getPath())) {
-            folder = new Folder(fileButton.getFile().getPath());
-            fileExplorer.navigateTo(folder);
+            fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
             fileButton.setFile(document);
         }
+    }
+
+    public FileExplorer getFileExplorer() {
+        return fileExplorer;
     }
 }
