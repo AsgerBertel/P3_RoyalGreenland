@@ -44,6 +44,10 @@ public class FileButton extends Button {
         }
     }
 
+    public void setFile(AbstractFile file) {
+        this.file = file;
+    }
+
     public AbstractFile getFile() {
         return file;
     }

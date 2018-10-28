@@ -2,7 +2,9 @@ package gui.file_overview;
 
 import directory.*;
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.Folder;
+import gui.file_overview.context_menu.FolderContextMenu;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -20,7 +23,8 @@ public class FileOverviewController {
 
     private Path rootDirectory = Paths.get("C:\\");
     private FileExplorer fileExplorer;
-
+    private Document document;
+    private Folder folder;
     @FXML
     private FlowPane flpFileExplorer;
     @FXML
@@ -41,16 +45,20 @@ public class FileOverviewController {
 
     // Updates the window to show the current files from the file explorer
     public void updateDisplayedFiles() {
+        flpFileExplorer.getChildren().clear();
         List<AbstractFile> filesToShow = fileExplorer.getShownFiles();
         for (int i = 0; i < filesToShow.size(); i++) {
             FileButton filebutton = new FileButton(filesToShow.get(i));
             filebutton.getStyleClass().add("FileButton");
             filebutton.setContentDisplay(ContentDisplay.TOP);
             filebutton.setOnMouseClicked(event -> {
-                if(event.getClickCount() == 2){
+                if (event.getClickCount() == 2) {
                     openFolder(filebutton);
                 }
-
+                else {
+                    FolderContextMenu folderContextMenu = new FolderContextMenu(filebutton,fileExplorer,folder);
+                    filebutton.setContextMenu(folderContextMenu);
+                }
             });
             flpFileExplorer.getChildren().add(filebutton);
         }
@@ -60,5 +68,13 @@ public class FileOverviewController {
 
 
     public void openFolder(FileButton fileButton) {
+
+        if (Files.isDirectory(fileButton.getFile().getPath())) {
+            folder = new Folder(fileButton.getFile().getPath());
+            fileExplorer.navigateTo(folder);
+            updateDisplayedFiles();
+        } else {
+            fileButton.setFile(document);
+        }
     }
 }

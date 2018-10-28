@@ -1,5 +1,10 @@
 package gui.file_overview.context_menu;
-
+import directory.*;
+import directory.files.AbstractFile;
+import directory.files.Document;
+import directory.files.Folder;
+import gui.file_overview.context_menu.FolderContextMenu;
+import javafx.event.ActionEvent;
 import directory.files.AbstractFile;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,13 +15,31 @@ import javax.naming.InvalidNameException;
 import java.nio.file.Path;
 
 public class ContextMenuHandler {
+    private FileExplorer fileExplorer;
 
-    public void createFolder(TableView<AbstractFile> files, Path currentPath, Path selectedPath) {
+    public ContextMenuHandler(FileExplorer fileExplorer) {
+        this.fileExplorer = fileExplorer;
+    }
+
+    public void openFolder(Folder newFolder, FileExplorer fileExplorer){
+        fileExplorer.navigateTo(newFolder);
+    }
+
+
+
+
+
+
+
+
+
+
+    public void createFolder() {
         // todo Add new folder through filemanager
     }
 
 
-    public void renameFile(TableColumn<AbstractFile, String> tblcName, TableView files) {
+   /* public void renameFile(TableColumn<AbstractFile, String> tblcName, TableView files) {
         TextField txtRename = new TextField();
         AbstractFile selectedFile = (AbstractFile) files.getSelectionModel().getSelectedItem();
 
@@ -37,7 +60,7 @@ public class ContextMenuHandler {
                 // todo cancel renaming - hide txtField
             }
         });
-    }
+    }*/
     /* //todo split into multiple functions - Maybe have creation of context menu seperate from the corresponding event handling? Create context menu
        //todo maybe create seperate context menu classes for folder, document and empty?
         fileContextMenu.getItems().clear();
