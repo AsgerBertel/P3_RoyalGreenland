@@ -21,7 +21,7 @@ public class FileOverviewController {
 
     DirectoryManager directoryManager = new DirectoryManager();
 
-    private Path rootDirectory = Paths.get("C:\\");
+    private Path rootDirectory = Paths.get(System.getProperty("user.home")).getRoot();
     private FileExplorer fileExplorer;
     private Document document;
     private Folder folder;
