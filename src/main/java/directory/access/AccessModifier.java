@@ -1,6 +1,7 @@
-package directory;
+package directory.access;
 
 public class AccessModifier {
+
 
 
 

@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public abstract class AbstractFile {
-    protected Path path;
 
+    protected Path path;
 
     public AbstractFile(Path path) {
         this.path = path;

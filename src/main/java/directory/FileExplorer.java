@@ -1,5 +1,6 @@
 package directory;
 
+import directory.access.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 

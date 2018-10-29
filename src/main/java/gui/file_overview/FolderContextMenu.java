@@ -1,19 +1,7 @@
 
-package gui.file_overview.context_menu;
-
-import directory.files.AbstractFile;
-import directory.files.Folder;
-import gui.file_overview.FileButton;
-import directory.FileExplorer;
-
-import gui.file_overview.FileOverviewController;
-import javafx.event.Event;
+package gui.file_overview;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class FolderContextMenu extends ContextMenu {
     private FileOverviewController fileOverviewController;

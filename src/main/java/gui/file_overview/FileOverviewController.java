@@ -1,12 +1,11 @@
 package gui.file_overview;
 
 import directory.*;
+import directory.access.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
-import gui.file_overview.context_menu.FolderContextMenu;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -20,20 +19,24 @@ public class FileOverviewController {
 
     DirectoryManager directoryManager = new DirectoryManager();
 
-    private Path rootDirectory = Paths.get(System.getProperty("user.home")).getRoot();
+    private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
-    private Document document;
-    private Folder folder;
+
     @FXML
     private FlowPane flpFileView;
     @FXML
     private Button btnReturn;
 
+    // todo temporary
+    private FileManager fileManager;
+
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
+        System.out.println(System.getProperty("user.dir"));
         fileExplorer = new FileExplorer(new Folder(rootDirectory), new AccessModifier()); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
+        fileManager = new FileManager();
     }
 
     @FXML
@@ -74,25 +77,27 @@ public class FileOverviewController {
 
 
     private void onFileButtonClick(MouseEvent event) {
+
+
         FileButton clickedButton = (FileButton) event.getSource();
-        if (event.getClickCount() == 2) {
+        AbstractFile file = clickedButton.getFile();
+        if (event.getClickCount() == 2)
             open(clickedButton);
+        else if(file instanceof Document){ // todo temp
+            fileManager.printFile((Document) file);
         }
+
     }
 
     // Opens the folder that is double clicked and displays its content
     public void open(FileButton fileButton) {
 
         if (fileButton.getFile() instanceof Folder) {
-
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
-            fileButton.setFile(document);
+            // fileButton.setFile(document); todo What is the point of this? Should probably just call docuement.openFile()
         }
     }
 
-    public FileExplorer getFileExplorer() {
-        return fileExplorer;
-    }
 }
