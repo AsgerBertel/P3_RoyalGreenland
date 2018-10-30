@@ -70,15 +70,15 @@ public class    DMSApplication extends Application {
 
         try {
             newPane = programPart.getPane();
+
+            // Make sure the new pane scales to the rest of the window
+            newPane.prefHeightProperty().bind(root.heightProperty());
+            newPane.prefWidthProperty().bind(root.widthProperty());
+
+            root.getChildren().add(newPane);
         } catch (IOException e) {
             e.printStackTrace(); // todo show popup with error message for the user?
         }
-
-        // Make sure the new pane scales to the rest of the window
-        newPane.prefHeightProperty().bind(root.heightProperty());
-        newPane.prefWidthProperty().bind(root.widthProperty());
-
-        root.getChildren().add(newPane);
     }
 
     public static void restartApp() throws Exception{

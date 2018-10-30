@@ -52,4 +52,5 @@ public class Folder extends AbstractFile {
                 .filter(Files::isRegularFile)
                 .forEach(file -> folderContents.add(new Document(file.toAbsolutePath())));
     }
+
 }

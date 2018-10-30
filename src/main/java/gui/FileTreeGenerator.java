@@ -9,6 +9,7 @@ public class FileTreeGenerator {
 
     public static TreeItem<AbstractFile> generateTree(AbstractFile rootFile){
         TreeItem<AbstractFile> item = new TreeItem<>(rootFile);
+        
 
         if(rootFile instanceof Folder){
             //item.setGraphic(); todo set
