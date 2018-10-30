@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController" stylesheets="@/styles/fileoverview.css">
-   <FlowPane fx:id="flpFileView" prefHeight="600.0" prefWidth="800.0" />
-</Pane>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController" stylesheets="@/styles/fileoverview.css">
+   <FlowPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" fx:id="flpFileView"/>
+</AnchorPane>

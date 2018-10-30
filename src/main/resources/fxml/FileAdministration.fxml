@@ -6,46 +6,49 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.text.Text?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.file_administration.AdminFilesController">
-    <left>
-        <BorderPane stylesheets="@/styles/menubar.css" styleClass="verticalMenu">
-            <top>
-                <VBox>
-                    <Button onAction="#addDocument">
-                        <graphic>
-                            <ImageView>
-                                <Image url="/icons/menu/adddocument.png" />
-                            </ImageView>
-                        </graphic>
-                    </Button>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.file_administration.FileAdminController">
 
-                    <Button onAction="#createFolder">
-                        <graphic>
-                            <ImageView>
-                                <Image url="/icons/menu/addfolder.png" />
-                            </ImageView>
-                        </graphic>
-                    </Button>
+    <!-- Side menu -->
+    <VBox stylesheets="@/styles/menubar.css" styleClass="verticalMenu">
+        <Button onAction="#addDocument">
+            <graphic>
+                <ImageView>
+                    <Image url="/icons/menu/adddocument.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
 
-                    <Button onAction="#deleteFile">
-                        <graphic>
-                            <ImageView>
-                                <Image url="/icons/menu/delete.png" />
-                            </ImageView>
-                        </graphic>
-                    </Button>
-                </VBox>
-            </top>
-            <bottom>
+        <Button onAction="#createFolder">
+            <graphic>
+                <ImageView>
+                    <Image url="/icons/menu/addfolder.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
 
-            </bottom>
-        </BorderPane>
-    </left>
-    <center>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Administration af filer her" />
-    </center>
+        <Button onAction="#deleteFile">
+            <graphic>
+                <ImageView>
+                    <Image url="/icons/menu/delete.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+    </VBox>
+
+    <!-- File tree -->
+
+    <TreeView fx:id="fileTree">
+
+    </TreeView>
+
+    <!-- Factory list -->
 
 
-</BorderPane>
+    <!-- Changes overview -->
+
+
+
+
+</HBox>

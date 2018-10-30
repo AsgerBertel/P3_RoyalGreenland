@@ -23,14 +23,8 @@ public class FileExplorer {
 
     // Returns the files currently shown in the explorer
     public List<AbstractFile> getShownFiles(){
-
-        // todo use selectedPlant.getAccessModifier().contains(file)
-        try {
-            return currentFolder.getContents();
-        } catch (IOException e) {
-            e.printStackTrace(); // todo Proper error handling
-        }
-        return null;
+        // todo use selectedPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
+        return currentFolder.getContents();
     }
 
     public void navigateTo(Folder newFolder){

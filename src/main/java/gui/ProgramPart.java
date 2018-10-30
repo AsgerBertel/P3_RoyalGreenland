@@ -2,6 +2,7 @@ package gui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
@@ -14,13 +15,13 @@ public enum ProgramPart {
     DELETED_FILES("DeletedFiles.fxml");
 
     private String fxmlFileName;
-    private Node node;
+    private Pane node;
 
     ProgramPart(String fxmlFileName){
         this.fxmlFileName = fxmlFileName;
     }
 
-    public Node getNode() throws IOException {
+    public Pane getPane() throws IOException {
         if(node == null)
             node = FXMLLoader.load(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName));
 

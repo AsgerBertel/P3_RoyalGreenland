@@ -4,9 +4,9 @@ import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class    DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
-    private BorderPane root;
+    private VBox root;
 
     public static Locale locale = new Locale("da", "DK");
 
@@ -37,7 +37,7 @@ public class    DMSApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        root = new BorderPane();
+        root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
         primaryStage.setMinHeight(MIN_HEIGHT);
@@ -50,7 +50,7 @@ public class    DMSApplication extends Application {
         mainMenu = fxmlLoader.load();
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
-        root.setTop(mainMenu);
+        root.getChildren().add(mainMenu);
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
 
@@ -62,13 +62,23 @@ public class    DMSApplication extends Application {
 
     // Shows the given part of the program
     public void switchWindow(ProgramPart programPart) {
-        Node newNode = null;
+        // Remove all currently added elements except the main menu
+        while(root.getChildren().size() > 1)
+            root.getChildren().remove(1);
+
+        Pane newPane = null;
+
         try {
-            newNode = programPart.getNode();
+            newPane = programPart.getPane();
         } catch (IOException e) {
             e.printStackTrace(); // todo show popup with error message for the user?
         }
-        root.setCenter(newNode);
+
+        // Make sure the new pane scales to the rest of the window
+        newPane.prefHeightProperty().bind(root.heightProperty());
+        newPane.prefWidthProperty().bind(root.widthProperty());
+
+        root.getChildren().add(newPane);
     }
 
     public static void restartApp() throws Exception{

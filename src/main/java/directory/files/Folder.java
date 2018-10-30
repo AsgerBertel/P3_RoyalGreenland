@@ -8,11 +8,12 @@ import javax.naming.InvalidNameException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Folder extends AbstractFile {
 
-    public List<AbstractFile> folderContents = FXCollections.observableArrayList();
+    private List<AbstractFile> folderContents = new ArrayList<>();
 
     public Folder(Path path) {
         super(path);
@@ -30,14 +31,19 @@ public class Folder extends AbstractFile {
     }
 
     // Reads the content o path its given
-    public List<AbstractFile> getContents() throws IOException {
-        updateContents();
+    public List<AbstractFile> getContents(){
+        try {
+            updateContents();
+        } catch (IOException e) {
+            e.printStackTrace(); // todo error handling
+        }
         return folderContents;
     }
 
     // Reads the list of files within the folder
     private void updateContents() throws IOException{
-        // todo add plant modifier into filter
+        folderContents.clear();
+
         Files.walk(path, 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
                 .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath())));
