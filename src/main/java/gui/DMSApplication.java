@@ -22,8 +22,8 @@ public class    DMSApplication extends Application {
 
     public static Locale locale = new Locale("da", "DK");
 
-    private static final int MIN_WIDTH = 800;
-    private static final int MIN_HEIGHT = 600;
+    private static final int MIN_WIDTH = 1024;
+    private static final int MIN_HEIGHT = 768;
     private static final String APP_TITLE = "RG - Document Management System";
 
     private FXMLLoader fxmlLoader;
@@ -40,6 +40,8 @@ public class    DMSApplication extends Application {
         root = new BorderPane();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
+        primaryStage.setMinHeight(MIN_HEIGHT);
+        primaryStage.setMinWidth(MIN_WIDTH);
 
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
@@ -49,7 +51,6 @@ public class    DMSApplication extends Application {
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
         root.setTop(mainMenu);
-
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
 

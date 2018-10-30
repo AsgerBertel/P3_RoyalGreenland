@@ -1,10 +1,11 @@
 package gui.file_overview;
 
 import directory.*;
-import directory.access.AccessModifier;
+import directory.plant.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import directory.plant.Plant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,8 +17,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class FileOverviewController {
-
-    DirectoryManager directoryManager = new DirectoryManager();
 
     private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
@@ -33,7 +32,7 @@ public class FileOverviewController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer(new Folder(rootDirectory), new AccessModifier()); // todo Add appropriate accessModifier
+        fileExplorer = new FileExplorer(new Folder(rootDirectory), new Plant(1564,"utøya",new AccessModifier())); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();
@@ -83,8 +82,8 @@ public class FileOverviewController {
         AbstractFile file = clickedButton.getFile();
         if (event.getClickCount() == 2)
             open(clickedButton);
-        else if(file instanceof Document){ // todo temp
-            fileManager.printFile((Document) file);
+        else if(file instanceof Document){
+            // todo temp
         }
 
     }

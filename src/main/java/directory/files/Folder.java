@@ -37,7 +37,7 @@ public class Folder extends AbstractFile {
 
     // Reads the list of files within the folder
     private void updateContents() throws IOException{
-        // todo add access modifier into filter
+        // todo add plant modifier into filter
         Files.walk(path, 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
                 .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath())));

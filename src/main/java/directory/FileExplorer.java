@@ -1,8 +1,9 @@
 package directory;
 
-import directory.access.AccessModifier;
+import directory.plant.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Folder;
+import directory.plant.Plant;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,15 +14,17 @@ import java.util.List;
 public class FileExplorer {
 
     private Folder currentFolder;
-    private AccessModifier accessModifier;
+    private Plant selectedPlant;
 
-    public FileExplorer(Folder startingFolder, AccessModifier accessModifier){
+    public FileExplorer(Folder startingFolder, Plant selectedPlant){
         currentFolder = startingFolder;
-        this.accessModifier = accessModifier;
+        this.selectedPlant = selectedPlant;
     }
 
     // Returns the files currently shown in the explorer
     public List<AbstractFile> getShownFiles(){
+
+        // todo use selectedPlant.getAccessModifier().contains(file)
         try {
             return currentFolder.getContents();
         } catch (IOException e) {

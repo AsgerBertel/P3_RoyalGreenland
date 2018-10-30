@@ -1,23 +1,27 @@
 package directory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import directory.files.AbstractFile;
 import directory.files.Document;
-import directory.files.JSonTest;
+import directory.files.Folder;
+
+import java.nio.file.Path;
 
 public class FileManager {
 
-    // TEST CLASS for later deletion
-    Gson gson;
 
-    public FileManager() {
-        gson = new GsonBuilder().create();
+    public static void uploadFile(Path src, Path dst){
+        // todo
     }
 
-    public void printFile(Document document){
-        gson.toJson(new JSonTest("name", 15654), System.out);
+    public static Folder createFolder(Path path){
+        return null; // todo
     }
+
+    public static void deleteFile(AbstractFile file){
+        // todo move to archive
+    }
+
+
 
 
 
