@@ -1,5 +1,6 @@
 package gui;
 
+import directory.files.DocumentBuilder;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static directory.plant.AccessModifier.testJson;
 
 
 public class    DMSApplication extends Application {
@@ -56,6 +59,13 @@ public class    DMSApplication extends Application {
 
         this.primaryStage = primaryStage;
         primaryStage.show();
+
+        //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
+        //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
+
+        testJson();
+
+        //JSonTest.JSONtester();
 
         switchWindow(ProgramPart.FILE_ADMINISTRATION);
     }

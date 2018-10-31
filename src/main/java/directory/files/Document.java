@@ -12,10 +12,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Document extends AbstractFile
-{
-    public Document(Path path) {
+public class Document extends AbstractFile {
+    int ID;
+
+    protected Document(Path path, int ID) {
         super(path);
+        this.ID = ID;
+    }
+
+    public int getID() {
+        return ID;
     }
 
     // Returns the files extension without the punctuation

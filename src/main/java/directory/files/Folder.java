@@ -50,7 +50,7 @@ public class Folder extends AbstractFile {
 
         Files.walk(path, 1)
                 .filter(Files::isRegularFile)
-                .forEach(file -> folderContents.add(new Document(file.toAbsolutePath())));
+                .forEach(file -> folderContents.add(DocumentBuilder.createDocument(file.toAbsolutePath())));
     }
 
 }
