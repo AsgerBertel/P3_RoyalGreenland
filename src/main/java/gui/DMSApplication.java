@@ -1,6 +1,7 @@
 package gui;
 
 import directory.files.DocumentBuilder;
+import directory.plant.JSonAccessModifier.PlantManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -63,7 +64,7 @@ public class    DMSApplication extends Application {
         //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
         //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
 
-        testJson();
+        PlantManager.testPlantManager();
 
         //JSonTest.JSONtester();
 
