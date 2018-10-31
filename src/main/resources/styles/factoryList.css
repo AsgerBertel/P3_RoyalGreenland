@@ -1,20 +1,32 @@
+
+
+
 .list-view{
     -fx-background-color: white;
-    -fx-min-width: 220;
-    -fx-max-width: 220;
-    -fx-pref-width: 220;
+    -fx-min-width: 240;
+    -fx-max-width: 240;
+    -fx-pref-width: 240;
     font-family: "Arial", Sans, serif;
 }
 
+.list-view:focused{
+    -fx-background-insets: 0, 1;
+}
+
+
 .list-cell{
     -fx-background-color: f2f7f7;
-    -fx-border-insets: 5px;
-    -fx-background-insets: 5px;
+    -fx-border-insets: 3px;
+    -fx-background-insets: 3px;
     -fx-padding: 15, 0, 0, 0;
     -fx-cell-size: 45;
-    -fx-text-alignment: Right;
+
 }
 
 .list-cell:empty{
     -fx-background-color: transparent;
 }
+
+
+
+

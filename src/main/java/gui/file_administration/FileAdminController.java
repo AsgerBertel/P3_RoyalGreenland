@@ -37,21 +37,41 @@ public class FileAdminController implements Initializable {
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
 
-        for(int i = 0; i < 15; i++){
+        for (int i = 0; i < 15; i++) {
             plants.add(new Plant(1243 + i, "NAVN", new AccessModifier()));
         }
-        factoryListView.setCellFactory(CheckBoxListCell.forListView(new Callback<Plant, ObservableValue<Boolean>>() {
 
+        // todo Fy for satan det er ulækkert det her
+        factoryListView.setCellFactory(new Callback<ListView<Plant>, ListCell<Plant>>() {
             @Override
-            public ObservableValue<Boolean> call(Plant item) {
-                BooleanProperty observable = new SimpleBooleanProperty();
+            public CheckBoxListCell<Plant> call(ListView<Plant> param) {
+                CheckBoxListCell<Plant> cell = new CheckBoxListCell<>() {
+                    @Override
+                    public void updateItem(Plant item, boolean empty) {
+                        setSelectedStateCallback(new Callback<Plant, ObservableValue<Boolean>>() {
+                            @Override
+                            public ObservableValue<Boolean> call(Plant item) {
+                                BooleanProperty observable = new SimpleBooleanProperty();
 
-                observable.addListener((obs, wasSelected, isNowSelected) ->
-                        System.out.println("Check box for " + item + " changed from "+wasSelected+" to "+isNowSelected)
-                );
-                return observable ;
+                                observable.addListener((obs, wasSelected, isNowSelected) ->
+                                        System.out.println("Check box for " + item + " changed from " + wasSelected + " to " + isNowSelected)
+                                );
+                                return observable;
+                            }
+                        });
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item.getId() + " - " + item.getName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+
+                return cell;
             }
-        }));
+        });
+
 
         factoryListView.getItems().addAll(plants);
     }

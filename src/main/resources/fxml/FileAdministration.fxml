@@ -38,13 +38,13 @@
     </VBox>
 
     <!-- File tree -->
-    <TreeView fx:id="fileTreeView" stylesheets="@/styles/fileTree.css" prefWidth="400"/>
+    <TreeView fx:id="fileTreeView" stylesheets="@/styles/fileTree.css" prefWidth="10000"/> <!-- todo prefwidth 10000 dirty trick? is there a better solution? -->
 
     <!-- Factory list -->
-    <ListView fx:id="factoryListView" prefWidth="300" stylesheets="@/styles/factoryList.css"/>
+    <ListView fx:id="factoryListView" stylesheets="@/styles/factoryList.css" minWidth="250" maxWidth="250" prefWidth="250"/>
 
     <!-- Changes overview -->
-    <VBox fx:id="changesVBox">
+    <VBox fx:id="changesVBox" minWidth="220" maxWidth="220" prefWidth="220">
 
     </VBox>
 

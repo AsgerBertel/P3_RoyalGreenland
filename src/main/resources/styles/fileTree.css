@@ -6,6 +6,10 @@
     -fx-padding: 0, 0, 0, 0;
 }
 
+.tree-view:focused{
+    -fx-background-insets: 0, 1;
+}
+
 .tree-view, .tree-cell {
     -fx-background-color: white ;
     -fx-text-fill: black ;
