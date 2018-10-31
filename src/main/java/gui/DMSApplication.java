@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static directory.plant.AccessModifier.testJson;
-
-
-public class    DMSApplication extends Application {
+public class DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
@@ -60,13 +57,6 @@ public class    DMSApplication extends Application {
 
         this.primaryStage = primaryStage;
         primaryStage.show();
-
-        //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
-        //System.out.println(DocumentBuilder.readAndUpdateCurrentID());
-
-        PlantManager.testPlantManager();
-
-        //JSonTest.JSONtester();
 
         switchWindow(ProgramPart.FILE_ADMINISTRATION);
     }

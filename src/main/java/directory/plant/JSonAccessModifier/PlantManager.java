@@ -11,14 +11,26 @@ import java.io.Reader;
 import java.util.ArrayList;
 
 public class PlantManager {
-    private static ArrayList<Plant> allPlants = new ArrayList<>();
+    private ArrayList<Plant> allPlants = new ArrayList<>();
+    private static PlantManager plantManager;
+    private static String pathToJson = "Sample files/allPlants.JSON";
 
-    public static ArrayList<Plant> getAllPlants(){
-        return allPlants;
+    private PlantManager() {
     }
 
-    public static Plant getPlant(int ID){
-        for(Plant plant : allPlants){
+    public static synchronized PlantManager getInstance(){
+        if(plantManager == null){
+            plantManager = new PlantManager();
+        }
+        return plantManager;
+    }
+
+    public ArrayList<Plant> getAllPlants(){
+        return getInstance().getAllPlants();
+    }
+
+    public Plant getPlant(int ID){
+        for(Plant plant : getInstance().allPlants){
             if (plant.getId() == ID){
                 return plant;
             }
@@ -26,32 +38,52 @@ public class PlantManager {
         return null;
     }
 
-    public static void addPlant(Plant plant) {
-        allPlants.add(plant);
+    public void addPlant(Plant plant) {
+        getInstance().allPlants.add(plant);
         updateJsonFile();
     }
 
-    public static void deletePlant(int ID){
-        for(Plant plant : allPlants){
+    public void deletePlant(int ID){
+        ArrayList<Plant> tempA = new ArrayList<>();
+        tempA.addAll(getInstance().allPlants);
+
+        for(Plant plant : tempA){
             if (plant.getId() == ID){
-                allPlants.remove(plant);
+                getInstance().allPlants.remove(plant);
             }
         }
         updateJsonFile();
+
+        System.out.println(getInstance().allPlants);
     }
 
-    public static void updateJsonFile(){
+    public void updateJsonFile(){
         // Write object to JSON file.
         Gson g = new Gson();
-        try (FileWriter writer = new FileWriter("Sample files/allPlants.JSON")){
-            g.toJson(allPlants, writer);
+        try (FileWriter writer = new FileWriter(pathToJson)){
+            g.toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void testPlantManager(){
-        addPlant(new Plant(1001, "hej1", new AccessModifier()));
-        addPlant(new Plant(1002, "hej2", new AccessModifier()));
+    public void readFromJsonFile(){
+        Gson g = new Gson();
+        try (Reader reader = new FileReader(pathToJson)){
+            plantManager = g.fromJson(reader, PlantManager.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void testPlantManager(){
+        getInstance().readFromJsonFile();
+        getInstance().addPlant(new Plant(1006, "sut", new AccessModifier()));
+        getInstance().addPlant(new Plant(1008, "hej2", new AccessModifier()));
+
+        System.out.println(getInstance().allPlants.get(1).getId());
+
+        deletePlant(1008);
+
     }
 }
