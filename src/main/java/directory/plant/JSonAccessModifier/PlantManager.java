@@ -1,6 +1,5 @@
 package directory.plant.JSonAccessModifier;
 
-import directory.plant.AccessModifier;
 import directory.plant.Plant;
 
 import java.util.ArrayList;
