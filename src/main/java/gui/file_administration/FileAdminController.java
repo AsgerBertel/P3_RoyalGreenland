@@ -5,13 +5,15 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import gui.FileTreeGenerator;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -36,32 +38,22 @@ public class FileAdminController implements Initializable {
         fileTreeView.setRoot(rootItem);
 
         for(int i = 0; i < 15; i++){
-            plants.add(new Plant(1243 + i, "Navn", new AccessModifier()));
+            plants.add(new Plant(1243 + i, "NAVN", new AccessModifier()));
         }
-
-
-        factoryListView.setCellFactory(new Callback<ListView<Plant>, ListCell<Plant>>() {
+        factoryListView.setCellFactory(CheckBoxListCell.forListView(new Callback<Plant, ObservableValue<Boolean>>() {
 
             @Override
-            public ListCell<Plant> call(ListView<Plant> param) {
-                ListCell<Plant> cell = new ListCell<Plant>() {
+            public ObservableValue<Boolean> call(Plant item) {
+                BooleanProperty observable = new SimpleBooleanProperty();
 
-                    @Override
-                    protected void updateItem(Plant item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-
-                        } else {
-                            setText("");
-                        }
-                    }
-                };
-                return cell;
+                observable.addListener((obs, wasSelected, isNowSelected) ->
+                        System.out.println("Check box for " + item + " changed from "+wasSelected+" to "+isNowSelected)
+                );
+                return observable ;
             }
-        });
+        }));
+
         factoryListView.getItems().addAll(plants);
-
-
     }
 
 
