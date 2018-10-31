@@ -3,7 +3,6 @@ package directory.plant;
 import java.util.ArrayList;
 
 public class AccessModifier {
-
     public ArrayList<Integer> documents = new ArrayList<>();
 
     public AccessModifier(){
@@ -13,6 +12,11 @@ public class AccessModifier {
         return documents;
     }
 
+    /**
+     * Used to see if a fileID is contained within this plant.AccessModifier
+     * Used for displaying the correct files in the GUI.
+     * @param ID Document.getID
+     */
     public boolean contains(Integer ID){
         for(Integer doc : documents){
             if(doc == ID){
@@ -22,12 +26,21 @@ public class AccessModifier {
         return false;
     }
 
+    /**
+     * Add a document ID to the access modifier.
+     * @param ID Document.getID
+     */
     public void addDocument(Integer ID){
         if(!contains(ID)){
             documents.add(ID);
         }
     }
 
+    /**
+     * Removes a document from Access Modifier if it is in it.
+     * @param ID Document.getID
+     * @return true if successful.
+     */
     public boolean removeDocument(Integer ID){
         if(contains(ID)){
             documents.remove(ID);

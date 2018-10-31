@@ -1,9 +1,5 @@
 package directory.files;
 
-
-import directory.files.AbstractFile;
-import javafx.scene.image.Image;
-
 import javax.naming.InvalidNameException;
 import java.awt.*;
 import java.io.File;
@@ -15,6 +11,11 @@ import java.nio.file.Path;
 public class Document extends AbstractFile {
     int ID;
 
+    /**
+     * Used DocumentBuilder to create a document so that it gets the correct ID.
+     * @param path path to the file.
+     * @param ID ID of the file. Given through the DocumentBuilder.
+     */
     protected Document(Path path, int ID) {
         super(path);
         this.ID = ID;
