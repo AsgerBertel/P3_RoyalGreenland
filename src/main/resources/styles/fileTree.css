@@ -1,0 +1,22 @@
+.tree-view{
+    -fx-background-radius: 0;
+    -fx-end-margin: 0;
+    -fx-start-margin: 0;
+    -fx-padding: 0, 0, 0, 0;
+}
+
+.tree-view, .tree-cell {
+    -fx-background-color: white ;
+    -fx-text-fill: black ;
+    -fx-padding: 0;
+}
+.tree-cell:expanded {
+
+}
+
+.tree-cell:selected {
+    -fx-background-color: #6fd59b;
+}
+.tree-cell {
+    -fx-padding: 0.75em 0em 0.75em 0em ;
+}

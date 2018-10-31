@@ -1,0 +1,11 @@
+.list-view{
+    -fx-background-color: white;
+    -fx-padding: 5;
+}
+
+.list-view .list-cell:even{
+    -fx-background-color: f2f7f7;
+    -fx-border-radius: 100px;
+    -fx-text-fill: black;
+    -fx-border-width: 10;
+}

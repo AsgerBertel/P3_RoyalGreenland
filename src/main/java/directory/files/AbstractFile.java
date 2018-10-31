@@ -27,4 +27,8 @@ public abstract class AbstractFile {
         return path.getFileName().toString();
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

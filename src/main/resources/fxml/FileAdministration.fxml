@@ -38,15 +38,16 @@
     </VBox>
 
     <!-- File tree -->
-
-    <TreeView fx:id="fileTree">
-
-    </TreeView>
+    <TreeView fx:id="fileTreeView" stylesheets="@/styles/fileTree.css" prefWidth="400"/>
 
     <!-- Factory list -->
-
+    <ListView fx:id="factoryListView" prefWidth="300" stylesheets="@/styles/factoryList.css"/>
 
     <!-- Changes overview -->
+    <VBox fx:id="changesVBox">
+
+    </VBox>
+
 
 
 
