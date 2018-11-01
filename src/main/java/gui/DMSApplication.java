@@ -1,6 +1,5 @@
 package gui;
 
-import directory.plant.PlantManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
