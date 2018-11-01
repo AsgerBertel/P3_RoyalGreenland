@@ -9,14 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Document extends AbstractFile {
-    int ID;
+    private int ID;
 
     /**
      * Used DocumentBuilder to create a document so that it gets the correct ID.
      * @param path path to the file.
      * @param ID ID of the file. Given through the DocumentBuilder.
      */
-    protected Document(Path path, int ID) {
+    Document(Path path, int ID) {
         super(path);
         this.ID = ID;
     }
