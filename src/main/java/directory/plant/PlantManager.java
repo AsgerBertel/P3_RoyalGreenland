@@ -115,6 +115,6 @@ public class PlantManager {
 
         deletePlant(1008);
 
-        DocumentBuilder.createDocument(Paths.get("Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"));
+        DocumentBuilder.getInstance().createDocument(Paths.get("Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"));
     }
 }
