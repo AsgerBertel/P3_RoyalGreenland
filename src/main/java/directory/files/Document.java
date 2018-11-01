@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Document extends AbstractFile {
     private int ID;
@@ -34,7 +35,10 @@ public class Document extends AbstractFile {
     }
 
     public void moveFile(Path targetPath) throws IOException{
-        Path temp = Files.move(path, targetPath);
+        // To make sure, that the name is also included in the path.
+        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + "/" + this.getName());
+        Path temp = Files.move(path, tempTargetPath);
+        this.path = tempTargetPath;
 
         if(temp == null){ // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
@@ -50,7 +54,9 @@ public class Document extends AbstractFile {
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = path.toFile();
-        File renamedFile = new File(path.getParent().toAbsolutePath() + newFileName);
+        File renamedFile = new File(path.getParent().toAbsolutePath() + "/" + newFileName);
+        this.path = Paths.get(renamedFile.getPath());
+
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))

@@ -20,7 +20,6 @@ class DocumentBuilderTest {
         int ID = DocumentBuilder.getInstance().readAndUpdateCurrentID();
         DocumentBuilder.getInstance().createDocument(pathToTestFile);
         int IDafterIncrement = DocumentBuilder.getInstance().readAndUpdateCurrentID();
-        System.out.println(ID + " after: " + IDafterIncrement);
         assertEquals(ID, IDafterIncrement - 2);
     }
 }
