@@ -36,7 +36,7 @@ public class Document extends AbstractFile {
 
     public void moveFile(Path targetPath) throws IOException{
         // To make sure, that the name is also included in the path.
-        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + "/" + this.getName());
+        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + File.separator + this.getName());
         Path temp = Files.move(path, tempTargetPath);
         this.path = tempTargetPath;
 

@@ -35,7 +35,7 @@ class DocumentTest {
             e.printStackTrace();
         }
 
-        assertEquals(doc.getPath().toString(), pathMoveTo.toString() + "/" + doc.getName());
+        assertEquals(doc.getPath().toString(), pathMoveTo.toString() + File.separator + doc.getName());
 
         try {
             doc.moveFile(orgPath.getParent());
