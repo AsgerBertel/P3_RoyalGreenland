@@ -36,7 +36,11 @@ class FileManagerTest {
         Folder folder = FileManager.createFolder(pathToTestDir, "TestFolder");
         assertEquals("TestFolder" ,folder.getName());
 
-        // todo delete file after finished test.
+        try {
+            Files.delete(Paths.get(pathToTestDir + File.separator + "TestFolder"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
