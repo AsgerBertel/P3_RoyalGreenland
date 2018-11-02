@@ -14,6 +14,8 @@ class DocumentTest {
     File resourcesDirectory = new File("src/tests/resTest");
     Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf");
     private Document doc = DocumentBuilder.getInstance().createDocument(pathToTestFile);
+    Path pathToWrongFile = Paths.get(resourcesDirectory.getAbsolutePath() + "Main Files Test/FL 01 GR_01 Flowdiagram Produktion af salt");
+    private Document wrongDoc = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
 
     @Test
     void getID() {
@@ -22,7 +24,11 @@ class DocumentTest {
 
     @Test
     void getFileExtension() {
+
+        //Gets right extension
         assertEquals("pdf" ,doc.getFileExtension());
+        //No extension, sends nothing back
+        assertEquals("", wrongDoc.getFileExtension());
     }
 
     @Test
@@ -35,7 +41,7 @@ class DocumentTest {
             e.printStackTrace();
         }
 
-        assertEquals(doc.getPath().toString(), pathMoveTo.toString() + "/" + doc.getName());
+        assertEquals(doc.getPath().toString(), pathMoveTo.toString() + File.separator + doc.getName());
 
         try {
             doc.moveFile(orgPath.getParent());
@@ -68,6 +74,16 @@ class DocumentTest {
         } catch (InvalidNameException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Test
+    void renameWrongName(){
+
+        //Try changing one document name to the same as the other
+        String originalName = doc.getName();
+        assertThrows(InvalidNameException.class, () ->
+                wrongDoc.renameFile(originalName));
     }
 
     @Test
