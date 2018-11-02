@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DocumentBuilderTest {
     File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf");
+    private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFile.pdf");
     private Path pathToCurrentID = Paths.get( resourcesDirectory.getAbsolutePath() + "/currentFileIDTest");
 
 

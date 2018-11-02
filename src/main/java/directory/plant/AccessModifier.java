@@ -3,7 +3,7 @@ package directory.plant;
 import java.util.ArrayList;
 
 public class AccessModifier {
-    public ArrayList<Integer> documents = new ArrayList<>();
+    private ArrayList<Integer> documents = new ArrayList<>();
 
     public AccessModifier(){
     }

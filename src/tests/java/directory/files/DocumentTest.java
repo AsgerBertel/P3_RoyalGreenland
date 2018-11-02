@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DocumentTest {
     private File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf");
+    private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFile.pdf");
     private Document doc = DocumentBuilder.getInstance().createDocument(pathToTestFile);
     private Path pathToWrongFile = Paths.get(resourcesDirectory.getAbsolutePath() + "Main Files Test/FL 01 GR_01 Flowdiagram Produktion af salt");
     private Document wrongDoc = DocumentBuilder.getInstance().createDocument(pathToWrongFile);

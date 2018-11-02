@@ -8,10 +8,12 @@ class PlantManagerTest {
 
     @Test
     void getInstance() {
+        assertTrue(PlantManager.getInstance() == PlantManager.getInstance());
     }
 
     @Test
     void getAllPlants() {
+
     }
 
     @Test
