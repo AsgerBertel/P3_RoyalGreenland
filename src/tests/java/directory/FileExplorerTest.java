@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileExplorerTest {
 
     @Test
-    void getShownFiles() {
+    void getShownFiles(){
     }
 
     @Test
