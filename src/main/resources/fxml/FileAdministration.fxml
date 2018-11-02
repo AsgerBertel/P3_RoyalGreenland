@@ -47,9 +47,4 @@
     <VBox fx:id="changesVBox" minWidth="220" maxWidth="220" prefWidth="220">
 
     </VBox>
-
-
-
-
-
 </HBox>
