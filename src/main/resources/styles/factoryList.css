@@ -1,28 +1,89 @@
-.list-view{
+#plantSection{
     -fx-background-color: white;
-    -fx-min-width: 240;
-    -fx-max-width: 240;
-    -fx-pref-width: 240;
-    font-family: "Arial", Sans, serif;
+    -fx-border-width: 0;
+    -fx-padding: 10;
+
+    -fx-min-height: 400px;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-pref-width: 250px;
+    -fx-alignment: top-center;
 }
 
-.list-view:focused{
-    -fx-background-insets: 0, 1;
-}
-
-
-.list-cell{
-    -fx-background-color: f2f7f7;
-    -fx-border-insets: 3px;
-    -fx-background-insets: 3px;
-    -fx-padding: 15, 0, 0, 0;
-    -fx-cell-size: 45;
-
-}
-
-.list-cell:empty{
+#plantScrollPane > .viewport {
     -fx-background-color: transparent;
 }
+
+#plantScrollPane{
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+
+    -fx-min-width: 210px;
+    -fx-max-width: 210px;
+    -fx-pref-width: 210px;
+}
+
+#plantVBox{
+    -fx-background-color: transparent;
+
+    -fx-min-height: 400px;
+    -fx-min-width: 190px;
+    -fx-max-width: 190px;
+    -fx-pref-width: 190px;
+}
+
+/* The box representing a single plant */
+.plantElement{
+     -fx-alignment: center-left;
+     -fx-background-color: #f2f7f7;
+
+     -fx-min-height: 40px;
+     -fx-max-height: 40px;
+     -fx-pref-height: 40px;
+     -fx-min-width: 200px;
+     -fx-max-width: 200px;
+     -fx-pref-width: 200px;
+
+     /* Margin hack */
+     -fx-padding: 8px;
+     -fx-border-insets: 3px;
+     -fx-background-insets: 3px;
+}
+
+.plantElement:focused{
+    -fx-background-color: #6fd59b;
+}
+
+.plantElement:hover{
+    -fx-cursor: HAND;
+}
+
+
+.plantText{
+    -fx-font-size: 12px;
+    -fx-font-family: Arial, sans-serif;
+    -fx-fill: #4f5760;
+}
+
+.plantText:disabled{
+    -fx-fill: #d2d7dd;
+}
+
+.check-box .box{
+    -fx-background-color: white;
+    -fx-border-width: 0;
+    -fx-border-color: #c0c7cf;
+    -fx-border-radius: 2;
+}
+
+.check-box .box:disabled{
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-color: #c0c7cf;
+    -fx-border-radius: 2;
+}
+
 
 
 

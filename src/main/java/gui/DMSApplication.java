@@ -1,5 +1,8 @@
 package gui;
 
+import directory.files.Document;
+import directory.files.DocumentBuilder;
+import directory.plant.PlantManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +13,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
-public class    DMSApplication extends Application {
+public class DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
@@ -47,6 +50,10 @@ public class    DMSApplication extends Application {
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
         fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
 
+        // Improve font rendering
+        System.setProperty("prism.lcdtext", "false");
+        System.setProperty("prism.text", "t2k");
+
         mainMenu = fxmlLoader.load();
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
@@ -57,6 +64,9 @@ public class    DMSApplication extends Application {
         this.primaryStage = primaryStage;
         primaryStage.show();
 
+        Document d = DocumentBuilder.getInstance().createDocument(Paths.get("Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"));
+        System.out.println(d.getPath());
+        System.out.println(d.getAbsolutePath());
         switchWindow(ProgramPart.FILE_ADMINISTRATION);
     }
 

@@ -1,0 +1,26 @@
+{
+  "pathToJson": "src/tests/resTest/allFilesTestUnix.JSON",
+  "pathToArchive": "Sample files/Archive",
+  "allContent": [
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
+    },
+    {
+      "type": "document",
+      "ID": 1883,
+      "path": "src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"
+    },
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/TestFolder"
+    },
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
+    }
+  ]
+}

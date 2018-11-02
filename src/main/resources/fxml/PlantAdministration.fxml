@@ -2,56 +2,91 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.4892367906066536, 0.5" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
-   <items>
-      <VBox stylesheets="@/styles/menubar.css">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
+   <children>
+      <!-- Side menu -->
+      <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
          <children>
-            <Button fx:id="sidebarBtnCreatePlant" onAction="#createPlantSidebar" stylesheets="@../styles/menubar.css">
+            <Button fx:id="sidebarBtnCreatePlant" onAction="#createPlantSidebar">
                <graphic>
                   <ImageView />
                </graphic>
             </Button>
-            <Button fx:id="btnEditPlant" onAction="#editPlant" stylesheets="@../styles/menubar.css">
+            <Button fx:id="btnEditPlantSidebar" onAction="#editPlantSidebar">
                <graphic>
                   <ImageView />
                </graphic>
             </Button>
-            <Button fx:id="btnDeletePlant" onAction="#deletePlant" stylesheets="@../styles/menubar.css">
+            <Button fx:id="btnDeletePlant" onAction="#deletePlant">
                <graphic>
                   <ImageView />
                </graphic>
             </Button>
          </children>
       </VBox>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="320.0" stylesheets="@../styles/menubar.css">
-         <children>
-            <Label layoutX="83.0" layoutY="72.0" text="Fabrikker">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="95.0" layoutY="91.0" text="Vælg fabrik" />
-         </children>
-      </AnchorPane>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" stylesheets="@../styles/plantAdministration.css">
-         <children>
-            <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#createPlant" prefHeight="25.0" prefWidth="96.0" stylesheets="@../styles/plantAdministration.css" text="Opret fabrik" />
-            <TextField layoutX="31.0" layoutY="114.0" promptText="Fabrik navn" />
-            <TextField layoutX="31.0" layoutY="150.0" promptText="Fabrik ID" />
-            <Label layoutX="31.0" layoutY="67.0" prefHeight="25.0" prefWidth="96.0" text="Ny fabrik">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="btnPressedText" disable="true" layoutX="25.0" layoutY="227.0" prefHeight="17.0" prefWidth="162.0" text="&quot;fabriknavn&quot; er blevet tilføjet." />
-         </children>
-      </AnchorPane>
-   </items>
-</SplitPane>
+      <SplitPane dividerPositions="0.5" prefHeight="768.0" prefWidth="1024.0">
+         <items>
+            <AnchorPane fx:id="hej" minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="320.0" stylesheets="@../styles/menubar.css">
+               <children>
+                  <VBox id="plantSection" layoutX="82.0" layoutY="71.0" stylesheets="@/styles/factoryList.css">
+                     <children>
+                        <HBox maxHeight="30" minHeight="30" styleClass="filler">
+                           <children>
+                              <Text fx:id="plantListTitle" styleClass="darkGreyTitle" text="Fabrikker" />
+                              <Text fx:id="plantCountText" styleClass="greyTitle" text=" (0)" />
+                           </children>
+                        </HBox>
+                        <ScrollPane id="plantScrollPane" translateY="10">
+                           <content>
+                              <VBox id="plantVBox" fx:id="plantVBox" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <StackPane fx:id="switchStackPane">
+               <children>
+                  <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" stylesheets="@../styles/plantAdministration.css">
+                     <children>
+                        <Button fx:id="btnCreatePlant1" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#editPlant" prefHeight="25.0" prefWidth="96.0" stylesheets="@../styles/plantAdministration.css" text="Rediger fabrik" />
+                        <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="Nyt fabriksnavn" />
+                        <TextField fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="Nyt fabriks ID" />
+                        <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="115.0" text="Rediger fabrik">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="btnPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="162.0" text="Fabrikken blev opdateret." visible="false" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" stylesheets="@../styles/plantAdministration.css">
+                     <children>
+                        <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#createPlant" prefHeight="25.0" prefWidth="96.0" stylesheets="@../styles/plantAdministration.css" text="Opret fabrik" />
+                        <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="Fabrik navn" />
+                        <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="Fabrik ID" />
+                        <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="124.0" text="Ny fabrik">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="btnPlantCreated" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="162.0" text="Fabrikken blev oprettet." visible="false" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+         </items>
+      </SplitPane>
+   </children>
+</HBox>

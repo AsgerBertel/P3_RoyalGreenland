@@ -1,0 +1,18 @@
+{
+  "allPlants": [
+    {
+      "id": 1000,
+      "name": "planqt0",
+      "accessModifier": {
+        "documents": []
+      }
+    },
+    {
+      "id": 1001,
+      "name": "plant1",
+      "accessModifier": {
+        "documents": []
+      }
+    }
+  ]
+}
