@@ -32,12 +32,16 @@ public class PlantManager {
         return plantManager;
     }
 
+    public void setPathToJson(String pathToJson) {
+        PlantManager.getInstance().pathToJson = pathToJson;
+    }
+
     /**
      * Use to retrieve all plants.
      * @return arrayList of all plants.
      */
     public ArrayList<Plant> getAllPlants(){
-        return getInstance().getAllPlants();
+        return allPlants;
     }
 
     /**
@@ -106,14 +110,24 @@ public class PlantManager {
         }
     }
 
+    /**
+     * Load the JSON file into the PlantManager.
+     */
+    public void readFromJsonFile(String pathToJson){
+        Gson g = new Gson();
+        try (Reader reader = new FileReader(pathToJson)){
+            plantManager = g.fromJson(reader, PlantManager.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void testPlantManager(){
         getInstance().readFromJsonFile();
         getInstance().addPlant(new Plant(1006, "sut", new AccessModifier()));
         getInstance().addPlant(new Plant(1008, "hej2", new AccessModifier()));
 
         System.out.println(getInstance().allPlants.get(1).getId());
-
-        deletePlant(1008);
 
         DocumentBuilder.getInstance().createDocument(Paths.get("Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"));
     }

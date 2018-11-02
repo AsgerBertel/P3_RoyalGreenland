@@ -15,16 +15,16 @@ class FileManagerTest {
     File resourcesDirectory = new File("src/tests/resTest" + File.separator);
     Path pathToTestDir = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test");
     Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
-    Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf");
+    Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
 
     @Test
     void uploadFile() {
         FileManager.uploadFile(toTestFile, pathToOnlineFileTestFolder);
 
-        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf")));
+        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
 
         try {
-            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"));
+            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf"));
         } catch (IOException e) {
             System.out.println("UploadFileTest: ");
             e.printStackTrace();
