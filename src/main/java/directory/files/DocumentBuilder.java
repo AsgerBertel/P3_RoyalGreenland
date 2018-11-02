@@ -33,7 +33,7 @@ public class DocumentBuilder {
 
     /**
      * Reads from the currentFileID file to get ID for the file.
-     * This also increments the currentID in the furrentFileID file.
+     * This also increments the currentID in the currentFileID file.
      *
      * @return a new ID for the new file.
      */

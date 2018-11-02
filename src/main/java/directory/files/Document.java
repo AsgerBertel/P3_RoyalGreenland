@@ -54,7 +54,7 @@ public class Document extends AbstractFile {
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = path.toFile();
-        File renamedFile = new File(path.getParent().toAbsolutePath() + "/" + newFileName);
+        File renamedFile = new File(path.getParent().toAbsolutePath() + File.separator + newFileName);
         this.path = Paths.get(renamedFile.getPath());
 
 
