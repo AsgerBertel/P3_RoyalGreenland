@@ -36,7 +36,7 @@ public class Document extends AbstractFile {
 
     public void moveFile(Path targetPath) throws IOException{
         // To make sure, that the name is also included in the path.
-        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + "/" + this.getName());
+        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + File.separator + this.getName());
         Path temp = Files.move(path, tempTargetPath);
         this.path = tempTargetPath;
 
@@ -48,7 +48,7 @@ public class Document extends AbstractFile {
     // Opens the document in windows
     public void openDocument() throws IOException {
         File file = new File(path.toAbsolutePath().toString()); // todo is this correctly implemented??
-        Desktop.getDesktop().open(file);
+        Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
     }
 
     @Override
@@ -62,11 +62,4 @@ public class Document extends AbstractFile {
         if(!currentFile.renameTo(renamedFile))
             throw new InvalidNameException();
     }
-
-    @Override
-    public void deleteFile(Path path) throws IOException {
-        // todo - add delete functionality. This method should probably just delete the file entirely?
-        // todo - Then moving a copy of the file to the trash would be handled from directoryManager/fileManager
-    }
-
 }

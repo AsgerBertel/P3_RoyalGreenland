@@ -13,7 +13,6 @@ public abstract class AbstractFile {
     }
 
     public abstract void renameFile(String newFileName) throws InvalidNameException;
-    public abstract void deleteFile(Path path) throws IOException;
 
     public Path getPath() {
         return path;
