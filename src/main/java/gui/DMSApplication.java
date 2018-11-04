@@ -47,6 +47,10 @@ public class    DMSApplication extends Application {
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
         fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
 
+        // Improve font rendering
+        System.setProperty("prism.lcdtext", "false");
+        System.setProperty("prism.text", "t2k");
+
         mainMenu = fxmlLoader.load();
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
