@@ -1,5 +1,6 @@
 package gui;
 
+import directory.plant.PlantManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +14,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
-public class    DMSApplication extends Application {
+public class DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
