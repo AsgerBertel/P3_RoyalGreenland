@@ -1,45 +1,35 @@
 package directory.files;
 
+import directory.FileManager;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.InvalidNameException;
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FolderTest {
-    private File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/renameFolderTest");
+
+    File newDirectory = new File(Paths.get("").toAbsolutePath().toString());
 
     @Test
     void renameFile() {
-        Folder folder = new Folder(pathToTestFolder);
-        List<AbstractFile> contents =  folder.getContents();
+        System.out.println(newDirectory.toPath().toString());
 
-        for(AbstractFile file : contents){
-            System.out.println("Name: " + file.getName());
-            System.out.println("Path: " + file.getPath().toString());
-        }
+        if (!newDirectory.exists())
+            newDirectory.mkdirs();
+
+        Folder folder = FileManager.getInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
 
         try {
-            folder.renameFile("renameFolderTest22");
+            folder.renameFile("renamedTestFolder");
         } catch (InvalidNameException e) {
-            System.out.println("Error in renameFile test");
             e.printStackTrace();
         }
-
-        for(AbstractFile file : contents){
-            System.out.println("Name: " + file.getName());
-            System.out.println("Path: " + file.getPath().toString());
-        }
-    }
-
-    @Test
-    void deleteFile() {
+        assertEquals("renamedTestFolder", folder.getName());
+        assertTrue(new File(Paths.get("").toAbsolutePath().toString()+"\\\\renamedTestFolder").exists());
+        assertTrue(new File(Paths.get("").toAbsolutePath().toString()+"\\\\renamedTestFolder").delete());
     }
 
     @Test
