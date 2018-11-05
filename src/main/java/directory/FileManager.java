@@ -37,6 +37,7 @@ public class FileManager {
             e.printStackTrace();
         } // todo Error handling.
         // todo do we first create the file, when we upload it? Is this correctly implemented then?
+
     }
 
     public Folder createFolder(Path path, String name){
