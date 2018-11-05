@@ -6,15 +6,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.util.function.Consumer;
+
 public class PlantElement extends BorderPane {
 
     private Plant plant;
     private Text text;
+    protected Runnable onSelected;
 
     public PlantElement(Plant plant){
         this.plant = plant;
         getStyleClass().add("plantElement");
-
         text = new Text(plant.getId() + " - " + plant.getName());
         text.getStyleClass().add("plantText");
         text.setTranslateX(6);
@@ -26,9 +28,17 @@ public class PlantElement extends BorderPane {
         setEventHandler(MouseEvent.MOUSE_PRESSED, event -> onClick(event));
     }
 
+    public void setOnSelectedListener(Runnable onSelected){
+        this.onSelected = onSelected;
+    }
+
     protected void onClick(MouseEvent event){
-        requestFocus(); // todo This does not work as the button will be unfocused when any other element is clicked
+        setFocused(true);
         event.consume();
+
+        // Run listener method if initialized
+        if(onSelected != null)
+            onSelected.run();
     }
 
     public Plant getPlant(){
@@ -40,6 +50,14 @@ public class PlantElement extends BorderPane {
         HBox container = new HBox();
         container.getStyleClass().add("centeredContainer");
         return container;
+    }
+
+    public void setSelected(boolean selected){
+        setFocused(selected);
+    }
+
+    public boolean isSelected(){
+        return isFocused();
     }
 
 

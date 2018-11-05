@@ -5,6 +5,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
+import java.util.function.Consumer;
+
 public class PlantCheckboxElement extends PlantElement{
 
     private CheckBox checkBox;
@@ -32,17 +34,25 @@ public class PlantCheckboxElement extends PlantElement{
         event.consume();
     }
 
-
     @Override // Reverses the current 'selected' state
     protected void onClick(MouseEvent event){
         boolean newValue = !checkBox.isSelected();
         checkBox.setSelected(newValue);
         setFocused(newValue);
+
+        // Run listener method
+        if(onSelected != null) onSelected.run();
     }
 
-
+    @Override
     public boolean isSelected(){
         return checkBox.isSelected();
+    }
+
+    @Override
+    public void setSelected(boolean selected){
+        checkBox.setSelected(selected);
+        setFocused(selected);
     }
 
 

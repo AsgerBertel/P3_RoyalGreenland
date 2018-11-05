@@ -66,6 +66,10 @@
     -fx-fill: #4f5760;
 }
 
+.plantText:disabled{
+    -fx-fill: #d2d7dd;
+}
+
 .check-box .box{
     -fx-background-color: white;
     -fx-border-width: 0;
