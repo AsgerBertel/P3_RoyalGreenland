@@ -12,6 +12,7 @@ public class PlantElement extends BorderPane {
 
     private Plant plant;
     private Text text;
+    protected Runnable onSelected;
 
     public PlantElement(Plant plant){
         this.plant = plant;
@@ -27,9 +28,17 @@ public class PlantElement extends BorderPane {
         setEventHandler(MouseEvent.MOUSE_PRESSED, event -> onClick(event));
     }
 
+    public void setOnSelectedListener(Runnable onSelected){
+        this.onSelected = onSelected;
+    }
+
     protected void onClick(MouseEvent event){
         setFocused(true);
         event.consume();
+
+        // Run listener method if initialized
+        if(onSelected != null)
+            onSelected.run();
     }
 
     public Plant getPlant(){

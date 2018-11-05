@@ -19,13 +19,11 @@ public class FileTreeGenerator {
             item.setGraphic(new ImageView(new Image("/icons/small_folder.png")));
             List<AbstractFile> children = ((Folder) rootFile).getContents();
 
-
-
             for(AbstractFile child : children)
                 item.getChildren().add(generateTree(child));
         }else{
             item.setGraphic(new ImageView(new Image("/icons/small_blue_doc.png")));
-            // todo add diferent icons for different file types
+            // todo add different icons for different file types
         }
 
         return item;

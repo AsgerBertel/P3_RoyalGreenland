@@ -39,6 +39,9 @@ public class PlantCheckboxElement extends PlantElement{
         boolean newValue = !checkBox.isSelected();
         checkBox.setSelected(newValue);
         setFocused(newValue);
+
+        // Run listener method
+        if(onSelected != null) onSelected.run();
     }
 
     @Override
