@@ -1,10 +1,12 @@
 package directory;
 
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,8 +36,36 @@ public class FileManager {
         return folder;
     }
 
-    public static void deleteFile(AbstractFile file){
+    public void deleteDocument(Document file) throws IOException {
+        Path pathWithName = Paths.get(pathToArchive.toAbsolutePath() + File.separator + file.getName());
+        Files.move(file.getPath(), pathWithName);
 
+        deleteEmptyFolders(file.getPath());
+    }
+
+    public void restoreDocument (Document file) throws IOException {
+
+        Path file1 = Paths.get(pathToArchive.toAbsolutePath() + File.separator + file.getName());
+
+        if (Files.exists(file.getParentPath())) {
+            Files.move(file1, file.getPath());
+        } else {
+            file.getParentPath().toFile().mkdirs();
+            Files.move(file1, file.getPath());
+        }
+    }
+
+    private void deleteEmptyFolders(Path path) throws IOException {
+
+        Folder folder = new Folder(path.getParent());
+
+        File file = new File(folder.getPath().toString());
+
+        while (file.isDirectory() && file.length() == 0){
+            Files.delete(folder.getPath());
+            folder = new Folder(folder.getParentPath());
+            file = new File(folder.getPath().toString());
+        }
     }
 
 }

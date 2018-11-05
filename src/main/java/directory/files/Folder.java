@@ -21,6 +21,7 @@ public class Folder extends AbstractFile {
 
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
+        //get contents -> rename path in all
 
         // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
     }
@@ -36,7 +37,7 @@ public class Folder extends AbstractFile {
     }
 
     // Reads the list of files within the folder
-    private void updateContents() throws IOException{
+    public void updateContents() throws IOException{
         folderContents.clear();
 
         Files.walk(path, 1)

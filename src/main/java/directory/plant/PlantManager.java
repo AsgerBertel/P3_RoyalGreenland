@@ -69,7 +69,7 @@ public class PlantManager {
     }
 
     /**
-     * Delete af plant from PlantManager with the given ID.
+     * Delete a plant from PlantManager with the given ID.
      * The JSON file has to be updated, so that it is updated on all machines.
      * @param ID Plant ID of the given plant.
      */

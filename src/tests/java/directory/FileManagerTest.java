@@ -1,4 +1,7 @@
 package directory;
+
+import directory.files.Document;
+import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +19,13 @@ class FileManagerTest {
     Path pathToTestDir = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test");
     Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
     Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
+    Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
 
     @Test
     void uploadFile() {
         FileManager.uploadFile(toTestFile, pathToOnlineFileTestFolder);
 
-        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
+        assertTrue(Files.exists(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
 
         try {
             Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf"));
@@ -34,7 +38,7 @@ class FileManagerTest {
     @Test
     void createFolder() {
         Folder folder = FileManager.createFolder(pathToTestDir, "TestFolder");
-        assertEquals("TestFolder" ,folder.getName());
+        assertEquals("TestFolder", folder.getName());
 
         try {
             Files.delete(Paths.get(pathToTestDir + File.separator + "TestFolder"));
@@ -43,7 +47,96 @@ class FileManagerTest {
         }
     }
 
+    void deleteDocument() throws IOException {
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+
+        FileManager fm = new FileManager();
+
+        fm.deleteDocument(doc);
+
+        assertEquals(toTestFile.toString(), doc.getPath().toString());
+        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
+    }
+
+    void restoreDocument() throws IOException {
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+
+        FileManager fm = new FileManager();
+
+        fm.restoreDocument(doc);
+    }
+
+    void deleteDocument2() throws IOException {
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+
+        FileManager fm = new FileManager();
+
+        fm.deleteDocument(doc);
+    }
+
+    void restoreDocumentWithPath() throws IOException {
+        Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "testFile.pdf");
+
+        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
+
+        FileManager fm = new FileManager();
+
+        fm.restoreDocument(doc);
+
+        //deletes folder and moves file back
+
+        Files.move(newPath, toTestFile);
+        Files.delete(newPath.getParent());
+    }
+
+    void deleteDocument3() throws IOException {
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+
+        FileManager fm = new FileManager();
+
+        fm.deleteDocument(doc);
+    }
+
+    void restoreDocumentWithPath2() throws IOException {
+        Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "Mega test" + File.separator + "Ultra test" + File.separator + "testFile.pdf");
+
+        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
+
+        FileManager fm = new FileManager();
+
+        fm.restoreDocument(doc);
+
+    }
+
+    void deleteEmptyFolders() throws IOException {
+        Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "Mega test" + File.separator + "Ultra test" + File.separator + "testFile.pdf");
+
+        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
+
+        FileManager fm = new FileManager();
+
+        fm.deleteDocument(doc);
+
+    }
+
+
+    void restoreDocument2() throws IOException {
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+
+        FileManager fm = new FileManager();
+
+        fm.restoreDocument(doc);
+    }
+
     @Test
-    void deleteFile() {
+    void inOrder() throws IOException {
+        deleteDocument();
+        restoreDocument();
+        deleteDocument2();
+        restoreDocumentWithPath();
+        deleteDocument3();
+        restoreDocumentWithPath2();
+        deleteEmptyFolders();
+        restoreDocument2();
     }
 }
