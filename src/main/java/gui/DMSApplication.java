@@ -1,5 +1,6 @@
 package gui;
 
+import directory.plant.PlantManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +14,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
-public class    DMSApplication extends Application {
+public class DMSApplication extends Application {
 
     private static Stage primaryStage = new Stage();
 
@@ -46,6 +46,10 @@ public class    DMSApplication extends Application {
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
         fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
+
+        // Improve font rendering
+        System.setProperty("prism.lcdtext", "false");
+        System.setProperty("prism.text", "t2k");
 
         mainMenu = fxmlLoader.load();
         ((MainMenuController) fxmlLoader.getController()).init(this);

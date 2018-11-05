@@ -25,11 +25,6 @@ public class Folder extends AbstractFile {
         // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
     }
 
-    @Override
-    public void deleteFile(Path path) throws IOException {
-        // TODO: 25-10-2018 : delete folder and contents
-    }
-
     // Reads the content o path its given
     public List<AbstractFile> getContents(){
         try {
@@ -50,7 +45,7 @@ public class Folder extends AbstractFile {
 
         Files.walk(path, 1)
                 .filter(Files::isRegularFile)
-                .forEach(file -> folderContents.add(new Document(file.toAbsolutePath())));
+                .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file.toAbsolutePath())));
     }
 
 }

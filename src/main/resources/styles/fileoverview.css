@@ -50,6 +50,8 @@
     -fx-focus-color: transparent;
     -fx-border-color: none;
     -fx-min-height: 200;
+    -fx-padding: none;
+    
 }
 
 #flpFileView:focused {
@@ -82,7 +84,6 @@
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 1em; /* 12 */
     -fx-text-fill: #000000;
-
 }
 
 #hBoxTop {
@@ -105,7 +106,4 @@
 }
 #VboxParrent{
     -fx-background-color:  #FFFFFF;
-}
-#vboxTop{
-
 }

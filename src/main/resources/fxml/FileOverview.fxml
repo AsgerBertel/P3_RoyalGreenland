@@ -25,16 +25,12 @@
 
                             </children>
                         </HBox>
-                        <!-- TODO make line dynamic size-->
-                       <Pane fx:id="PaneLine" id="PaneLine">
-
-                       </Pane>
-
+                       <Pane fx:id="PaneLine" id="PaneLine"/>
                     </children>
                 </VBox >
               <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600" >
                     <content >
-                            <FlowPane id="flpFileView" fx:id="flpFileView" minWidth="600" prefWidth="${scpFileView.width}"/>
+                            <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
                         </content>
                 </ScrollPane>
 
