@@ -45,7 +45,7 @@ public class Document extends AbstractFile {
         }
     }
 
-    // Opens the document in windows
+    // Opens the document in a window
     public void openDocument() throws IOException {
         File file = new File(path.toAbsolutePath().toString()); // todo is this correctly implemented??
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?

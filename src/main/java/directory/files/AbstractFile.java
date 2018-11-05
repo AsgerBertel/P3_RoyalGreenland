@@ -12,7 +12,7 @@ public abstract class AbstractFile {
         this.path = path;
     }
 
-    public abstract void renameFile(String newFileName) throws InvalidNameException;
+    abstract void renameFile(String newFileName) throws InvalidNameException;
 
     public Path getPath() {
         return path;
@@ -26,4 +26,7 @@ public abstract class AbstractFile {
         return path.getFileName().toString();
     }
 
+    public void setPath(Path path) {
+        this.path = path;
+    }
 }

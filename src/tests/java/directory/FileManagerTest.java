@@ -12,14 +12,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileManagerTest {
-    File resourcesDirectory = new File("src/tests/resTest" + File.separator);
-    Path pathToTestDir = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test");
-    Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
-    Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
+    private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
+    private Path pathToTestDir = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test");
+    private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
+    private Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
+
+    /*@BeforeEach
+    void initEach(){
+        FileManager.getInstance().readFromJsonFile(pathToJsonTest.toString());
+    }*/
 
     @Test
     void uploadFile() {
-        FileManager.uploadFile(toTestFile, pathToOnlineFileTestFolder);
+        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getInstance().updateJsonFile();
+
+        FileManager.getInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
 
         assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
 
@@ -33,7 +42,7 @@ class FileManagerTest {
 
     @Test
     void createFolder() {
-        Folder folder = FileManager.createFolder(pathToTestDir, "TestFolder");
+        Folder folder = FileManager.getInstance().createFolder(pathToTestDir, "TestFolder");
         assertEquals("TestFolder" ,folder.getName());
 
         try {

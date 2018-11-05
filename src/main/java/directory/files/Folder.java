@@ -1,13 +1,12 @@
 package directory.files;
 
 
-import javafx.collections.FXCollections;
-import javafx.scene.image.Image;
-
 import javax.naming.InvalidNameException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,22 @@ public class Folder extends AbstractFile {
     }
 
     @Override
-    public void renameFile(String newFileName) throws InvalidNameException {
+    void renameFile(String newFileName) throws InvalidNameException {
+        File currentFile = this.getPath().toFile();
+        File renamedFile = new File(path.getParent().toAbsolutePath() + File.separator + newFileName);
+        if(!currentFile.renameTo(renamedFile))
+            throw new InvalidNameException();
+        this.path = Paths.get(renamedFile.getPath());
 
-        // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
+        for(AbstractFile file : folderContents){
+            String strPath = file.getPath().toString();
+            int i = strPath.lastIndexOf(File.separator);
+            System.out.println("Before: " + strPath);
+            strPath = strPath.replace(this.getName(), newFileName);
+            file.setPath(Paths.get(strPath));
+            System.out.println("After: " + strPath);
+        }
+        // TODO: 25-10-2018 : add functionality for changing path for all child elements.
     }
 
     // Reads the content o path its given
