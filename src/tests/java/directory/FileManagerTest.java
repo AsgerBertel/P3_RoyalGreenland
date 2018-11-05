@@ -18,10 +18,11 @@ class FileManagerTest {
     private Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
     private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
 
-    /*@BeforeEach
+    @Test
     void initEach(){
         FileManager.getInstance().readFromJsonFile(pathToJsonTest.toString());
-    }*/
+        System.out.println(FileManager.getInstance().allContent.get(0).getName());
+    }
 
     @Test
     void uploadFile() {

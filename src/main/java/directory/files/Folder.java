@@ -1,14 +1,9 @@
 package directory.files;
 
-
-import javafx.collections.FXCollections;
-import javafx.scene.image.Image;
-
 import javax.naming.InvalidNameException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +11,7 @@ public class Folder extends AbstractFile {
 
     private List<AbstractFile> folderContents = new ArrayList<>();
 
-    public Folder(Path path) {
+    public Folder(String path) {
         super(path);
     }
 
@@ -24,10 +19,10 @@ public class Folder extends AbstractFile {
     public void renameFile(String newFileName) throws InvalidNameException {
         // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
 
-        File file = new File(path.toString());
-        int indexOfLast = path.toString().lastIndexOf(File.separator);
-        File newFile = new File(path.toString().substring(0,indexOfLast)+"\\"+newFileName);
-        this.path = newFile.toPath();
+        File file = new File(path);
+        int indexOfLast = path.lastIndexOf(File.separator);
+        File newFile = new File(path.substring(0,indexOfLast)+ File.separator + newFileName);
+        this.setPath(newFile.toPath());
 
         if(file.renameTo(newFile)) {
             try {
@@ -52,11 +47,11 @@ public class Folder extends AbstractFile {
     private void updateContents() throws IOException{
         folderContents.clear();
 
-        Files.walk(path, 1)
+        Files.walk(getPath(), 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
-                .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath())));
+                .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath().toString())));
 
-        Files.walk(path, 1)
+        Files.walk(getPath(), 1)
                 .filter(Files::isRegularFile)
                 .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file.toAbsolutePath())));
     }

@@ -28,8 +28,8 @@ class FolderTest {
             e.printStackTrace();
         }
         assertEquals("renamedTestFolder", folder.getName());
-        assertTrue(new File(Paths.get("").toAbsolutePath().toString()+"\\\\renamedTestFolder").exists());
-        assertTrue(new File(Paths.get("").toAbsolutePath().toString()+"\\\\renamedTestFolder").delete());
+        assertTrue(new File(Paths.get("").toAbsolutePath().toString() + File.separator + "renamedTestFolder").exists());
+        assertTrue(new File(Paths.get("").toAbsolutePath().toString() + File.separator + "renamedTestFolder").delete());
     }
 
     @Test

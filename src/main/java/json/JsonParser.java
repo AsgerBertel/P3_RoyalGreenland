@@ -6,11 +6,9 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 
-import java.nio.file.Path;
-
 public class JsonParser
 {
-    private static Gson gson = new Gson();
+    private static Gson gson;
 
     static {
         GsonBuilder gb = new GsonBuilder();
@@ -21,13 +19,11 @@ public class JsonParser
                 .registerSubtype(Folder.class, "folder");
 
         gb.registerTypeAdapterFactory(typeFactory);
-        gb.registerTypeAdapter(Path.class, PathSerializer.class);
-        gb.registerTypeAdapter(Path.class, PathDeserializer.class);
 
         gson = gb.create();
     }
 
-    public static Gson getGson() {
+    public static Gson getJsonParser() {
         return gson;
     }
 }

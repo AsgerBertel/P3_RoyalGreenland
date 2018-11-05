@@ -33,7 +33,7 @@ public class FileExplorer {
 
     // Navigates to the parent directory
     public boolean navigateBack(){
-        currentFolder = new Folder(currentFolder.getParentPath());
+        currentFolder = new Folder(currentFolder.getParentPath().toAbsolutePath().toString());
         // Todo add error handling in case it cant navigate further back
         return false;
     }

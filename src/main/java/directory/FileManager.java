@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import directory.files.AbstractFile;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import json.JsonParser;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -43,7 +44,7 @@ public class FileManager {
     public Folder createFolder(Path path, String name){
         // Todo Error handling
         String pathToFolder = path.toString() + File.separator + name;
-        Folder folder = new Folder(Paths.get(pathToFolder));
+        Folder folder = new Folder(Paths.get(pathToFolder).toAbsolutePath().toString());
         new File(path.toString() + File.separator + name).mkdirs();
         allContent.add(folder);
         updateJsonFile();
@@ -55,27 +56,24 @@ public class FileManager {
 
     public void updateJsonFile(){
         // Write object to JSON file.
-        Gson g = new Gson();
         try (FileWriter writer = new FileWriter(pathToJson)){
-            g.toJson(getInstance(), writer);
+            JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void readFromJsonFile(){
-        Gson g = new Gson();
         try (Reader reader = new FileReader(pathToJson)){
-            FileManager = g.fromJson(reader, FileManager.class);
+            FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void readFromJsonFile(String path){
-        Gson g = new Gson();
         try (Reader reader = new FileReader(path)){
-            FileManager = g.fromJson(reader, FileManager.class);
+            FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
