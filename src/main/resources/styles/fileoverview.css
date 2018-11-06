@@ -14,8 +14,92 @@
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
-    -fx-background-color: 	#00BFFF;
-    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #00BFFF;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 1em; /* 12 */
     -fx-text-fill: #000000;
+}
+
+#scpFileView {
+    -fx-background-color:  #FFFFFF;
+    -fx-box-border: transparent;
+    -fx-padding: none;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-translate-x: 2;
+    -fx-translate-y: 2;
+
+
+}
+
+#scpFileView:focused {
+    -fx-background-color:  #FFFFFF;
+    -fx-box-border: transparent;
+    -fx-padding: none;
+    -fx-focus-color: white;
+    -fx-faint-focus-color: transparent;
+}
+
+#flpFileView {
+    -fx-background-color: #FFFFFF;
+    -fx-box-border: transparent;
+    -fx-focus-color: transparent;
+    -fx-border-color: none;
+    -fx-min-height: 200;
+    -fx-padding: none;
+
+}
+
+#flpFileView:focused {
+    -fx-background-color:  #FFFFFF;
+    -fx-box-border: transparent;
+    -fx-focus-color: transparent;
+    -fx-border-color: none;
+}
+
+
+#btnReturn {
+    -fx-translate-x: 50;
+    -fx-translate-y: 35;
+    -fx-pref-height: 32;
+    -fx-pref-width: 32;
+    /*Todo fix background image*/
+    -fx-background-image: url("../icons/navigate_back.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 90%;
+    -fx-background-color: transparent;
+
+}
+#btnReturn:pressed {
+
+    -fx-background-image: url("../icons/navigate_back.png");
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 60;
+    -fx-background-color: #d4d4d4;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: #000000;
+}
+
+#hBoxTop {
+    -fx-background-color: transparent;
+    -fx-min-height: 100;
+}
+
+#lblVisualPath {
+    -fx-translate-x: 80;
+    -fx-translate-y: 40;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #454e59;
+    -fx-font-family: "Arial", sans-serif;
+}
+
+#PaneLine {
+    -fx-pref-height: 1;
+    -fx-background-color: gray;
+}
+#VboxParrent{
+    -fx-background-color:  #FFFFFF;
 }

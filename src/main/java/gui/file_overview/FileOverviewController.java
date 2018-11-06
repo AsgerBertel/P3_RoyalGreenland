@@ -6,11 +6,14 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
+import gui.FileTreeGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,18 +28,28 @@ public class FileOverviewController {
     private FlowPane flpFileView;
     @FXML
     private Button btnReturn;
-
+    @FXML
+    private Label lblVisualPath;
+    @FXML
+    private VBox vboxTop;
+    @FXML
+    private Pane PaneLine;
     // todo temporary
     private FileManager fileManager;
+    @FXML
+    private TreeView<AbstractFile> fileTreeView;
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer(new Folder(rootDirectory), new Plant(1564,"utøya",new AccessModifier())); // todo Add appropriate accessModifier
+        fileExplorer = new FileExplorer(new Folder(rootDirectory), new Plant(1564, "utøya", new AccessModifier())); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();
+        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(new Folder(rootDirectory));
+        fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
+
 
     @FXML
     void prevDir(ActionEvent event) {
@@ -54,6 +67,9 @@ public class FileOverviewController {
             FileButton fileButton = createFileButton(file);
             flpFileView.getChildren().add(fileButton);
         }
+        lblVisualPath.setText(PathDisplayCorrection());
+
+
     }
 
     // Creates a FileButton from a File and adds
@@ -76,16 +92,13 @@ public class FileOverviewController {
 
 
     private void onFileButtonClick(MouseEvent event) {
-
-
         FileButton clickedButton = (FileButton) event.getSource();
         AbstractFile file = clickedButton.getFile();
         if (event.getClickCount() == 2)
             open(clickedButton);
-        else if(file instanceof Document){
+        else if (file instanceof Document) {
             // todo temp
         }
-
     }
 
     // Opens the folder that is double clicked and displays its content
@@ -97,6 +110,19 @@ public class FileOverviewController {
         } else {
             // fileButton.setFile(document); todo What is the point of this? Should probably just call docuement.openFile()
         }
+    }
+
+    @FXML
+    public void openPreviusFolder() {
+        fileExplorer.navigateBack();
+        updateDisplayedFiles();
+    }
+
+    public String PathDisplayCorrection() {
+        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll("\\\\", " > ");
+
+         NewString= NewString.substring(NewString.indexOf("Main Files"));
+        return NewString;
     }
 
 }

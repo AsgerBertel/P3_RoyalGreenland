@@ -19,6 +19,8 @@ public class FileTreeGenerator {
             item.setGraphic(new ImageView(new Image("/icons/small_folder.png")));
             List<AbstractFile> children = ((Folder) rootFile).getContents();
 
+
+
             for(AbstractFile child : children)
                 item.getChildren().add(generateTree(child));
         }else{
