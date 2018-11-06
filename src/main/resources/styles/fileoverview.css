@@ -1,17 +1,20 @@
-*{-fx-background-color: white}
-.FileButton{
+*{    -fx-background-color: white;
+}
+
+.FileButton {
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
-    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 1em; /* 12 */
     -fx-text-fill: #000000;
     -fx-pref-width: 100;
     -fx-pref-height: 100;
 
 }
-.FileButton:focused{
+
+.FileButton:focused {
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
@@ -22,7 +25,7 @@
 }
 
 #scpFileView {
-    -fx-background-color:  #FFFFFF;
+    -fx-background-color: #FFFFFF;
     -fx-box-border: transparent;
     -fx-padding: none;
     -fx-focus-color: transparent;
@@ -30,11 +33,10 @@
     -fx-translate-x: 2;
     -fx-translate-y: 2;
 
-
 }
 
 #scpFileView:focused {
-    -fx-background-color:  #FFFFFF;
+    -fx-background-color: #FFFFFF;
     -fx-box-border: transparent;
     -fx-padding: none;
     -fx-focus-color: white;
@@ -51,12 +53,11 @@
 }
 
 #flpFileView:focused {
-    -fx-background-color:  #FFFFFF;
+    -fx-background-color: #FFFFFF;
     -fx-box-border: transparent;
     -fx-focus-color: transparent;
     -fx-border-color: none;
 }
-
 
 #btnReturn {
     -fx-translate-x: 50;
@@ -70,6 +71,7 @@
     -fx-background-color: transparent;
 
 }
+
 #btnReturn:pressed {
     -fx-background-image: url("/icons/navigate_back.png");
     -fx-border-color: transparent;
@@ -95,10 +97,7 @@
     -fx-font-family: "Arial", sans-serif;
 }
 
-#PaneLine {
-    -fx-pref-height: 1;
-    -fx-background-color: gray;
+#VboxParrent {
+    -fx-background-color: #FFFFFF;
 }
-#VboxParrent{
-    -fx-background-color:  #FFFFFF;
-}
+
