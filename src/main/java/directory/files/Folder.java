@@ -28,7 +28,7 @@ public class Folder extends AbstractFile {
     // Reads the content o path its given
     public List<AbstractFile> getContents(){
         try {
-            updateContents();
+            if(folderContents.isEmpty()) updateContents();
         } catch (IOException e) {
             e.printStackTrace(); // todo error handling
         }
