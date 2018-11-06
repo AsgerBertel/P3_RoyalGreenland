@@ -53,11 +53,10 @@ public class FileManager {
         return folder;
     }
 
-    public void deleteDocument(Document file) throws IOException {
+    public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
-
-        //deleteEmptyFolders(file.getPath());
+        //todo remove from json file
     }
 
     public void restoreDocument(Document file) throws IOException {
@@ -70,24 +69,8 @@ public class FileManager {
             file.getParentPath().toFile().mkdirs();
             Files.move(file1, file.getPath());
         }
-    }
 
-    /*
-    private void deleteEmptyFolders(Path path) throws IOException {
-
-        Folder folder = new Folder(path.getParent());
-
-        File file = new File(folder.getPath().toString());
-
-        while (file.isDirectory() && file.length() == 0){
-            Files.delete(folder.getPath());
-            folder = new Folder(folder.getParentPath());
-            file = new File(folder.getPath().toString());
-        }
-    }*/
-
-    public void deleteFolder() {
-
+        //todo make abstract file and add folder compatibility
     }
 
     public void updateJsonFile() {
