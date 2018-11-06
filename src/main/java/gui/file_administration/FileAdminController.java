@@ -7,15 +7,12 @@ import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import gui.FileTreeGenerator;
 import gui.PlantCheckboxElement;
-import gui.PlantElement;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -24,7 +21,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 
 public class FileAdminController implements Initializable {
 
