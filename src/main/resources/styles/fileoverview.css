@@ -64,21 +64,20 @@
     -fx-pref-height: 32;
     -fx-pref-width: 32;
     /*Todo fix background image*/
-    -fx-background-image: url("../icons/navigate_back.png");
+    -fx-background-image: url("/icons/navigate_back.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: 90%;
     -fx-background-color: transparent;
 
 }
 #btnReturn:pressed {
-
-    -fx-background-image: url("../icons/navigate_back.png");
+    -fx-background-image: url("/icons/navigate_back.png");
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 60;
     -fx-background-color: #d4d4d4;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 1em; /* 12 */
+    -fx-font-size: 1px; /* 12 */
     -fx-text-fill: #000000;
 }
 

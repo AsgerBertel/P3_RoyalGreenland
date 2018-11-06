@@ -15,6 +15,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -108,7 +109,12 @@ public class FileOverviewController {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
-            // fileButton.setFile(document); todo What is the point of this? Should probably just call docuement.openFile()
+
+             try {
+                ((Document) fileButton.getFile()).openDocument();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
