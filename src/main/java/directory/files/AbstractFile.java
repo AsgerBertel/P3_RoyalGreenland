@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 
 public abstract class AbstractFile {
 
-    protected String path;
+    private String path;
 
     AbstractFile(String path) {
         this.path = path;
@@ -29,9 +29,5 @@ public abstract class AbstractFile {
 
     public void setPath(Path path) {
         this.path = path.toAbsolutePath().toString();
-    }
-
-    public String getPathAsString(){
-        return path;
     }
 }
