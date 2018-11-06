@@ -25,7 +25,7 @@ public class DocumentBuilder {
     }
 
     public Document createDocument(Path path) {
-        return new Document(path, readAndUpdateCurrentID());
+        return new Document(path.toAbsolutePath().toString(), readAndUpdateCurrentID());
     }
 
     public void setCurrentIDPath(Path currentIDPath) {

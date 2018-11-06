@@ -1,0 +1,16 @@
+{
+  "pathToJson": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\allFilesTest.JSON",
+  "pathToArchive": "Sample files/Archive",
+  "allContent": [
+    {
+      "type": "document",
+      "ID": 155,
+      "path": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest"
+    },
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"
+    }
+  ]
+}

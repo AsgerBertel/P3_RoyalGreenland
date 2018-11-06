@@ -16,7 +16,6 @@ VBox{
     -fx-background-color: transparent;
 }
 
-
 /* -- Text -- */
 .darkGreyTitle{
     -fx-font-size: 15px;
@@ -74,7 +73,6 @@ VBox{
     -fx-min-height: 8;
     -fx-max-height: 8;
 }
-
 
 .scroll-bar:vertical{
     -fx-background-color:transparent;
