@@ -53,7 +53,7 @@ public class FileManager {
     }
 
     public void deleteDocument(Document file) throws IOException {
-        Path pathWithName = Paths.get(pathToArchive.toAbsolutePath() + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
 
         //deleteEmptyFolders(file.getPath());
@@ -61,7 +61,7 @@ public class FileManager {
 
     public void restoreDocument (Document file) throws IOException {
 
-        Path file1 = Paths.get(pathToArchive.toAbsolutePath() + File.separator + file.getName());
+        Path file1 = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
 
         if (Files.exists(file.getParentPath())) {
             Files.move(file1, file.getPath());
