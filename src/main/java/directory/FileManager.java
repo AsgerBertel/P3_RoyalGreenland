@@ -46,22 +46,23 @@ public class FileManager {
     public Folder createFolder(Path path, String name) {
         // Todo Error handling
         String pathToFolder = path.toString() + File.separator + name;
-        Folder folder = new Folder(Paths.get(pathToFolder).toAbsolutePath().toString());
+        Folder folder = new Folder(Paths.get(pathToFolder).toString());
         new File(pathToFolder).mkdirs();
         allContent.add(folder);
         updateJsonFile();
         return folder;
     }
 
-    public void deleteFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
+    public void deleteDocument(Document file) throws IOException {
+        Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
-        //todo remove from json file
+
+        //deleteEmptyFolders(file.getPath());
     }
 
     public void restoreDocument(Document file) throws IOException {
 
-        Path file1 = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
+        Path file1 = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
 
         if (Files.exists(file.getParentPath())) {
             Files.move(file1, file.getPath());
@@ -69,8 +70,24 @@ public class FileManager {
             file.getParentPath().toFile().mkdirs();
             Files.move(file1, file.getPath());
         }
+    }
 
-        //todo make abstract file and add folder compatibility
+    /*
+    private void deleteEmptyFolders(Path path) throws IOException {
+
+        Folder folder = new Folder(path.getParent());
+
+        File file = new File(folder.getPath().toString());
+
+        while (file.isDirectory() && file.length() == 0){
+            Files.delete(folder.getPath());
+            folder = new Folder(folder.getParentPath());
+            file = new File(folder.getPath().toString());
+        }
+    }*/
+
+    public void deleteFolder(Folder folder) {
+
     }
 
     public void updateJsonFile() {

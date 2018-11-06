@@ -1,16 +1,1 @@
-{
-  "pathToJson": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\allFilesTest.JSON",
-  "pathToArchive": "Sample files/Archive",
-  "allContent": [
-    {
-      "type": "document",
-      "ID": 155,
-      "path": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest"
-    },
-    {
-      "type": "folder",
-      "folderContents": [],
-      "path": "C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"
-    }
-  ]
-}
+{"pathToJson":"src/tests/resTest/allFilesTest.JSON","pathToArchive":"Sample files/Archive","allContent":[{"type":"folder","folderContents":[],"path":"src/tests/resTest/Main Files Test/renameTestFolder"},{"type":"document","ID":1895,"path":"src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"},{"type":"folder","folderContents":[],"path":"src/tests/resTest/Main Files Test/TestFolder"},{"type":"folder","folderContents":[],"path":"src/tests/resTest/Main Files Test/renameTestFolder"}]}

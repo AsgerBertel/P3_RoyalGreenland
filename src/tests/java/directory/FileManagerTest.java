@@ -60,9 +60,7 @@ class FileManagerTest {
     void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
 
-        FileManager fm = new FileManager();
-
-        fm.deleteFile(doc);
+        FileManager.getInstance().deleteDocument(doc);
 
         assertEquals(toTestFile.toString(), doc.getPath().toString());
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
@@ -71,17 +69,13 @@ class FileManagerTest {
     void restoreDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
 
-        FileManager fm = new FileManager();
-
-        fm.restoreDocument(doc);
+        FileManager.getInstance().restoreDocument(doc);
     }
 
     void deleteDocument2() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
 
-        FileManager fm = new FileManager();
-
-        fm.deleteFile(doc);
+        FileManager.getInstance().deleteDocument(doc);
     }
 
     void restoreDocumentWithPath() throws IOException {
@@ -115,8 +109,6 @@ class FileManagerTest {
     void deleteFolder() throws IOException {
         Folder folder = new Folder("C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\deleteTest");
 
-        FileManager fm = new FileManager();
-
-        fm.deleteFile(folder);
+        FileManager.getInstance().deleteFolder(folder);
     }
 }
