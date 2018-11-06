@@ -44,7 +44,7 @@ public class FileAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Folder rootFolder = new Folder(Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files")); // todo Fetch path from some class
+        Folder rootFolder = new Folder(Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files").toString()); // todo Fetch path from some class
 
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);

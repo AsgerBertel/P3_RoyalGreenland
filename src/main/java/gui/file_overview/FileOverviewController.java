@@ -46,7 +46,7 @@ public class FileOverviewController {
         updateDisplayedFiles();
 
         fileManager = new FileManager();
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(new Folder(rootDirectory));
+        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(new Folder(rootDirectory.toString()));
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
 
