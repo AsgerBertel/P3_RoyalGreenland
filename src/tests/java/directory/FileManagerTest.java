@@ -20,12 +20,22 @@ class FileManagerTest {
     Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
     Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
     Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
+
+    @Test
+    void initEach(){
+        FileManager.getInstance().readFromJsonFile(pathToJsonTest.toString());
+        System.out.println(FileManager.getInstance().allContent.get(0).getName());
+    }
 
     @Test
     void uploadFile() {
-        FileManager.uploadFile(toTestFile, pathToOnlineFileTestFolder);
+        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getInstance().updateJsonFile();
 
-        assertTrue(Files.exists(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
+        FileManager.getInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
+
+        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
 
         try {
             Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf"));
@@ -37,8 +47,8 @@ class FileManagerTest {
 
     @Test
     void createFolder() {
-        Folder folder = FileManager.createFolder(pathToTestDir, "TestFolder");
-        assertEquals("TestFolder", folder.getName());
+        Folder folder = FileManager.getInstance().createFolder(pathToTestDir, "TestFolder");
+        assertEquals("TestFolder" ,folder.getName());
 
         try {
             Files.delete(Paths.get(pathToTestDir + File.separator + "TestFolder"));

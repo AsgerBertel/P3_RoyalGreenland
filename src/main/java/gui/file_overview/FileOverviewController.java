@@ -32,7 +32,7 @@ public class FileOverviewController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer(new Folder(rootDirectory), new Plant(1564,"utøya",new AccessModifier())); // todo Add appropriate accessModifier
+        fileExplorer = new FileExplorer(new Folder(rootDirectory.toAbsolutePath().toString()), new Plant(1564,"utøya",new AccessModifier())); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();

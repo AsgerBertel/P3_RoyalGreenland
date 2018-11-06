@@ -24,7 +24,7 @@ public class FileAdminController implements Initializable {
     }
 
     public void addDocument(ActionEvent actionEvent) {
-        fileTree.setRoot(FileTreeGenerator.generateTree(new Folder(Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files"))));
+        fileTree.setRoot(FileTreeGenerator.generateTree(new Folder(Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files").toAbsolutePath().toString())));
     }
 
     public void createFolder(ActionEvent actionEvent) {
