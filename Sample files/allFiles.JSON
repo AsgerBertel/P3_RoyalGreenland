@@ -1,1 +1,11 @@
-{"pathToJson":"Sample files/allFiles.JSON","pathToArchive":"Sample files/Archive","allContent":[{"type":"folder","folderContents":[],"path":"/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/renameTestFolder"}]}
+{
+  "pathToJson": "Sample files/allFiles.JSON",
+  "pathToArchive": "Sample files/Archive",
+  "allContent": [
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/renameTestFolder"
+    }
+  ]
+}

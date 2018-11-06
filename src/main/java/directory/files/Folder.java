@@ -19,9 +19,9 @@ public class Folder extends AbstractFile {
     public void renameFile(String newFileName){
         // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
 
-        File file = new File(path);
-        int indexOfLast = path.lastIndexOf(File.separator);
-        File newFile = new File(path.substring(0,indexOfLast)+ File.separator + newFileName);
+        File file = new File(getPath().toString());
+        int indexOfLast = getPath().toString().lastIndexOf(File.separator);
+        File newFile = new File(getPath().toString().substring(0,indexOfLast)+ File.separator + newFileName);
         this.setPath(newFile.toPath());
 
         if(file.renameTo(newFile)) {
@@ -48,7 +48,7 @@ public class Folder extends AbstractFile {
         folderContents.clear();
 
         Files.walk(getPath(), 1)
-                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(path))
+                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(getPath()))
                 .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath().toString())));
 
         Files.walk(getPath(), 1)

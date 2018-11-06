@@ -17,22 +17,23 @@ public class FileManager {
     // todo Archive folder path should be set on setup
     public String pathToJson = "Sample files/allFiles.JSON";
     String pathToArchive = "Sample files/Archive";
-    private static FileManager FileManager;
     ArrayList<AbstractFile> allContent = new ArrayList<>();
 
-    public static synchronized FileManager getInstance(){
-        if(FileManager == null){
+    private static FileManager FileManager;
+
+    public static synchronized FileManager getInstance() {
+        if (FileManager == null) {
             FileManager = new FileManager();
         }
         return FileManager;
     }
 
-    public void uploadFile(Path src, Path dst){
+    public void uploadFile(Path src, Path dst) {
         File file = new File(src.toString());
         Path dest = Paths.get(dst.toString() + File.separator + file.getName());
         try {
             Files.copy(src, dest);
-            allContent.add(DocumentBuilder.getInstance().createDocument(dst));
+            allContent.add(DocumentBuilder.getInstance().createDocument(dest));
             updateJsonFile();
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -42,11 +43,11 @@ public class FileManager {
 
     }
 
-    public Folder createFolder(Path path, String name){
+    public Folder createFolder(Path path, String name) {
         // Todo Error handling
         String pathToFolder = path.toString() + File.separator + name;
         Folder folder = new Folder(Paths.get(pathToFolder).toAbsolutePath().toString());
-        new File(path.toString() + File.separator + name).mkdirs();
+        new File(pathToFolder).mkdirs();
         allContent.add(folder);
         updateJsonFile();
         return folder;
@@ -58,7 +59,7 @@ public class FileManager {
         //todo remove from json file
     }
 
-    public void restoreDocument (Document file) throws IOException {
+    public void restoreDocument(Document file) throws IOException {
 
         Path file1 = Paths.get(Paths.get(pathToArchive).toAbsolutePath() + File.separator + file.getName());
 
@@ -81,17 +82,16 @@ public class FileManager {
         }
     }
 
-    public void readFromJsonFile(){
-        try (Reader reader = new FileReader(pathToJson)){
-            FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void readFromJsonFile() {
+        // String pathStr;
 
-    public void readFromJsonFile(String path){
-        try (Reader reader = new FileReader(path)){
+        try (Reader reader = new FileReader(pathToJson)) {
             FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
+            /* // todo change read and write json to convert to unix file system.
+            for (AbstractFile file : FileManager.allContent) {
+                pathStr = file.getPath().toString().replace("\\", "/");
+                        file.setPath(Paths.get(pathStr));
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
