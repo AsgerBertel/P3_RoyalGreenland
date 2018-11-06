@@ -19,7 +19,7 @@ public class AccessModifier {
      */
     public boolean contains(Integer ID){
         for(Integer doc : documents){
-            if(doc == ID){
+            if(doc.equals(ID)){
                 return true;
             }
         }

@@ -1,0 +1,10 @@
+#changesVBox{
+    -fx-background-color: #f2f7f7;
+    -fx-alignment: top-center;
+}
+
+.tree-view{
+    -fx-padding: 2px;
+    -fx-border-insets: 2px;
+    -fx-background-insets: 2px;
+}

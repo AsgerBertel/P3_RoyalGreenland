@@ -1,20 +1,16 @@
-#BackGround{
-    -fx-background-color: white;
-}
-.FileButton {
+.FileButton{
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 1em; /* 12 */
     -fx-text-fill: #000000;
     -fx-pref-width: 100;
     -fx-pref-height: 100;
 
 }
-
-.FileButton:focused {
+.FileButton:focused{
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
@@ -51,7 +47,7 @@
     -fx-border-color: none;
     -fx-min-height: 200;
     -fx-padding: none;
-    
+
 }
 
 #flpFileView:focused {

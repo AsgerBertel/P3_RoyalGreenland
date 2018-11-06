@@ -1,0 +1,28 @@
+.button:hover{
+    -fx-font-size: 12;
+    -fx-background-color: #32CD32;
+}
+.button {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 12px;
+    -fx-background-radius: 0;
+    -fx-text-alignment: center;
+    -fx-background-insets: 0, 0, 0, 0, 0, 0, 0;
+}
+
+.button:hover{
+    -fx-background-color: #32CD32;
+    -fx-background-radius: 0;
+}
+
+
+.button:focused {
+    -fx-background-radius: 0;
+
+}
+
+.button:pressed{
+    -fx-background-color: #228B22;
+    -fx-background-radius: 0;
+}
+

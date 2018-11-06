@@ -39,6 +39,7 @@ public class FileAdminController implements Initializable {
     @FXML
     private TreeView<AbstractFile> fileTreeView;
 
+    // The document last selected in the FileTree
     private Document selectedDocument;
 
     @Override
@@ -53,7 +54,7 @@ public class FileAdminController implements Initializable {
         for (int i = 0; i < 15; i++) {
             Plant p = new Plant(1243 + i, "NUUK", new AccessModifier());
             PlantCheckboxElement plantCheckboxElement = new PlantCheckboxElement(p);
-            plantCheckboxElement.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> onPlantToggle(plantCheckboxElement));
+            plantCheckboxElement.setOnSelectedListener(() -> onPlantToggle(plantCheckboxElement));
             plantElements.add(plantCheckboxElement);
         }
 
@@ -61,37 +62,53 @@ public class FileAdminController implements Initializable {
         setFactoryListDisabled(true);
     }
 
+    // Called after a plant is toggled on or off in plant checklist
+    private void onPlantToggle(PlantCheckboxElement plantElement) {
+        Plant plant = plantElement.getPlant();
 
-    public void onPlantToggle(PlantCheckboxElement plantElement){
-        System.out.println("Test");
+        if (plantElement.isSelected()) {
+            plant.getAccessModifier().addDocument(selectedDocument.getID());
+        } else {
+            plant.getAccessModifier().removeDocument(selectedDocument.getID());
+        }
+        //todo save to file
     }
 
-    public void onTreeItemSelected(TreeItem<AbstractFile> oldValue, TreeItem<AbstractFile> newValue){
-        if(newValue != null && newValue != oldValue){
+    // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
+    public void onTreeItemSelected(TreeItem<AbstractFile> oldValue, TreeItem<AbstractFile> newValue) {
+        if (newValue != null && newValue != oldValue) {
             AbstractFile chosenFile = newValue.getValue();
             clearPlantSelection();
 
-            if(chosenFile instanceof Document){
+            if (chosenFile instanceof Document) {
                 setFactoryListDisabled(false);
                 onDocumentSelected((Document) chosenFile);
-            }else if(chosenFile instanceof Folder){
+            } else if (chosenFile instanceof Folder) {
                 setFactoryListDisabled(true);
             }
         }
     }
 
-    private void setFactoryListDisabled(boolean disabled){
-        for(PlantCheckboxElement element : plantElements)
+    // Disables clicking on elements in the factory list
+    private void setFactoryListDisabled(boolean disabled) {
+        for (PlantCheckboxElement element : plantElements)
             element.setDisable(disabled);
     }
 
-    private void clearPlantSelection(){
-        for(PlantCheckboxElement element : plantElements)
+    // Deselects all elements in the plant list
+    private void clearPlantSelection() {
+        for (PlantCheckboxElement element : plantElements)
             element.setSelected(false);
     }
 
-    private void onDocumentSelected(Document document){
+    // Updates the plant list to reflect the AccessModifier of the chosen document
+    private void onDocumentSelected(Document document) {
         selectedDocument = document;
+
+        for (PlantCheckboxElement element : plantElements) {
+            if (element.getPlant().getAccessModifier().contains(selectedDocument.getID()))
+                element.setSelected(true);
+        }
     }
 
     public void addDocument(ActionEvent actionEvent) {
