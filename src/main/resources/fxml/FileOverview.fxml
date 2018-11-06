@@ -12,7 +12,7 @@
 <HBox stylesheets="@/styles/fileoverview.css" xmlns="http://javafx.com/javafx/10.0.1" id="BackGround"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
-        <TreeView fx:id="fileTreeView" minWidth="300"/>
+        <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"/>
         <VBox id="VboxParrent">
             <children>
                 <VBox fx:id="vboxTop" id="vboxTop">
