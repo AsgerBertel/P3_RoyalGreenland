@@ -16,7 +16,7 @@ public class Folder extends AbstractFile {
     }
 
     @Override
-    public void renameFile(String newFileName) throws InvalidNameException {
+    public void renameFile(String newFileName){
         // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
 
         File file = new File(path);
