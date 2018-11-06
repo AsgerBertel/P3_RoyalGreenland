@@ -17,7 +17,7 @@ public class Document extends AbstractFile {
      * @param path path to the file.
      * @param ID ID of the file. Given through the DocumentBuilder.
      */
-    Document(Path path, int ID) {
+    Document(String path, int ID) {
         super(path);
         this.ID = ID;
     }
@@ -37,25 +37,25 @@ public class Document extends AbstractFile {
     public void moveFile(Path targetPath) throws IOException{
         // To make sure, that the name is also included in the path.
         Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + File.separator + this.getName());
-        Path temp = Files.move(path, tempTargetPath);
-        this.path = tempTargetPath;
+        Path temp = Files.move(getPath(), tempTargetPath);
+        setPath(tempTargetPath);
 
         if(temp == null){ // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
         }
     }
 
-    // Opens the document in windows
+    // Opens the document in a window
     public void openDocument() throws IOException {
-        File file = new File(path.toAbsolutePath().toString()); // todo is this correctly implemented??
+        File file = new File(getPath().toString()); // todo is this correctly implemented??
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
     }
 
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
-        File currentFile = path.toFile();
-        File renamedFile = new File(path.getParent().toAbsolutePath() + File.separator + newFileName);
-        this.path = Paths.get(renamedFile.getPath());
+        File currentFile = getPath().toFile();
+        File renamedFile = new File(getPath().getParent().toAbsolutePath() + File.separator + newFileName);
+        setPath(Paths.get(renamedFile.getPath()));
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))
