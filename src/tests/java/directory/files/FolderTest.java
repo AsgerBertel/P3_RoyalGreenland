@@ -22,11 +22,7 @@ class FolderTest {
 
         Folder folder = FileManager.getInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
 
-        try {
-            folder.renameFile("renamedTestFolder");
-        } catch (InvalidNameException e) {
-            e.printStackTrace();
-        }
+        folder.renameFile("renamedTestFolder");
         assertEquals("renamedTestFolder", folder.getName());
         assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").exists());
         assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").delete());

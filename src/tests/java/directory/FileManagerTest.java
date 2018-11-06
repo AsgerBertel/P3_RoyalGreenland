@@ -62,7 +62,7 @@ class FileManagerTest {
 
         FileManager fm = new FileManager();
 
-        fm.deleteDocument(doc);
+        fm.deleteFile(doc);
 
         assertEquals(toTestFile.toString(), doc.getPath().toString());
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
@@ -81,7 +81,7 @@ class FileManagerTest {
 
         FileManager fm = new FileManager();
 
-        fm.deleteDocument(doc);
+        fm.deleteFile(doc);
     }
 
     void restoreDocumentWithPath() throws IOException {
@@ -99,54 +99,24 @@ class FileManagerTest {
         Files.delete(newPath.getParent());
     }
 
-    void deleteDocument3() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
-
-        FileManager fm = new FileManager();
-
-        fm.deleteDocument(doc);
-    }
-
-    void restoreDocumentWithPath2() throws IOException {
-        Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "Mega test" + File.separator + "Ultra test" + File.separator + "testFile.pdf");
-
-        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
-
-        FileManager fm = new FileManager();
-
-        fm.restoreDocument(doc);
-
-    }
-
-    void deleteEmptyFolders() throws IOException {
-        Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "Mega test" + File.separator + "Ultra test" + File.separator + "testFile.pdf");
-
-        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
-
-        FileManager fm = new FileManager();
-
-        fm.deleteDocument(doc);
-
-    }
-
-
-    void restoreDocument2() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
-
-        FileManager fm = new FileManager();
-
-        fm.restoreDocument(doc);
-    }
-
     @Test
     void inOrder() throws IOException {
         deleteDocument();
         restoreDocument();
+    }
+
+    @Test
+    void inOrder2() throws IOException {
         deleteDocument2();
         restoreDocumentWithPath();
-        /*deleteDocument3();
-        restoreDocumentWithPath2();
-        deleteEmptyFolders();
-        restoreDocument2();*/
+    }
+
+    @Test
+    void deleteFolder() throws IOException {
+        Folder folder = new Folder("C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\deleteTest");
+
+        FileManager fm = new FileManager();
+
+        fm.deleteFile(folder);
     }
 }
