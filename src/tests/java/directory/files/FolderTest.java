@@ -5,17 +5,17 @@ import org.junit.jupiter.api.Test;
 
 import javax.naming.InvalidNameException;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FolderTest {
 
-    File newDirectory = new File(Paths.get("").toAbsolutePath().toString());
-
     @Test
     void renameFile() {
-        System.out.println(newDirectory.toPath().toString());
+        Path pathToTestDir = Paths.get("src/tests/resTest/Main Files Test");
+        File newDirectory = new File(pathToTestDir.toString());
 
         if (!newDirectory.exists())
             newDirectory.mkdirs();
@@ -24,8 +24,8 @@ class FolderTest {
 
         folder.renameFile("renamedTestFolder");
         assertEquals("renamedTestFolder", folder.getName());
-        assertTrue(new File(Paths.get("").toAbsolutePath().toString() + File.separator + "renamedTestFolder").exists());
-        assertTrue(new File(Paths.get("").toAbsolutePath().toString() + File.separator + "renamedTestFolder").delete());
+        assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").exists());
+        assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").delete());
     }
 
     @Test
