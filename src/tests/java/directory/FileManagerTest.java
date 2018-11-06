@@ -134,9 +134,9 @@ class FileManagerTest {
         restoreDocument();
         deleteDocument2();
         restoreDocumentWithPath();
-        deleteDocument3();
+        /*deleteDocument3();
         restoreDocumentWithPath2();
         deleteEmptyFolders();
-        restoreDocument2();
+        restoreDocument2();*/
     }
 }

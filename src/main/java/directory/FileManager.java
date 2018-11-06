@@ -1,12 +1,9 @@
 package directory;
 
-import directory.files.AbstractFile;
 import directory.files.Document;
-import directory.files.DocumentBuilder;
 import directory.files.Folder;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +37,7 @@ public class FileManager {
         Path pathWithName = Paths.get(pathToArchive.toAbsolutePath() + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
 
-        deleteEmptyFolders(file.getPath());
+        //deleteEmptyFolders(file.getPath());
     }
 
     public void restoreDocument (Document file) throws IOException {
@@ -55,6 +52,7 @@ public class FileManager {
         }
     }
 
+    /*
     private void deleteEmptyFolders(Path path) throws IOException {
 
         Folder folder = new Folder(path.getParent());
@@ -66,6 +64,10 @@ public class FileManager {
             folder = new Folder(folder.getParentPath());
             file = new File(folder.getPath().toString());
         }
+    }*/
+
+    public void deleteFolder(){
+
     }
 
 }
