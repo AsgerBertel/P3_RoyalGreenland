@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -40,7 +41,8 @@ public class FileAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Folder rootFolder = new Folder(Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files").toString()); // todo Fetch path from some class
+        FileManager.getInstance().readFromJsonFile();
+        Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
 
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);

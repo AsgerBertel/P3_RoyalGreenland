@@ -1,5 +1,6 @@
 package gui;
 
+import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import javafx.scene.control.TreeItem;
@@ -20,7 +21,7 @@ public class FileTreeGenerator {
 
         if(rootFile instanceof Folder){
             item.setGraphic(new ImageView(folderImage));
-            List<AbstractFile> children = ((Folder) rootFile).getContents();
+            List<AbstractFile> children = ((Folder) rootFile).getFolderContents();
 
             for(AbstractFile child : children)
                 item.getChildren().add(generateTree(child));

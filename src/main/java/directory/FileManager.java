@@ -8,6 +8,7 @@ import directory.files.Folder;
 import json.JsonParser;
 
 import java.io.*;
+import java.lang.module.FindException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +21,10 @@ public class FileManager {
     ArrayList<AbstractFile> allContent = new ArrayList<>();
 
     private static FileManager FileManager;
+
+    public ArrayList<AbstractFile> getAllContent() {
+        return allContent;
+    }
 
     public static synchronized FileManager getInstance() {
         if (FileManager == null) {
@@ -101,7 +106,6 @@ public class FileManager {
 
     public void readFromJsonFile() {
         // String pathStr;
-
         try (Reader reader = new FileReader(pathToJson)) {
             FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
@@ -116,5 +120,23 @@ public class FileManager {
 
     public void setPathToJson(String pathToJson) {
         this.pathToJson = pathToJson;
+    }
+
+    public void initFolderTree() throws IOException{
+        getInstance().allContent.clear();
+
+        Folder root = new Folder("Sample files/Main Files");
+
+        getInstance().allContent.add(root);
+
+        Files.walk(root.getPath(), 1)
+                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
+                .forEach(file -> root.getFolderContents().add(new Folder(file.toString(), true)));
+
+        Files.walk(root.getPath(), 1)
+                .filter(Files::isRegularFile)
+                .forEach(file -> root.getFolderContents().add(DocumentBuilder.getInstance().createDocument(file)));
+
+        updateJsonFile();
     }
 }
