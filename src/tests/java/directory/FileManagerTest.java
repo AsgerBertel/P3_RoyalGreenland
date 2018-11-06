@@ -16,16 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest {
     private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
-    private Path pathToTestDir = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test");
-    private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
-    private Path toTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
+    private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
+    private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
+    private Path toTestFile = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
     private Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
-    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
-    private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTestUnix.JSON");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory + File.separator + "allFilesTest.JSON");
+    private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.toString() + File.separator + "allFilesTestUnix.JSON");
 
     @BeforeEach
     void initEach() {
-        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getInstance().readFromJsonFile();
     }
 
@@ -43,7 +42,7 @@ class FileManagerTest {
             e.printStackTrace();
         }
 
-        assertEquals("testFile.pdf", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("renameTestFolder", FileManager.getInstance().allContent.get(0).getName());
     }
 
     @Test

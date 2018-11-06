@@ -1,21 +1,26 @@
 {
-  "pathToJson": "/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/src/tests/resTest/allFilesTestUnix.JSON",
+  "pathToJson": "src/tests/resTest/allFilesTestUnix.JSON",
   "pathToArchive": "Sample files/Archive",
   "allContent": [
     {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
+    },
+    {
       "type": "document",
-      "ID": 201,
-      "path": "/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"
+      "ID": 1883,
+      "path": "src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"
     },
     {
       "type": "folder",
       "folderContents": [],
-      "path": "/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/src/tests/resTest/Main Files Test/TestFolder"
+      "path": "src/tests/resTest/Main Files Test/TestFolder"
     },
     {
-      "type": "document",
-      "ID": 182,
-      "path": "/Users/philip/Library/Mobile Documents/com~apple~CloudDocs/Cloud dokumenter/Java projects/P3/src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
     }
   ]
 }

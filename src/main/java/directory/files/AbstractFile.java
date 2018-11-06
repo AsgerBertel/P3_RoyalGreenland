@@ -19,6 +19,10 @@ public abstract class AbstractFile {
         return Paths.get(path);
     }
 
+    public Path getAbsolutePath(){
+        return Paths.get(path).toAbsolutePath();
+    }
+
     public Path getParentPath() {
         return Paths.get(path).getParent();
     }
@@ -28,7 +32,7 @@ public abstract class AbstractFile {
     }
 
     public void setPath(Path path) {
-        this.path = path.toAbsolutePath().toString();
+        this.path = path.toString();
     }
     @Override
     public String toString() {

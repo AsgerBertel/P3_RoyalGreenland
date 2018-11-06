@@ -49,11 +49,11 @@ public class Folder extends AbstractFile {
 
         Files.walk(getPath(), 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(getPath()))
-                .forEach(file -> folderContents.add(new Folder(file.toAbsolutePath().toString())));
+                .forEach(file -> folderContents.add(new Folder(file.toString())));
 
         Files.walk(getPath(), 1)
                 .filter(Files::isRegularFile)
-                .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file.toAbsolutePath())));
+                .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file)));
     }
 
 }
