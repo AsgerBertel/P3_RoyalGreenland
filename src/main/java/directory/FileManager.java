@@ -27,6 +27,12 @@ public class FileManager {
 
     public static synchronized FileManager getInstance() {
         if (FileManager == null) {
+            FileManager = readFilesFromJson();
+        }
+        return FileManager;
+    }
+    public static synchronized FileManager getTestInstance() {
+        if (FileManager == null) {
             FileManager = new FileManager();
         }
         return FileManager;
@@ -85,10 +91,10 @@ public class FileManager {
         }
     }
 
-    public void readFilesFromJson() {
+    public static FileManager readFilesFromJson() {
         // String pathStr;
-        try (Reader reader = new FileReader(pathToJson)) {
-            FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
+        try (Reader reader = new FileReader(FileManager.pathToJson)) {
+            return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : FileManager.allContent) {
                 pathStr = file.getPath().toString().replace("\\", "/");
@@ -97,6 +103,7 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void setPathToJson(String pathToJson) {

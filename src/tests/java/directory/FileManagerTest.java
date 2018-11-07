@@ -27,14 +27,14 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() {
-        FileManager.getInstance().readFilesFromJson();
+        FileManager.getTestInstance().readFilesFromJson();
     }
 
     // Todo use FileManager.deleteFile() to delete file.
     @Test
     void uploadFile() throws IOException {
-        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
-        FileManager.getInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
+        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getTestInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
         assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
 
         try {
@@ -45,12 +45,12 @@ class FileManagerTest {
         }
 
         //assertEquals("testFile1.pdf", FileManager.getInstance().allContent.get(0).getName());
-        assertEquals("Main Files", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
     }
 
     @Test
     void createFolder() {
-        Folder folder = FileManager.getInstance().createFolder(pathToTestDir, "TestFolder");
+        Folder folder = FileManager.getTestInstance().createFolder(pathToTestDir, "TestFolder");
         assertEquals("TestFolder", folder.getName());
 
         try {
@@ -63,7 +63,7 @@ class FileManagerTest {
     void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().deleteFile(doc);
+        FileManager.getTestInstance().deleteFile(doc);
 
         //assertEquals(toTestFile2.toString(), doc.getPath().toString());
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
@@ -72,13 +72,13 @@ class FileManagerTest {
     void restoreDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().restoreDocument(doc);
+        FileManager.getTestInstance().restoreDocument(doc);
     }
 
     void deleteDocument2() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().deleteFile(doc);
+        FileManager.getTestInstance().deleteFile(doc);
     }
 
     void restoreDocumentWithPath() throws IOException {

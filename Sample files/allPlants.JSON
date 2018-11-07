@@ -2,9 +2,12 @@
   "allPlants": [
     {
       "id": 1000,
-      "name": "planqt0",
+      "name": "plant0",
       "accessModifier": {
-        "documents": []
+        "documents": [
+          0,
+          2
+        ]
       }
     },
     {

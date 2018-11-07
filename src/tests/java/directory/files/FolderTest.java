@@ -20,7 +20,7 @@ class FolderTest {
         if (!newDirectory.exists())
             newDirectory.mkdirs();
 
-        Folder folder = FileManager.getInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
+        Folder folder = FileManager.getTestInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
 
         folder.renameFile("renamedTestFolder");
         assertEquals("renamedTestFolder", folder.getName());

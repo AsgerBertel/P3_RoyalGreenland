@@ -6,6 +6,7 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
+import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
 import gui.PlantCheckboxElement;
 
@@ -30,7 +31,7 @@ public class FileAdminController implements Initializable {
     private VBox plantVBox;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
-    private List<Plant> plants = new ArrayList<>();
+    private ArrayList<Plant> plants = new ArrayList<>();
 
     @FXML
     private TreeView<AbstractFile> fileTreeView;
@@ -43,20 +44,23 @@ public class FileAdminController implements Initializable {
         FileManager.getInstance().readFilesFromJson();
         Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
 
+        plants = PlantManager.getInstance().ReadJsonAndGetAllPlants();
+
+        System.out.println(plants.size());
+
+        for(Plant plant : plants){
+            PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
+            checkBox.setOnSelectedListener(() -> onPlantToggle(checkBox));
+            plantVBox.getChildren().add(checkBox);
+            plantElements.add(checkBox);
+        }
+
+        setFactoryListDisabled(true);
+
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
-
-        for (int i = 0; i < 15; i++) {
-            Plant p = new Plant(1243 + i, "NUUK", new AccessModifier());
-            PlantCheckboxElement plantCheckboxElement = new PlantCheckboxElement(p);
-            plantCheckboxElement.setOnSelectedListener(() -> onPlantToggle(plantCheckboxElement));
-            plantElements.add(plantCheckboxElement);
-        }
-
-        plantVBox.getChildren().addAll(plantElements);
-        setFactoryListDisabled(true);
     }
 
     // Called after a plant is toggled on or off in plant checklist
@@ -68,7 +72,8 @@ public class FileAdminController implements Initializable {
         } else {
             plant.getAccessModifier().removeDocument(selectedDocument.getID());
         }
-        //todo save to file
+
+        PlantManager.getInstance().updateJsonFile();
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
