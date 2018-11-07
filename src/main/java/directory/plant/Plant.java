@@ -1,5 +1,7 @@
 package directory.plant;
 
+import java.util.Objects;
+
 public class Plant {
 
     private int id;
@@ -33,6 +35,20 @@ public class Plant {
     }
 
     @Override
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plant plant = (Plant) o;
+        return id == plant.id &&
+                Objects.equals(name, plant.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
     public String toString() {
         return id +" "+ name;
 
