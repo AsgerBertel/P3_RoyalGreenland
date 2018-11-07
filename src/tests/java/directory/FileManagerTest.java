@@ -27,6 +27,7 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() {
+        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getTestInstance().readFilesFromJson();
     }
 
@@ -44,7 +45,7 @@ class FileManagerTest {
             e.printStackTrace();
         }
 
-        //assertEquals("testFile1.pdf", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
         assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
     }
 
