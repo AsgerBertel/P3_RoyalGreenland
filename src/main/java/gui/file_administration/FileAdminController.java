@@ -41,7 +41,6 @@ public class FileAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FileManager.getInstance().readFilesFromJson();
         Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
 
         plants = PlantManager.getInstance().ReadJsonAndGetAllPlants();

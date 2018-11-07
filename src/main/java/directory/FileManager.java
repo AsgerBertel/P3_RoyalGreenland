@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FileManager {
     // todo Archive folder path should be set on setup
-    public String pathToJson = "Sample files/allFiles.JSON";
+    public static String pathToJson = "Sample files/allFiles.JSON";
     String pathToArchive = "Sample files/Archive";
     ArrayList<AbstractFile> allContent = new ArrayList<>();
     ArrayList<AbstractFile> archive = new ArrayList<>();
@@ -31,6 +31,7 @@ public class FileManager {
         }
         return FileManager;
     }
+
     public static synchronized FileManager getTestInstance() {
         if (FileManager == null) {
             FileManager = new FileManager();
@@ -93,7 +94,7 @@ public class FileManager {
 
     public static FileManager readFilesFromJson() {
         // String pathStr;
-        try (Reader reader = new FileReader(FileManager.pathToJson)) {
+        try (Reader reader = new FileReader(pathToJson)) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : FileManager.allContent) {
