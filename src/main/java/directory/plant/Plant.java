@@ -35,6 +35,7 @@ public class Plant {
     }
 
     @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -48,4 +49,8 @@ public class Plant {
         return Objects.hash(id, name);
     }
 
+    public String toString() {
+        return id +" "+ name;
+
+    }
 }

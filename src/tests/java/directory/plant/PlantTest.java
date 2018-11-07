@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlantTest {
-
     private Plant plant = new Plant(1007, "Nuuk", new AccessModifier());
     private Plant plant2 = plant;
 

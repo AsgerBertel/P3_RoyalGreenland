@@ -16,7 +16,6 @@ VBox{
     -fx-background-color: transparent;
 }
 
-
 /* -- Text -- */
 .darkGreyTitle{
     -fx-font-size: 15px;
@@ -55,7 +54,6 @@ VBox{
 .verticalSplitter{
     -fx-pref-width: 2;
     -fx-min-width: 2;
-    -fx-max-height: 2;
     -fx-background-color: #f2f7f7;
 }
 
@@ -74,7 +72,6 @@ VBox{
     -fx-min-height: 8;
     -fx-max-height: 8;
 }
-
 
 .scroll-bar:vertical{
     -fx-background-color:transparent;
@@ -101,5 +98,67 @@ VBox{
 }
 
 
+.combo-box .list-cell {
+    -fx-background: #f2f7f7;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+    -fx-pref-width: 200;
+}
 
+.combo-box-popup .list-view {
+    -fx-background-color: #f2f7f7, #f2f7f7;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0.0, 0, 0);
+
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 4 0 4 5;
+
+    /* No alternate highlighting */
+    -fx-background-color: #f2f7f7;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #6fd59b;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-popup .list-view .list-cell {
+
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-pref-height: 40;
+}
+
+.combo-box-base {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ComboBoxBaseSkin";
+    -fx-background-color: #f2f7f7, #f2f7f7, #f2f7f7, #f2f7f7;
+    -fx-background-radius: 5, 5, 4, 3;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-padding: 0;
+    -fx-pref-height: 40;
+    -fx-pref-width: 300;
+}
+
+
+.combo-box-base:showing {
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused {
+    -fx-background-color: #f2f7f7, #f2f7f7, #f2f7f7, #f2f7f7;
+}
+
+.combo-box-base:disabled {
+    -fx-opacity: .4;
+}
 

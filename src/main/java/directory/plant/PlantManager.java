@@ -2,11 +2,9 @@ package directory.plant;
 
 import com.google.gson.Gson;
 import directory.files.DocumentBuilder;
+import json.JsonParser;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -69,7 +67,7 @@ public class PlantManager {
     }
 
     /**
-     * Delete af plant from PlantManager with the given ID.
+     * Delete a plant from PlantManager with the given ID.
      * The JSON file has to be updated, so that it is updated on all machines.
      * @param ID Plant ID of the given plant.
      */
@@ -102,9 +100,8 @@ public class PlantManager {
      * Load the JSON file into the PlantManager.
      */
     public void readFromJsonFile(){
-        Gson g = new Gson();
         try (Reader reader = new FileReader(pathToJson)){
-            plantManager = g.fromJson(reader, PlantManager.class);
+            plantManager = JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,9 +111,8 @@ public class PlantManager {
      * Load the JSON file into the PlantManager.
      */
     public void readFromJsonFile(String pathToJson){
-        Gson g = new Gson();
         try (Reader reader = new FileReader(pathToJson)){
-            plantManager = g.fromJson(reader, PlantManager.class);
+            plantManager = JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
