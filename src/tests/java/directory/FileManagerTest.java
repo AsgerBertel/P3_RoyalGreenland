@@ -45,7 +45,7 @@ class FileManagerTest {
         }
 
         //assertEquals("testFile1.pdf", FileManager.getInstance().allContent.get(0).getName());
-        //assertEquals("renameTestFolder", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("Main Files", FileManager.getInstance().allContent.get(0).getName());
     }
 
     @Test
