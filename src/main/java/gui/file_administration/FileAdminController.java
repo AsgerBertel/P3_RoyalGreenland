@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -41,7 +40,7 @@ public class FileAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FileManager.getInstance().readFromJsonFile();
+        FileManager.getInstance().readFilesFromJson();
         Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
 
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);

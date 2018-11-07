@@ -1,14 +1,12 @@
 package directory;
 
 import directory.files.Document;
-import com.google.gson.Gson;
 import directory.files.AbstractFile;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import json.JsonParser;
 
 import java.io.*;
-import java.lang.module.FindException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,8 +15,10 @@ import java.util.ArrayList;
 public class FileManager {
     // todo Archive folder path should be set on setup
     public String pathToJson = "Sample files/allFiles.JSON";
+    public String pathToJsonArchive = "Sample files/archive.JSON";
     String pathToArchive = "Sample files/Archive";
     ArrayList<AbstractFile> allContent = new ArrayList<>();
+    ArrayList<AbstractFile> archive = new ArrayList<>();
 
     private static FileManager FileManager;
 
@@ -39,12 +39,12 @@ public class FileManager {
         try {
             Files.copy(src, dest);
             allContent.add(DocumentBuilder.getInstance().createDocument(dest));
-            updateJsonFile();
+            updateFilesJson();
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
         } // todo Error handling.
-        // todo do we first create the file, when we upload it? Is this correctly implemented then?
+        // todo Is this correctly implemented? We just copy the file from src to dst.
 
     }
 
@@ -54,17 +54,19 @@ public class FileManager {
         Folder folder = new Folder(Paths.get(pathToFolder).toString());
         new File(pathToFolder).mkdirs();
         allContent.add(folder);
-        updateJsonFile();
+        updateFilesJson();
         return folder;
     }
 
     public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
+        allContent.remove(file);
+        archive.add(file);
+        updateFilesJson();
     }
 
     public void restoreDocument(Document file) throws IOException {
-
         Path file1 = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
 
         if (Files.exists(file.getParentPath())) {
@@ -75,9 +77,7 @@ public class FileManager {
         }
     }
 
-
-
-    public void updateJsonFile() {
+    public void updateFilesJson() {
         // Write object to JSON file.
         try (FileWriter writer = new FileWriter(pathToJson)) {
             JsonParser.getJsonParser().toJson(getInstance(), writer);
@@ -86,7 +86,7 @@ public class FileManager {
         }
     }
 
-    public void readFromJsonFile() {
+    public void readFilesFromJson() {
         // String pathStr;
         try (Reader reader = new FileReader(pathToJson)) {
             FileManager = JsonParser.getJsonParser().fromJson(reader, FileManager.class);
@@ -119,6 +119,16 @@ public class FileManager {
                 .filter(Files::isRegularFile)
                 .forEach(file -> root.getFolderContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
-        updateJsonFile();
+        updateFilesJson();
+    }
+
+    public Folder findParent(Folder child){
+        for(AbstractFile current : getInstance().getAllContent()){
+            if(current instanceof Folder){
+                if(((Folder) current).getContents().contains(child));
+                    return (Folder) current;
+            }
+        }
+        return null;
     }
 }

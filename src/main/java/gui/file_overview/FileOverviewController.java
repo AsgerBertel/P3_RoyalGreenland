@@ -42,11 +42,11 @@ public class FileOverviewController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer(new Folder(rootDirectory.toAbsolutePath().toString()), new Plant(1564,"utøya",new AccessModifier())); // todo Add appropriate accessModifier
+        fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), new Plant(1000, "Nuuk", new AccessModifier())); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(new Folder(rootDirectory.toString()));
+        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
 
@@ -68,8 +68,6 @@ public class FileOverviewController {
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
-
-
     }
 
     // Creates a FileButton from a File and adds
@@ -103,7 +101,6 @@ public class FileOverviewController {
 
     // Opens the folder that is double clicked and displays its content
     public void open(FileButton fileButton) {
-
         if (fileButton.getFile() instanceof Folder) {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();

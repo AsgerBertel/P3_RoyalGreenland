@@ -27,7 +27,7 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() {
-        FileManager.getInstance().readFromJsonFile();
+        FileManager.getInstance().readFilesFromJson();
     }
 
     // Todo use FileManager.deleteFile() to delete file.

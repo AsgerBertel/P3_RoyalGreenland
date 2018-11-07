@@ -37,9 +37,8 @@ public class FileExplorer {
     // Navigates to the parent directory
     public boolean navigateBack() {
         if (!(currentFolder.getPath().equals(rootDirectory.getPath()))) {
-            currentFolder = new Folder(currentFolder.getParentPath().toString());
+            currentFolder = FileManager.getInstance().findParent(currentFolder);
         }
-
 
         // Todo add error handling in case it cant navigate further back
         return false;

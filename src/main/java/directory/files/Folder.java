@@ -33,7 +33,7 @@ public class Folder extends AbstractFile {
         this.setPath(newFile.toPath());
 
         if(file.renameTo(newFile)) {
-            FileManager.getInstance().updateJsonFile();
+            FileManager.getInstance().updateFilesJson();
         }
     }
 

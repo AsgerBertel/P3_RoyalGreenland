@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Singleton pattern.
  * Used to get all plants. All plants are stored in allPlants.JSON file.
- * Use the readFromJsonFile method to load the plants into this class.
+ * Use the readFilesFromJson method to load the plants into this class.
  */
 
 public class PlantManager {
