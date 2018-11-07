@@ -61,8 +61,6 @@ public class FileManager {
     public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
-
-        //deleteEmptyFolders(file.getPath());
     }
 
     public void restoreDocument(Document file) throws IOException {
