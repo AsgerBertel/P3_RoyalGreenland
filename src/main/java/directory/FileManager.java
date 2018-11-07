@@ -58,7 +58,7 @@ public class FileManager {
         return folder;
     }
 
-    public void deleteDocument(Document file) throws IOException {
+    public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
 
@@ -77,23 +77,7 @@ public class FileManager {
         }
     }
 
-    /*
-    private void deleteEmptyFolders(Path path) throws IOException {
 
-        Folder folder = new Folder(path.getParent());
-
-        File file = new File(folder.getPath().toString());
-
-        while (file.isDirectory() && file.length() == 0){
-            Files.delete(folder.getPath());
-            folder = new Folder(folder.getParentPath());
-            file = new File(folder.getPath().toString());
-        }
-    }*/
-
-    public void deleteFolder(Folder folder) {
-
-    }
 
     public void updateJsonFile() {
         // Write object to JSON file.
