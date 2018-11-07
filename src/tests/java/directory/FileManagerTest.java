@@ -27,7 +27,6 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() {
-        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getInstance().readFromJsonFile();
     }
 
@@ -36,16 +35,17 @@ class FileManagerTest {
     void uploadFile() {
         FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
-        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
+        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
 
         try {
-            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf"));
+            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf"));
         } catch (IOException e) {
             System.out.println("UploadFileTest: ");
             e.printStackTrace();
         }
 
         //assertEquals("testFile1.pdf", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("renameTestFolder", FileManager.getInstance().allContent.get(0).getName());
     }
 
     @Test

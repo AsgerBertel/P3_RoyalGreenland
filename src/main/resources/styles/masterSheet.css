@@ -1,0 +1,103 @@
+VBox{
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+/* -- Alignment -- */
+.filler{
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-alignment: center-left;
+}
+
+.centeredContainer{
+    -fx-border-width: 0;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+}
+
+/* -- Text -- */
+.darkGreyTitle{
+    -fx-font-size: 15px;
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-font-weight: bold;
+    -fx-fill: #42474c;
+}
+
+.greyTitle{
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-fill: #a9b2bd;
+}
+
+.bigTitle{
+    -fx-font-size: 26px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-fill: #42474c;
+}
+
+.standardText{
+    -fx-font-size: 12px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-fill: #6f777e;
+}
+
+.smallNote{
+    -fx-font-size: 12px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-style: italic;
+    -fx-fill: #a9b2bd;
+}
+
+
+/* -- Splitters -- */
+.verticalSplitter{
+    -fx-pref-width: 2;
+    -fx-min-width: 2;
+    -fx-max-height: 2;
+    -fx-background-color: #f2f7f7;
+}
+
+.horizontalSplitter{
+    -fx-pref-height: 2;
+    -fx-min-height: 2;
+    -fx-max-height: 2;
+    -fx-background-color: #f2f7f7;
+}
+
+
+/* -- Scroll Bar --*/
+.scroll-bar:horizontal{
+    -fx-background-color:transparent;
+    -fx-pref-height: 8;
+    -fx-min-height: 8;
+    -fx-max-height: 8;
+}
+
+.scroll-bar:vertical{
+    -fx-background-color:transparent;
+    -fx-pref-width: 8;
+    -fx-min-width: 8;
+    -fx-max-width: 8;
+    -fx-translate-x: -4;
+}
+
+/* The main scrollbar */
+.scroll-bar:horizontal .track ,
+.scroll-bar:vertical .track{
+    -fx-background-color: #e5e5e5;
+    -fx-background-radius: 10em;
+    -fx-border-width: 0;
+}
+
+/* The scrollbar thumb */
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #a5a5a5;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 10em;
+}
+
+
+
+

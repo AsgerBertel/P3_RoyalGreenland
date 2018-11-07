@@ -1,1 +1,26 @@
-{"pathToJson":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\allFilesTest.JSON","pathToArchive":"Sample files/Archive","allContent":[{"type":"document","ID":155,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"document","ID":185,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":189,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":193,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":197,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile1.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":202,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile1.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":206,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile1.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":211,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile1.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"},{"type":"document","ID":216,"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\onlineFileTest\\testFile1.pdf"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\TestFolder"},{"type":"folder","folderContents":[],"path":"C:\\Users\\Hanna\\IdeaProjects\\P3\\renameTestFolder"}]}
+{
+  "pathToJson": "src/tests/resTest/allFilesTest.JSON",
+  "pathToArchive": "Sample files/Archive",
+  "allContent": [
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
+    },
+    {
+      "type": "document",
+      "ID": 1901,
+      "path": "src/tests/resTest/Main Files Test/onlineFileTest/testFile.pdf"
+    },
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/TestFolder"
+    },
+    {
+      "type": "folder",
+      "folderContents": [],
+      "path": "src/tests/resTest/Main Files Test/renameTestFolder"
+    }
+  ]
+}

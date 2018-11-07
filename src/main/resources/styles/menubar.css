@@ -14,7 +14,6 @@
     -fx-padding: 0;
 }
 
-
 .button {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 12px;
@@ -28,8 +27,8 @@
 .button:hover{
     -fx-background-color: #3d4652;
     -fx-background-radius: 0;
+    -fx-cursor: HAND;
 }
-
 
 .button:focused {
     -fx-background-color: #3d4652;

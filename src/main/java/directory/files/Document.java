@@ -36,7 +36,7 @@ public class Document extends AbstractFile {
 
     public void moveFile(Path targetPath) throws IOException{
         // To make sure, that the name is also included in the path.
-        Path tempTargetPath = Paths.get(targetPath.toAbsolutePath() + File.separator + this.getName());
+        Path tempTargetPath = Paths.get(targetPath + File.separator + this.getName());
         Path temp = Files.move(getPath(), tempTargetPath);
         setPath(tempTargetPath);
 
@@ -54,12 +54,15 @@ public class Document extends AbstractFile {
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent().toAbsolutePath() + File.separator + newFileName);
+        File renamedFile = new File(getPath().getParent()+ File.separator + newFileName);
         setPath(Paths.get(renamedFile.getPath()));
-
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))
             throw new InvalidNameException();
+    }
+
+    public void tester(){
+        System.out.println(getPath());
     }
 }
