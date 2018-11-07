@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileOverviewController {
@@ -42,7 +43,14 @@ public class FileOverviewController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), new Plant(1000, "Nuuk", new AccessModifier())); // todo Add appropriate accessModifier
+        Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
+        plant.getAccessModifier().addDocument(0);
+        plant.getAccessModifier().addDocument(9);
+        plant.getAccessModifier().addDocument(16);
+        plant.getAccessModifier().addDocument(21);
+        plant.getAccessModifier().addDocument(27);
+
+        fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();

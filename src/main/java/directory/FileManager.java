@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class FileManager {
     // todo Archive folder path should be set on setup
     public String pathToJson = "Sample files/allFiles.JSON";
-    public String pathToJsonArchive = "Sample files/archive.JSON";
     String pathToArchive = "Sample files/Archive";
     ArrayList<AbstractFile> allContent = new ArrayList<>();
     ArrayList<AbstractFile> archive = new ArrayList<>();
@@ -113,11 +112,11 @@ public class FileManager {
 
         Files.walk(root.getPath(), 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
-                .forEach(file -> root.getFolderContents().add(new Folder(file.toString(), true)));
+                .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
 
         Files.walk(root.getPath(), 1)
                 .filter(Files::isRegularFile)
-                .forEach(file -> root.getFolderContents().add(DocumentBuilder.getInstance().createDocument(file)));
+                .forEach(file -> root.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
         updateFilesJson();
     }
@@ -129,6 +128,6 @@ public class FileManager {
                     return (Folder) current;
             }
         }
-        return null;
+        return child;
     }
 }

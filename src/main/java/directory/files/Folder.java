@@ -1,6 +1,7 @@
 package directory.files;
 
 import directory.FileManager;
+import directory.plant.AccessModifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,10 +41,6 @@ public class Folder extends AbstractFile {
 
     // Reads the content o path its given
     public List<AbstractFile> getContents(){
-        if(folderContents.isEmpty()) {
-            return null;
-        }
-
         return folderContents;
     }
 
@@ -64,7 +61,25 @@ public class Folder extends AbstractFile {
         }
     }
 
-    public List<AbstractFile> getFolderContents() {
-        return folderContents;
+    public boolean containsFromAccessModifier(AccessModifier am){
+        List<AbstractFile> allContent = getContents();
+
+        if(allContent.isEmpty()){
+            return false;
+        }
+
+        for(AbstractFile file : allContent){
+            if(file instanceof Folder){
+                if(((Folder) file).containsFromAccessModifier(am)){
+                    return true;
+                }
+            }
+            if(file instanceof Document){
+                if(am.contains(((Document) file).getID())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

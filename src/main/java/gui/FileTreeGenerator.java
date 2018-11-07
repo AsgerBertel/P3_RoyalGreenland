@@ -21,7 +21,7 @@ public class FileTreeGenerator {
 
         if(rootFile instanceof Folder){
             item.setGraphic(new ImageView(folderImage));
-            List<AbstractFile> children = ((Folder) rootFile).getFolderContents();
+            List<AbstractFile> children = ((Folder) rootFile).getContents();
 
             for(AbstractFile child : children)
                 item.getChildren().add(generateTree(child));
