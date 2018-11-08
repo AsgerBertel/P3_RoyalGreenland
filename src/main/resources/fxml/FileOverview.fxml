@@ -13,9 +13,9 @@
 <HBox stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" id="BackGround"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
-        <VBox>
+        <VBox fx:id="leftSideVbox">
             <ComboBox fx:id="drdPlant" stylesheets="@/styles/masterSheet.css" />
-            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"/>
+            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css" prefHeight="${leftSideVbox.height}"/>
         </VBox>
 
         <Pane styleClass="verticalSplitter"/>

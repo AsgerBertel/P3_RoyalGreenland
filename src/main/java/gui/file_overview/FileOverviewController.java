@@ -26,19 +26,14 @@ import java.util.List;
 
 public class FileOverviewController {
 
-    private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
+    //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
 
     @FXML
     private FlowPane flpFileView;
-    @FXML
-    private Button btnReturn;
+
     @FXML
     private Label lblVisualPath;
-    @FXML
-    private VBox vboxTop;
-    @FXML
-    private Pane PaneLine;
     // todo temporary
     private FileManager fileManager;
     @FXML
