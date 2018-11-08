@@ -43,7 +43,6 @@ public class FileOverviewController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
-        System.out.println(System.getProperty("user.dir"));
         Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
         plant.getAccessModifier().addDocument(0);
         plant.getAccessModifier().addDocument(9);

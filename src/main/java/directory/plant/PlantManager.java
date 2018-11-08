@@ -35,7 +35,6 @@ public class PlantManager {
     }
 
     public ArrayList<Plant> ReadJsonAndGetAllPlants(){
-        System.out.println(allPlants.size());
         return allPlants;
     }
 
