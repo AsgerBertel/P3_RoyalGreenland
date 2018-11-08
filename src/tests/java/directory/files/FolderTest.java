@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FolderTest {
+    private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
 
     @Test
     void renameFile() {
@@ -20,7 +22,9 @@ class FolderTest {
         if (!newDirectory.exists())
             newDirectory.mkdirs();
 
-        Folder folder = FileManager.getInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
+        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
+
+        Folder folder = FileManager.getTestInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
 
         folder.renameFile("renamedTestFolder");
         assertEquals("renamedTestFolder", folder.getName());

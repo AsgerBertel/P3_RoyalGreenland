@@ -18,36 +18,40 @@ class FileManagerTest {
     private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
     private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
     private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
-    private Path toTestFile = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
+    private Path toTestFile = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile1.pdf");
+    private Path toTestFile2 = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
     private Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
-    private Path pathToJsonTest = Paths.get(resourcesDirectory + File.separator + "allFilesTest.JSON");
-    private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.toString() + File.separator + "allFilesTestUnix.JSON");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
+    private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTestUnix.JSON");
+    private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "deleteTest");
 
     @BeforeEach
     void initEach() {
-        FileManager.getInstance().readFromJsonFile();
+        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getTestInstance().readFilesFromJson();
     }
 
     // Todo use FileManager.deleteFile() to delete file.
     @Test
-    void uploadFile() {
-        FileManager.getInstance().setPathToJson(pathToJsonTest.toString());
-        FileManager.getInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
-        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf")));
+    void uploadFile() throws IOException {
+        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getTestInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
+        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
 
         try {
-            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile.pdf"));
+            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf"));
         } catch (IOException e) {
             System.out.println("UploadFileTest: ");
             e.printStackTrace();
         }
 
-        assertEquals("renameTestFolder", FileManager.getInstance().allContent.get(0).getName());
+        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
+        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
     }
 
     @Test
     void createFolder() {
-        Folder folder = FileManager.getInstance().createFolder(pathToTestDir, "TestFolder");
+        Folder folder = FileManager.getTestInstance().createFolder(pathToTestDir, "TestFolder");
         assertEquals("TestFolder", folder.getName());
 
         try {
@@ -58,24 +62,24 @@ class FileManagerTest {
     }
 
     void deleteDocument() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().deleteDocument(doc);
+        FileManager.getTestInstance().deleteFile(doc);
 
-        assertEquals(toTestFile.toString(), doc.getPath().toString());
+        //assertEquals(toTestFile2.toString(), doc.getPath().toString());
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
     void restoreDocument() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().restoreDocument(doc);
+        FileManager.getTestInstance().restoreDocument(doc);
     }
 
     void deleteDocument2() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile);
+        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getInstance().deleteDocument(doc);
+        FileManager.getTestInstance().deleteFile(doc);
     }
 
     void restoreDocumentWithPath() throws IOException {
@@ -89,7 +93,7 @@ class FileManagerTest {
 
         //deletes folder and moves file back
 
-        Files.move(newPath, toTestFile);
+        Files.move(newPath, toTestFile2);
         Files.delete(newPath.getParent());
     }
 
@@ -105,10 +109,10 @@ class FileManagerTest {
         restoreDocumentWithPath();
     }
 
-    @Test
+    /*@Test
     void deleteFolder() throws IOException {
-        Folder folder = new Folder("C:\\Users\\Hanna\\IdeaProjects\\P3\\src\\tests\\resTest\\Main Files Test\\deleteTest");
+        Folder folder = new Folder(pathToTestFolder.toString());
 
-        FileManager.getInstance().deleteFolder(folder);
-    }
+        FileManager.getInstance().deleteFile(folder);
+    }*/
 }

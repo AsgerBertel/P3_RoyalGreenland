@@ -1,5 +1,6 @@
 package gui;
 
+import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import javafx.scene.control.TreeItem;

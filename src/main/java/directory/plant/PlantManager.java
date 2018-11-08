@@ -11,13 +11,13 @@ import java.util.ArrayList;
 /**
  * Singleton pattern.
  * Used to get all plants. All plants are stored in allPlants.JSON file.
- * Use the readFromJsonFile method to load the plants into this class.
+ * Use the readFilesFromJson method to load the plants into this class.
  */
 
 public class PlantManager {
     private ArrayList<Plant> allPlants = new ArrayList<>();
-    private static PlantManager plantManager;
     private static String pathToJson = "Sample files/allPlants.JSON";
+    private static PlantManager plantManager;
 
     /**
      * Use this function to access the PlantManager according to the singleton Pattern.
@@ -25,13 +25,18 @@ public class PlantManager {
      */
     public static synchronized PlantManager getInstance(){
         if(plantManager == null){
-            plantManager = new PlantManager();
+            plantManager = readFromJsonFile();
         }
         return plantManager;
     }
 
     public void setPathToJson(String pathToJson) {
-        PlantManager.getInstance().pathToJson = pathToJson;
+        getInstance().pathToJson = pathToJson;
+    }
+
+    public ArrayList<Plant> ReadJsonAndGetAllPlants(){
+        System.out.println(allPlants.size());
+        return allPlants;
     }
 
     /**
@@ -88,9 +93,8 @@ public class PlantManager {
      */
     public void updateJsonFile(){
         // Write object to JSON file.
-        Gson g = new Gson();
         try (FileWriter writer = new FileWriter(pathToJson)){
-            g.toJson(getInstance(), writer);
+            JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,12 +103,14 @@ public class PlantManager {
     /**
      * Load the JSON file into the PlantManager.
      */
-    public void readFromJsonFile(){
+    public static PlantManager readFromJsonFile(){
         try (Reader reader = new FileReader(pathToJson)){
-            plantManager = JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
+            return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
+            System.out.println("Could not read JSON plants.");
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -114,17 +120,8 @@ public class PlantManager {
         try (Reader reader = new FileReader(pathToJson)){
             plantManager = JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
+            System.out.println("Could not read JSON plants.");
             e.printStackTrace();
         }
-    }
-
-    public void testPlantManager(){
-        getInstance().readFromJsonFile();
-        getInstance().addPlant(new Plant(1006, "sut", new AccessModifier()));
-        getInstance().addPlant(new Plant(1008, "hej2", new AccessModifier()));
-
-        System.out.println(getInstance().allPlants.get(1).getId());
-
-        DocumentBuilder.getInstance().createDocument(Paths.get("Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"));
     }
 }
