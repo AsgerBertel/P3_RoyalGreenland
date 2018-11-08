@@ -50,6 +50,7 @@ public class FileOverviewController {
         plant.getAccessModifier().addDocument(16);
         plant.getAccessModifier().addDocument(21);
         plant.getAccessModifier().addDocument(27);
+        plant.getAccessModifier().addDocument(32);
 
         fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
