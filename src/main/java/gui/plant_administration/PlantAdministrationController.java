@@ -125,18 +125,21 @@ public class PlantAdministrationController implements Initializable{
         plantElements.add(newPlantElement);
         plantVBox.getChildren().add(newPlantElement);
         btnPlantCreated.setText("A new plant has been created.");
-
-        return;
-
     }
+
     @FXML
     void editPlant(ActionEvent event){
+        boolean isElementSelected = false;
         for(PlantElement element: plantElements){
             if(element.isSelected()) {
                 element.getPlant().setName(field_EditPlantName.getText());
                 element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
                 element.updateText();
+                isElementSelected = true;
             }
+        }
+        if(!isElementSelected){
+            btnPlantEdited.setText("A plant has to be selected first.");
         }
     }
 }
