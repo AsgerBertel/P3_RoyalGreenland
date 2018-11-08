@@ -34,11 +34,6 @@ public class PlantManager {
         getInstance().pathToJson = pathToJson;
     }
 
-    public ArrayList<Plant> ReadJsonAndGetAllPlants(){
-        System.out.println(allPlants.size());
-        return allPlants;
-    }
-
     /**
      * Use to retrieve all plants.
      * @return arrayList of all plants.
