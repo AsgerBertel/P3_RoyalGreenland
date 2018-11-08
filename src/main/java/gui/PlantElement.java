@@ -6,6 +6,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 public class PlantElement extends BorderPane {
 
     private Plant plant;
@@ -14,6 +17,9 @@ public class PlantElement extends BorderPane {
 
     public PlantElement(Plant plant){
         this.plant = plant;
+        getStyleClass().add("plantElement");
+        text = new Text();
+        updateText();
         this.getStyleClass().add("plantElement");
 
         text = new Text(plant.getId() + " - " + plant.getName());
@@ -60,7 +66,9 @@ public class PlantElement extends BorderPane {
         return isFocused();
     }
 
-
+    public void updateText(){
+        text.setText(plant.getId() + " - " + plant.getName());
+    }
 
 
 }
