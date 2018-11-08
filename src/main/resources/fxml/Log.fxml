@@ -1,16 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>       <?import javafx.scene.control.TableColumn?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Pane?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.log.LogController">
-    <children>
-        <TableView prefHeight="400.0" prefWidth="600.0">
-            <columns>
-                <TableColumn prefWidth="320.0" text="Handling"/>
-                <TableColumn prefWidth="140.0" text="Bruger"/>
-                <TableColumn prefWidth="136.0" text="Tidspunkt"/>
-            </columns>
-        </TableView>
-    </children>
-</Pane>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
+      <TableView fx:id="tableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <columns>
+              <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" />
+              <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" />
+              <TableColumn minWidth="${tableView.width*0.2}"  text="Tidspunkt" />
+         </columns>
+      </TableView>
+   <padding>
+      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+   </padding>
+
+</AnchorPane>

@@ -22,13 +22,13 @@ public class LogController {
     private TableColumn<rgEvent,String> time;
 
     @FXML
-    private void initialize(){
+   /* private void initialize(){
         event.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Time"));
 
        // tableView.getItems().setAll(parseEventList);
-    }
+    }*/
 
     private void parseEventList(){
 
