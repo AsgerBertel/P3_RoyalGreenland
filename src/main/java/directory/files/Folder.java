@@ -51,7 +51,7 @@ public class Folder extends AbstractFile {
         try {
             Files.walk(getPath(), 1)
                     .filter(path1 -> Files.isDirectory(path1) && !path1.equals(getPath()))
-                    .forEach(file -> folderContents.add(new Folder(file.toString())));
+                    .forEach(file -> folderContents.add(new Folder(file.toString(), true)));
 
             Files.walk(getPath(), 1)
                     .filter(Files::isRegularFile)
