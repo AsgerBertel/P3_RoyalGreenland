@@ -6,6 +6,7 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
+import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,11 +49,18 @@ public class FileOverviewController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
         System.out.println(System.getProperty("user.dir"));
-        fileExplorer = new FileExplorer(new Folder(rootDirectory.toAbsolutePath().toString()), new Plant(1564, "utøya", new AccessModifier())); // todo Add appropriate accessModifier
+        Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
+        plant.getAccessModifier().addDocument(0);
+        plant.getAccessModifier().addDocument(9);
+        plant.getAccessModifier().addDocument(16);
+        plant.getAccessModifier().addDocument(21);
+        plant.getAccessModifier().addDocument(27);
+
+        fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(new Folder(rootDirectory.toString()));
+        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
 
@@ -74,12 +82,8 @@ public class FileOverviewController {
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
-        List<Plant> list = new ArrayList<Plant>();
-        ObservableList<Plant> observableList = FXCollections.observableList(list);
-
-        list.add(new Plant(110,"test", new AccessModifier()));
-        list.add(new Plant(111,"dingo", new AccessModifier()));
-        list.add(new Plant(420,"yoyo", new AccessModifier()));
+        PlantManager.getInstance().readFromJsonFile();
+        ObservableList<Plant> observableList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(observableList);
     }
 
@@ -110,7 +114,6 @@ public class FileOverviewController {
 
     // Opens the folder that is double clicked and displays its content
     public void open(FileButton fileButton) {
-
         if (fileButton.getFile() instanceof Folder) {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();

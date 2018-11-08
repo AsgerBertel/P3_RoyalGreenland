@@ -17,6 +17,9 @@ public class DocumentBuilder {
     private Path currentIDPath = Paths.get("Sample files/currentFileID");
     public static DocumentBuilder documentBuilder;
 
+    private DocumentBuilder() {
+    }
+
     public static synchronized DocumentBuilder getInstance(){
         if(documentBuilder == null){
             documentBuilder = new DocumentBuilder();
