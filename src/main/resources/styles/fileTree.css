@@ -4,6 +4,7 @@
     -fx-end-margin: 0;
     -fx-start-margin: 0;
     -fx-padding: 0, 0, 0, 0;
+
 }
 
 .tree-view:focused {
