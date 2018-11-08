@@ -50,7 +50,7 @@ public class Plant {
     }
 
     public String toString() {
-        return id +" "+ name;
+        return id +" - "+ name;
 
     }
 }

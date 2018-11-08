@@ -6,6 +6,7 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
+import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -74,12 +75,8 @@ public class FileOverviewController {
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
-        List<Plant> list = new ArrayList<Plant>();
-        ObservableList<Plant> observableList = FXCollections.observableList(list);
-
-        list.add(new Plant(110,"test", new AccessModifier()));
-        list.add(new Plant(111,"dingo", new AccessModifier()));
-        list.add(new Plant(420,"yoyo", new AccessModifier()));
+        PlantManager.getInstance().readFromJsonFile();
+        ObservableList<Plant> observableList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(observableList);
     }
 
