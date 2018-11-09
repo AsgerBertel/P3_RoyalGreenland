@@ -4,6 +4,7 @@ import javax.naming.InvalidNameException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public abstract class AbstractFile {
 
@@ -37,5 +38,19 @@ public abstract class AbstractFile {
     @Override
     public String toString() {
         return getName();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractFile that = (AbstractFile) o;
+        return Objects.equals(path, that.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path);
     }
 }

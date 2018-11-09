@@ -129,11 +129,14 @@ public class FileManager {
         updateFilesJson();
     }
 
-    public Folder findParent(Folder child){
-        for(AbstractFile current : getInstance().getAllContent()){
-            if(current instanceof Folder){
-                if(((Folder) current).getContents().contains(child));
+    public Folder findParent(Folder child) {
+        for (AbstractFile current : getInstance().getAllContent()) {
+            if (current instanceof Folder) {
+                if (((Folder) current).getContents().contains(child)) {
                     return (Folder) current;
+                } else {
+                    return ((Folder) current).findParent(child);
+                }
             }
         }
         return child;
