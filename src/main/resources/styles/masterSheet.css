@@ -1,81 +1,78 @@
-VBox{
+VBox {
     -fx-background-color: white;
     -fx-border-width: 0;
 }
 
 /* -- Alignment -- */
-.filler{
+.filler {
     -fx-border-width: 0;
     -fx-background-color: transparent;
     -fx-alignment: center-left;
 }
 
-.centeredContainer{
+.centeredContainer {
     -fx-border-width: 0;
     -fx-alignment: center;
     -fx-background-color: transparent;
 }
 
 /* -- Text -- */
-.darkGreyTitle{
+.darkGreyTitle {
     -fx-font-size: 15px;
     -fx-font-family: "Arial Black", sans-serif;
     -fx-font-weight: bold;
     -fx-fill: #42474c;
 }
 
-.greyTitle{
+.greyTitle {
     -fx-font-size: 14px;
     -fx-font-family: "Arial", sans-serif;
     -fx-fill: #a9b2bd;
 }
 
-.bigTitle{
+.bigTitle {
     -fx-font-size: 26px;
     -fx-font-family: "Arial", sans-serif;
     -fx-fill: #42474c;
 }
 
-.standardText{
+.standardText {
     -fx-font-size: 12px;
     -fx-font-family: "Arial", sans-serif;
     -fx-fill: #6f777e;
 }
 
-.smallNote{
+.smallNote {
     -fx-font-size: 12px;
     -fx-font-family: "Arial", sans-serif;
     -fx-font-style: italic;
     -fx-fill: #a9b2bd;
 }
 
-
 /* -- Splitters -- */
-.verticalSplitter{
+.verticalSplitter {
     -fx-pref-width: 2;
     -fx-min-width: 2;
-    -fx-max-height: 2;
     -fx-background-color: #f2f7f7;
 }
 
-.horizontalSplitter{
+.horizontalSplitter {
     -fx-pref-height: 2;
     -fx-min-height: 2;
     -fx-max-height: 2;
     -fx-background-color: #f2f7f7;
 }
 
-
 /* -- Scroll Bar --*/
-.scroll-bar:horizontal{
-    -fx-background-color:transparent;
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
     -fx-pref-height: 8;
     -fx-min-height: 8;
     -fx-max-height: 8;
 }
 
-.scroll-bar:vertical{
-    -fx-background-color:transparent;
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
     -fx-pref-width: 8;
     -fx-min-width: 8;
     -fx-max-width: 8;
@@ -83,8 +80,8 @@ VBox{
 }
 
 /* The main scrollbar */
-.scroll-bar:horizontal .track ,
-.scroll-bar:vertical .track{
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
     -fx-background-color: #e5e5e5;
     -fx-background-radius: 10em;
     -fx-border-width: 0;
@@ -98,6 +95,66 @@ VBox{
     -fx-background-radius: 10em;
 }
 
+.combo-box .list-cell {
+    -fx-background: #f2f7f7;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+    -fx-pref-width: 200;
+}
 
+.combo-box-popup .list-view {
+    -fx-background-color: #f2f7f7, #f2f7f7;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0.0, 0, 0);
 
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 4 0 4 5;
+    /* No alternate highlighting */
+    -fx-background-color: #f2f7f7;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #6fd59b;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover:pressed {
+    -fx-background-color: #6fd59b;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-popup .list-view .list-cell:filled:focused {
+    -fx-background-color: #6fd59b;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-pref-height: 40;
+}
+
+.combo-box-base {
+    -fx-background-color: #f2f7f7, #f2f7f7, #f2f7f7, #f2f7f7;
+    -fx-background-radius: 5, 5, 4, 3;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-padding: 0;
+    -fx-min-height: 40;
+    -fx-pref-width: 300;
+}
+
+.combo-box-base:showing {
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused {
+    -fx-background-color: #f2f7f7, #f2f7f7, #f2f7f7, #f2f7f7;
+}
+
+.combo-box-base:disabled {
+    -fx-opacity: .4;
+}
 

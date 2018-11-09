@@ -9,15 +9,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox stylesheets="@/styles/fileoverview.css" xmlns="http://javafx.com/javafx/10.0.1" id="BackGround"
+<?import javafx.scene.control.ComboBox?>
+<HBox stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" id="BackGround"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
-        <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"/>
+        <VBox fx:id="leftSideVbox">
+            <ComboBox fx:id="drdPlant" stylesheets="@/styles/masterSheet.css" />
+            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css" prefHeight="${leftSideVbox.height}"/>
+        </VBox>
+
+        <Pane styleClass="verticalSplitter"/>
         <VBox id="VboxParrent">
             <children>
                 <VBox fx:id="vboxTop" id="vboxTop">
                     <children>
-                        <HBox id="hBoxTop" >
+                        <HBox id="hBoxTop">
                             <children>
                                 <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false"
                                         onAction="#openPreviusFolder"/>
@@ -25,13 +31,13 @@
 
                             </children>
                         </HBox>
-                       <Pane fx:id="PaneLine" id="PaneLine"/>
+                        <Pane  styleClass="horizontalSplitter"/>
                     </children>
-                </VBox >
-              <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600" >
-                    <content >
-                            <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
-                        </content>
+                </VBox>
+                <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">
+                    <content>
+                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
+                    </content>
                 </ScrollPane>
 
             </children>
