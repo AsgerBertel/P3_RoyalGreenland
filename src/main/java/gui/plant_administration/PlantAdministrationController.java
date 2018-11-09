@@ -2,10 +2,12 @@ package gui.plant_administration;
 
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
+import directory.plant.PlantManager;
 import gui.PlantElement;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -25,13 +27,17 @@ public class PlantAdministrationController implements Initializable{
     ArrayList<PlantElement> plantElements = new ArrayList<>();
 
     @FXML
+    private Button btnCreatePlant;
+    @FXML
+    private Button btnEditPlant;
+    @FXML
     private AnchorPane editPane;
 
     @FXML
-    private Label btnPlantEdited;
+    private Label lblPlantEdited;
 
     @FXML
-    private Label btnPlantCreated;
+    private Label lblPlantCreated;
 
     @FXML
     private TextField field_CreatePlantName;
@@ -53,11 +59,8 @@ public class PlantAdministrationController implements Initializable{
         createPane.toFront();
         editPane.setDisable(true);
         editPane.setVisible(false);
-
-
-        for (int i = 0; i < 15; i++) {
-            Plant p = new Plant(1243 + i, "NUUK", new AccessModifier());
-            PlantElement plantElement = new PlantElement(p);
+        for(Plant plant: PlantManager.getInstance().getAllPlants()){
+            PlantElement plantElement = new PlantElement(plant);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
         }
@@ -77,14 +80,14 @@ public class PlantAdministrationController implements Initializable{
     @FXML
     void createPlantSidebar(ActionEvent event) {
         activatePane(createPane, editPane);
-        btnPlantCreated.setText("");
-        btnPlantCreated.setVisible(true);
+        lblPlantCreated.setText("");
+        lblPlantCreated.setVisible(true);
     }
 
     @FXML
     void editPlantSidebar(ActionEvent event) {
-        btnPlantEdited.setText("Select a plant to be edited");
-        btnPlantEdited.setVisible(true);
+        lblPlantEdited.setText("Select a plant to be edited");
+        lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
     }
 
@@ -99,10 +102,10 @@ public class PlantAdministrationController implements Initializable{
 
     @FXML
     PlantElement deletePlant(ActionEvent event) {
-
         for(PlantElement element: plantElements){
             if(element.isSelected()){
                 plantElements.remove(element);
+                PlantManager.getInstance().deletePlant(element.getPlant().getId());
                 plantVBox.getChildren().remove(element);
                 return element;
             }
@@ -117,14 +120,17 @@ public class PlantAdministrationController implements Initializable{
         Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
         for(PlantElement element: plantElements){
             if(element.getPlant().equals(plant)){
-                btnPlantCreated.setText("Plant name or ID already exists");
+                lblPlantCreated.setText("Plant name or ID already exists");
                 return;
             }
         }
-        PlantElement newPlantElement = new PlantElement(new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier()));
+        PlantElement newPlantElement = new PlantElement(plant);
+        PlantManager.getInstance().addPlant(plant);
         plantElements.add(newPlantElement);
         plantVBox.getChildren().add(newPlantElement);
-        btnPlantCreated.setText("A new plant has been created.");
+        lblPlantCreated.setText("A new plant has been created.");
+        field_CreatePlantName.clear();
+        field_CreatePlantId.clear();
     }
 
     @FXML
@@ -139,7 +145,13 @@ public class PlantAdministrationController implements Initializable{
             }
         }
         if(!isElementSelected){
-            btnPlantEdited.setText("A plant has to be selected first.");
+            lblPlantEdited.setText("A plant has to be selected first.");
         }
+        field_EditPlantName.clear();
+        field_EditPlantId.clear();
+
+
     }
+
+
 }
