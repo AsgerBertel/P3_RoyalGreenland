@@ -16,7 +16,7 @@
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
         <Button onAction="#addDocument">
             <graphic>
-                <ImageView>
+                <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/adddocument.png" />
                 </ImageView>
             </graphic>
@@ -24,7 +24,7 @@
 
         <Button onAction="#createFolder">
             <graphic>
-                <ImageView>
+                <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/addfolder.png" />
                 </ImageView>
             </graphic>
@@ -32,7 +32,7 @@
 
         <Button onAction="#deleteFile">
             <graphic>
-                <ImageView>
+                <ImageView fitHeight="39" fitWidth="39">
                     <Image url="/icons/menu/delete.png" />
                 </ImageView>
             </graphic>

@@ -63,8 +63,8 @@
     -fx-translate-y: 35;
     -fx-pref-height: 32;
     -fx-pref-width: 32;
-    /*Todo fix background image*/
-    -fx-background-image: url("/icons/navigate_back.png");
+    -fx-background-image: url("/icons/back.png");
+    -fx-background-size: 30px 30px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 90%;
     -fx-background-color: transparent;
@@ -74,7 +74,7 @@
     -fx-background-color:white;
 }
 #btnReturn:pressed {
-    -fx-background-image: url("/icons/navigate_back.png");
+    -fx-background-image: url("/icons/back.png");
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 60;

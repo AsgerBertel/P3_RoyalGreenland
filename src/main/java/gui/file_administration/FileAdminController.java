@@ -20,7 +20,6 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileAdminController implements Initializable {
@@ -41,11 +40,11 @@ public class FileAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
+        Folder rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
 
         plants = PlantManager.getInstance().getAllPlants();
 
-        for(Plant plant : plants){
+        for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
             checkBox.setOnSelectedListener(() -> onPlantToggle(checkBox));
             plantVBox.getChildren().add(checkBox);

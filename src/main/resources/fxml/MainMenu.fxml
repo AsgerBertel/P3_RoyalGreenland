@@ -12,40 +12,40 @@
          <children>
              <Button text="%MainMenuAdminDoc" onAction="#administrateDocuments">
                  <graphic>
-                     <ImageView>
-                         <Image url="/icons/menu/admin_documents.png" />
+                     <ImageView fitWidth="19" fitHeight="25">
+                         <Image url="/icons/menu/adminDocuments.png" />
                      </ImageView>
                  </graphic>
-             </Button>
+         </Button>
 
              <Button text="%MainMenuSeeDoc" onAction="#viewDocuments">
                  <graphic>
-                     <ImageView>
-                         <Image url="/icons/menu/view_documents.png" />
+                     <ImageView fitWidth="20" fitHeight="24">
+                         <Image url="/icons/menu/viewDocuments.png" />
                      </ImageView>
                  </graphic>
              </Button>
 
              <Button text="%MainMenuAdminPlant" onAction="#administratePlants">
                  <graphic>
-                     <ImageView>
-                         <Image url="/icons/menu/admin_plants.png" />
+                     <ImageView fitWidth="25" fitHeight="24">
+                         <Image url="/icons/menu/adminPlants.png" />
                      </ImageView>
                  </graphic>
              </Button>
 
              <Button text="%MainMenuDeletedFiles" onAction="#deletedFiles">
                  <graphic>
-                     <ImageView>
-                         <Image url="/icons/menu/deleted_files.png" />
+                     <ImageView fitWidth="24" fitHeight="24">
+                         <Image url="/icons/menu/deletedFiles.png" />
                      </ImageView>
                  </graphic>
              </Button>
 
              <Button text="%MainMenuHistory" onAction="#log">
                  <graphic>
-                     <ImageView>
-                         <Image url="/icons/menu/view_documents.png" />
+                     <ImageView fitWidth="24" fitHeight="24">
+                         <Image url="/icons/menu/history.png"/>
                      </ImageView>
                  </graphic>
              </Button>
@@ -59,7 +59,7 @@
          <children>
             <Button onAction="#changeToDanish">
                 <graphic>
-                    <ImageView>
+                    <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/danish.png"  />
                     </ImageView>
                 </graphic>
@@ -67,7 +67,7 @@
 
             <Button onAction="#changeToGreenlandic">
                 <graphic >
-                    <ImageView>
+                    <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/greenlandic.png"/>
                     </ImageView>
                 </graphic>
