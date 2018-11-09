@@ -51,7 +51,7 @@ public class FileOverviewController {
         plant.getAccessModifier().addDocument(27);
         plant.getAccessModifier().addDocument(32);
 
-        fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
+        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
 
         fileManager = new FileManager();
@@ -129,9 +129,19 @@ public class FileOverviewController {
     }
 
     public String PathDisplayCorrection() {
+        int BracketCounter = 0;
         String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll("\\\\", " > ");
-        NewString = NewString.substring(NewString.indexOf("Main Files"));
+        for (int i = 0; i < NewString.length(); i++) {
+            if (NewString.charAt(i) == '>')
+                BracketCounter++;
+        }
+        if (BracketCounter > 2) {
+            NewString = NewString.substring(NewString.indexOf(""));
+        } else {
+            NewString = NewString.substring(NewString.indexOf("Main Files"));
+
+        }
+
         return NewString;
     }
-
 }

@@ -10,12 +10,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.ComboBox?>
-<HBox stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" id="BackGround"
+<HBox stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1"
+      id="BackGround"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
         <VBox fx:id="leftSideVbox">
-            <ComboBox fx:id="drdPlant" stylesheets="@/styles/masterSheet.css" />
-            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css" prefHeight="${leftSideVbox.height}"/>
+            <ComboBox fx:id="drdPlant" stylesheets="@/styles/masterSheet.css"/>
+            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
+                      prefHeight="${leftSideVbox.height}"/>
         </VBox>
 
         <Pane styleClass="verticalSplitter"/>
@@ -27,11 +29,12 @@
                             <children>
                                 <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false"
                                         onAction="#openPreviusFolder"/>
-                                <Label id="lblVisualPath" fx:id="lblVisualPath"/>
+
+                                        <Label id="lblVisualPath" fx:id="lblVisualPath"/>
 
                             </children>
                         </HBox>
-                        <Pane  styleClass="horizontalSplitter"/>
+                        <Pane styleClass="horizontalSplitter"/>
                     </children>
                 </VBox>
                 <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">

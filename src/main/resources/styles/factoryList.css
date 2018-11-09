@@ -34,10 +34,9 @@
 }
 
 /* The box representing a single plant */
-.plantElement >*{
+.plantElement {
      -fx-alignment: center-left;
      -fx-background-color: #f2f7f7;
-
      -fx-min-height: 40px;
      -fx-max-height: 40px;
      -fx-pref-height: 40px;
@@ -51,7 +50,7 @@
      -fx-background-insets: 3px;
 }
 
-.plantElement:focused > *{
+.plantElement:focused {
     -fx-background-color: #6fd59b;
 }
 

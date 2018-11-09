@@ -1,11 +1,5 @@
-HBox{
+#Background{
     -fx-background-color: white;
-    -fx-border-width: 0;
-}
-
-AnchorPane{
-    -fx-background-color: white;
-    -fx-border-width: 0;
 }
 
 .button:hover{
