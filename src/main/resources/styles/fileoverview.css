@@ -26,7 +26,7 @@
 #scpFileView {
     -fx-background-color: #FFFFFF;
     -fx-box-border: transparent;
-    -fx-padding : 0 0 0 0;
+    -fx-padding : 0;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-translate-x: 2;
@@ -37,7 +37,7 @@
 #scpFileView:focused {
     -fx-background-color: #FFFFFF;
     -fx-box-border: transparent;
-    -fx-padding: none;
+    -fx-padding: 0;
     -fx-focus-color: white;
     -fx-faint-focus-color: transparent;
 }
@@ -47,7 +47,7 @@
     -fx-box-border: transparent;
     -fx-focus-color: transparent;
     -fx-border-color: none;
-    -fx-padding: none;
+    -fx-padding: 0;
 
 }
 
@@ -101,4 +101,5 @@
 #VboxParrent {
     -fx-background-color: #FFFFFF;
 }
+
 

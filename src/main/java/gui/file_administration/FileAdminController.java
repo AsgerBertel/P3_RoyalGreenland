@@ -43,9 +43,7 @@ public class FileAdminController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Folder rootFolder = (Folder)FileManager.getInstance().getAllContent().get(0);
 
-        plants = PlantManager.getInstance().ReadJsonAndGetAllPlants();
-
-        System.out.println(plants.size());
+        plants = PlantManager.getInstance().getAllPlants();
 
         for(Plant plant : plants){
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);

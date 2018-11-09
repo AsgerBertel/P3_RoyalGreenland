@@ -26,19 +26,14 @@ import java.util.List;
 
 public class FileOverviewController {
 
-    private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
+    //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
 
     @FXML
     private FlowPane flpFileView;
-    @FXML
-    private Button btnReturn;
+
     @FXML
     private Label lblVisualPath;
-    @FXML
-    private VBox vboxTop;
-    @FXML
-    private Pane PaneLine;
     // todo temporary
     private FileManager fileManager;
     @FXML
@@ -48,13 +43,13 @@ public class FileOverviewController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize() {
-        System.out.println(System.getProperty("user.dir"));
         Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
         plant.getAccessModifier().addDocument(0);
         plant.getAccessModifier().addDocument(9);
         plant.getAccessModifier().addDocument(16);
         plant.getAccessModifier().addDocument(21);
         plant.getAccessModifier().addDocument(27);
+        plant.getAccessModifier().addDocument(32);
 
         fileExplorer = new FileExplorer((Folder)FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
