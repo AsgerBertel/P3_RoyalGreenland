@@ -35,6 +35,9 @@ public class FileAdminController implements Initializable {
     @FXML
     private TreeView<AbstractFile> fileTreeView;
 
+    @FXML
+    private Text plantCountText;
+
     // The document last selected in the FileTree
     private Document selectedDocument;
 
@@ -57,6 +60,8 @@ public class FileAdminController implements Initializable {
         fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
+
+        plantCountText.setText("(" + plants.size() + ")");
     }
 
     // Called after a plant is toggled on or off in plant checklist

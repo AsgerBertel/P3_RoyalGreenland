@@ -24,6 +24,7 @@ public class Plant {
 
     public void setId(int id) {
         this.id = id;
+        PlantManager.getInstance().updateJsonFile();
     }
 
     public String getName() {
@@ -32,6 +33,7 @@ public class Plant {
 
     public void setName(String name) {
         this.name = name;
+        PlantManager.getInstance().updateJsonFile();
     }
 
     @Override

@@ -104,7 +104,7 @@ public class PlantManager {
      */
     public static PlantManager readFromJsonFile(){
         try (Reader reader = new FileReader(pathToJson)){
-            return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
+                return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
             System.out.println("Could not read JSON plants.");
             e.printStackTrace();
