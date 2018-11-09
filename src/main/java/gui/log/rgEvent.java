@@ -29,4 +29,13 @@ public class rgEvent {
     public LogEventType getEventType() {
         return eventType;
     }
+
+    public String getEvent(){
+        LoggingTools lt = new LoggingTools();
+        return getFileName() +  " er " + lt.EventTypeToString(getEventType());
+    }
+
+    public String getTime(){
+        return getLocalDateTime().getDayOfMonth() +"/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear();
+    }
 }

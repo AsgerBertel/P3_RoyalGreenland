@@ -8,9 +8,9 @@
 <AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
       <TableView fx:id="tableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
           <columns>
-              <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" />
-              <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" />
-              <TableColumn minWidth="${tableView.width*0.2}"  text="Tidspunkt" />
+              <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" fx:id="event" />
+              <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" fx:id="user"/>
+              <TableColumn minWidth="${tableView.width*0.2}"  text="Tidspunkt" fx:id="time" />
          </columns>
       </TableView>
    <padding>
