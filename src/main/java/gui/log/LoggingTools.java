@@ -1,8 +1,6 @@
 package gui.log;
 
 
-import json.JsonParser;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,14 +23,7 @@ public class LoggingTools {
          //create and write event
          rgEvent event = new rgEvent(fileName, userName, localDateTime,eventType);
 
-         //writeEventAsJson(event);
-         writeEventAsJson(event);
-         //writeEventAsLog(event);
-
-    }
-
-    public void writeEventAsJson(rgEvent event){
-
+         writeEventAsLog(event);
     }
 
     public List<rgEvent> listOfAllEvents(){
@@ -71,11 +62,11 @@ public class LoggingTools {
     private List<String> EventToStringArray(rgEvent event){
 
         // [YEAR/MONTH/DATE - HOUR:MINUTES]
-        String eventDate =event.getLocalDateTime().getYear() + "/" + event.getLocalDateTime().getMonthValue() + "/" + event.getLocalDateTime().getDayOfMonth()
-                + "/" + event.getLocalDateTime().getHour() + ":" + event.getLocalDateTime().getMinute();
+        String eventDate =event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
+                + "-" + event.getLocalDateTime().getHour() + ":" + event.getLocalDateTime().getMinute();
 
         // FILENAME blev EVENT
-        String eventData = event.getFileName() + "/" + EventTypeToString(event.getEventType());
+        String eventData = event.getFileName() + "|" + EventTypeToString(event.getEventType());
 
         //USER
         String eventUser = event.getUser();
@@ -89,16 +80,12 @@ public class LoggingTools {
     }
     private rgEvent parseEvent(String eventLine){
         //split string
-        String [] substrings =  eventLine.split("[/:\\|]"); //NOT REDUNDANT
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d:H:m");
-        LocalDateTime localDateTime = LocalDateTime.parse(substrings[0] + "-"+substrings[1]+"-"+substrings[2] + ":"+ substrings[3] +":"+substrings[4],formatter);
-
-        for(String s : substrings){
-            System.out.println(s);
-        }
-
-        return new rgEvent(substrings[5],substrings[7],localDateTime, stringToLogEventType(substrings[6]));
+        String [] substrings = eventLine.split("[|]");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d-H:m");
+        LocalDateTime localDateTime = LocalDateTime.parse(substrings[0],formatter);
+        return new rgEvent(substrings[1],substrings[3],localDateTime, stringToLogEventType(substrings[2]));
     }
+
     private LogEventType stringToLogEventType(String string){
 
         switch (string){
