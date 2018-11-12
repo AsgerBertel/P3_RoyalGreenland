@@ -28,11 +28,11 @@ public class FileOverviewController implements TabController {
     //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
 
-    private Plant selectedPlant = null;
-
     private ObservableList<Plant> plantList;
 
     private TreeItem<AbstractFile> rootItem;
+
+    List<AbstractFile> filesToShow;
 
     @FXML
     private FlowPane flpFileView;
@@ -48,15 +48,16 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
+        update();
+    }
+
+    @Override
+    public void update() {
         rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem);
         PlantManager.getInstance().readFromJsonFile();
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
-    }
-
-    @Override
-    public void update() {
     }
 
     @FXML
@@ -76,7 +77,7 @@ public class FileOverviewController implements TabController {
         // Remove all currently shown files
         flpFileView.getChildren().clear();
 
-        List<AbstractFile> filesToShow = fileExplorer.getShownFiles();
+        filesToShow = fileExplorer.getShownFiles();
         for (AbstractFile file : filesToShow) {
             FileButton fileButton = createFileButton(file);
             flpFileView.getChildren().add(fileButton);
