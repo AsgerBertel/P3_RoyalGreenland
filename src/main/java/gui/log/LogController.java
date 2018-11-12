@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class LogController implements TabController {
@@ -27,19 +25,16 @@ public class LogController implements TabController {
 
     @FXML
     public void initialize(URL location, ResourceBundle resources){
+        LoggingTools lt = new LoggingTools();
         event.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Time"));
 
-       tableView.getItems().setAll(parseEventList());
+        tableView.getItems().setAll(lt.listOfAllEvents());
+
     }
     @Override
     public void update() {
 
-    }
-
-    private List<rgEvent> parseEventList(){
-        LoggingTools lt = new LoggingTools();
-        return lt.listOfAllEvents();
     }
 }
