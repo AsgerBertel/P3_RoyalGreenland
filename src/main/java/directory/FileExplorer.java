@@ -32,15 +32,17 @@ public class FileExplorer {
         ArrayList<AbstractFile> filesWithAccess = new ArrayList<>();
         List<AbstractFile> allFiles = currentFolder.getContents();
 
-        for(AbstractFile file : allFiles){
-            if(file instanceof Folder){
-                if(((Folder) file).containsFromAccessModifier(selectedPlant.getAccessModifier())){
-                    filesWithAccess.add(file);
+        if(selectedPlant != null){
+            for(AbstractFile file : allFiles){
+                if(file instanceof Folder){
+                    if(((Folder) file).containsFromAccessModifier(selectedPlant.getAccessModifier())){
+                        filesWithAccess.add(file);
+                    }
                 }
-            }
-            if(file instanceof Document){
-                if(selectedPlant.getAccessModifier().contains(((Document) file).getID())){
-                    filesWithAccess.add(file);
+                if(file instanceof Document){
+                    if(selectedPlant.getAccessModifier().contains(((Document) file).getID())){
+                        filesWithAccess.add(file);
+                    }
                 }
             }
         }

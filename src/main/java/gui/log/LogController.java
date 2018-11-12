@@ -1,13 +1,17 @@
 package gui.log;
 
+import gui.TabController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class LogController {
+public class LogController implements TabController {
+
 
     @FXML
     private TableView<rgEvent> tableView;
@@ -22,12 +26,16 @@ public class LogController {
     private TableColumn<rgEvent,String> time;
 
     @FXML
-    private void initialize(){
+    public void initialize(URL location, ResourceBundle resources){
         event.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent,String>("Time"));
 
        tableView.getItems().setAll(parseEventList());
+    }
+    @Override
+    public void update() {
+
     }
 
     private List<rgEvent> parseEventList(){

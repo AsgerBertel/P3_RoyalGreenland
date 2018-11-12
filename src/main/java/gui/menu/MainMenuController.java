@@ -1,11 +1,10 @@
 package gui.menu;
 
 import gui.DMSApplication;
-import gui.ProgramPart;
+import gui.TabLoader;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 
-import java.io.IOException;
 import java.util.Locale;
 
 public class MainMenuController {
@@ -17,23 +16,23 @@ public class MainMenuController {
     }
 
     public void administrateDocuments(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(ProgramPart.FILE_ADMINISTRATION);
+        dmsApplication.switchWindow(TabLoader.FILE_ADMINISTRATION);
     }
 
     public void viewDocuments(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(ProgramPart.FILE_OVERVIEW);
+        dmsApplication.switchWindow(TabLoader.FILE_OVERVIEW);
     }
 
     public void administratePlants(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(ProgramPart.PLANT_ADMINISTRATION);
+        dmsApplication.switchWindow(TabLoader.PLANT_ADMINISTRATION);
     }
 
     public void deletedFiles(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(ProgramPart.DELETED_FILES);
+        dmsApplication.switchWindow(TabLoader.DELETED_FILES);
     }
 
     public void log(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(ProgramPart.LOG);
+        dmsApplication.switchWindow(TabLoader.LOG);
     }
 
     public void changeToDanish(Event actionEvent) throws Exception{

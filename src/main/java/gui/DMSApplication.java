@@ -1,6 +1,5 @@
 package gui;
 
-import directory.FileManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -61,11 +60,11 @@ public class DMSApplication extends Application {
         this.primaryStage = primaryStage;
         primaryStage.show();
 
-        switchWindow(ProgramPart.FILE_ADMINISTRATION);
+        switchWindow(TabLoader.FILE_ADMINISTRATION);
     }
 
     // Shows the given part of the program
-    public void switchWindow(ProgramPart programPart) {
+    public void switchWindow(TabLoader programPart) {
         // Remove all currently added elements except the main menu
         while(root.getChildren().size() > 1)
             root.getChildren().remove(1);

@@ -8,6 +8,7 @@ import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
+import gui.TabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,19 +16,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class FileOverviewController {
+public class FileOverviewController implements TabController {
 
     //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
+
+    private ObservableList<Plant> plantList;
+
+    private TreeItem<AbstractFile> rootItem;
+
+    List<AbstractFile> filesToShow;
 
     @FXML
     private FlowPane flpFileView;
@@ -35,32 +40,36 @@ public class FileOverviewController {
     @FXML
     private Label lblVisualPath;
 
+    private FileManager fileManager;
     @FXML
     private TreeView<AbstractFile> fileTreeView;
     @FXML
     private ComboBox<Plant> drdPlant;
 
     @FXML // Called upon loading the fxml and constructing the gui
-    public void initialize() {
-        Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
-        plant.getAccessModifier().addDocument(0);
-        plant.getAccessModifier().addDocument(9);
-        plant.getAccessModifier().addDocument(16);
-        plant.getAccessModifier().addDocument(21);
-        plant.getAccessModifier().addDocument(27);
-        plant.getAccessModifier().addDocument(32);
-
-        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
-        updateDisplayedFiles();
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
-        fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
+    public void initialize(URL location, ResourceBundle resources) {
+        update();
     }
 
+    @Override
+    public void update() {
+        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
+        fileTreeView.setRoot(rootItem);
+        PlantManager.getInstance().readFromJsonFile();
+        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        drdPlant.setItems(plantList);
+    }
+
+    @FXML
+    void getSelectedPlantgetSelectedPlant(ActionEvent event) {
+        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
+        updateDisplayedFiles();
+    }
 
     @FXML
     void prevDir(ActionEvent event) {
         fileExplorer.navigateBack();
-        updateDisplayedFiles();
+
     }
 
     // Updates the window to show the current files from the file explorer
@@ -68,15 +77,12 @@ public class FileOverviewController {
         // Remove all currently shown files
         flpFileView.getChildren().clear();
 
-        List<AbstractFile> filesToShow = fileExplorer.getShownFiles();
+        filesToShow = fileExplorer.getShownFiles();
         for (AbstractFile file : filesToShow) {
             FileButton fileButton = createFileButton(file);
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
-        PlantManager.getInstance().readFromJsonFile();
-        ObservableList<Plant> observableList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
-        drdPlant.setItems(observableList);
     }
 
     // Creates a FileButton from a File and adds
@@ -89,7 +95,7 @@ public class FileOverviewController {
         filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
         // Add appropriate context menu
         if (file instanceof Folder) {
-            filebutton.setContextMenu(new ReadOnlyFolderContextMenu(this, filebutton));
+            filebutton.setContextMenu(new FolderContextMenu(this, filebutton));
         } else {
             // todo set document context menu
         }
@@ -127,7 +133,7 @@ public class FileOverviewController {
 
     public String PathDisplayCorrection() {
         int BracketCounter = 0;
-        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll("\\\\", " > ");
+        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
         for (int i = 0; i < NewString.length(); i++) {
             if (NewString.charAt(i) == '>')
                 BracketCounter++;
@@ -141,4 +147,6 @@ public class FileOverviewController {
 
         return NewString;
     }
+
+
 }

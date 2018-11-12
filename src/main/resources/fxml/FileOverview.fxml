@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TreeView?>
@@ -9,37 +10,32 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.ComboBox?>
-<HBox stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1"
-      id="BackGround"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
+<HBox id="BackGround" stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
         <VBox fx:id="leftSideVbox">
-            <ComboBox fx:id="drdPlant" stylesheets="@/styles/masterSheet.css"/>
-            <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
-                      prefHeight="${leftSideVbox.height}"/>
+            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlantgetSelectedPlant" promptText="Vælg din fabrik" stylesheets="@/styles/masterSheet.css" />
+            <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
         </VBox>
 
-        <Pane styleClass="verticalSplitter"/>
+        <Pane styleClass="verticalSplitter" />
         <VBox id="VboxParrent">
             <children>
-                <VBox fx:id="vboxTop" id="vboxTop">
+                <VBox id="vboxTop" fx:id="vboxTop">
                     <children>
                         <HBox id="hBoxTop">
                             <children>
-                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false"
-                                        onAction="#openPreviusFolder"/>
+                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviusFolder" />
 
-                                        <Label id="lblVisualPath" fx:id="lblVisualPath"/>
+                                        <Label id="lblVisualPath" fx:id="lblVisualPath" />
 
                             </children>
                         </HBox>
-                        <Pane styleClass="horizontalSplitter"/>
+                        <Pane styleClass="horizontalSplitter" />
                     </children>
                 </VBox>
                 <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">
                     <content>
-                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
+                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}" />
                     </content>
                 </ScrollPane>
 

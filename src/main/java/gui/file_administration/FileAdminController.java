@@ -9,9 +9,9 @@ import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
 import gui.PlantCheckboxElement;
 
+import gui.TabController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.VBox;
@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class FileAdminController implements Initializable {
+public class FileAdminController implements TabController {
 
     @FXML
     public Text plantListTitle;
@@ -61,6 +61,11 @@ public class FileAdminController implements Initializable {
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
 
         plantCountText.setText("(" + plants.size() + ")");
+    }
+
+    @Override
+    public void update() {
+
     }
 
     // Called after a plant is toggled on or off in plant checklist
@@ -122,6 +127,5 @@ public class FileAdminController implements Initializable {
 
     public void deleteFile(ActionEvent actionEvent) {
     }
-
 
 }
