@@ -13,7 +13,7 @@
 <HBox id="BackGround" stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
     <children>
         <VBox fx:id="leftSideVbox">
-            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlantgetSelectedPlant" promptText="Vælg din fabrik" stylesheets="@/styles/masterSheet.css" />
+            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlant" promptText="Vælg din fabrik" stylesheets="@/styles/masterSheet.css" />
             <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
         </VBox>
 
