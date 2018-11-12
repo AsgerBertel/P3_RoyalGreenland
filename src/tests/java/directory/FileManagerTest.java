@@ -36,17 +36,16 @@ class FileManagerTest {
     void uploadFile() throws IOException {
         FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getTestInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
+
         assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
 
-        try {
-            Files.delete(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf"));
-        } catch (IOException e) {
-            System.out.println("UploadFileTest: ");
-            e.printStackTrace();
-        }
+        FileManager.getTestInstance().deleteFile(DocumentBuilder.getInstance().createDocument(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
 
-        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
-        assertEquals("testFile1.pdf", FileManager.getTestInstance().allContent.get(0).getName());
+        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
+
+        Files.delete(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf"));
+
+        assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
     }
 
     @Test
@@ -61,35 +60,42 @@ class FileManagerTest {
         }
     }
 
-    void deleteDocument() throws IOException {
+    private void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
         FileManager.getTestInstance().deleteFile(doc);
 
-        //assertEquals(toTestFile2.toString(), doc.getPath().toString());
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
-    void restoreDocument() throws IOException {
+    private void restoreDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getTestInstance().restoreDocument(doc);
+        FileManager.getTestInstance().restoreFile(doc);
+
+        assertTrue(Files.exists(toTestFile2));
     }
 
-    void deleteDocument2() throws IOException {
+    private void deleteDocument2() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
         FileManager.getTestInstance().deleteFile(doc);
+
+        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
-    void restoreDocumentWithPath() throws IOException {
+    private void restoreDocumentWithPath() throws IOException {
         Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "testFile.pdf");
 
         Document doc = DocumentBuilder.getInstance().createDocument(newPath);
 
         FileManager fm = new FileManager();
 
-        fm.restoreDocument(doc);
+        assertFalse(Files.exists(newPath));
+
+        fm.restoreFile(doc);
+
+        assertTrue(Files.exists(newPath));
 
         //deletes folder and moves file back
 
@@ -109,10 +115,20 @@ class FileManagerTest {
         restoreDocumentWithPath();
     }
 
-    /*@Test
-    void deleteFolder() throws IOException {
-        Folder folder = new Folder(pathToTestFolder.toString());
+    @Test
+    void restoreFolder () throws IOException {
+        Folder folder = FileManager.getTestInstance().createFolder(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
 
-        FileManager.getInstance().deleteFile(folder);
-    }*/
+        FileManager.getTestInstance().deleteFile(folder);
+
+        assertFalse(Files.exists(folder.getPath()));
+        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+
+        FileManager.getTestInstance().restoreFile(folder);
+
+        assertTrue(Files.exists(folder.getPath()));
+        assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+
+    }
+
 }
