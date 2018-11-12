@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -26,6 +27,12 @@ public class FileOverviewController implements TabController {
 
     //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
+
+    private Plant selectedPlant = null;
+
+    private ObservableList<Plant> plantList;
+
+    private TreeItem<AbstractFile> rootItem;
 
     @FXML
     private FlowPane flpFileView;
@@ -41,31 +48,28 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-        Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
-        plant.getAccessModifier().addDocument(0);
-        plant.getAccessModifier().addDocument(9);
-        plant.getAccessModifier().addDocument(16);
-        plant.getAccessModifier().addDocument(21);
-        plant.getAccessModifier().addDocument(27);
-        plant.getAccessModifier().addDocument(32);
-
-        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
-        updateDisplayedFiles();
-
-        fileManager = new FileManager();
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
+// todo Add appropriate accessModifier
+        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
+        PlantManager.getInstance().readFromJsonFile();
+        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        drdPlant.setItems(plantList);
     }
 
     @Override
-    public void updateDisplay() {
+    public void update() {
+    }
 
+    @FXML
+    void getSelectedPlantgetSelectedPlant(ActionEvent event) {
+        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
+        updateDisplayedFiles();
     }
 
     @FXML
     void prevDir(ActionEvent event) {
         fileExplorer.navigateBack();
-        updateDisplayedFiles();
+
     }
 
     // Updates the window to show the current files from the file explorer
@@ -79,9 +83,6 @@ public class FileOverviewController implements TabController {
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
-        PlantManager.getInstance().readFromJsonFile();
-        ObservableList<Plant> observableList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
-        drdPlant.setItems(observableList);
     }
 
     // Creates a FileButton from a File and adds
@@ -132,7 +133,7 @@ public class FileOverviewController implements TabController {
 
     public String PathDisplayCorrection() {
         int BracketCounter = 0;
-        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll("\\\\", " > ");
+        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
         for (int i = 0; i < NewString.length(); i++) {
             if (NewString.charAt(i) == '>')
                 BracketCounter++;

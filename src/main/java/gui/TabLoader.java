@@ -28,7 +28,7 @@ public enum TabLoader {
             tabController = fxmlLoader.getController();
         }
 
-        tabController.updateDisplay();
+        tabController.update();
         return node;
     }
 

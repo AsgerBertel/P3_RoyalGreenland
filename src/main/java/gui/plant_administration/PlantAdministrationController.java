@@ -70,7 +70,7 @@ public class PlantAdministrationController implements TabController {
 
 
     @Override
-    public void updateDisplay() {
+    public void update() {
 
     }
 

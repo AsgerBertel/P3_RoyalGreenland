@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class DeletedFilesController implements TabController {
 
     @Override
-    public void updateDisplay() {
+    public void update() {
 
     }
 

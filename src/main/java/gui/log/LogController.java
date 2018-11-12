@@ -34,7 +34,7 @@ public class LogController implements TabController {
        tableView.getItems().setAll(parseEventList());
     }
     @Override
-    public void updateDisplay() {
+    public void update() {
 
     }
 

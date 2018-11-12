@@ -64,7 +64,7 @@ public class FileAdminController implements TabController {
     }
 
     @Override
-    public void updateDisplay() {
+    public void update() {
 
     }
 
