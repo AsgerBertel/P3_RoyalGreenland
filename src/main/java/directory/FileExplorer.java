@@ -58,7 +58,6 @@ public class FileExplorer {
             currentFolder = FileManager.getInstance().findParent(currentFolder);
         }
 
-        // Todo add error handling in case it cant navigate further back
         return false;
     }
 

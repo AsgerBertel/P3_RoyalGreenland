@@ -1,17 +1,19 @@
 
-package gui.file_overview;
+package gui.file_administration;
+import gui.file_overview.FileButton;
+import gui.file_overview.FileOverviewController;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
-public class FolderContextMenu extends ContextMenu {
+public class AdminFolderContextMenu extends ContextMenu {
     private FileOverviewController fileOverviewController;
     private FileButton fileButton;
 
 
-    public FolderContextMenu(FileOverviewController fileOverviewController, FileButton fileButton) {
+    public AdminFolderContextMenu(FileOverviewController fileOverviewController, FileButton fileButton) {
         this.fileOverviewController = fileOverviewController;
         this.fileButton = fileButton;
-        initFolderContextMenu(); // todo throw exception if document and not folder
+        initFolderContextMenu();
     }
 
     public void initFolderContextMenu() {
