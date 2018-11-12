@@ -55,19 +55,23 @@ public class PlantAdministrationController implements TabController {
         createPane.toFront();
         editPane.setDisable(true);
         editPane.setVisible(false);
-        for(Plant plant: PlantManager.getInstance().getAllPlants()){
-            PlantElement plantElement = new PlantElement(plant);
-            plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
-            plantElements.add(plantElement);
-        }
-        plantVBox.getChildren().addAll(plantElements);
 
+        update();
     }
 
 
     @Override
     public void update() {
+        plantElements.clear();
+        plantVBox.getChildren().clear();
 
+        for(Plant plant: PlantManager.getInstance().readFromJsonFile().getAllPlants()){
+            PlantElement plantElement = new PlantElement(plant);
+            plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
+            plantElements.add(plantElement);
+        }
+
+        plantVBox.getChildren().addAll(plantElements);
     }
 
     private void onPlantToggle(PlantElement plantElement) {

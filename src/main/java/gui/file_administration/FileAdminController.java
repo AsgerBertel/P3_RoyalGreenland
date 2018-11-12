@@ -23,13 +23,19 @@ import java.util.ResourceBundle;
 
 public class FileAdminController implements TabController {
 
-    @FXML
-    public Text plantListTitle;
-    @FXML
-    private VBox plantVBox;
+    private Folder rootFolder;
+
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     private ArrayList<Plant> plants = new ArrayList<>();
+
+    private TreeItem<AbstractFile> rootItem;
+
+    @FXML
+    public Text plantListTitle;
+
+    @FXML
+    private VBox plantVBox;
 
     @FXML
     private TreeView<AbstractFile> fileTreeView;
@@ -42,9 +48,26 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Folder rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
 
-        plants = PlantManager.getInstance().getAllPlants();
+        setFactoryListDisabled(true);
+
+        rootItem = FileTreeGenerator.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
+        fileTreeView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
+
+        update();
+    }
+
+    @Override
+    public void update() {
+        plants.clear();
+        plantElements.clear();
+        plants = PlantManager.getInstance().readFromJsonFile().getAllPlants();
+
+
+        plantVBox.getChildren().clear();
 
         for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
@@ -53,18 +76,11 @@ public class FileAdminController implements TabController {
             plantElements.add(checkBox);
         }
 
-        setFactoryListDisabled(true);
-
-        TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(rootFolder);
-        fileTreeView.setRoot(rootItem);
-        fileTreeView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
-
         plantCountText.setText("(" + plants.size() + ")");
-    }
 
-    @Override
-    public void update() {
+        onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
+
+        setFactoryListDisabled(true);
 
     }
 
@@ -92,6 +108,7 @@ public class FileAdminController implements TabController {
                 onDocumentSelected((Document) chosenFile);
             } else if (chosenFile instanceof Folder) {
                 setFactoryListDisabled(true);
+                selectedDocument = null;
             }
         }
     }
