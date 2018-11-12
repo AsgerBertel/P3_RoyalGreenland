@@ -95,7 +95,7 @@ public class FileOverviewController implements TabController {
         filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
         // Add appropriate context menu
         if (file instanceof Folder) {
-            filebutton.setContextMenu(new FolderContextMenu(this, filebutton));
+            filebutton.setContextMenu(new ReadOnlyFolderContextMenu(this, filebutton));
         } else {
             // todo set document context menu
         }
