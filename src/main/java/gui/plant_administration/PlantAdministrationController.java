@@ -53,8 +53,6 @@ public class PlantAdministrationController implements TabController {
     public void initialize(URL location, ResourceBundle resources){
         //Setting standard
         createPane.toFront();
-        editPane.setDisable(true);
-        editPane.setVisible(false);
 
         update();
     }
