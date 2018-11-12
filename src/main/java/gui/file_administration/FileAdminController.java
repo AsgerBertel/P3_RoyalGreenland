@@ -92,8 +92,6 @@ public class FileAdminController implements TabController {
         } else {
             plant.getAccessModifier().removeDocument(selectedDocument.getID());
         }
-
-        PlantManager.getInstance().updateJsonFile();
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
