@@ -1,1 +1,39 @@
-{"allPlants":[{"id":1765,"name":"hejsa","accessModifier":{"documents":[36,8]}},{"id":1006,"name":"plant6","accessModifier":{"documents":[7]}},{"id":1007,"name":"plant7","accessModifier":{"documents":[35]}},{"id":1010,"name":"nuuk","accessModifier":{"documents":[]}}]}
+{
+  "allPlants": [
+    {
+      "id": 1765,
+      "name": "hejsa",
+      "accessModifier": {
+        "documents": [
+          36,
+          8
+        ]
+      }
+    },
+    {
+      "id": 1006,
+      "name": "plant6",
+      "accessModifier": {
+        "documents": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 1007,
+      "name": "plant7",
+      "accessModifier": {
+        "documents": [
+          35
+        ]
+      }
+    },
+    {
+      "id": 1010,
+      "name": "nuuk",
+      "accessModifier": {
+        "documents": []
+      }
+    }
+  ]
+}
