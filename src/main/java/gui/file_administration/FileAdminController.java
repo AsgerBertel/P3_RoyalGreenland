@@ -4,7 +4,6 @@ import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
-import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.FileTreeGenerator;

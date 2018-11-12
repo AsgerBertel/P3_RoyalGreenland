@@ -10,14 +10,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="fileAdminHBox" stylesheets="@/styles/masterSheet.css,@/styles/fileAdministration.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_administration.FileAdminController">
+<HBox fx:id="fileAdminHBox" stylesheets="@/styles/masterSheet.css,@/styles/fileAdministration.css"
+      xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.file_administration.FileAdminController">
 
     <!-- Side menu -->
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
         <Button onAction="#addDocument">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="/icons/menu/adddocument.png" />
+                    <Image url="/icons/menu/adddocument.png"/>
                 </ImageView>
             </graphic>
         </Button>
@@ -25,7 +27,7 @@
         <Button onAction="#createFolder">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="/icons/menu/addfolder.png" />
+                    <Image url="/icons/menu/addfolder.png"/>
                 </ImageView>
             </graphic>
         </Button>
@@ -33,20 +35,20 @@
         <Button onAction="#deleteFile">
             <graphic>
                 <ImageView fitHeight="39" fitWidth="39">
-                    <Image url="/icons/menu/delete.png" />
+                    <Image url="/icons/menu/delete.png"/>
                 </ImageView>
             </graphic>
         </Button>
     </VBox>
 
     <!-- File tree -->
-    <VBox>
+    <VBox fx:id="leftSideVbox">
         <HBox styleClass="filler" minHeight="40" maxHeight="40">
             <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="Filer"/>
         </HBox>
-        <TreeView fx:id="fileTreeView" translateY="10" prefWidth="10000" prefHeight="10000" stylesheets="@/styles/fileTree.css" /> <!-- todo prefwidth 10000 dirty trick? is there a better solution? -->
+        <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
+                  prefHeight="${leftSideVbox.height}"/>
     </VBox>
-
 
     <!-- Splitter -->
     <Pane styleClass="verticalSplitter"/>
@@ -54,11 +56,11 @@
     <!-- Factory list -->
     <VBox id="plantSection" stylesheets="@/styles/factoryList.css">
         <HBox minHeight="30" maxHeight="30" styleClass="filler">
-            <Text  text="Fabrikker" fx:id="plantListTitle" styleClass="darkGreyTitle"/> <!-- todo sprog -->
-            <Text  text=" (0)" fx:id="plantCountText" styleClass="greyTitle"/>
+            <Text text="Fabrikker" fx:id="plantListTitle" styleClass="darkGreyTitle"/> <!-- todo sprog -->
+            <Text text=" (0)" fx:id="plantCountText" styleClass="greyTitle"/>
         </HBox>
         <ScrollPane id="plantScrollPane" translateY="10">
-            <VBox id="plantVBox" fx:id="plantVBox" />
+            <VBox id="plantVBox" fx:id="plantVBox"/>
         </ScrollPane>
     </VBox>
 

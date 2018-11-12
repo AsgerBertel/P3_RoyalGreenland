@@ -34,8 +34,7 @@ public class FileOverviewController {
 
     @FXML
     private Label lblVisualPath;
-    // todo temporary
-    private FileManager fileManager;
+
     @FXML
     private TreeView<AbstractFile> fileTreeView;
     @FXML
@@ -53,8 +52,6 @@ public class FileOverviewController {
 
         fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), plant); // todo Add appropriate accessModifier
         updateDisplayedFiles();
-
-        fileManager = new FileManager();
         TreeItem<AbstractFile> rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
