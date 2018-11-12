@@ -7,7 +7,6 @@ import gui.PlantElement;
 import gui.TabController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -155,8 +154,5 @@ public class PlantAdministrationController implements TabController {
         field_EditPlantName.clear();
         field_EditPlantId.clear();
 
-
     }
-
-
 }
