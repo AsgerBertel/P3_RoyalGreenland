@@ -59,8 +59,13 @@ public class FileManager {
         String pathToFolder = path.toString() + File.separator + name;
         Folder folder = new Folder(Paths.get(pathToFolder).toString());
 
-        //todo next line doesnt do anything?
-        new File(pathToFolder).mkdirs();
+        boolean isSuccessful = new File(pathToFolder).mkdirs();
+
+        if(!isSuccessful){
+            System.out.println("mkdirs was not successful");
+            return null;
+        }
+
         allContent.add(folder);
         updateFilesJson();
         return folder;
@@ -80,9 +85,12 @@ public class FileManager {
         if (Files.exists(file.getParentPath())) {
             Files.move(file1, file.getPath());
         } else {
-            //todo mkdirs is ignored?
-            file.getParentPath().toFile().mkdirs();
-            Files.move(file1, file.getPath());
+            boolean isSuccessful = file.getParentPath().toFile().mkdirs();
+            if (isSuccessful){
+                Files.move(file1, file.getPath());
+            } else {
+                System.out.println("mkdirs was not successful");
+            }
         }
     }
 
