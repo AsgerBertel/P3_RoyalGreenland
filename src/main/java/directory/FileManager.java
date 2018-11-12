@@ -96,7 +96,7 @@ public class FileManager {
         }
     }
 
-    public static FileManager readFilesFromJson() {
+    protected static FileManager readFilesFromJson() {
         // String pathStr;
         try (Reader reader = new FileReader(pathToJson)) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
