@@ -39,8 +39,6 @@ public class FileOverviewController implements TabController {
 
     @FXML
     private Label lblVisualPath;
-
-    private FileManager fileManager;
     @FXML
     private TreeView<AbstractFile> fileTreeView;
     @FXML
@@ -66,12 +64,6 @@ public class FileOverviewController implements TabController {
         updateDisplayedFiles();
     }
 
-    @FXML
-    void prevDir(ActionEvent event) {
-        fileExplorer.navigateBack();
-
-    }
-
     // Updates the window to show the current files from the file explorer
     private void updateDisplayedFiles() {
         // Remove all currently shown files
@@ -91,13 +83,12 @@ public class FileOverviewController implements TabController {
 
         filebutton.getStyleClass().add("FileButton");
         filebutton.setContentDisplay(ContentDisplay.TOP);
-
         filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
         // Add appropriate context menu
         if (file instanceof Folder) {
-            filebutton.setContextMenu(new FolderContextMenu(this, filebutton));
+            filebutton.setContextMenu(new ReadOnlyFolderContextMenu(this, filebutton));
         } else {
-            // todo set document context menu
+            filebutton.setContextMenu(new ReadOnlyDocumentContextMenu(this, filebutton));
         }
 
         return filebutton;
@@ -133,19 +124,32 @@ public class FileOverviewController implements TabController {
 
     public String PathDisplayCorrection() {
         int BracketCounter = 0;
-        String NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
+        String NewString;
+        if (getOperatingSystem() == "Windows")
+            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator + File.separator, " > ");
+        else
+            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
+
         for (int i = 0; i < NewString.length(); i++) {
             if (NewString.charAt(i) == '>')
                 BracketCounter++;
         }
         if (BracketCounter > 2) {
-            NewString = NewString.substring(NewString.indexOf(""));
+            //NewString = fileExplorer.getCurrentFolder().getPath().getParent().toString() + fileExplorer.getCurrentFolder().getPath().toString();
         } else {
             NewString = NewString.substring(NewString.indexOf("Main Files"));
 
         }
 
         return NewString;
+    }
+
+    public String getOperatingSystem() {
+        String OS = System.getProperty("os.name");
+        if (OS.startsWith("Windows"))
+            return "Windows";
+        else
+            return "IOS";
     }
 
 

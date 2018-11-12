@@ -16,7 +16,7 @@ public class FileButton extends Button {
     private static Image pdfFileIcon = new Image("/icons/bigPDFDoc.png");
     private static Image folderIcon = new Image("/icons/bigFolder.png");
 
-    private static Image defaultIcon = wordFileIcon; // todo add a default icon for uknown file types
+    private static Image defaultIcon = wordFileIcon;
     private ImageView imageView;
 
     public FileButton(AbstractFile file) {

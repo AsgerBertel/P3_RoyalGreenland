@@ -1,12 +1,10 @@
-
-
 .FileButton {
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 1em; /* 12 */
+    -fx-font-family: "Arial ", sans-serif;
+    -fx-font-size: 12px;
     -fx-text-fill: #000000;
     -fx-pref-width: 100;
     -fx-pref-height: 100;
@@ -18,8 +16,8 @@
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-background-color: #00BFFF;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 1em; /* 12 */
+    -fx-font-family: "Arial ", sans-serif;
+    -fx-font-size: 12px;
     -fx-text-fill: #000000;
 }
 
@@ -79,7 +77,7 @@
     -fx-border-width: 0;
     -fx-background-radius: 60;
     -fx-background-color: #d4d4d4;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "Arial Black", sans-serif;
     -fx-font-size: 1px; /* 12 */
     -fx-text-fill: #000000;
 }
@@ -95,7 +93,7 @@
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #454e59;
-    -fx-font-family: "Arial", sans-serif;
+    -fx-font-family: "Arial Black", sans-serif;
 }
 
 #VboxParrent {
