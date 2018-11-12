@@ -39,7 +39,7 @@ public class FileOverviewController implements TabController {
 
     @FXML
     private Label lblVisualPath;
-    // todo temporary
+
     private FileManager fileManager;
     @FXML
     private TreeView<AbstractFile> fileTreeView;
@@ -48,9 +48,8 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-// todo Add appropriate accessModifier
         rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
-        fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
+        fileTreeView.setRoot(rootItem);
         PlantManager.getInstance().readFromJsonFile();
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
