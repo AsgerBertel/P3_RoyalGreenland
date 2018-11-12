@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -13,8 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
-<HBox id="Background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@/styles/plantAdministration.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
+<HBox id="Background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@/styles/plantAdministration.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
    <children>
       <!-- Side menu -->
       <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
@@ -70,7 +70,7 @@
          <children>
 
             
-            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0">
+            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" visible="false">
                <children>
                   <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#editPlant" prefHeight="25.0" prefWidth="96.0" text="Rediger fabrik" />
                   <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="Nyt fabriksnavn" />
@@ -85,7 +85,7 @@
             </AnchorPane>
 
       
-                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0">
+                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false">
                <children>
                   <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#createPlant" prefHeight="25.0" prefWidth="96.0" text="Opret fabrik" />
                   <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="Fabrik navn" />
