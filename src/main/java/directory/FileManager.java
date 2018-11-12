@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class FileManager {
     // todo Archive folder path should be set on setup
-    public static String pathToJson = "Sample files/allFiles.JSON";
-    String pathToArchive = "Sample files/Archive";
-    ArrayList<AbstractFile> allContent = new ArrayList<>();
-    ArrayList<AbstractFile> archive = new ArrayList<>();
+    private static String pathToJson = "Sample files/allFiles.JSON";
+    private String pathToArchive = "Sample files/Archive";
+    private ArrayList<AbstractFile> allContent = new ArrayList<>();
+    private ArrayList<AbstractFile> archive = new ArrayList<>();
 
     private static FileManager FileManager;
 
@@ -58,6 +58,8 @@ public class FileManager {
         // Todo Error handling
         String pathToFolder = path.toString() + File.separator + name;
         Folder folder = new Folder(Paths.get(pathToFolder).toString());
+
+        //todo next line doesnt do anything?
         new File(pathToFolder).mkdirs();
         allContent.add(folder);
         updateFilesJson();
@@ -72,12 +74,13 @@ public class FileManager {
         updateFilesJson();
     }
 
-    public void restoreDocument(Document file) throws IOException {
+    public void restoreFile(AbstractFile file) throws IOException {
         Path file1 = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
 
         if (Files.exists(file.getParentPath())) {
             Files.move(file1, file.getPath());
         } else {
+            //todo mkdirs is ignored?
             file.getParentPath().toFile().mkdirs();
             Files.move(file1, file.getPath());
         }

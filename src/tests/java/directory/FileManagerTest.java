@@ -60,7 +60,7 @@ class FileManagerTest {
         }
     }
 
-    void deleteDocument() throws IOException {
+    private void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
         FileManager.getTestInstance().deleteFile(doc);
@@ -68,15 +68,15 @@ class FileManagerTest {
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
-    void restoreDocument() throws IOException {
+    private void restoreDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
-        FileManager.getTestInstance().restoreDocument(doc);
+        FileManager.getTestInstance().restoreFile(doc);
 
         assertTrue(Files.exists(toTestFile2));
     }
 
-    void deleteDocument2() throws IOException {
+    private void deleteDocument2() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
         FileManager.getTestInstance().deleteFile(doc);
@@ -84,7 +84,7 @@ class FileManagerTest {
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
-    void restoreDocumentWithPath() throws IOException {
+    private void restoreDocumentWithPath() throws IOException {
         Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "testFile.pdf");
 
         Document doc = DocumentBuilder.getInstance().createDocument(newPath);
@@ -93,7 +93,7 @@ class FileManagerTest {
 
         assertFalse(Files.exists(newPath));
 
-        fm.restoreDocument(doc);
+        fm.restoreFile(doc);
 
         assertTrue(Files.exists(newPath));
 
@@ -113,6 +113,22 @@ class FileManagerTest {
     void inOrder2() throws IOException {
         deleteDocument2();
         restoreDocumentWithPath();
+    }
+
+    @Test
+    void restoreFolder () throws IOException {
+        Folder folder = FileManager.getTestInstance().createFolder(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
+
+        FileManager.getTestInstance().deleteFile(folder);
+
+        assertFalse(Files.exists(folder.getPath()));
+        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+
+        FileManager.getTestInstance().restoreFile(folder);
+
+        assertTrue(Files.exists(folder.getPath()));
+        assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+
     }
 
 }
