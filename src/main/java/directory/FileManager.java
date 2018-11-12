@@ -21,15 +21,19 @@ public class FileManager {
 
     private static FileManager FileManager;
 
-    public ArrayList<AbstractFile> getAllContent() {
-        return allContent;
-    }
-
     public static synchronized FileManager getInstance() {
         if (FileManager == null) {
             FileManager = readFilesFromJson();
         }
         return FileManager;
+    }
+
+    public ArrayList<AbstractFile> getAllContent() {
+        return allContent;
+    }
+
+    public ArrayList<AbstractFile> getArchive() {
+        return archive;
     }
 
     public static synchronized FileManager getTestInstance() {

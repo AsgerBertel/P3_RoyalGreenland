@@ -53,7 +53,6 @@ public class FileOverviewController implements TabController {
     public void update() {
         rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem);
-        PlantManager.getInstance().readFromJsonFile();
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
 
@@ -155,7 +154,7 @@ public class FileOverviewController implements TabController {
         if (OS.startsWith("Windows"))
             return "Windows";
         else
-            return "IOS";
+            return "MacOS";
     }
 
 
