@@ -137,11 +137,11 @@ public class FileOverviewController implements TabController {
             NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
 
         for (int i = 0; i < NewString.length(); i++) {
-            if (NewString.charAt(i) == '>')
+            if (NewString.charAt(i) == '\\')
                 BracketCounter++;
         }
         if (BracketCounter > 2) {
-            //NewString = fileExplorer.getCurrentFolder().getPath().getParent().toString() + fileExplorer.getCurrentFolder().getPath().toString();
+            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(fileExplorer.getCurrentFolder().getParentPath().toString(),".//") ;
         } else {
             NewString = NewString.substring(NewString.indexOf("Main Files"));
 
