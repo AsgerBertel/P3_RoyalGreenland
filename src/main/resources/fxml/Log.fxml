@@ -15,7 +15,16 @@
         <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
             <Button>
                 <graphic>
-
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/search.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button>
+                <graphic>
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/filter.png" />
+                    </ImageView>
                 </graphic>
             </Button>
         </VBox>
