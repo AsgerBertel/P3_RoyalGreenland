@@ -27,10 +27,6 @@ public class PlantAdministrationController implements TabController {
     ArrayList<PlantElement> plantElements = new ArrayList<>();
 
     @FXML
-    private Button btnCreatePlant;
-    @FXML
-    private Button btnEditPlant;
-    @FXML
     private AnchorPane editPane;
 
     @FXML
@@ -133,10 +129,11 @@ public class PlantAdministrationController implements TabController {
         PlantElement newPlantElement = new PlantElement(plant);
         PlantManager.getInstance().addPlant(plant);
         plantElements.add(newPlantElement);
+        newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
         plantVBox.getChildren().add(newPlantElement);
-        lblPlantCreated.setText("A new plant has been created.");
-        field_CreatePlantName.clear();
-        field_CreatePlantId.clear();
+        lblPlantCreated.setText("Plant created");
+        field_CreatePlantName.setText("");
+        field_CreatePlantId.setText("");
     }
 
     @FXML
