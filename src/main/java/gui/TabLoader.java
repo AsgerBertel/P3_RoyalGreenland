@@ -1,12 +1,11 @@
 package gui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
-public enum ProgramPart {
+public enum TabLoader {
 
     FILE_OVERVIEW("FileOverview.fxml"),
     FILE_ADMINISTRATION("FileAdministration.fxml"),
@@ -16,15 +15,20 @@ public enum ProgramPart {
 
     private String fxmlFileName;
     private Pane node;
+    private TabController tabController;
 
-    ProgramPart(String fxmlFileName){
+    TabLoader(String fxmlFileName){
         this.fxmlFileName = fxmlFileName;
     }
 
     public Pane getPane() throws IOException {
-        if(node == null)
-            node = FXMLLoader.load(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName));
+        if(node == null){
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName));
+            node = fxmlLoader.load();
+            tabController = fxmlLoader.getController();
+        }
 
+        tabController.updateDisplay();
         return node;
     }
 

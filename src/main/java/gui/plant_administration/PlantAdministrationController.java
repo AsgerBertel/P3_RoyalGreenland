@@ -4,9 +4,9 @@ import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.PlantElement;
+import gui.TabController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class PlantAdministrationController implements Initializable{
+public class PlantAdministrationController implements TabController {
 
     @FXML
     private AnchorPane createPane;
@@ -65,6 +65,12 @@ public class PlantAdministrationController implements Initializable{
             plantElements.add(plantElement);
         }
         plantVBox.getChildren().addAll(plantElements);
+
+    }
+
+
+    @Override
+    public void updateDisplay() {
 
     }
 

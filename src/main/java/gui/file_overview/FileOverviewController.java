@@ -8,6 +8,7 @@ import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
+import gui.TabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,16 +16,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class FileOverviewController {
+public class FileOverviewController implements TabController {
 
     //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
@@ -42,7 +40,7 @@ public class FileOverviewController {
     private ComboBox<Plant> drdPlant;
 
     @FXML // Called upon loading the fxml and constructing the gui
-    public void initialize() {
+    public void initialize(URL location, ResourceBundle resources) {
         Plant plant = new Plant(1000, "Nuuk", new AccessModifier());
         plant.getAccessModifier().addDocument(0);
         plant.getAccessModifier().addDocument(9);
@@ -59,6 +57,10 @@ public class FileOverviewController {
         fileTreeView.setRoot(rootItem); // todo Add appropriate accessModifier
     }
 
+    @Override
+    public void updateDisplay() {
+
+    }
 
     @FXML
     void prevDir(ActionEvent event) {
@@ -144,4 +146,6 @@ public class FileOverviewController {
 
         return NewString;
     }
+
+
 }
