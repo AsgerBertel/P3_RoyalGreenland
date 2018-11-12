@@ -5,16 +5,36 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
-      <TableView fx:id="tableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
+            <Button>
+                <graphic>
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/search.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button>
+                <graphic>
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/filter.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+
+    <TableView fx:id="tableView" HBox.hgrow="ALWAYS">
           <columns>
               <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" fx:id="event" />
               <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" fx:id="user"/>
               <TableColumn minWidth="${tableView.width*0.2}"  text="Tidspunkt" fx:id="time" />
          </columns>
       </TableView>
-   <padding>
-      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-   </padding>
-
+    </HBox>
 </AnchorPane>
