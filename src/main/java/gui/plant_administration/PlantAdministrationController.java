@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -76,6 +78,7 @@ public class PlantAdministrationController implements TabController {
             plantElements.add(plantElement);
         }
 
+
         plantVBox.getChildren().addAll(plantElements);
     }
 
@@ -96,14 +99,6 @@ public class PlantAdministrationController implements TabController {
         activatePane(createPane, editPane);
         lblPlantCreated.setText("");
         lblPlantCreated.setVisible(true);
-        field_CreatePlantId.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.getCode().equals(KeyCode.ENTER)){
-                    createPlant();
-                }
-            }
-        });
     }
 
     @FXML
@@ -111,14 +106,6 @@ public class PlantAdministrationController implements TabController {
         lblPlantEdited.setText("Select a plant to be edited");
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
-        field_EditPlantId.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.getCode().equals(KeyCode.ENTER)){
-                    editPlant();
-                }
-            }
-        });
     }
 
     private void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
@@ -143,6 +130,8 @@ public class PlantAdministrationController implements TabController {
                 plantElements.remove(element);
                 PlantManager.getInstance().deletePlant(element.getPlant().getId());
                 plantVBox.getChildren().remove(element);
+                btnDeletePlant.setDisable(true);
+                btnDeletePlant.setStyle("-fx-opacity: 0.5");
                 return element;
             }
         }
@@ -197,7 +186,18 @@ public class PlantAdministrationController implements TabController {
         }
         field_EditPlantName.clear();
         field_EditPlantId.clear();
+
     }
-
-
+    @FXML
+    void keyPressedCreate(KeyEvent event){
+        if(event.getCode().equals(KeyCode.ENTER)){
+            createPlant();
+        }
+    }
+    @FXML
+    void keyPressedEdit(KeyEvent event){
+        if(event.getCode().equals(KeyCode.ENTER)){
+            editPlant();
+        }
+    }
 }

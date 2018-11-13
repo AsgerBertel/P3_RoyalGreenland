@@ -10,31 +10,56 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.HBox?>
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
-    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.StackPane?>
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.log.LogController">
+    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
         <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-            <Button>
+            <Button onAction="#searchClicked" fx:id="searchBtn">
                 <graphic>
                     <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/search.png" />
+                        <Image url="/icons/menu/search.png"/>
                     </ImageView>
                 </graphic>
             </Button>
             <Button>
                 <graphic>
                     <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/filter.png" />
+                        <Image url="/icons/menu/filter.png"/>
                     </ImageView>
                 </graphic>
             </Button>
         </VBox>
+        <VBox HBox.hgrow="ALWAYS" fx:id="vbox">
+            <StackPane VBox.vgrow="ALWAYS" fx:id="stackPane">
+                <Pane fx:id="box" >
+                    <HBox>
+                        <TextField onKeyReleased="#keyReleased" fx:id="searchField" minHeight="${searchBtn.height}"/>
+                        <Button>
+                            <graphic>
+                                <ImageView fitHeight="${searchField.height}">
+                                    <Image url="/icons/menu/search.png" />
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </HBox>
 
-    <TableView fx:id="tableView" HBox.hgrow="ALWAYS">
-          <columns>
-              <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" fx:id="event" />
-              <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" fx:id="user"/>
-              <TableColumn minWidth="${tableView.width*0.2}"  text="Tidspunkt" fx:id="time" />
-         </columns>
-      </TableView>
+                </Pane>
+
+                <TableView fx:id="tableView">
+                    <columns>
+                        <TableColumn prefWidth="${tableView.width*0.6}" text="%Log.Change" fx:id="event" sortable="false"/>
+                        <TableColumn prefWidth="${tableView.width*0.2}" text="%Log.User" fx:id="user" sortable="false"/>
+                        <TableColumn minWidth="${tableView.width*0.2}" text="%Log.Time" fx:id="time" sortable="false"/>
+                    </columns>
+                </TableView>
+
+            </StackPane>
+        </VBox>
     </HBox>
 </AnchorPane>

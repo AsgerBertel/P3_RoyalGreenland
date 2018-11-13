@@ -7,16 +7,10 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
-import directory.plant.PlantManager;
 import gui.FileTreeGenerator;
 import gui.TabController;
 import gui.file_overview.FileButton;
-import gui.file_overview.ReadOnlyDocumentContextMenu;
-import gui.file_overview.ReadOnlyFolderContextMenu;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -26,7 +20,6 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -61,21 +54,18 @@ public class DeletedFilesController implements TabController {
 
     @Override
     public void update() {
-        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getArchive().get(0));
+        rootItem = FileTreeGenerator.generateTree((Folder) FileManager.getInstance().getArchive().get(0));
         fileTreeView.setRoot(rootItem);
-        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getArchive().get(0), new Plant(0,"symbol", new AccessModifier()));
-        updateDisplayedFiles();
     }
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        update();
-    }
+        fileTreeView.setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2)
+                fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        });
 
-    @FXML
-    void openPreviousFolder(ActionEvent event) {
-        fileExplorer.navigateBack(FileManager.getInstance().getArchive());
-        updateDisplayedFiles();
+        update();
     }
 
     @FXML
@@ -150,5 +140,31 @@ public class DeletedFilesController implements TabController {
             return "Windows";
         else
             return "MacOS";
+    }
+
+    public void restoreDocument(ActionEvent event){
+        AbstractFile selectedFile = fileTreeView.getSelectionModel().getSelectedItem().getValue();
+        try {
+            FileManager.getInstance().restoreFile(selectedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // todo Update content on screen. Magnus is looking into creating a method doing exactly this.
+    }
+
+    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                AbstractFile file = newValue.getValue();
+                if (file instanceof Document) {
+                    try {
+                        ((Document) file).openDocument();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

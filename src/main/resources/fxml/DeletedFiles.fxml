@@ -9,35 +9,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox id="BackGround" stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.deleted_files.DeletedFilesController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<HBox id="background" stylesheets="@/styles/archive.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.deleted_files.DeletedFilesController">
     <children>
-        <VBox fx:id="leftSideVbox">
-            <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
+        <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
+            <Button fx:id="btnRestore" onAction="#restoreDocument">
+                <graphic>
+                    <ImageView fitHeight="40" fitWidth="40">
+                        <Image url="/icons/menu/restoreDocument.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
         </VBox>
-
-        <Pane styleClass="verticalSplitter" />
-        <VBox id="VboxParrent">
-            <children>
-                <VBox id="vboxTop" fx:id="vboxTop">
-                    <children>
-                        <HBox id="hBoxTop">
-                            <children>
-                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviousFolder" />
-
-                                <Label id="lblVisualPath" fx:id="lblVisualPath" />
-
-                            </children>
-                        </HBox>
-                        <Pane styleClass="horizontalSplitter" />
-                    </children>
-                </VBox>
-                <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">
-                    <content>
-                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}" />
-                    </content>
-                </ScrollPane>
-
-            </children>
+        <VBox fx:id="leftSideVbox">
+            <TreeView fx:id="fileTreeView" minWidth="984" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
         </VBox>
     </children>
 </HBox>
