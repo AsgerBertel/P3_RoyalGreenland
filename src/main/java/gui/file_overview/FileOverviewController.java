@@ -47,6 +47,8 @@ public class FileOverviewController implements TabController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
         update();
+        fileTreeView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
     }
 
     @Override
@@ -55,7 +57,6 @@ public class FileOverviewController implements TabController {
         fileTreeView.setRoot(rootItem);
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
-
 
         /* todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
         if(!PlantManager.getInstance().getAllPlants().contains(drdPlant.getSelectionModel().getSelectedItem())){
@@ -99,7 +100,6 @@ public class FileOverviewController implements TabController {
         return filebutton;
     }
 
-
     private void onFileButtonClick(MouseEvent event) {
         FileButton clickedButton = (FileButton) event.getSource();
         if (event.getClickCount() == 2)
@@ -136,16 +136,15 @@ public class FileOverviewController implements TabController {
             NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
 
         for (int i = 0; i < NewString.length(); i++) {
-            if (NewString.charAt(i) == '\\')
+            if (NewString.charAt(i) == '>')
                 BracketCounter++;
         }
-        if (BracketCounter > 2) {
-            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(fileExplorer.getCurrentFolder().getParentPath().toString(),".//") ;
+
+        if (BracketCounter > 3) {
+            NewString = "../" + fileExplorer.getCurrentFolder().getName();
         } else {
             NewString = NewString.substring(NewString.indexOf("Main Files"));
-
         }
-
         return NewString;
     }
 
@@ -157,5 +156,18 @@ public class FileOverviewController implements TabController {
             return "MacOS";
     }
 
+    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+        AbstractFile file = newValue.getValue();
+        if (file instanceof Folder) {
+            fileExplorer.navigateTo((Folder) file);
+            updateDisplayedFiles();
+        } else {
 
+            try {
+                ((Document) file).openDocument();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
