@@ -11,6 +11,54 @@
               "type": "folder",
               "folderContents": [
                 {
+                  "type": "folder",
+                  "folderContents": [
+                    {
+                      "type": "document",
+                      "ID": 32,
+                      "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+                    }
+                  ],
+                  "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2"
+                }
+              ],
+              "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1"
+            },
+            {
+              "type": "document",
+              "ID": 36,
+              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+            },
+            {
+              "type": "document",
+              "ID": 33,
+              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.vsd"
+            },
+            {
+              "type": "document",
+              "ID": 34,
+              "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+            },
+            {
+              "type": "document",
+              "ID": 35,
+              "path": "Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
+            }
+          ],
+          "path": "Sample files/Main Files/01_SALTFISK"
+        },
+        {
+          "type": "folder",
+          "folderContents": [
+            {
+              "type": "folder",
+              "folderContents": [
+                {
+                  "type": "document",
+                  "ID": 2,
+                  "path": "Sample files/Main Files/02_VINTERTØRRET FISK/KAL/GFL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.pdf"
+                },
+                {
                   "type": "document",
                   "ID": 0,
                   "path": "Sample files/Main Files/02_VINTERTØRRET FISK/KAL/GFL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.vsd"
@@ -19,11 +67,6 @@
                   "type": "document",
                   "ID": 1,
                   "path": "Sample files/Main Files/02_VINTERTØRRET FISK/KAL/GHA 02 GR_02  HACCP plan for indfrysning af fisk_kal.doc"
-                },
-                {
-                  "type": "document",
-                  "ID": 2,
-                  "path": "Sample files/Main Files/02_VINTERTØRRET FISK/KAL/GFL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.pdf"
                 },
                 {
                   "type": "document",
@@ -40,18 +83,18 @@
             },
             {
               "type": "document",
-              "ID": 5,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
+              "ID": 11,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/FL 02 GR_02   Flowdiagram for produktion af vintertørret fisk.pdf"
             },
             {
               "type": "document",
-              "ID": 6,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/~$ 01 GR_01  Risikobeskrivelse for produktion af vintertørret fisk.doc"
+              "ID": 13,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/FL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.vsd"
             },
             {
               "type": "document",
-              "ID": 7,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/~$ 01 GR_02  Risikobeskrivelse for produktion af vintertørret fisk.doc"
+              "ID": 10,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc"
             },
             {
               "type": "document",
@@ -65,13 +108,8 @@
             },
             {
               "type": "document",
-              "ID": 10,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc"
-            },
-            {
-              "type": "document",
-              "ID": 11,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/FL 02 GR_02   Flowdiagram for produktion af vintertørret fisk.pdf"
+              "ID": 5,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
             },
             {
               "type": "document",
@@ -80,8 +118,13 @@
             },
             {
               "type": "document",
-              "ID": 13,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/FL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.vsd"
+              "ID": 6,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/~$ 01 GR_01  Risikobeskrivelse for produktion af vintertørret fisk.doc"
+            },
+            {
+              "type": "document",
+              "ID": 7,
+              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/~$ 01 GR_02  Risikobeskrivelse for produktion af vintertørret fisk.doc"
             }
           ],
           "path": "Sample files/Main Files/02_VINTERTØRRET FISK"
@@ -96,18 +139,13 @@
             },
             {
               "type": "document",
-              "ID": 15,
-              "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/GMP 03 GR_02.doc"
-            },
-            {
-              "type": "document",
-              "ID": 16,
-              "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/RI 03 GR_03   Risikoanalyse for produktion af urenset stenbiderrogn.doc"
-            },
-            {
-              "type": "document",
               "ID": 17,
               "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/FL 03 GR_03   Flowdiagram for produktion af urenset stenbiderrogn.vsd"
+            },
+            {
+              "type": "document",
+              "ID": 15,
+              "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/GMP 03 GR_02.doc"
             },
             {
               "type": "document",
@@ -118,6 +156,11 @@
               "type": "document",
               "ID": 19,
               "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/PB 03 GR_03   Procesbeskrivelse for urenset stenbiderrogn.doc"
+            },
+            {
+              "type": "document",
+              "ID": 16,
+              "path": "Sample files/Main Files/03_URENSET STENBIDERROGN/RI 03 GR_03   Risikoanalyse for produktion af urenset stenbiderrogn.doc"
             },
             {
               "type": "document",
@@ -132,49 +175,8 @@
           "folderContents": [
             {
               "type": "document",
-              "ID": 21,
-              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/PB 06 GR_02   Procesbeskrivelse for frossen Torskerogn.pdf"
-            },
-            {
-              "type": "document",
-              "ID": 22,
-              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/FL 06 GR_02   Flowdiagram for produktion af frossen TorskeRogn.pdf"
-            },
-            {
-              "type": "document",
-              "ID": 23,
-              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/PB 06 GR_02   Procesbeskrivelse for frossen Torskerogn.doc"
-            },
-            {
-              "type": "document",
-              "ID": 24,
-              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/FL 06 GR_02   Flowdiagram for produktion af frossen TorskeRogn.vsd"
-            },
-            {
-              "type": "document",
-              "ID": 25,
-              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/RI 06 GR_03   Risikoanalyse for produktion af frossen torskerogn.doc"
-            }
-          ],
-          "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen"
-        },
-        {
-          "type": "folder",
-          "folderContents": [
-            {
-              "type": "document",
-              "ID": 26,
-              "path": "Sample files/Main Files/04_MASKINTØRRET FISK/RI 04 GR_02   Risikoanalyse for produktion af maskintørret fisk.pdf"
-            },
-            {
-              "type": "document",
               "ID": 27,
               "path": "Sample files/Main Files/04_MASKINTØRRET FISK/FL 04 GR_02   Flowdiagram for produktion af maskintørret fisk.pdf"
-            },
-            {
-              "type": "document",
-              "ID": 28,
-              "path": "Sample files/Main Files/04_MASKINTØRRET FISK/PB 04 GR_02   Procesbeskrivelse for produktion af maskintørret fisk.pdf"
             },
             {
               "type": "document",
@@ -188,8 +190,18 @@
             },
             {
               "type": "document",
+              "ID": 28,
+              "path": "Sample files/Main Files/04_MASKINTØRRET FISK/PB 04 GR_02   Procesbeskrivelse for produktion af maskintørret fisk.pdf"
+            },
+            {
+              "type": "document",
               "ID": 31,
               "path": "Sample files/Main Files/04_MASKINTØRRET FISK/RI 04 GR_02   Risikoanalyse for produktion af maskintørret fisk.doc"
+            },
+            {
+              "type": "document",
+              "ID": 26,
+              "path": "Sample files/Main Files/04_MASKINTØRRET FISK/RI 04 GR_02   Risikoanalyse for produktion af maskintørret fisk.pdf"
             }
           ],
           "path": "Sample files/Main Files/04_MASKINTØRRET FISK"
@@ -198,44 +210,32 @@
           "type": "folder",
           "folderContents": [
             {
-              "type": "folder",
-              "folderContents": [
-                {
-                  "type": "folder",
-                  "folderContents": [
-                    {
-                      "type": "document",
-                      "ID": 32,
-                      "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
-                    }
-                  ],
-                  "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2"
-                }
-              ],
-              "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1"
+              "type": "document",
+              "ID": 22,
+              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/FL 06 GR_02   Flowdiagram for produktion af frossen TorskeRogn.pdf"
             },
             {
               "type": "document",
-              "ID": 33,
-              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.vsd"
+              "ID": 24,
+              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/FL 06 GR_02   Flowdiagram for produktion af frossen TorskeRogn.vsd"
             },
             {
               "type": "document",
-              "ID": 34,
-              "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+              "ID": 23,
+              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/PB 06 GR_02   Procesbeskrivelse for frossen Torskerogn.doc"
             },
             {
               "type": "document",
-              "ID": 35,
-              "path": "Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
+              "ID": 21,
+              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/PB 06 GR_02   Procesbeskrivelse for frossen Torskerogn.pdf"
             },
             {
               "type": "document",
-              "ID": 36,
-              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+              "ID": 25,
+              "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen/RI 06 GR_03   Risikoanalyse for produktion af frossen torskerogn.doc"
             }
           ],
-          "path": "Sample files/Main Files/01_SALTFISK"
+          "path": "Sample files/Main Files/06_TORSKE ROGN blok frossen"
         }
       ],
       "path": "Sample files/Main Files"
