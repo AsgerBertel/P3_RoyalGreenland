@@ -57,10 +57,11 @@ public class FileOverviewController implements TabController {
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
 
-        /* todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
+         //todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
+
         if(!PlantManager.getInstance().getAllPlants().contains(drdPlant.getSelectionModel().getSelectedItem())){
             drdPlant.getPromptText();
-        }*/
+        }
     }
 
     @FXML

@@ -186,7 +186,6 @@ public class PlantAdministrationController implements TabController {
         }
         field_EditPlantName.clear();
         field_EditPlantId.clear();
-
     }
     @FXML
     void keyPressedCreate(KeyEvent event){
