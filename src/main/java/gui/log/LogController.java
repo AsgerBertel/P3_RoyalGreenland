@@ -43,14 +43,10 @@ public class LogController implements TabController {
     private VBox vbox;
 
     @FXML
-    private StackPane stackPane;
-
-    @FXML
     private TextField searchField;
 
     private boolean searchToggled = false;
     private List<rgEvent> listOfEvents;
-
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
