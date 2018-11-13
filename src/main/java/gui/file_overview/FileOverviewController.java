@@ -47,12 +47,7 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-        update();
-
-        fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2)
-                fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
-        });
+        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
     }
 
     @Override
@@ -162,14 +157,21 @@ public class FileOverviewController implements TabController {
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
 
-        AbstractFile file = newValue.getValue();
-        if (file instanceof Document) {
-            fileExplorer.navigateTo((Folder) file);
-            try {
-                ((Document) file).openDocument();
-            } catch (IOException e) {
-                e.printStackTrace();
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                AbstractFile file = newValue.getValue();
+                if (file instanceof Document) {
+                    try {
+                        ((Document) file).openDocument();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
-        }
+
+        });
+
+
     }
 }
