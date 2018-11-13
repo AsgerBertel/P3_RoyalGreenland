@@ -1,4 +1,5 @@
 {
+  "pathToFiles": "Sample files/Main Files",
   "pathToArchive": "Sample files/Archive",
   "allContent": [
     {
@@ -37,11 +38,6 @@
                 }
               ],
               "path": "Sample files/Main Files/02_VINTERTØRRET FISK/KAL"
-            },
-            {
-              "type": "document",
-              "ID": 5,
-              "path": "Sample files/Main Files/02_VINTERTØRRET FISK/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
             },
             {
               "type": "document",
@@ -244,11 +240,6 @@
             },
             {
               "type": "document",
-              "ID": 35,
-              "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
-            },
-            {
-              "type": "document",
               "ID": 36,
               "path": "Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
             },
@@ -269,25 +260,14 @@
       "type": "folder",
       "folderContents": [
         {
-          "type": "folder",
-          "folderContents": [],
-          "path": "Sample files/Archive/root2"
+          "type": "document",
+          "ID": 38,
+          "path": "Sample files/Main Files/02_VINTERTØRRET FISK/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
         },
         {
-          "type": "folder",
-          "folderContents": [
-            {
-              "type": "document",
-              "ID": 38,
-              "path": "Sample files/Archive/rootArchive/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
-            },
-            {
-              "type": "document",
-              "ID": 39,
-              "path": "Sample files/Archive/rootArchive/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
-            }
-          ],
-          "path": "Sample files/Archive/rootArchive"
+          "type": "document",
+          "ID": 39,
+          "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
         }
       ],
       "path": "Sample files/Archive"

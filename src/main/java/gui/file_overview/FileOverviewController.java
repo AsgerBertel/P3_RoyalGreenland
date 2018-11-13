@@ -156,7 +156,6 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 AbstractFile file = newValue.getValue();
@@ -167,11 +166,7 @@ public class FileOverviewController implements TabController {
                         e.printStackTrace();
                     }
                 }
-
             }
-
         });
-
-
     }
 }
