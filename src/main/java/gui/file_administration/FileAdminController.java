@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import directory.FileExplorer;
 import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
@@ -17,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -56,7 +58,6 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
-
         update();
     }
 

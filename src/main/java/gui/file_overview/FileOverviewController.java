@@ -50,7 +50,7 @@ public class FileOverviewController implements TabController {
         update();
 
         fileTreeView.setOnMouseClicked(event -> {
-            if(event.getClickCount() == 2)
+            if (event.getClickCount() == 2)
                 fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
         });
     }
@@ -163,11 +163,8 @@ public class FileOverviewController implements TabController {
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
 
         AbstractFile file = newValue.getValue();
-        if (file instanceof Folder) {
+        if (file instanceof Document) {
             fileExplorer.navigateTo((Folder) file);
-            updateDisplayedFiles();
-        } else {
-
             try {
                 ((Document) file).openDocument();
             } catch (IOException e) {
