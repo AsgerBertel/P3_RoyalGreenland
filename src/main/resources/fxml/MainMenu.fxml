@@ -10,7 +10,7 @@
    <left>
       <HBox>
          <children>
-             <Button text="%MainMenuAdminDoc" onAction="#administrateDocuments">
+             <Button text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
                  <graphic>
                      <ImageView fitWidth="19" fitHeight="25">
                          <Image url="/icons/menu/adminDocuments.png" />
@@ -18,7 +18,7 @@
                  </graphic>
          </Button>
 
-             <Button text="%MainMenuSeeDoc" onAction="#viewDocuments">
+             <Button text="%MainMenu.SeeDoc" onAction="#viewDocuments">
                  <graphic>
                      <ImageView fitWidth="20" fitHeight="24">
                          <Image url="/icons/menu/viewDocuments.png" />
@@ -26,7 +26,7 @@
                  </graphic>
              </Button>
 
-             <Button text="%MainMenuAdminPlant" onAction="#administratePlants">
+             <Button text="%MainMenu.AdminPlant" onAction="#administratePlants">
                  <graphic>
                      <ImageView fitWidth="25" fitHeight="24">
                          <Image url="/icons/menu/adminPlants.png" />
@@ -34,7 +34,7 @@
                  </graphic>
              </Button>
 
-             <Button text="%MainMenuDeletedFiles" onAction="#deletedFiles">
+             <Button text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/deletedFiles.png" />
@@ -42,7 +42,7 @@
                  </graphic>
              </Button>
 
-             <Button text="%MainMenuHistory" onAction="#log">
+             <Button text="%MainMenu.History" onAction="#log">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/history.png"/>

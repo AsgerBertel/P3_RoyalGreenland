@@ -44,7 +44,7 @@
     <!-- File tree -->
     <VBox fx:id="leftSideVbox">
         <HBox styleClass="filler" minHeight="40" maxHeight="40">
-            <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="Filer"/>
+            <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="%AdminFiles.Files"/>
         </HBox>
         <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
                   prefHeight="${leftSideVbox.height}"/>
@@ -56,7 +56,7 @@
     <!-- Factory list -->
     <VBox id="plantSection" stylesheets="@/styles/factoryList.css">
         <HBox minHeight="30" maxHeight="30" styleClass="filler">
-            <Text text="Fabrikker" fx:id="plantListTitle" styleClass="darkGreyTitle"/> <!-- todo sprog -->
+            <Text text="%AdminFiles.Plants" fx:id="plantListTitle" styleClass="darkGreyTitle"/> <!-- todo sprog -->
             <Text text=" (0)" fx:id="plantCountText" styleClass="greyTitle"/>
         </HBox>
         <ScrollPane id="plantScrollPane" translateY="10">
@@ -67,9 +67,9 @@
 
     <!-- Changes overview -->
     <VBox fx:id="changesVBox" id="changesVBox" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
-        <Text text="Ændringer" styleClass="bigTitle"/>
-        <Text text="Sidste opdatering: 09/10-2018" styleClass="smallNote" translateY="3"/>
-        <Text text="Ingen nye ændringer" styleClass="standardText" translateY="15"/>
+        <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
+        <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
+        <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
     </VBox>
 </HBox>
 

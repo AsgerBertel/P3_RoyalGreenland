@@ -53,9 +53,9 @@
 
                 <TableView fx:id="tableView">
                     <columns>
-                        <TableColumn prefWidth="${tableView.width*0.6}" text="Handling" fx:id="event" sortable="false"/>
-                        <TableColumn prefWidth="${tableView.width*0.2}" text="Bruger" fx:id="user" sortable="false"/>
-                        <TableColumn minWidth="${tableView.width*0.2}" text="Tidspunkt" fx:id="time" sortable="false"/>
+                        <TableColumn prefWidth="${tableView.width*0.6}" text="%Log.Change" fx:id="event" sortable="false"/>
+                        <TableColumn prefWidth="${tableView.width*0.2}" text="%Log.User" fx:id="user" sortable="false"/>
+                        <TableColumn minWidth="${tableView.width*0.2}" text="%Log.Time" fx:id="time" sortable="false"/>
                     </columns>
                 </TableView>
 
