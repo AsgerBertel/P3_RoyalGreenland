@@ -34,6 +34,7 @@ public class AccessModifier {
         if(!contains(ID)){
             documents.add(ID);
         }
+        PlantManager.getInstance().updateJsonFile();
     }
 
     /**
@@ -44,6 +45,7 @@ public class AccessModifier {
     public boolean removeDocument(Integer ID){
         if(contains(ID)){
             documents.remove(ID);
+            PlantManager.getInstance().updateJsonFile();
             return true;
         }
         return false;

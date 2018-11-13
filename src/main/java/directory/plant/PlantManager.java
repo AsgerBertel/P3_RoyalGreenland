@@ -90,7 +90,7 @@ public class PlantManager {
     /**
      * Used to update the JSON file to the current state of the PlantManager.
      */
-    public void updateJsonFile(){
+    protected void updateJsonFile(){
         // Write object to JSON file.
         try (FileWriter writer = new FileWriter(pathToJson)){
             JsonParser.getJsonParser().toJson(getInstance(), writer);
