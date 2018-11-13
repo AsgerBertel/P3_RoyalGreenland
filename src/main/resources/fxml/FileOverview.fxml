@@ -15,7 +15,7 @@
       fx:controller="gui.file_overview.FileOverviewController">
     <children>
         <VBox fx:id="leftSideVbox">
-            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlant" promptText="Vælg din fabrik"
+            <ComboBox fx:id="drdPlant" onAction="#onPlantSelected" promptText="Vælg din fabrik"
                       stylesheets="@/styles/masterSheet.css"/>
             <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}"
                       stylesheets="@/styles/fileTree.css"/>

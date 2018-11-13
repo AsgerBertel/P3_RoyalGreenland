@@ -54,7 +54,7 @@ public class DeletedFilesController implements TabController {
 
     @Override
     public void update() {
-        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getArchive().get(0));
+        rootItem = FileTreeGenerator.generateTree((Folder) FileManager.getInstance().getArchive().get(0));
         fileTreeView.setRoot(rootItem);
     }
 

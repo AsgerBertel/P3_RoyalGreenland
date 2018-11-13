@@ -52,7 +52,7 @@ public class FileOverviewController implements TabController {
 
     @Override
     public void update() {
-        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
+        rootItem = FileTreeGenerator.generateTree((Folder) FileManager.getInstance().getAllContent().get(0));
         fileTreeView.setRoot(rootItem);
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
@@ -64,8 +64,10 @@ public class FileOverviewController implements TabController {
     }
 
     @FXML
-    void getSelectedPlant(ActionEvent event) {
+    void onPlantSelected(ActionEvent event) {
         fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
+        rootItem = FileTreeGenerator.generateTree((Folder) FileManager.getInstance().getAllContent().get(0), fileExplorer.getSelectedPlant().getAccessModifier());
+        fileTreeView.setRoot(rootItem);
         updateDisplayedFiles();
     }
 
