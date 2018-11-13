@@ -12,6 +12,7 @@ import gui.TabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -46,7 +47,7 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-        update();
+        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
     }
 
     @Override
@@ -55,7 +56,6 @@ public class FileOverviewController implements TabController {
         fileTreeView.setRoot(rootItem);
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
-
 
         /* todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
         if(!PlantManager.getInstance().getAllPlants().contains(drdPlant.getSelectionModel().getSelectedItem())){
@@ -99,7 +99,6 @@ public class FileOverviewController implements TabController {
         return filebutton;
     }
 
-
     private void onFileButtonClick(MouseEvent event) {
         FileButton clickedButton = (FileButton) event.getSource();
         if (event.getClickCount() == 2)
@@ -122,8 +121,8 @@ public class FileOverviewController implements TabController {
     }
 
     @FXML
-    public void openPreviusFolder() {
-        fileExplorer.navigateBack();
+    public void openPreviousFolder() {
+        fileExplorer.navigateBack(FileManager.getInstance().getAllContent());
         updateDisplayedFiles();
     }
 
@@ -139,13 +138,12 @@ public class FileOverviewController implements TabController {
             if (NewString.charAt(i) == '>')
                 BracketCounter++;
         }
-        if (BracketCounter > 2) {
-            //NewString = fileExplorer.getCurrentFolder().getPath().getParent().toString() + fileExplorer.getCurrentFolder().getPath().toString();
+
+        if (BracketCounter > 3) {
+            NewString = "../" + fileExplorer.getCurrentFolder().getName();
         } else {
             NewString = NewString.substring(NewString.indexOf("Main Files"));
-
         }
-
         return NewString;
     }
 
@@ -157,5 +155,18 @@ public class FileOverviewController implements TabController {
             return "MacOS";
     }
 
-
+    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                AbstractFile file = newValue.getValue();
+                if (file instanceof Document) {
+                    try {
+                        ((Document) file).openDocument();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 }

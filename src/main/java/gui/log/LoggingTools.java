@@ -1,9 +1,6 @@
 package gui.log;
 
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,7 +25,6 @@ public class LoggingTools {
 
          writeEventAsLog(event);
     }
-
     public List<rgEvent> listOfAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
         try(Stream<String> stream = Files.lines(Paths.get("Sample Files/logs.log"))){
@@ -38,7 +34,6 @@ public class LoggingTools {
         }
         return listOfEvents;
     }
-
     private void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 

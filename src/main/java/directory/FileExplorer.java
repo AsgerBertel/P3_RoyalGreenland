@@ -26,6 +26,10 @@ public class FileExplorer {
         rootDirectory = startingFolder;
     }
 
+    public Folder getRootDirectory() {
+        return rootDirectory;
+    }
+
     // Returns the files currently shown in the explorer
     public List<AbstractFile> getShownFiles() {
         // todo use selectedPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
@@ -55,15 +59,19 @@ public class FileExplorer {
     }
 
     // Navigates to the parent directory
-    public boolean navigateBack() {
+    public boolean navigateBack(List<AbstractFile> allFiles) {
         if (!(currentFolder.getPath().equals(rootDirectory.getPath()))) {
             currentFolder = (Folder)FileManager.getInstance().findParent(currentFolder);
+            //currentFolder = FileManager.getInstance().findParent(allFiles, currentFolder);
         }
-
         return false;
     }
 
     public Folder getCurrentFolder() {
         return currentFolder;
+    }
+
+    public List<AbstractFile> getCurrentFolderContent() {
+        return currentFolder.getContents();
     }
 }

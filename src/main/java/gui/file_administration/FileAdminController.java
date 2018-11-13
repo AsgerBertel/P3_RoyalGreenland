@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import directory.FileExplorer;
 import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
@@ -17,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
