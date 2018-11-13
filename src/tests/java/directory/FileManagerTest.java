@@ -32,7 +32,7 @@ class FileManagerTest {
     }
 
     // Todo use FileManager.deleteFile() to delete file.
-    @Test
+   /* @Test
     void uploadFile() throws IOException {
         FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
         FileManager.getTestInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
@@ -46,7 +46,7 @@ class FileManagerTest {
         Files.delete(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf"));
 
         assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
-    }
+    }*/
 
     @Test
     void createFolder() {

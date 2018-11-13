@@ -61,7 +61,8 @@ public class FileExplorer {
     // Navigates to the parent directory
     public boolean navigateBack(List<AbstractFile> allFiles) {
         if (!(currentFolder.getPath().equals(rootDirectory.getPath()))) {
-            currentFolder = FileManager.getInstance().findParent(allFiles, currentFolder);
+            currentFolder = (Folder)FileManager.getInstance().findParent(currentFolder);
+            //currentFolder = FileManager.getInstance().findParent(allFiles, currentFolder);
         }
         return false;
     }

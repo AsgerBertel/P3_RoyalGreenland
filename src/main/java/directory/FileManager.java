@@ -1,6 +1,7 @@
 package directory;
 
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import json.JsonParser;
@@ -44,12 +45,14 @@ public class FileManager {
         return fileManager;
     }
 
-    public void uploadFile(Path src, Path dst) {
+    public void uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
-        Path dest = Paths.get(dst.toString() + File.separator + file.getName());
+
+        Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
         try {
             Files.copy(src, dest);
-            allContent.add(DocumentBuilder.getInstance().createDocument(dest));
+            Document doc = DocumentBuilder.getInstance().createDocument(dest);
+            dstFolder.getContents().add(doc);
             updateFilesJson();
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -79,7 +82,8 @@ public class FileManager {
     public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
-        allContent.remove(file);
+        Folder folder = findParent(file);
+        folder.getContents().remove(file);
         archive.add(file);
         updateFilesJson();
     }
@@ -159,16 +163,30 @@ public class FileManager {
         updateFilesJson();
     }
 
-    public Folder findParent(List<AbstractFile> fileList, Folder child) {
-        for (AbstractFile current : fileList) {
+    public Folder getRootElement(){
+        return (Folder)allContent.get(0);
+        //todo error handle if not folder
+    }
+
+    public Folder findParent(AbstractFile child) {
+        return findParent(child, getRootElement());
+
+    }
+
+    private Folder findParent(AbstractFile child, Folder parent) {
+        if (parent.getContents().contains(child)){
+            return parent;
+        }
+
+        for (AbstractFile current : parent.getContents()) {
             if (current instanceof Folder) {
-                if (((Folder) current).getContents().contains(child)) {
-                    return (Folder) current;
-                } else {
-                    return ((Folder) current).findParent(child);
+                Folder folder = findParent(child, (Folder)current);
+                if (folder != null){
+                    return folder;
                 }
             }
         }
-        return child;
+        return null;
     }
+
 }
