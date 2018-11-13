@@ -6,14 +6,17 @@ import directory.plant.PlantManager;
 import gui.PlantElement;
 import gui.TabController;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PlantAdministrationController implements TabController {
@@ -46,14 +49,19 @@ public class PlantAdministrationController implements TabController {
     @FXML
     private TextField field_EditPlantId;
 
+    @FXML
+    private Button btnDeletePlant;
+
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
         //Setting standard
         createPane.toFront();
-
+        createPane.setVisible(true);
+        btnDeletePlant.setDisable(true);
         update();
+
     }
 
 
@@ -76,6 +84,9 @@ public class PlantAdministrationController implements TabController {
             element.setSelected(false);
         }
         plantElement.setSelected(true);
+        btnDeletePlant.setDisable(false);
+        btnDeletePlant.setStyle("-fx-opacity: 1");
+
 
     }
 
@@ -85,6 +96,14 @@ public class PlantAdministrationController implements TabController {
         activatePane(createPane, editPane);
         lblPlantCreated.setText("");
         lblPlantCreated.setVisible(true);
+        field_CreatePlantId.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    createPlant();
+                }
+            }
+        });
     }
 
     @FXML
@@ -92,6 +111,14 @@ public class PlantAdministrationController implements TabController {
         lblPlantEdited.setText("Select a plant to be edited");
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
+        field_EditPlantId.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    editPlant();
+                }
+            }
+        });
     }
 
     private void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
@@ -105,25 +132,42 @@ public class PlantAdministrationController implements TabController {
 
     @FXML
     PlantElement deletePlant(ActionEvent event) {
-        for(PlantElement element: plantElements){
-            if(element.isSelected()){
+        for (PlantElement element : plantElements) {
+            if (element.isSelected()) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Deleting plant");
+                alert.setHeaderText("Pressing OK to this will delete the selected plant.");
+                alert.setContentText("Are you ok with this?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
                 plantElements.remove(element);
                 PlantManager.getInstance().deletePlant(element.getPlant().getId());
                 plantVBox.getChildren().remove(element);
                 return element;
             }
         }
-        return null;
     }
-
+        return null;
+}
 
 
     @FXML
-    void createPlant(ActionEvent event) {
+    void btnCreatePlant(ActionEvent event){
+        createPlant();
+    }
+
+    @FXML
+    void btnEditPlant(ActionEvent event){
+        editPlant();
+
+    }
+
+    void createPlant(){
         Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
         for(PlantElement element: plantElements){
             if(element.getPlant().equals(plant)){
                 lblPlantCreated.setText("Plant name or ID already exists");
+                lblPlantCreated.setVisible(true);
                 return;
             }
         }
@@ -133,26 +177,27 @@ public class PlantAdministrationController implements TabController {
         newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
         plantVBox.getChildren().add(newPlantElement);
         lblPlantCreated.setText("Plant created");
+        lblPlantCreated.setVisible(true);
         field_CreatePlantName.setText("");
         field_CreatePlantId.setText("");
     }
 
-    @FXML
-    void editPlant(ActionEvent event){
+    void editPlant(){
         boolean isElementSelected = false;
-        for(PlantElement element: plantElements){
-            if(element.isSelected()) {
+        for (PlantElement element : plantElements) {
+            if (element.isSelected()) {
                 element.getPlant().setName(field_EditPlantName.getText());
                 element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
                 element.updateText();
                 isElementSelected = true;
             }
         }
-        if(!isElementSelected){
+        if (!isElementSelected) {
             lblPlantEdited.setText("A plant has to be selected first.");
         }
         field_EditPlantName.clear();
         field_EditPlantId.clear();
-
     }
+
+
 }
