@@ -72,7 +72,7 @@
             
             <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" visible="false">
                <children>
-                  <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#editPlant" prefHeight="25.0" prefWidth="96.0" text="Rediger fabrik" />
+                  <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnEditPlant" prefHeight="25.0" prefWidth="96.0" text="Rediger fabrik" />
                   <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="Nyt fabriksnavn" />
                   <TextField fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="Nyt fabriks ID" />
                   <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="247.0" text="Rediger fabrik">
@@ -87,7 +87,7 @@
       
                   <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false">
                <children>
-                  <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#createPlant" prefHeight="25.0" prefWidth="96.0" text="Opret fabrik" />
+                  <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="96.0" text="Opret fabrik" />
                   <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="Fabrik navn" />
                   <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="Fabrik ID" />
                   <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="124.0" text="Ny fabrik">
