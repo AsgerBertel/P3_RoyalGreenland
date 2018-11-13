@@ -1,1 +1,1 @@
-{"allPlants":[{"id":1000,"name":"Nuuk","accessModifier":{"documents":[36,34,32]}},{"id":1001,"name":"nuuk1","accessModifier":{"documents":[36]}},{"id":1002,"name":"nuuk2","accessModifier":{"documents":[34]}}]}
+{"allPlants":[{"id":1000,"name":"Nuuk","accessModifier":{"documents":[36,34,35]}},{"id":1001,"name":"nuuk1","accessModifier":{"documents":[36,35,9]}},{"id":1002,"name":"nuuk2","accessModifier":{"documents":[34,35,9]}}]}

@@ -62,11 +62,11 @@ public class FileAdminController implements TabController {
 
     @Override
     public void update() {
+        plants.clear();
         plantElements.clear();
         plantVBox.getChildren().clear();
 
-
-        plants = PlantManager.getInstance().getAllPlants();
+        plants.addAll(PlantManager.getInstance().getAllPlants());
 
         for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
@@ -92,8 +92,6 @@ public class FileAdminController implements TabController {
         } else {
             plant.getAccessModifier().removeDocument(selectedDocument.getID());
         }
-
-        PlantManager.getInstance().updateJsonFile();
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
@@ -143,5 +141,6 @@ public class FileAdminController implements TabController {
 
     public void deleteFile(ActionEvent actionEvent) {
     }
+
 
 }
