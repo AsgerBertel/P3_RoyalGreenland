@@ -22,7 +22,7 @@
                     <children>
                         <HBox id="hBoxTop">
                             <children>
-                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviusFolder" />
+                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviousFolder" />
 
                                 <Label id="lblVisualPath" fx:id="lblVisualPath" />
 

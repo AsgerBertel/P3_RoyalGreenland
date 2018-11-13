@@ -215,23 +215,46 @@
               "path": "Sample files/Main Files/01_SALTFISK/SaltFiskUnderMappe1"
             },
             {
-              "type": "document",
-              "ID": 33,
-              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.vsd"
+              "type": "folder",
+              "folderContents": [
+                {
+                  "type": "folder",
+                  "folderContents": [
+                    {
+                      "type": "folder",
+                      "folderContents": [
+                        {
+                          "type": "document",
+                          "ID": 33,
+                          "path": "Sample files/Main Files/01_SALTFISK/saltyfish/EvenSaltyer fish/Saltyiest fish/FL 02 GR_02   Flowdiagram for produktion af vintertørret fisk.pdf"
+                        }
+                      ],
+                      "path": "Sample files/Main Files/01_SALTFISK/saltyfish/EvenSaltyer fish/Saltyiest fish"
+                    }
+                  ],
+                  "path": "Sample files/Main Files/01_SALTFISK/saltyfish/EvenSaltyer fish"
+                }
+              ],
+              "path": "Sample files/Main Files/01_SALTFISK/saltyfish"
             },
             {
               "type": "document",
               "ID": 34,
-              "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+              "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.vsd"
             },
             {
               "type": "document",
               "ID": 35,
-              "path": "Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
+              "path": "Sample files/Main Files/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
             },
             {
               "type": "document",
               "ID": 36,
+              "path": "Sample files/Main Files/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
+            },
+            {
+              "type": "document",
+              "ID": 37,
               "path": "Sample files/Main Files/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
             }
           ],
@@ -244,7 +267,30 @@
   "archive": [
     {
       "type": "folder",
-      "path": "Sample files/Archive/rootArchive"
+      "folderContents": [
+        {
+          "type": "folder",
+          "folderContents": [],
+          "path": "Sample files/Archive/root2"
+        },
+        {
+          "type": "folder",
+          "folderContents": [
+            {
+              "type": "document",
+              "ID": 38,
+              "path": "Sample files/Archive/rootArchive/PB 02 GR_02  Procesbeskrivelse for produktion af vintertørret fisk.pdf"
+            },
+            {
+              "type": "document",
+              "ID": 39,
+              "path": "Sample files/Archive/rootArchive/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+            }
+          ],
+          "path": "Sample files/Archive/rootArchive"
+        }
+      ],
+      "path": "Sample files/Archive"
     }
   ]
 }

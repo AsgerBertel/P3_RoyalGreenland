@@ -126,8 +126,8 @@ public class FileOverviewController implements TabController {
     }
 
     @FXML
-    public void openPreviusFolder() {
-        fileExplorer.navigateBack();
+    public void openPreviousFolder() {
+        fileExplorer.navigateBack(FileManager.getInstance().getAllContent());
         updateDisplayedFiles();
     }
 
