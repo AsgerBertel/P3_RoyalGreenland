@@ -48,6 +48,7 @@ public class FileOverviewController implements TabController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+
     }
 
     @Override
@@ -57,11 +58,6 @@ public class FileOverviewController implements TabController {
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
 
-         //todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
-
-        if(!PlantManager.getInstance().getAllPlants().contains(drdPlant.getSelectionModel().getSelectedItem())){
-            drdPlant.getPromptText();
-        }
     }
 
     @FXML
@@ -162,6 +158,7 @@ public class FileOverviewController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 AbstractFile file = newValue.getValue();
+
                 if (file instanceof Document) {
                     try {
                         ((Document) file).openDocument();
