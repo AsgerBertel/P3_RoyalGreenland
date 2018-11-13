@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -81,7 +82,12 @@ public class DMSApplication extends Application {
 
             root.getChildren().add(newPane);
         } catch (IOException e) {
-            e.printStackTrace(); // todo show popup with error message for the user?
+
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Fejl");
+            alert.setContentText("Kontakt Udvikleren");
+
         }
     }
 

@@ -16,7 +16,7 @@
     <children>
         <VBox fx:id="leftSideVbox">
             <ComboBox fx:id="drdPlant" onAction="#getSelectedPlant" promptText="Vælg din fabrik"
-                      stylesheets="@/styles/masterSheet.css"/>
+                      stylesheets="@/styles/masterSheet.css" accessibleText="sdf"/>
             <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}"
                       stylesheets="@/styles/fileTree.css"/>
         </VBox>

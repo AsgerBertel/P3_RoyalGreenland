@@ -44,7 +44,7 @@
       </VBox>
 
 
-      <VBox minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="320.0">
+      <VBox >
          <children>
             <VBox id="plantSection" layoutX="82.0" layoutY="71.0" stylesheets="@/styles/factoryList.css">
                <children>
