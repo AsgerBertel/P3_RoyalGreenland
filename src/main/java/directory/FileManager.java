@@ -1,6 +1,7 @@
 package directory;
 
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import json.JsonParser;
@@ -81,7 +82,7 @@ public class FileManager {
     public void deleteFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
-        Folder folder = FileManager.findParent(file);
+        Folder folder = findParent(file);
         folder.getContents().remove(file);
         archive.add(file);
         updateFilesJson();
