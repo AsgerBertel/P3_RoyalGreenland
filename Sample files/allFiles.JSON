@@ -241,5 +241,10 @@
       "path": "Sample files/Main Files"
     }
   ],
-  "archive": []
+  "archive": [
+    {
+      "type": "folder",
+      "path": "Sample files/Archive/rootArchive"
+    }
+  ]
 }

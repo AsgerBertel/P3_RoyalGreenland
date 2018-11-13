@@ -10,32 +10,37 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox id="BackGround" stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_overview.FileOverviewController">
+<HBox id="BackGround" stylesheets="@/styles/fileoverview.css, @/styles/masterSheet.css"
+      xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.file_overview.FileOverviewController">
     <children>
         <VBox fx:id="leftSideVbox">
-            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlant" promptText="Vælg din fabrik" stylesheets="@/styles/masterSheet.css" />
-            <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
+            <ComboBox fx:id="drdPlant" onAction="#getSelectedPlant" promptText="Vælg din fabrik"
+                      stylesheets="@/styles/masterSheet.css"/>
+            <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}"
+                      stylesheets="@/styles/fileTree.css"/>
         </VBox>
 
-        <Pane styleClass="verticalSplitter" />
+        <Pane styleClass="verticalSplitter"/>
         <VBox id="VboxParrent">
             <children>
                 <VBox id="vboxTop" fx:id="vboxTop">
                     <children>
                         <HBox id="hBoxTop">
                             <children>
-                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviusFolder" />
+                                <Button id="btnReturn" fx:id="btnReturn" mnemonicParsing="false"
+                                        onAction="#openPreviusFolder"/>
 
-                                        <Label id="lblVisualPath" fx:id="lblVisualPath" />
+                                <Label id="lblVisualPath" fx:id="lblVisualPath"/>
 
                             </children>
                         </HBox>
-                        <Pane styleClass="horizontalSplitter" />
+                        <Pane styleClass="horizontalSplitter"/>
                     </children>
                 </VBox>
                 <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">
                     <content>
-                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}" />
+                        <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
                     </content>
                 </ScrollPane>
 

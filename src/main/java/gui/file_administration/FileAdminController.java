@@ -62,12 +62,11 @@ public class FileAdminController implements TabController {
 
     @Override
     public void update() {
-        plants.clear();
         plantElements.clear();
-        plants = PlantManager.getInstance().readFromJsonFile().getAllPlants();
-
-
         plantVBox.getChildren().clear();
+
+
+        plants = PlantManager.getInstance().getAllPlants();
 
         for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
