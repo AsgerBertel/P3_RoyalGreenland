@@ -29,20 +29,18 @@ public class FileTreeGenerator {
         for (AbstractFile child : children) {
             if (child instanceof Folder) {
                 // Generate new tree from folder if it is contained within the accessModifier or if there is no access modifier
-                if(accessModifier == null || rootFolder.containsFromAccessModifier(accessModifier))
+                if(accessModifier == null || ((Folder) child).containsFromAccessModifier(accessModifier))
                     rootItem.getChildren().add(generateTree((Folder) child, accessModifier));
 
             }else if(child instanceof Document){
                 // Add file to the tree if it is contained within the accessModifier or there is no accessModifier
                 if(accessModifier == null || accessModifier.contains(((Document)child).getID())){
-                    TreeItem<AbstractFile> docItem = new TreeItem<>(rootFolder);
+                    TreeItem<AbstractFile> docItem = new TreeItem<>(child);
                     docItem.setGraphic(getImageView(child));
                     rootItem.getChildren().add(docItem);
                 }
             }
         }
-
-        rootItem.setGraphic(getImageView(rootFolder));
         return rootItem;
     }
 
