@@ -15,6 +15,7 @@ import java.util.List;
 public class FileManager {
     // todo Archive folder path should be set on setup
     private static String pathToJson = "Sample files/allFiles.JSON";
+    private String pathToFiles = "Sample files/Main Files";
     private String pathToArchive = "Sample files/Archive";
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
@@ -130,7 +131,7 @@ public class FileManager {
         // First crawl all the files
         getInstance().allContent.clear();
 
-        Folder root = new Folder("Sample files/Main Files");
+        Folder root = new Folder(pathToFiles);
 
         getInstance().allContent.add(root);
 
@@ -143,7 +144,7 @@ public class FileManager {
                 .forEach(file -> root.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
         // Crawl archive
-        Folder rootArchive = new Folder("Sample files/Archive");
+        Folder rootArchive = new Folder(pathToArchive);
 
         getInstance().archive.add(rootArchive);
 
@@ -151,7 +152,7 @@ public class FileManager {
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(rootArchive.getPath()))
                 .forEach(file -> rootArchive.getContents().add(new Folder(file.toString(), true)));
 
-        Files.walk(root.getPath(), 1)
+        Files.walk(rootArchive.getPath(), 1)
                 .filter(Files::isRegularFile)
                 .forEach(file -> rootArchive.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
