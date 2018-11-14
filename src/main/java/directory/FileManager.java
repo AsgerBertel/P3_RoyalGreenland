@@ -62,19 +62,18 @@ public class FileManager {
 
     }
 
-    public Folder createFolder(Path path, String name) {
+    public Folder createFolder(Folder folder, String name) {
         // Todo Error handling
-        String pathToFolder = path.toString() + File.separator + name;
-        Folder folder = new Folder(Paths.get(pathToFolder).toString());
+        Folder createdFolder = new Folder(folder.getPath() + File.separator + name);
 
-        boolean isSuccessful = new File(pathToFolder).mkdirs();
+        boolean isSuccessful = new File(createdFolder.getPath().toString()).mkdirs();
 
         if(!isSuccessful){
             System.out.println("mkdirs was not successful");
             return null;
         }
 
-        allContent.add(folder);
+        folder.getContents().add(createdFolder);
         updateFilesJson();
         return folder;
     }

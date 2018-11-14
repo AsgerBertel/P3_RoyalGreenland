@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -95,9 +96,9 @@ public class FileAdminController implements TabController {
         Plant plant = plantElement.getPlant();
 
         if (plantElement.isSelected()) {
-            plant.getAccessModifier().addDocument(((Document)selectedFile).getID());
+            plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
         } else {
-            plant.getAccessModifier().removeDocument(((Document)selectedFile).getID());
+            plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
         }
     }
 
@@ -133,14 +134,14 @@ public class FileAdminController implements TabController {
     // Updates the plant list to reflect the AccessModifier of the chosen document
     private void onDocumentSelected() {
 
-        Document document = (Document)selectedFile;
+        Document document = (Document) selectedFile;
         for (PlantCheckboxElement element : plantElements) {
             if (element.getPlant().getAccessModifier().contains(document.getID()))
                 element.setSelected(true);
         }
     }
 
-    public void addDocument(ActionEvent actionEvent){
+    public void addDocument(ActionEvent actionEvent) {
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
         int returnValue = jfc.showOpenDialog(null);
@@ -149,16 +150,23 @@ public class FileAdminController implements TabController {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File uploadedFile = jfc.getSelectedFile();
 
-            if (selectedFile instanceof Folder){
-                FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()),(Folder)selectedFile);
+            if (selectedFile instanceof Folder) {
+                FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
                 update();
-            } else if (selectedFile instanceof Document){
+            } else if (selectedFile instanceof Document) {
                 System.out.println("popup med dokument valgt istedet for folder");
             }
         }
+
+        //todo if they upload a file that already exists (or choose a file)
+        //todo it should move the old file to archive and replace it with the new uploaded file
     }
 
     public void createFolder(ActionEvent actionEvent) {
+        String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
+
+        FileManager.getInstance().createFolder((Folder)selectedFile, folderName);
+
     }
 
     public void deleteFile(ActionEvent actionEvent) throws IOException {
