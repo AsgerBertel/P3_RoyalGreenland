@@ -152,7 +152,8 @@ public class FileOverviewController implements TabController {
         if (BracketCounter > 3) {
             NewString = "../" + fileExplorer.getCurrentFolder().getName();
         } else {
-            NewString = NewString.substring(NewString.indexOf("Main Files"));
+            // todo This no longer works after paths are reworked.
+           // NewString = NewString.substring(NewString.indexOf("Main Files"));
         }
         return NewString;
     }
