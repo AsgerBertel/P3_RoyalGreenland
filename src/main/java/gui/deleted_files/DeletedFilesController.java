@@ -61,7 +61,7 @@ public class DeletedFilesController implements TabController {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setOnMouseClicked(event -> {
-            if(event.getClickCount() == 2)
+            if (event.getClickCount() == 2)
                 fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
         });
 
@@ -142,7 +142,7 @@ public class DeletedFilesController implements TabController {
             return "MacOS";
     }
 
-    public void restoreDocument(ActionEvent event){
+    public void restoreDocument(ActionEvent event) {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         AbstractFile selectedFile = selectedItem.getValue();
         try {
