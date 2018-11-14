@@ -65,8 +65,6 @@ public class FileAdminController implements TabController {
         if(currentRoot == null || !currentRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0)))
             reloadFileTree();
 
-
-
         reloadPlantList();
     }
 
@@ -196,6 +194,4 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         selectedItem.getParent().getChildren().remove(selectedItem);
     }
-
-
 }

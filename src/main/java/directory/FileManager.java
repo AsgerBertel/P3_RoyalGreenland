@@ -9,6 +9,7 @@ import json.JsonParser;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,6 @@ import java.util.List;
 public class FileManager {
     // todo Archive folder path should be set on setup
     private static String pathToJson = "Sample files/allFiles.JSON";
-    private String pathToFiles = "Sample files/Main Files";
-    private String pathToArchive = "Sample files/Archive/";
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
@@ -86,7 +85,7 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(PathsManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
         Files.move(file.getPath(), pathWithName);
         Folder parent = findParent(file);
         parent.getContents().remove(file);
@@ -98,9 +97,11 @@ public class FileManager {
     }
 
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(PathsManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
-        Files.move(pathWithName, Paths.get("Sample files/Main Files" + File.separator + file.getName()));
+
+
+        Files.move(pathWithName, Paths.get(PathsManager.getInstance().getServerMainFilesPath() + File.separator + file.getName()));
 
         Folder archiveFolder = (Folder)getInstance().archive.get(0);
         archiveFolder.getContents().remove(file);
@@ -112,7 +113,7 @@ public class FileManager {
 
     public void updateFilesJson() {
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(pathToJson)) {
+        try (FileWriter writer = new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,7 +122,8 @@ public class FileManager {
 
     protected static FileManager readFilesFromJson() {
         // String pathStr;
-        try (Reader reader = new FileReader(pathToJson)) {
+        System.out.println("Looking for: " + PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON");
+        try (Reader reader = new FileReader(PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : fileManager.allContent) {
@@ -142,7 +144,7 @@ public class FileManager {
         // First crawl all the files
         getInstance().allContent.clear();
 
-        Folder root = new Folder(pathToFiles);
+        Folder root = new Folder(PathsManager.getInstance().getServerMainFilesPath());
 
         getInstance().allContent.add(root);
 
@@ -155,7 +157,7 @@ public class FileManager {
                 .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
 
         // Crawl archive
-        Folder rootArchive = new Folder(pathToArchive);
+        Folder rootArchive = new Folder(PathsManager.getInstance().getServerArchivePath());
 
         getInstance().archive.add(rootArchive);
 

@@ -1,6 +1,7 @@
 package gui;
 
 import directory.FileManager;
+import directory.PathsManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -62,12 +63,10 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         //resetter file tree
-        //FileManager.getTestInstance().initFolderTree();
+        FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();
-
-        // FileManager.getTestInstance().initFolderTree();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
 

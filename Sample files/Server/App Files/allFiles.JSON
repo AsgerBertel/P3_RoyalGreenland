@@ -1,0 +1,95 @@
+{
+  "pathToFiles": "Sample files/Main Files",
+  "pathToArchive": "Sample files/Archive/",
+  "allContent": [
+    {
+      "type": "folder",
+      "folderContents": [
+        {
+          "type": "folder",
+          "folderContents": [
+            {
+              "type": "folder",
+              "folderContents": [
+                {
+                  "type": "folder",
+                  "folderContents": [],
+                  "path": "Sample files/Server/Documents/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2"
+                }
+              ],
+              "path": "Sample files/Server/Documents/01_SALTFISK/SaltFiskUnderMappe1"
+            },
+            {
+              "type": "folder",
+              "folderContents": [
+                {
+                  "type": "folder",
+                  "folderContents": [
+                    {
+                      "type": "folder",
+                      "folderContents": [
+                        {
+                          "type": "document",
+                          "ID": 48,
+                          "path": "Sample files/Server/Documents/01_SALTFISK/saltyfish/EvenSaltyer fish/Saltyiest fish/FL 02 GR_02   Flowdiagram for produktion af vintertørret fisk.pdf"
+                        }
+                      ],
+                      "path": "Sample files/Server/Documents/01_SALTFISK/saltyfish/EvenSaltyer fish/Saltyiest fish"
+                    }
+                  ],
+                  "path": "Sample files/Server/Documents/01_SALTFISK/saltyfish/EvenSaltyer fish"
+                },
+                {
+                  "type": "document",
+                  "ID": 49,
+                  "path": "Sample files/Server/Documents/01_SALTFISK/saltyfish/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+                }
+              ],
+              "path": "Sample files/Server/Documents/01_SALTFISK/saltyfish"
+            },
+            {
+              "type": "document",
+              "ID": 52,
+              "path": "Sample files/Server/Documents/01_SALTFISK/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+            },
+            {
+              "type": "document",
+              "ID": 50,
+              "path": "Sample files/Server/Documents/01_SALTFISK/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+            }
+          ],
+          "path": "Sample files/Server/Documents/01_SALTFISK"
+        },
+        {
+          "type": "document",
+          "ID": 47,
+          "path": "Sample files/Server/Documents/01_SALTFISK/SaltFiskUnderMappe1/SaltFiskUnderMappe2/FL 01 GR_01 Flowdiagram Produktion af saltfisk.pdf"
+        },
+        {
+          "type": "document",
+          "ID": 53,
+          "path": "Sample files/Server/Archive/FL 01 GR_01 Flowdiagram Produktion af saltfisk.vsd"
+        }
+      ],
+      "path": "Sample files/Server/Documents/"
+    }
+  ],
+  "archive": [
+    {
+      "type": "folder",
+      "folderContents": [
+        {
+          "type": "document",
+          "ID": 46,
+          "path": "Sample files/Server/Documents/PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
+        },
+        {
+          "type": "document",
+          "ID": 51,
+          "path": "Sample files/Server/Documents/01_SALTFISK/RI 01 GR_01 Risikoanalyse Produktion af saltfisk.doc"
+        }
+      ],
+      "path": "Sample files/Server/Archive/"
+    }
+  ]
+}
