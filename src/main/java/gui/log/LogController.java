@@ -30,13 +30,9 @@ public class LogController implements TabController {
     @FXML
     private TableColumn<rgEvent, String> time;
 
-    @FXML
-    private Pane searchPane;
 
     @FXML
     private TextField searchField;
-
-    private boolean searchToggled = false;
     private List<rgEvent> listOfEvents;
     private boolean sortedByTime = false;
 
@@ -49,28 +45,16 @@ public class LogController implements TabController {
 
     @Override
     public void update() {
+        tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
         tableView.getItems().setAll(listOfEvents);
     }
 
-    public void searchClicked(ActionEvent actionEvent) {
-        if (searchToggled) {
-            searchPane.toBack();
-            searchToggled = false;
-        } else {
-            searchPane.toFront();
-            searchToggled = true;
-        }
-    }
 
     public void keyReleased(KeyEvent keyEvent){
-        if(keyEvent.getCode() == KeyCode.ENTER){
-            searchPane.toBack();
-            searchToggled = false;
-        }
-        search(searchField.getText());
+        search(searchField.getText().toLowerCase());
     }
 
     private void search(String search) {

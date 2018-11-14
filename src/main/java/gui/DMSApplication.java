@@ -59,8 +59,13 @@ public class DMSApplication extends Application {
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
 
+        //resetter file tree
+        //FileManager.getTestInstance().initFolderTree();
+
         this.primaryStage = primaryStage;
         primaryStage.show();
+
+        // FileManager.getTestInstance().initFolderTree();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
     }
