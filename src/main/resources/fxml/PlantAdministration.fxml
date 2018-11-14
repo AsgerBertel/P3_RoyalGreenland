@@ -87,10 +87,10 @@
       
                   <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false" onKeyPressed="#keyPressedCreate">
                <children>
-                  <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="125.0" text="%PlantAdmin.CreatePlant" />
-                  <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" />
-                  <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" />
-                  <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="124.0" text="%PlantAdmin.NewPlant">
+                  <Button fx:id="btnCreatePlant" styleClass="standardText" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="125.0" text="%PlantAdmin.CreatePlant" />
+                  <TextField fx:id="field_CreatePlantName" styleClass="standardText" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" />
+                  <TextField fx:id="field_CreatePlantId" styleClass="standardText" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" />
+                  <Label layoutX="31.0" layoutY="67.0" styleClass="bigTitle" prefHeight="27.0" prefWidth="124.0" text="%PlantAdmin.NewPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
