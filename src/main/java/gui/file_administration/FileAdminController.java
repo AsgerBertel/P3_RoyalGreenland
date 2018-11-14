@@ -54,12 +54,7 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
-
         setFactoryListDisabled(true);
-
-        rootItem = FileTreeUtil.generateTree(rootFolder);
-        fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
 
@@ -68,6 +63,10 @@ public class FileAdminController implements TabController {
 
     @Override
     public void update() {
+        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        rootItem = FileTreeUtil.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
+
         plants.clear();
         plantElements.clear();
         plantVBox.getChildren().clear();
@@ -180,6 +179,8 @@ public class FileAdminController implements TabController {
 
     public void deleteFile(ActionEvent actionEvent) throws IOException {
         FileManager.getInstance().deleteFile(selectedFile);
+        TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+        selectedItem.getParent().getChildren().remove(selectedItem);
     }
 
 

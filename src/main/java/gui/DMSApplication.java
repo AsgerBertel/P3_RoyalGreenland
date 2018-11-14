@@ -65,6 +65,8 @@ public class DMSApplication extends Application {
         this.primaryStage = primaryStage;
         primaryStage.show();
 
+        // FileManager.getTestInstance().initFolderTree();
+
         switchWindow(TabLoader.FILE_ADMINISTRATION);
     }
 
