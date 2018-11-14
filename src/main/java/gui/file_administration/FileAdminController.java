@@ -14,7 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -62,13 +61,17 @@ public class FileAdminController implements TabController {
     @Override
     public void update() {
         // Refresh file tree if the files have changed // todo test if functional
-        if(!(FileManager.getInstance().getAllContent().get(0).equals(fileTreeView.getRoot().getValue())))
+        TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
+        if(currentRoot == null || !currentRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0)))
             reloadFileTree();
+
+
 
         reloadPlantList();
     }
 
     private void reloadFileTree(){
+        System.out.println("test");
         rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
 
         rootItem = FileTreeUtil.generateTree(rootFolder);
