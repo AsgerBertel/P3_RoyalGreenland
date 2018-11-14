@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
-    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <VBox fx:id="vbox" HBox.hgrow="ALWAYS">
-                    <HBox style="-fx-padding: 2.0" spacing="5">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController" stylesheets="@/styles/log.css">
+        <VBox fx:id="vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <HBox fx:id="topbar" spacing="5">
                         <Button onAction="#sortByUser">
                             <graphic>
                                 <ImageView fitHeight="38" fitWidth="38">
@@ -37,16 +36,15 @@
                             </graphic>
                         </Button>
                         <HBox spacing="1" HBox.hgrow="ALWAYS">
-                        <TextField  promptText="Søg efter filnavne eller brugernavne her.." fx:id="searchField" minHeight="46" HBox.hgrow="ALWAYS" onKeyReleased="#keyReleased" />
+                        <TextField promptText="Søg efter filnavne eller brugernavne her.." fx:id="searchField" minHeight="46" HBox.hgrow="ALWAYS" onKeyReleased="#keyReleased" />
                         </HBox>
                     </HBox>
-                <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableView" VBox.vgrow="SOMETIMES">
                     <columns>
-                        <TableColumn fx:id="event" prefWidth="${tableView.width*0.6}" sortable="false" text="%Log.Change" />
-                        <TableColumn fx:id="user" prefWidth="${tableView.width*0.2}" sortable="false" text="%Log.User" />
-                        <TableColumn fx:id="time" minWidth="${tableView.width*0.2}" sortable="false" text="%Log.Time" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="event" sortable="false" prefWidth="${tableView.width*0.6}" text="%Log.Change" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="user"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.User" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="time"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.Time" />
                     </columns>
                 </TableView>
             </VBox>
-        </HBox>
 </AnchorPane>

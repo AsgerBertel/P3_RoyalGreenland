@@ -30,6 +30,7 @@ public class LogController implements TabController {
     @FXML
     private TableColumn<rgEvent, String> time;
 
+
     @FXML
     private TextField searchField;
     private List<rgEvent> listOfEvents;
@@ -44,6 +45,7 @@ public class LogController implements TabController {
 
     @Override
     public void update() {
+        tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
