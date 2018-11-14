@@ -22,9 +22,6 @@ public class PathsManager {
     private static final String LOCAL_FILES_PATH = "Documents/";
     private static final String LOCAL_APP_FILES_PATH = "App Files/";
 
-    // Temporary
-    private static final String JAR_PATH = PathsManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
     private String serverPath, localPath;
 
     private PathsManager() {
@@ -42,8 +39,8 @@ public class PathsManager {
 
     public void getNewPaths() {
         // temporary hardcoded paths todo Get paths from user input
-        serverPath = JAR_PATH + "Sample files/Server/";
-        localPath = JAR_PATH + "Sample files/Local Disk/";
+        serverPath = "Sample files/Server/";
+        localPath = "Sample files/Local Disk/";
 
         preferences.put(SERVER_PATH_PREF, serverPath);
         preferences.put(LOCAL_PATH_PREF, serverPath);
