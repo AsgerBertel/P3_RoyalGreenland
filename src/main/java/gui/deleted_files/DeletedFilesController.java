@@ -5,9 +5,7 @@ import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
-import directory.plant.AccessModifier;
-import directory.plant.Plant;
-import gui.FileTreeGenerator;
+import gui.FileTreeUtil;
 import gui.TabController;
 import gui.file_overview.FileButton;
 import javafx.event.ActionEvent;
@@ -16,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import jdk.nashorn.api.tree.Tree;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class DeletedFilesController implements TabController {
 
     @Override
     public void update() {
-        rootItem = FileTreeGenerator.generateTree((Folder) FileManager.getInstance().getArchive().get(0));
+        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getArchive().get(0));
         fileTreeView.setRoot(rootItem);
     }
 
@@ -86,7 +85,7 @@ public class DeletedFilesController implements TabController {
 
         filebutton.getStyleClass().add("FileButton");
         filebutton.setContentDisplay(ContentDisplay.TOP);
-        filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
+        filebutton.setOnMouseClicked(this::onFileButtonClick);
         // Add appropriate context menu
 
         return filebutton;
@@ -143,14 +142,14 @@ public class DeletedFilesController implements TabController {
     }
 
     public void restoreDocument(ActionEvent event){
-        AbstractFile selectedFile = fileTreeView.getSelectionModel().getSelectedItem().getValue();
+        TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+        AbstractFile selectedFile = selectedItem.getValue();
         try {
             FileManager.getInstance().restoreFile(selectedFile);
+            selectedItem.getParent().getChildren().remove(selectedItem);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // todo error handling
         }
-
-        // todo Update content on screen. Magnus is looking into creating a method doing exactly this.
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {

@@ -116,7 +116,6 @@ public class PlantAdministrationController implements TabController {
         activatedPane.toFront();
     }
 
-
     @FXML
     PlantElement deletePlant(ActionEvent event) {
         for (PlantElement element : plantElements) {
