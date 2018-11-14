@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.StackPane?>
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.log.LogController">
-    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="0.0">
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController">
+    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-            <Button onAction="#searchClicked" fx:id="searchBtn">
+            <Button fx:id="searchBtn" onAction="#searchClicked">
                 <graphic>
                     <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/search.png"/>
+                        <Image url="/icons/menu/search.png" />
                     </ImageView>
                 </graphic>
             </Button>
-            <Button>
+            <Button onAction="#sortByUser">
                 <graphic>
                     <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/filter.png"/>
+                        <Image url="/icons/menu/filter.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button onAction="#sortByChangeType">
+                <graphic>
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/filter.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button onAction="#sortByTime">
+                <graphic>
+                    <ImageView fitHeight="38" fitWidth="38">
+                        <Image url="/icons/menu/filter.png" />
                     </ImageView>
                 </graphic>
             </Button>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" fx:id="vbox">
-            <StackPane VBox.vgrow="ALWAYS" fx:id="stackPane">
-                <Pane fx:id="box" >
+        <VBox fx:id="vbox" HBox.hgrow="ALWAYS">
+            <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS">
+                <Pane fx:id="searchPane">
                     <HBox>
-                        <TextField onKeyReleased="#keyReleased" fx:id="searchField" minHeight="${searchBtn.height}"/>
+                        <TextField fx:id="searchField" minHeight="${searchBtn.height}" onKeyReleased="#keyReleased" />
                         <Button>
                             <graphic>
                                 <ImageView fitHeight="${searchField.height}">
@@ -48,14 +58,13 @@
                             </graphic>
                         </Button>
                     </HBox>
-
                 </Pane>
 
                 <TableView fx:id="tableView">
                     <columns>
-                        <TableColumn prefWidth="${tableView.width*0.6}" text="%Log.Change" fx:id="event" sortable="false"/>
-                        <TableColumn prefWidth="${tableView.width*0.2}" text="%Log.User" fx:id="user" sortable="false"/>
-                        <TableColumn minWidth="${tableView.width*0.2}" text="%Log.Time" fx:id="time" sortable="false"/>
+                        <TableColumn fx:id="event" prefWidth="${tableView.width*0.6}" sortable="false" text="%Log.Change" />
+                        <TableColumn fx:id="user" prefWidth="${tableView.width*0.2}" sortable="false" text="%Log.User" />
+                        <TableColumn fx:id="time" minWidth="${tableView.width*0.2}" sortable="false" text="%Log.Time" />
                     </columns>
                 </TableView>
 

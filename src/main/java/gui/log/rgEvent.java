@@ -36,6 +36,6 @@ public class rgEvent {
     }
 
     public String getTime(){
-        return getLocalDateTime().getDayOfMonth() +"/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear();
+        return getLocalDateTime().getDayOfMonth() +"/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + getLocalDateTime().getMinute();
     }
 }

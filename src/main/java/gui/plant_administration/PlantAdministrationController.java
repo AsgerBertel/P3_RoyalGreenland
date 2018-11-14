@@ -6,7 +6,6 @@ import directory.plant.PlantManager;
 import gui.PlantElement;
 import gui.TabController;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -15,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,7 +54,8 @@ public class PlantAdministrationController implements TabController {
     @FXML
     private Button btnDeletePlant;
 
-
+    @FXML
+    private Text plantCountText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -63,7 +64,6 @@ public class PlantAdministrationController implements TabController {
         createPane.setVisible(true);
         btnDeletePlant.setDisable(true);
         update();
-
     }
 
 
@@ -77,9 +77,9 @@ public class PlantAdministrationController implements TabController {
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
         }
-
-
         plantVBox.getChildren().addAll(plantElements);
+
+        plantCountText.setText("(" + plantElements.size() + ")");
     }
 
     private void onPlantToggle(PlantElement plantElement) {
@@ -89,8 +89,6 @@ public class PlantAdministrationController implements TabController {
         plantElement.setSelected(true);
         btnDeletePlant.setDisable(false);
         btnDeletePlant.setStyle("-fx-opacity: 1");
-
-
     }
 
 
@@ -128,6 +126,7 @@ public class PlantAdministrationController implements TabController {
                 if (result.get() == ButtonType.OK) {
                 plantElements.remove(element);
                 PlantManager.getInstance().deletePlant(element.getPlant().getId());
+                plantCountText.setText("(" + plantElements.size() + ")");
                 plantVBox.getChildren().remove(element);
                 btnDeletePlant.setDisable(true);
                 btnDeletePlant.setStyle("-fx-opacity: 0.5");
@@ -138,7 +137,6 @@ public class PlantAdministrationController implements TabController {
         return null;
 }
 
-
     @FXML
     void btnCreatePlant(ActionEvent event){
         createPlant();
@@ -147,7 +145,6 @@ public class PlantAdministrationController implements TabController {
     @FXML
     void btnEditPlant(ActionEvent event){
         editPlant();
-
     }
 
     void createPlant(){
@@ -168,6 +165,7 @@ public class PlantAdministrationController implements TabController {
         lblPlantCreated.setVisible(true);
         field_CreatePlantName.setText("");
         field_CreatePlantId.setText("");
+        plantCountText.setText("(" + plantElements.size() + ")");
     }
 
     void editPlant(){
@@ -185,7 +183,6 @@ public class PlantAdministrationController implements TabController {
         }
         field_EditPlantName.clear();
         field_EditPlantId.clear();
-
     }
     @FXML
     void keyPressedCreate(KeyEvent event){

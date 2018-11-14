@@ -2,24 +2,18 @@ package gui.log;
 
 import gui.TabController;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LogController implements TabController {
 
@@ -37,16 +31,14 @@ public class LogController implements TabController {
     private TableColumn<rgEvent, String> time;
 
     @FXML
-    private Pane box;
-
-    @FXML
-    private VBox vbox;
+    private Pane searchPane;
 
     @FXML
     private TextField searchField;
 
     private boolean searchToggled = false;
     private List<rgEvent> listOfEvents;
+    private boolean sortedByTime = false;
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,17 +57,17 @@ public class LogController implements TabController {
 
     public void searchClicked(ActionEvent actionEvent) {
         if (searchToggled) {
-            box.toBack();
+            searchPane.toBack();
             searchToggled = false;
         } else {
-            box.toFront();
+            searchPane.toFront();
             searchToggled = true;
         }
     }
 
     public void keyReleased(KeyEvent keyEvent){
         if(keyEvent.getCode() == KeyCode.ENTER){
-            box.toBack();
+            searchPane.toBack();
             searchToggled = false;
         }
         search(searchField.getText());
@@ -91,4 +83,27 @@ public class LogController implements TabController {
         tableView.getItems().setAll(foundEvents);
     }
 
+    public void sortByUser(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getUser));
+        tableView.getItems().setAll(sortedList);
+    }
+    public void sortByChangeType(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getEventType));
+        tableView.getItems().setAll(sortedList);
+    }
+    public void sortByTime(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getLocalDateTime));
+        if(sortedByTime){
+            Collections.reverse(sortedList);
+            tableView.getItems().setAll(sortedList);
+            sortedByTime = false;
+        }else{
+            tableView.getItems().setAll(sortedList);
+            sortedByTime = true;
+        }
+
+    }
 }
