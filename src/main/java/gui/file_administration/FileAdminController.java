@@ -1,13 +1,12 @@
 package gui.file_administration;
 
-import directory.FileExplorer;
 import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.FileTreeGenerator;
+import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
 import gui.TabController;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ public class FileAdminController implements TabController {
 
         setFactoryListDisabled(true);
 
-        rootItem = FileTreeGenerator.generateTree(rootFolder);
+        rootItem = FileTreeUtil.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));

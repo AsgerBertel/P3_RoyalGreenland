@@ -97,7 +97,7 @@ public class FileManager {
             if (isSuccessful){
                 Files.move(file1, file.getPath());
             } else {
-                System.out.println("mkdirs was not successful");
+                System.out.println("mkdirs was not successful"); // todo error handling
             }
         }
     }

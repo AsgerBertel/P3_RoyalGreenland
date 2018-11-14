@@ -5,18 +5,20 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.AccessModifier;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.print.Doc;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
-public class FileTreeGenerator {
+public class FileTreeUtil {
 
     private static final Image folderImage = new Image("/icons/smallFolder.png");
     private static final Image documentImage = new Image("/icons/smallBlueDoc.png");
 
+    // Recursively generates a tree from a root folder. The tree will only contain files from the given access modifier
+    // If the access modifier is null all files will be shown in the tree
     public static TreeItem<AbstractFile> generateTree(Folder rootFolder, AccessModifier accessModifier) {
         // Add folder element to tree
         TreeItem<AbstractFile> rootItem = new TreeItem<>(rootFolder);
@@ -24,7 +26,7 @@ public class FileTreeGenerator {
 
         List<AbstractFile> children = rootFolder.getContents();
         // Sort to show files in order of file type and name
-        children.sort(FileTreeGenerator::compareFiles);
+        children.sort(FileTreeUtil::compareFiles);
 
         for (AbstractFile child : children) {
             if (child instanceof Folder) {
@@ -63,16 +65,18 @@ public class FileTreeGenerator {
     }
 
     // Returns an image view with an appropriate icon according to the file-type
-    public static ImageView getImageView(AbstractFile file) {
+    private static ImageView getImageView(AbstractFile file) {
         ImageView imageView;
         if (file instanceof Folder) {
             imageView = new ImageView(folderImage);
+
             // Set scaling of image
             imageView.setFitWidth(16);
             imageView.setFitHeight(16);
         } else {
             // todo add icons for multiple filetypes
             imageView = new ImageView(documentImage);
+
             //Set scaling of image
             imageView.setFitWidth(14);
             imageView.setFitHeight(16);
