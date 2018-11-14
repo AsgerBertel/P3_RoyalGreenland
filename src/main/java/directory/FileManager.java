@@ -17,8 +17,6 @@ import java.util.List;
 public class FileManager {
     // todo Archive folder path should be set on setup
     private static String pathToJson = "Sample files/allFiles.JSON";
-    private String pathToFiles = "Sample files/Main Files";
-    private String pathToArchive = "Sample files/Archive/";
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
