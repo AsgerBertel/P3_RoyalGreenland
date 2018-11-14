@@ -22,12 +22,12 @@ public enum TabLoader {
 
     TabLoader(String fxmlFileName){
         this.fxmlFileName = fxmlFileName;
-        lang = DMSApplication.locale;
+        lang = DMSApplication.getLanguage();
     }
 
     public Pane getPane() throws IOException {
-        if(node == null || lang != DMSApplication.locale){
-            ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.locale);
+        if(node == null || lang != DMSApplication.getLanguage()){
+            ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName), bundle);
             node = fxmlLoader.load();
             tabController = fxmlLoader.getController();

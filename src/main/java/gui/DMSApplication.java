@@ -24,8 +24,8 @@ public class DMSApplication extends Application {
 
     private VBox root;
 
-    public static Locale locale = new Locale("da", "DK");
-    public static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
+    private static Locale locale = new Locale("da", "DK");
+    private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
@@ -111,4 +111,14 @@ public class DMSApplication extends Application {
         DMSApplication.locale = locale;
         messages = ResourceBundle.getBundle("Messages", locale);
     }
+
+    public static Locale getLanguage(){
+        return locale;
+    }
+
+    public static String getMessage(String key){
+        return messages.getString("PlantAdmin.DeletePlantConfirmation");
+    }
+
+
 }

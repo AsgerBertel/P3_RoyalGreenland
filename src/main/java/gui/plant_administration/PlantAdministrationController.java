@@ -196,8 +196,7 @@ public class PlantAdministrationController implements TabController {
     }
 
     public void popup() {
-        System.out.println(DMSApplication.messages.getString("PlantAdmin.DeletePlantConfirmation"));
-        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.messages.getString("PlantAdmin.DeletePlantConfirmation"));
+        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.DeletePlantConfirmation"));
         popup.showAndWait();
     }
 
