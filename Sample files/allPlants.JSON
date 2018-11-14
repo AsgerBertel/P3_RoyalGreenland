@@ -1,1 +1,32 @@
-{"allPlants":[{"id":123,"name":"nuuk","accessModifier":{"documents":[]}},{"id":1234,"name":"hej","accessModifier":{"documents":[]}}]}
+{
+  "allPlants": [
+    {
+      "id": 1,
+      "name": "1",
+      "accessModifier": {
+        "documents": []
+      }
+    },
+    {
+      "id": 1234,
+      "name": "124",
+      "accessModifier": {
+        "documents": []
+      }
+    },
+    {
+      "id": 235,
+      "name": "123",
+      "accessModifier": {
+        "documents": []
+      }
+    },
+    {
+      "id": 23415,
+      "name": "123",
+      "accessModifier": {
+        "documents": []
+      }
+    }
+  ]
+}

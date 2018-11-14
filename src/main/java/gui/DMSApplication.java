@@ -5,9 +5,11 @@ import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -62,6 +64,7 @@ public class DMSApplication extends Application {
         primaryStage.show();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
+
     }
 
     // Shows the given part of the program
