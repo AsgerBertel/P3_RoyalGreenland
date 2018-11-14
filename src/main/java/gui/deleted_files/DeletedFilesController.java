@@ -146,10 +146,10 @@ public class DeletedFilesController implements TabController {
         AbstractFile selectedFile = fileTreeView.getSelectionModel().getSelectedItem().getValue();
         try {
             FileManager.getInstance().restoreFile(selectedFile);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // todo Update content on screen. Magnus is looking into creating a method doing exactly this.
     }
 

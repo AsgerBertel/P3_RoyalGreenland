@@ -8,8 +8,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.print.Doc;
-import java.util.Comparator;
 import java.util.List;
 
 public class FileTreeGenerator {
