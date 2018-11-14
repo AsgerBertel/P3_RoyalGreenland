@@ -36,12 +36,12 @@ public class MainMenuController {
     }
 
     public void changeToDanish(Event actionEvent) throws Exception{
-        DMSApplication.setLocale(new Locale("da", "DK"));
+        DMSApplication.changeLanguage(new Locale("da", "DK"));
         DMSApplication.restartApp();
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
-        DMSApplication.setLocale(new Locale("kl", "GL"));
+        DMSApplication.changeLanguage(new Locale("kl", "GL"));
         DMSApplication.restartApp();
     }
 }

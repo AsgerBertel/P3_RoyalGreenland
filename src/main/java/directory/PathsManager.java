@@ -32,7 +32,7 @@ public class PathsManager {
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
         // Add new path values if non exists
-        if (serverPath.equals(DEFAULT_NULL_VALUE)) {
+        if (true || serverPath.equals(DEFAULT_NULL_VALUE)) { // todo if(true) is obvs temporary
             getNewPaths();
         }
     }

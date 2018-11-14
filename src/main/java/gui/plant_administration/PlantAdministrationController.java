@@ -3,6 +3,7 @@ package gui.plant_administration;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import popup.PopupDeletePlantController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PlantAdministrationController implements TabController {
@@ -64,7 +66,7 @@ public class PlantAdministrationController implements TabController {
     private Text plantCountText;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize(URL location, ResourceBundle resources) {
         //Setting standard
         createPane.toFront();
         createPane.setVisible(true);
@@ -77,7 +79,7 @@ public class PlantAdministrationController implements TabController {
         plantElements.clear();
         plantVBox.getChildren().clear();
 
-        for(Plant plant: PlantManager.getInstance().readFromJsonFile().getAllPlants()){
+        for (Plant plant : PlantManager.getInstance().readFromJsonFile().getAllPlants()) {
             PlantElement plantElement = new PlantElement(plant);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
@@ -88,7 +90,7 @@ public class PlantAdministrationController implements TabController {
     }
 
     private void onPlantToggle(PlantElement plantElement) {
-        for(PlantElement element:plantElements){
+        for (PlantElement element : plantElements) {
             element.setSelected(false);
         }
         plantElement.setSelected(true);
@@ -132,19 +134,19 @@ public class PlantAdministrationController implements TabController {
     }
 
     @FXML
-    void btnCreatePlant(ActionEvent event){
+    void btnCreatePlant(ActionEvent event) {
         createPlant();
     }
 
     @FXML
-    void btnEditPlant(ActionEvent event){
+    void btnEditPlant(ActionEvent event) {
         editPlant();
     }
 
-    void createPlant(){
+    void createPlant() {
         Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
-        for(PlantElement element: plantElements){
-            if(element.getPlant().equals(plant)){
+        for (PlantElement element : plantElements) {
+            if (element.getPlant().equals(plant)) {
                 lblPlantCreated.setText("Plant name or ID already exists");
                 lblPlantCreated.setVisible(true);
                 return;
@@ -162,7 +164,7 @@ public class PlantAdministrationController implements TabController {
         plantCountText.setText("(" + plantElements.size() + ")");
     }
 
-    void editPlant(){
+    void editPlant() {
         boolean isElementSelected = false;
         for (PlantElement element : plantElements) {
             if (element.isSelected()) {
@@ -178,26 +180,25 @@ public class PlantAdministrationController implements TabController {
         field_EditPlantName.clear();
         field_EditPlantId.clear();
     }
+
     @FXML
-    void keyPressedCreate(KeyEvent event){
-        if(event.getCode().equals(KeyCode.ENTER)){
+    void keyPressedCreate(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
             createPlant();
         }
     }
+
     @FXML
-    void keyPressedEdit(KeyEvent event){
-        if(event.getCode().equals(KeyCode.ENTER)){
+    void keyPressedEdit(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
             editPlant();
         }
     }
 
-    public void popup(){
-            PopupDeletePlantController popup = new PopupDeletePlantController();
-            popup.deletePlantController(this);
-
-
-
-
+    public void popup() {
+        System.out.println(DMSApplication.messages.getString("PlantAdmin.DeletePlantConfirmation"));
+        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.messages.getString("PlantAdmin.DeletePlantConfirmation"));
+        popup.showAndWait();
     }
 
     public Button getBtnDeletePlant() {

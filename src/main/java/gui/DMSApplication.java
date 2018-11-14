@@ -25,6 +25,7 @@ public class DMSApplication extends Application {
     private VBox root;
 
     public static Locale locale = new Locale("da", "DK");
+    public static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
@@ -47,6 +48,8 @@ public class DMSApplication extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
+        //System.out.println(locale.get);
+
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
         fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
@@ -63,7 +66,7 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         //resetter file tree
-        // FileManager.getTestInstance().initFolderTree();
+        //FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();
@@ -104,7 +107,8 @@ public class DMSApplication extends Application {
         main.start(new Stage());
     }
 
-    public static void setLocale(Locale locale) {
+    public static void changeLanguage(Locale locale) {
         DMSApplication.locale = locale;
+        messages = ResourceBundle.getBundle("Messages", locale);
     }
 }
