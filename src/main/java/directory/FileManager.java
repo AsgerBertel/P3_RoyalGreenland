@@ -45,10 +45,15 @@ public class FileManager {
         return fileManager;
     }
 
-    public void uploadFile(Path src, Folder dstFolder) {
+    public void uploadFile(Path src, Folder dstFolder) throws IOException {
         File file = new File(src.toString());
 
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
+
+        if (Files.exists(dest)){
+            deleteFile(DocumentBuilder.getInstance().createDocument(dest));
+        }
+
         try {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
@@ -58,7 +63,9 @@ public class FileManager {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
         } // todo Error handling.
-        // todo Is this correctly implemented? We just copy the file from src to dst.
+
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
 
     }
 

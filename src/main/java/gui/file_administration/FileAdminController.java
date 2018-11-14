@@ -149,21 +149,32 @@ public class FileAdminController implements TabController {
             File uploadedFile = jfc.getSelectedFile();
 
             if (selectedFile instanceof Folder) {
-                FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
+                try {
+                    FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
+                } catch (IOException e) {
+                    System.out.println("could not upload file");
+                    e.printStackTrace();
+                }
                 update();
             } else if (selectedFile instanceof Document) {
                 System.out.println("popup med dokument valgt istedet for folder");
             }
         }
 
-        //todo if they upload a file that already exists (or choose a file)
-        //todo it should move the old file to archive and replace it with the new uploaded file
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
     }
 
     public void createFolder(ActionEvent actionEvent) {
-        String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
 
-        FileManager.getInstance().createFolder((Folder)selectedFile, folderName);
+        if (selectedFile instanceof Folder){
+            String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
+            if(folderName != null) {
+                FileManager.getInstance().createFolder((Folder) selectedFile, folderName);
+            }
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(), "Vælg en folder");
+        }
 
     }
 

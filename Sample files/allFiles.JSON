@@ -261,11 +261,6 @@
       "folderContents": [
         {
           "type": "document",
-          "ID": 36,
-          "path": "Sample files\\Archive\\DEB_forelsning_1.pdf"
-        },
-        {
-          "type": "document",
           "ID": 37,
           "path": "Sample files\\Archive\\PB 01 GR_02 Procesbeskrivelse Produktion af saltfisk.docx"
         },
@@ -276,17 +271,6 @@
         }
       ],
       "path": "Sample files/Archive"
-    },
-    {
-      "type": "folder",
-      "folderContents": [
-        {
-          "type": "document",
-          "ID": 87,
-          "path": "Sample files\\Main Files\\04_MASKINTØRRET FISK\\PLZWORK\\DEB_forelsning_1.pdf"
-        }
-      ],
-      "path": "Sample files\\Main Files\\04_MASKINTØRRET FISK\\PLZWORK"
     }
   ]
 }
