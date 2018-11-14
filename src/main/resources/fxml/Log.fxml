@@ -45,6 +45,9 @@
                         <TableColumn reorderable="false" resizable="false" fx:id="user"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.User" />
                         <TableColumn reorderable="false" resizable="false" fx:id="time"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.Time" />
                     </columns>
+                    <padding>
+                        <Insets bottom="3" left="5" right="5"/>
+                    </padding>
                 </TableView>
             </VBox>
 </AnchorPane>

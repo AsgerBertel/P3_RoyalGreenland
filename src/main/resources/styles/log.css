@@ -6,16 +6,52 @@
     -fx-font-family: Arial;
     -fx-font-size: 12;
 }
+#vbox{
+    -fx-background-color: white;
+}
+
 #tableView .table-column{
     -fx-font-family: Arial;
     -fx-font-size: 12;
     -fx-alignment: CENTER;
+    -fx-text-fill: black;
+}
+#tableView{
+    -fx-table-cell-border-color: transparent;
+    -fx-border-color: transparent;
+}
+#tableView .table-row-cell {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: black;
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: transparent;
+}
+#tableView:focused .table-row-cell:focused{
+    -fx-background-color: lightblue;
+}
+#tableView .column-header-background{
+    -fx-background-color: transparent;
 }
 
 #tableView .column-header{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-radius: 1;
+    -fx-border-color: black;
+    -fx-background-color: transparent;
     -fx-font-family: Arial;
     -fx-font-size: 18;
+
 }
-#vbox{
-    -fx-padding: 2;
+
+#topbar{
+    -fx-padding: 4;
+}
+
+
+#tableView *.scroll-bar:horizontal *.increment-arrow,
+#tableView *.scroll-bar:horizontal *.decrement-arrow,
+#tableView *.scroll-bar:horizontal *.increment-button,
+#tableView *.scroll-bar:horizontal *.decrement-button{
+    -fx-padding: 0;
+    -fx-shape: null;
 }
