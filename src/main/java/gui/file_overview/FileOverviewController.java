@@ -4,6 +4,7 @@ import directory.*;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.FileTreeUtil;
@@ -46,20 +47,33 @@ public class FileOverviewController implements TabController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        drdPlant.setItems(plantList);
     }
 
     @Override
     public void update() {
-        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getAllContent().get(0));
-        fileTreeView.setRoot(rootItem);
+        // Refresh file tree if the files have changed // todo test if functional
+        TreeItem<AbstractFile> treeRoot = fileTreeView.getRoot();
+        if(treeRoot == null || !treeRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0))){
+            reloadFileTree();
+        }
+
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
+    }
+
+    private void reloadFileTree(){
+        Folder rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        rootItem = FileTreeUtil.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
     }
 
     @FXML
     void onPlantSelected(ActionEvent event) {
         fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
-        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getAllContent().get(0), fileExplorer.getSelectedPlant().getAccessModifier());
+        AccessModifier accessModifier = (fileExplorer.getSelectedPlant() == null) ? null : fileExplorer.getSelectedPlant().getAccessModifier();
+        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getAllContent().get(0), accessModifier);
         fileTreeView.setRoot(rootItem);
         updateDisplayedFiles();
     }

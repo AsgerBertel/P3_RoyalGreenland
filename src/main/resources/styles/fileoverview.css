@@ -66,8 +66,8 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: 90%;
     -fx-background-color: transparent;
-
 }
+
 #scpFileView > *{
     -fx-background-color:white;
 }

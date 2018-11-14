@@ -61,18 +61,34 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
-
-        update();
     }
 
     @Override
     public void update() {
-        plants.clear();
+        // Refresh file tree if the files have changed // todo test if functional
+        if(!(FileManager.getInstance().getAllContent().get(0).equals(fileTreeView.getRoot().getValue())))
+            reloadFileTree();
+
+        reloadPlantList();
+    }
+
+    private void reloadFileTree(){
+        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+
+        rootItem = FileTreeUtil.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
+
+        setFactoryListDisabled(true);
+    }
+
+    private void reloadPlantList(){
         plantElements.clear();
         plantVBox.getChildren().clear();
 
+        plants.clear();
         plants.addAll(PlantManager.getInstance().getAllPlants());
 
+        // Create all plant boxes and add them to the plantVBox
         for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
             checkBox.setOnSelectedListener(() -> onPlantToggle(checkBox));
@@ -82,9 +98,8 @@ public class FileAdminController implements TabController {
 
         plantCountText.setText("(" + plants.size() + ")");
 
+        // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
-
-        setFactoryListDisabled(true);
 
     }
 
