@@ -1,65 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.StackPane?>
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.log.LogController">
-    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="0.0">
-        <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-            <Button onAction="#searchClicked" fx:id="searchBtn">
-                <graphic>
-                    <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/search.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button>
-                <graphic>
-                    <ImageView fitHeight="38" fitWidth="38">
-                        <Image url="/icons/menu/filter.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
-        </VBox>
-        <VBox HBox.hgrow="ALWAYS" fx:id="vbox">
-            <StackPane VBox.vgrow="ALWAYS" fx:id="stackPane">
-                <Pane fx:id="box" >
-                    <HBox>
-                        <TextField onKeyReleased="#keyReleased" fx:id="searchField" minHeight="${searchBtn.height}"/>
-                        <Button>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController" stylesheets="@/styles/log.css">
+        <VBox fx:id="vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <HBox fx:id="topbar" spacing="5">
+                        <Button onAction="#sortByUser">
                             <graphic>
-                                <ImageView fitHeight="${searchField.height}">
-                                    <Image url="/icons/menu/search.png" />
+                                <ImageView fitHeight="38" fitWidth="38">
+                                    <Image url="/icons/menu/filter.png" />
                                 </ImageView>
                             </graphic>
                         </Button>
+                        <Button onAction="#sortByChangeType">
+                            <graphic>
+                                <ImageView fitHeight="38" fitWidth="38">
+                                    <Image url="/icons/menu/filter.png" />
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button onAction="#sortByTime">
+                            <graphic>
+                                <ImageView fitHeight="38" fitWidth="38">
+                                    <Image url="/icons/menu/filter.png" />
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <HBox spacing="1" HBox.hgrow="ALWAYS">
+                        <TextField promptText="Søg efter filnavne eller brugernavne her.." fx:id="searchField" minHeight="46" HBox.hgrow="ALWAYS" onKeyReleased="#keyReleased" />
+                        </HBox>
                     </HBox>
-
-                </Pane>
-
-                <TableView fx:id="tableView">
+                <TableView fx:id="tableView" VBox.vgrow="SOMETIMES">
                     <columns>
-                        <TableColumn prefWidth="${tableView.width*0.6}" text="%Log.Change" fx:id="event" sortable="false"/>
-                        <TableColumn prefWidth="${tableView.width*0.2}" text="%Log.User" fx:id="user" sortable="false"/>
-                        <TableColumn minWidth="${tableView.width*0.2}" text="%Log.Time" fx:id="time" sortable="false"/>
+                        <TableColumn reorderable="false" resizable="false" fx:id="event" sortable="false" prefWidth="${tableView.width*0.6}" text="%Log.Change" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="user"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.User" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="time"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.Time" />
                     </columns>
                 </TableView>
-
-            </StackPane>
-        </VBox>
-    </HBox>
+            </VBox>
 </AnchorPane>

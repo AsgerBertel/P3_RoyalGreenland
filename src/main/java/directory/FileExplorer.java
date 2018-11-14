@@ -74,4 +74,8 @@ public class FileExplorer {
     public List<AbstractFile> getCurrentFolderContent() {
         return currentFolder.getContents();
     }
+
+    public Plant getSelectedPlant() {
+        return selectedPlant;
+    }
 }

@@ -43,7 +43,7 @@
 
     <!-- File tree -->
     <VBox fx:id="leftSideVbox">
-        <HBox styleClass="filler" minHeight="40" maxHeight="40">
+        <HBox styleClass="filler" minHeight="40" maxHeight="40" prefWidth="${fileAdminHBox.width}">
             <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="%AdminFiles.Files"/>
         </HBox>
         <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"

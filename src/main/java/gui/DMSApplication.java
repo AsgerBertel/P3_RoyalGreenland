@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
@@ -60,8 +61,13 @@ public class DMSApplication extends Application {
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
 
+        //resetter file tree
+        //FileManager.getTestInstance().initFolderTree();
+
         this.primaryStage = primaryStage;
         primaryStage.show();
+
+        // FileManager.getTestInstance().initFolderTree();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
 
@@ -84,7 +90,12 @@ public class DMSApplication extends Application {
 
             root.getChildren().add(newPane);
         } catch (IOException e) {
-            e.printStackTrace(); // todo show popup with error message for the user?
+
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Fejl");
+            alert.setContentText("Kontakt Udvikleren");
+
         }
     }
 

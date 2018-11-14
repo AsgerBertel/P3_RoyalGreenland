@@ -48,7 +48,7 @@ class FileManagerTest {
         assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
     }*/
 
-    @Test
+/*    @Test
     void createFolder() {
         Folder folder = FileManager.getTestInstance().createFolder(pathToTestDir, "TestFolder");
         assertEquals("TestFolder", folder.getName());
@@ -58,7 +58,7 @@ class FileManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
@@ -115,7 +115,7 @@ class FileManagerTest {
         restoreDocumentWithPath();
     }
 
-    @Test
+  /*  @Test
     void restoreFolder () throws IOException {
         Folder folder = FileManager.getTestInstance().createFolder(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
 
@@ -129,6 +129,6 @@ class FileManagerTest {
         assertTrue(Files.exists(folder.getPath()));
         assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
 
-    }
+    }*/
 
 }

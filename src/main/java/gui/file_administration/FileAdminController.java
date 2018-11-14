@@ -1,13 +1,12 @@
 package gui.file_administration;
 
-import directory.FileExplorer;
 import directory.FileManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.FileTreeGenerator;
+import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
 import gui.TabController;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -55,26 +53,41 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
-
         setFactoryListDisabled(true);
-
-        rootItem = FileTreeGenerator.generateTree(rootFolder);
-        fileTreeView.setRoot(rootItem);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
-
-        update();
     }
 
     @Override
     public void update() {
-        plants.clear();
+        // Refresh file tree if the files have changed // todo test if functional
+        TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
+        if(currentRoot == null || !currentRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0)))
+            reloadFileTree();
+
+
+
+        reloadPlantList();
+    }
+
+    private void reloadFileTree(){
+        System.out.println("test");
+        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+
+        rootItem = FileTreeUtil.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
+
+        setFactoryListDisabled(true);
+    }
+
+    private void reloadPlantList(){
         plantElements.clear();
         plantVBox.getChildren().clear();
 
+        plants.clear();
         plants.addAll(PlantManager.getInstance().getAllPlants());
 
+        // Create all plant boxes and add them to the plantVBox
         for (Plant plant : plants) {
             PlantCheckboxElement checkBox = new PlantCheckboxElement(plant);
             checkBox.setOnSelectedListener(() -> onPlantToggle(checkBox));
@@ -84,9 +97,8 @@ public class FileAdminController implements TabController {
 
         plantCountText.setText("(" + plants.size() + ")");
 
+        // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
-
-        setFactoryListDisabled(true);
 
     }
 
@@ -95,9 +107,9 @@ public class FileAdminController implements TabController {
         Plant plant = plantElement.getPlant();
 
         if (plantElement.isSelected()) {
-            plant.getAccessModifier().addDocument(((Document)selectedFile).getID());
+            plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
         } else {
-            plant.getAccessModifier().removeDocument(((Document)selectedFile).getID());
+            plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
         }
     }
 
@@ -133,14 +145,14 @@ public class FileAdminController implements TabController {
     // Updates the plant list to reflect the AccessModifier of the chosen document
     private void onDocumentSelected() {
 
-        Document document = (Document)selectedFile;
+        Document document = (Document) selectedFile;
         for (PlantCheckboxElement element : plantElements) {
             if (element.getPlant().getAccessModifier().contains(document.getID()))
                 element.setSelected(true);
         }
     }
 
-    public void addDocument(ActionEvent actionEvent){
+    public void addDocument(ActionEvent actionEvent) {
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
         int returnValue = jfc.showOpenDialog(null);
@@ -149,20 +161,40 @@ public class FileAdminController implements TabController {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File uploadedFile = jfc.getSelectedFile();
 
-            if (selectedFile instanceof Folder){
-                FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()),(Folder)selectedFile);
+            if (selectedFile instanceof Folder) {
+                try {
+                    FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
+                } catch (IOException e) {
+                    System.out.println("could not upload file");
+                    e.printStackTrace();
+                }
                 update();
-            } else if (selectedFile instanceof Document){
+            } else if (selectedFile instanceof Document) {
                 System.out.println("popup med dokument valgt istedet for folder");
             }
         }
+
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
     }
 
     public void createFolder(ActionEvent actionEvent) {
+
+        if (selectedFile instanceof Folder){
+            String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
+            if(folderName != null) {
+                FileManager.getInstance().createFolder((Folder) selectedFile, folderName);
+            }
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(), "Vælg en folder");
+        }
+
     }
 
     public void deleteFile(ActionEvent actionEvent) throws IOException {
         FileManager.getInstance().deleteFile(selectedFile);
+        TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+        selectedItem.getParent().getChildren().remove(selectedItem);
     }
 
 

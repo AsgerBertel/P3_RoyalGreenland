@@ -14,7 +14,7 @@ class FolderTest {
     private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
     private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
 
-    @Test
+/*    @Test
     void renameFile() {
         Path pathToTestDir = Paths.get("src/tests/resTest/Main Files Test");
         File newDirectory = new File(pathToTestDir.toString());
@@ -34,5 +34,5 @@ class FolderTest {
 
     @Test
     void getContents() {
-    }
+    }*/
 }

@@ -35,6 +35,7 @@ public abstract class AbstractFile {
     public void setPath(Path path) {
         this.path = path.toString();
     }
+
     @Override
     public String toString() {
         return getName();

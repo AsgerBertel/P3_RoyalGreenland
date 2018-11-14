@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Folder extends AbstractFile {
     private List<AbstractFile> folderContents = new ArrayList<>();
@@ -21,7 +22,6 @@ public class Folder extends AbstractFile {
         if(firstTime){
             folderInit();
         }
-
     }
 
     @Override
@@ -95,5 +95,19 @@ public class Folder extends AbstractFile {
             }
         }
         return child;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Folder folder = (Folder) o;
+        return Objects.equals(folderContents, folder.folderContents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), folderContents);
     }
 }

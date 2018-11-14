@@ -1,18 +1,17 @@
 package gui.file_overview;
 
 import directory.*;
-import directory.plant.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.FileTreeGenerator;
+import gui.FileTreeUtil;
 import gui.TabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -48,24 +47,34 @@ public class FileOverviewController implements TabController {
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        drdPlant.setItems(plantList);
     }
 
     @Override
     public void update() {
-        rootItem = FileTreeGenerator.generateTree(FileManager.getInstance().getAllContent().get(0));
-        fileTreeView.setRoot(rootItem);
+        // Refresh file tree if the files have changed // todo test if functional
+        TreeItem<AbstractFile> treeRoot = fileTreeView.getRoot();
+        if(treeRoot == null || !treeRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0))){
+            reloadFileTree();
+        }
+
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
+    }
 
-        /* todo if a plant is first selected in the file overview and then deleted, the drdplant should display prompt text again.
-        if(!PlantManager.getInstance().getAllPlants().contains(drdPlant.getSelectionModel().getSelectedItem())){
-            drdPlant.getPromptText();
-        }*/
+    private void reloadFileTree(){
+        Folder rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        rootItem = FileTreeUtil.generateTree(rootFolder);
+        fileTreeView.setRoot(rootItem);
     }
 
     @FXML
-    void getSelectedPlant(ActionEvent event) {
+    void onPlantSelected(ActionEvent event) {
         fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
+        AccessModifier accessModifier = (fileExplorer.getSelectedPlant() == null) ? null : fileExplorer.getSelectedPlant().getAccessModifier();
+        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getAllContent().get(0), accessModifier);
+        fileTreeView.setRoot(rootItem);
         updateDisplayedFiles();
     }
 
@@ -82,19 +91,19 @@ public class FileOverviewController implements TabController {
         lblVisualPath.setText(PathDisplayCorrection());
     }
 
-    // Creates a FileButton from a File and adds
+    // Creates a FileButton from a File
     private FileButton createFileButton(AbstractFile file) {
         FileButton filebutton = new FileButton(file);
 
         filebutton.getStyleClass().add("FileButton");
         filebutton.setContentDisplay(ContentDisplay.TOP);
-        filebutton.setOnMouseClicked(event -> onFileButtonClick(event));
+        filebutton.setOnMouseClicked(this::onFileButtonClick);
+
         // Add appropriate context menu
-        if (file instanceof Folder) {
+        if (file instanceof Folder)
             filebutton.setContextMenu(new ReadOnlyFolderContextMenu(this, filebutton));
-        } else {
+        else
             filebutton.setContextMenu(new ReadOnlyDocumentContextMenu(this, filebutton));
-        }
 
         return filebutton;
     }
@@ -119,6 +128,7 @@ public class FileOverviewController implements TabController {
             }
         }
     }
+
 
     @FXML
     public void openPreviousFolder() {
@@ -159,6 +169,7 @@ public class FileOverviewController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 AbstractFile file = newValue.getValue();
+
                 if (file instanceof Document) {
                     try {
                         ((Document) file).openDocument();

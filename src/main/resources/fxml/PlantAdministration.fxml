@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox id="Background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@/styles/plantAdministration.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
+<HBox id="Background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@/styles/plantAdministration.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.plant_administration.PlantAdministrationController">
    <children>
       <!-- Side menu -->
       <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
@@ -44,13 +44,13 @@
       </VBox>
 
 
-      <VBox minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="320.0">
+      <VBox >
          <children>
             <VBox id="plantSection" layoutX="82.0" layoutY="71.0" stylesheets="@/styles/factoryList.css">
                <children>
                   <HBox maxHeight="30" minHeight="30" styleClass="filler">
                      <children>
-                        <Text fx:id="plantListTitle" styleClass="darkGreyTitle" text="Fabrikker" />
+                        <Text fx:id="plantListTitle" styleClass="darkGreyTitle" text="%PlantAdmin.Plants" />
                         <Text fx:id="plantCountText" styleClass="greyTitle" text=" (0)" />
                      </children>
                   </HBox>
@@ -69,33 +69,33 @@
       <StackPane fx:id="switchStackPane">
          <children>
 
-
-            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" visible="false" onKeyPressed = "#keyPressedEdit">
+            
+            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" visible="false" onKeyPressed="#keyPressedEdit">
                <children>
-                  <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnEditPlant" prefHeight="25.0" prefWidth="96.0" text="Rediger fabrik" />
-                  <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="Nyt fabriksnavn" />
-                  <TextField fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="Nyt fabriks ID" />
-                  <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="247.0" text="Rediger fabrik">
+                  <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnEditPlant" prefHeight="25.0" prefWidth="125.0" text="Rediger fabrik" />
+                  <TextField fx:id="field_EditPlantName" styleClass="standardText" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" />
+                  <TextField fx:id="field_EditPlantId" styleClass="standardText" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" />
+                  <Label layoutX="31.0" layoutY="67.0" styleClass="bigTitle" prefHeight="27.0" prefWidth="247.0" text="%PlantAdmin.EditPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="222.0" text="Fabrikken blev opdateret." visible="false" />
+                  <Label fx:id="lblPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="222.0" text="%PlantAdmin.PlantUpdated" visible="false" />
                </children>
             </AnchorPane>
 
-
+      
                   <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false" onKeyPressed="#keyPressedCreate">
                <children>
-                  <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="96.0" text="Opret fabrik" />
-                  <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="Fabrik navn" />
-                  <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="Fabrik ID" />
-                  <Label layoutX="31.0" layoutY="67.0" prefHeight="27.0" prefWidth="124.0" text="Ny fabrik">
+                  <Button fx:id="btnCreatePlant" styleClass="standardText" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="125.0" text="%PlantAdmin.CreatePlant" />
+                  <TextField fx:id="field_CreatePlantName" styleClass="standardText" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" />
+                  <TextField fx:id="field_CreatePlantId" styleClass="standardText" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" />
+                  <Label layoutX="31.0" layoutY="67.0" styleClass="bigTitle" prefHeight="27.0" prefWidth="124.0" text="%PlantAdmin.NewPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlantCreated" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="192.0" text="Fabrikken blev oprettet." visible="false" />
+                  <Label fx:id="lblPlantCreated" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="192.0" text="%PlantAdmin.PlantCreated" visible="false" />
                </children>
             </AnchorPane>
          </children>

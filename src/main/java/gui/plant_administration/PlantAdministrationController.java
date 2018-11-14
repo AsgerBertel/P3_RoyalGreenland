@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import popup.PopupDeletePlantController;
 
 import java.io.IOException;
@@ -59,7 +60,8 @@ public class PlantAdministrationController implements TabController {
     @FXML
     private Button btnDeletePlant;
 
-
+    @FXML
+    private Text plantCountText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -67,7 +69,6 @@ public class PlantAdministrationController implements TabController {
         createPane.toFront();
         createPane.setVisible(true);
         btnDeletePlant.setDisable(true);
-
     }
 
 
@@ -81,9 +82,9 @@ public class PlantAdministrationController implements TabController {
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
         }
-
-
         plantVBox.getChildren().addAll(plantElements);
+
+        plantCountText.setText("(" + plantElements.size() + ")");
     }
 
     private void onPlantToggle(PlantElement plantElement) {
@@ -105,7 +106,6 @@ public class PlantAdministrationController implements TabController {
 
     @FXML
     void editPlantSidebar(ActionEvent event) {
-
         lblPlantEdited.setText("Select a plant to be edited");
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
@@ -131,7 +131,6 @@ public class PlantAdministrationController implements TabController {
         btnDeletePlant.setOpacity(0.5);
     }
 
-
     @FXML
     void btnCreatePlant(ActionEvent event){
         createPlant();
@@ -140,59 +139,44 @@ public class PlantAdministrationController implements TabController {
     @FXML
     void btnEditPlant(ActionEvent event){
         editPlant();
-
     }
 
     void createPlant(){
-        try {
-            Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
-            for (PlantElement element : plantElements) {
-                if (element.getPlant().equals(plant)) {
-                    lblPlantCreated.setText("Plant name or ID already exists");
-                    lblPlantCreated.setVisible(true);
-                    return;
-                }
+        Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
+        for(PlantElement element: plantElements){
+            if(element.getPlant().equals(plant)){
+                lblPlantCreated.setText("Plant name or ID already exists");
+                lblPlantCreated.setVisible(true);
+                return;
             }
-            PlantElement newPlantElement = new PlantElement(plant);
-            PlantManager.getInstance().addPlant(plant);
-            plantElements.add(newPlantElement);
-
-            newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
-
-            plantVBox.getChildren().add(newPlantElement);
-            lblPlantCreated.setText("Plant created");
-            lblPlantCreated.setVisible(true);
-
-            field_CreatePlantName.setText("");
-            field_CreatePlantId.setText("");
-
-        } catch(NumberFormatException e){
-            lblPlantCreated.setText("ID can only contain numbers.");
-            lblPlantCreated.setVisible(true);
         }
+        PlantElement newPlantElement = new PlantElement(plant);
+        PlantManager.getInstance().addPlant(plant);
+        plantElements.add(newPlantElement);
+        newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
+        plantVBox.getChildren().add(newPlantElement);
+        lblPlantCreated.setText("Plant created");
+        lblPlantCreated.setVisible(true);
+        field_CreatePlantName.setText("");
+        field_CreatePlantId.setText("");
+        plantCountText.setText("(" + plantElements.size() + ")");
     }
 
     void editPlant(){
-        try {
-            boolean isElementSelected = false;
-            for (PlantElement element : plantElements) {
-                if (element.isSelected()) {
-                    element.getPlant().setName(field_EditPlantName.getText());
-                    element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
-                    element.updateText();
-                    isElementSelected = true;
-                }
+        boolean isElementSelected = false;
+        for (PlantElement element : plantElements) {
+            if (element.isSelected()) {
+                element.getPlant().setName(field_EditPlantName.getText());
+                element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
+                element.updateText();
+                isElementSelected = true;
             }
-            if (!isElementSelected) {
-                lblPlantEdited.setText("Please select an item");
-            }
-            field_EditPlantName.clear();
-            field_EditPlantId.clear();
-        } catch(NumberFormatException e){
-            lblPlantEdited.setText("ID can only contain numbers");
-            lblPlantEdited.setVisible(true);
         }
-
+        if (!isElementSelected) {
+            lblPlantEdited.setText("A plant has to be selected first.");
+        }
+        field_EditPlantName.clear();
+        field_EditPlantId.clear();
     }
     @FXML
     void keyPressedCreate(KeyEvent event){
