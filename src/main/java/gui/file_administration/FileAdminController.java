@@ -62,7 +62,9 @@ public class FileAdminController implements TabController {
     public void update() {
         // Refresh file tree if the files have changed // todo test if functional
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
-        if(currentRoot == null || !currentRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0)))
+        // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
+        // todo - It always reloads. - Philip
+        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
 
         reloadPlantList();
