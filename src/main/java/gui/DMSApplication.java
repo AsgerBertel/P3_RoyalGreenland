@@ -1,17 +1,13 @@
 package gui;
 
-import directory.FileManager;
-import directory.PathsManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -117,7 +113,7 @@ public class DMSApplication extends Application {
     }
 
     public static String getMessage(String key){
-        return messages.getString("PlantAdmin.DeletePlantConfirmation");
+        return messages.getString(key);
     }
 
 

@@ -193,16 +193,16 @@ public class PlantAdministrationController implements TabController {
     }
 
     public void popup() {
-        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.DeletePlantConfirmation"));
+        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
         btnPressedPopup(popup);
     }
 
     public PlantElement btnPressedPopup(Alert popup) {
         for (PlantElement element : plantElements) {
             if (element.isSelected()) {
-                popup.setTitle("Deleting plant");
-                popup.setHeaderText("Pressing OK to this will delete the selected plant.");
-                popup.setContentText("Are you ok with this?");
+                popup.setTitle(DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
+                popup.setHeaderText(DMSApplication.getMessage("PlantAdmin.Popup.Info"));
+                popup.setContentText(DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
                 Optional<ButtonType> result = popup.showAndWait();
                 if(!result.isPresent())
                     popup.close();
