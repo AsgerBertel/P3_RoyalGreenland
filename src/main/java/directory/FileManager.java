@@ -122,7 +122,6 @@ public class FileManager {
 
     protected static FileManager readFilesFromJson() {
         // String pathStr;
-        System.out.println("Looking for: " + PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON");
         try (Reader reader = new FileReader(PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.

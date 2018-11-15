@@ -69,7 +69,6 @@ public class FileAdminController implements TabController {
     }
 
     private void reloadFileTree(){
-        System.out.println("test");
         rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
 
         rootItem = FileTreeUtil.generateTree(rootFolder);
