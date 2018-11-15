@@ -158,7 +158,7 @@ public class PlantAdministrationController implements TabController {
         lblPlantCreated.setVisible(true);
         field_CreatePlantName.setText("");
         field_CreatePlantId.setText("");
-        plantCountText.setText("(" + plantElements.size() + ")");
+        plantCountText.setText(" (" + plantElements.size() + ")");
     }
 
     void editPlant() {
@@ -193,16 +193,16 @@ public class PlantAdministrationController implements TabController {
     }
 
     public void popup() {
-        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
+        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.DeletePopup.DeleteTitle"));
         btnPressedPopup(popup);
     }
 
     public PlantElement btnPressedPopup(Alert popup) {
         for (PlantElement element : plantElements) {
             if (element.isSelected()) {
-                popup.setTitle(DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
-                popup.setHeaderText(DMSApplication.getMessage("PlantAdmin.Popup.Info"));
-                popup.setContentText(DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
+                popup.setTitle(DMSApplication.getMessage("PlantAdmin.DeletePopup.DeleteTitle"));
+                popup.setHeaderText(DMSApplication.getMessage("PlantAdmin.DeletePopup.Info"));
+                popup.setContentText(DMSApplication.getMessage("PlantAdmin.DeletePopup.YouSure"));
                 Optional<ButtonType> result = popup.showAndWait();
                 if(!result.isPresent())
                     popup.close();
@@ -212,7 +212,7 @@ public class PlantAdministrationController implements TabController {
                     plantVBox.getChildren().remove(element);
                     btnDeletePlant.setDisable(true);
                     btnDeletePlant.setStyle("-fx-opacity: 0.5");
-                    plantCountText.setText("(" + plantElements.size() + ")");
+                    plantCountText.setText(" (" + plantElements.size() + ")");
                     return element;
                 }
                 if(result.get() == ButtonType.CANCEL){
