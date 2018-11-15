@@ -16,9 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import popup.PopupDeletePlantController;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -197,10 +194,32 @@ public class PlantAdministrationController implements TabController {
 
     public void popup() {
         Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.DeletePlantConfirmation"));
-        popup.showAndWait();
+        btnPressedPopup(popup);
     }
 
-    public Button getBtnDeletePlant() {
-        return btnDeletePlant;
+    public PlantElement btnPressedPopup(Alert popup) {
+        for (PlantElement element : plantElements) {
+            if (element.isSelected()) {
+                popup.setTitle("Deleting plant");
+                popup.setHeaderText("Pressing OK to this will delete the selected plant.");
+                popup.setContentText("Are you ok with this?");
+                Optional<ButtonType> result = popup.showAndWait();
+                if(!result.isPresent())
+                    popup.close();
+                if (result.get() == ButtonType.OK) {
+                    plantElements.remove(element);
+                    PlantManager.getInstance().deletePlant(element.getPlant().getId());
+                    plantVBox.getChildren().remove(element);
+                    btnDeletePlant.setDisable(true);
+                    btnDeletePlant.setStyle("-fx-opacity: 0.5");
+                    plantCountText.setText("(" + plantElements.size() + ")");
+                    return element;
+                }
+                if(result.get() == ButtonType.CANCEL){
+                    popup.close();
+                }
+            }
+        }
+        return null;
     }
 }
