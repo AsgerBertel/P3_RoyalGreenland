@@ -132,8 +132,10 @@ public class FileOverviewController implements TabController {
 
     @FXML
     public void openPreviousFolder() {
-        fileExplorer.navigateBack(FileManager.getInstance().getAllContent());
-        updateDisplayedFiles();
+        if(drdPlant.getSelectionModel().getSelectedItem() != null){
+            fileExplorer.navigateBack(FileManager.getInstance().getAllContent());
+            updateDisplayedFiles();
+        }
     }
 
     public String PathDisplayCorrection() {
