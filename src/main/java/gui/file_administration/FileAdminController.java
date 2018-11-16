@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import javax.naming.InvalidNameException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -241,6 +242,35 @@ public class FileAdminController implements TabController {
 
     public void renameFile(){
         // todo make a way to type in a new name. - Philip
+        Optional<String> optName = renameFilePopUP();
+        if(optName.isPresent()){
+            String name = optName.get();
+            if(selectedFile instanceof Document){
+                Document doc = (Document)selectedFile;
+                try {
+                    doc.renameFile(name);
+                } catch (InvalidNameException e) {
+                    System.out.println("Could not rename file");
+                    e.printStackTrace();
+                }
+            }
+            if(selectedFile instanceof Folder){
+                Folder fol = (Folder)selectedFile;
+                fol.renameFile(name);
+            }
+        }
+    }
+
+    public Optional<String> renameFilePopUP(){
+        TextInputDialog txtInputDia = new TextInputDialog();
+        txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFile"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFileInfo"));
+        txtInputDia.getEditor().setPromptText(DMSApplication.getMessage("AdminFiles.PopUpRename.TypeNewName"));
+        txtInputDia.setGraphic(new ImageView());
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.NewName"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.Cancel"));
+
+        return txtInputDia.showAndWait();
     }
 
     public void uploadFile(){
