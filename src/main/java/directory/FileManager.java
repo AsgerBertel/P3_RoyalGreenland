@@ -9,10 +9,8 @@ import json.JsonParser;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FileManager {
     // todo Archive folder path should be set on setup
@@ -84,16 +82,21 @@ public class FileManager {
         return folder;
     }
 
-    public void deleteFile(AbstractFile file) throws IOException {
+    public void deleteFile(AbstractFile file) {
         Path pathWithName = Paths.get(Paths.get(PathsManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
-        Files.move(file.getPath(), pathWithName);
-        Folder parent = findParent(file);
-        parent.getContents().remove(file);
+        try {
+            Files.move(file.getPath(), pathWithName);
+            Folder parent = findParent(file);
+            parent.getContents().remove(file);
 
 
-        Folder archiveFolder = (Folder)getInstance().archive.get(0);
-        archiveFolder.getContents().add(file);
-        getInstance().updateFilesJson();
+            Folder archiveFolder = (Folder)getInstance().archive.get(0);
+            archiveFolder.getContents().add(file);
+            getInstance().updateFilesJson();
+        } catch (IOException e) {
+            System.out.println("Could not delete file");
+            e.printStackTrace();
+        }
     }
 
     public void restoreFile(AbstractFile file) throws IOException {

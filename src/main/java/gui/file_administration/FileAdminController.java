@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class FileAdminController implements TabController {
@@ -57,6 +58,7 @@ public class FileAdminController implements TabController {
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
+
     }
 
     @Override
@@ -68,6 +70,7 @@ public class FileAdminController implements TabController {
         if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
 
+        fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         reloadPlantList();
     }
 
@@ -154,6 +157,7 @@ public class FileAdminController implements TabController {
 
     public void addDocument(ActionEvent actionEvent) {
         if (selectedFile instanceof Folder) {
+            // Todo JFileChooser is from. swing. Use a JavaFX one. - Philip
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
             int returnValue = jfc.showOpenDialog(null);
@@ -182,22 +186,50 @@ public class FileAdminController implements TabController {
         //todo make some kind of counter to file name
     }
 
-    public void createFolder(ActionEvent actionEvent) {
-
+    public void createFolder() {
         if (selectedFile instanceof Folder) {
-            String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
-            if (folderName != null) {
-                FileManager.getInstance().createFolder((Folder) selectedFile, folderName);
-            }
-        } else {
-            JOptionPane.showMessageDialog(new JFrame(), "Vælg en folder");
-        }
+            int expand = fileTreeView.getExpandedItemCount();
+            TextInputDialog txtInputDia = new TextInputDialog();
+            txtInputDia.getEditor().setPromptText("Skriv navnet på folderen");
 
+            Optional<String> folderName;
+            folderName = txtInputDia.showAndWait();
+
+
+            if (folderName.isPresent()) {
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder((Folder) selectedFile, name);
+                fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
+        }
     }
 
-    public void deleteFile(ActionEvent actionEvent) throws IOException {
+    public void deleteFile() {
         FileManager.getInstance().deleteFile(selectedFile);
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         selectedItem.getParent().getChildren().remove(selectedItem);
+    }
+
+    public void openFile(){
+        if(selectedFile instanceof Folder){
+            fileTreeView.getSelectionModel().getSelectedItem().setExpanded(true);
+        }
+        if(selectedFile instanceof Document) {
+            Document doc = (Document)selectedFile;
+            try {
+                doc.openDocument();
+            } catch (IOException e) {
+                System.out.println("Could not open file");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void renameFile(){
+        // todo make a way to type in a new name. - Philip
+    }
+
+    public void uploadFile(){
+        // todo Make fileChooser to retrieve document to upload. - Philip
     }
 }
