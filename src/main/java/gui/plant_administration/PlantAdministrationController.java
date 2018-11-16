@@ -23,12 +23,10 @@ import java.util.ResourceBundle;
 
 public class PlantAdministrationController implements TabController {
 
+    ArrayList<PlantElement> plantElements = new ArrayList<>();
+
     @FXML
     private AnchorPane createPane;
-
-    public VBox getPlantVBox() {
-        return plantVBox;
-    }
 
     @FXML
     private VBox plantVBox;
@@ -60,8 +58,9 @@ public class PlantAdministrationController implements TabController {
     @FXML
     private Text plantCountText;
 
-    ArrayList<PlantElement> plantElements = new ArrayList<>();
-
+    public VBox getPlantVBox() {
+        return plantVBox;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
