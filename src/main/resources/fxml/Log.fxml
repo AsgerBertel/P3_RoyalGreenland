@@ -17,21 +17,20 @@
                         <Button onAction="#sortByUser">
                             <graphic>
                                 <ImageView fitHeight="38" fitWidth="38">
-                                    <Image url="/icons/menu/filter.png" />
+                                    <Image url="/icons/menu/user.png" />
                                 </ImageView>
                             </graphic>
                         </Button>
                         <Button onAction="#sortByChangeType">
                             <graphic>
                                 <ImageView fitHeight="38" fitWidth="38">
-                                    <Image url="/icons/menu/filter.png" />
+                                    <Image url="/icons/menu/fileSort.png" />
                                 </ImageView>
                             </graphic>
                         </Button>
                         <Button onAction="#sortByTime">
                             <graphic>
-                                <ImageView fx:id="searchImage" fitHeight="38" fitWidth="38">
-                                </ImageView>
+                                <ImageView fx:id="searchImage" fitHeight="38" fitWidth="38"/>
                             </graphic>
                         </Button>
                         <HBox spacing="1" HBox.hgrow="ALWAYS">

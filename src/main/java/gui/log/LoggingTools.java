@@ -48,7 +48,6 @@ public class LoggingTools {
         }
     }
     public String EventTypeToString(LogEventType eventType){
-        // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
          switch (eventType){
              case CHANGED:
                  return DMSApplication.getMessage("Log.Changed");
