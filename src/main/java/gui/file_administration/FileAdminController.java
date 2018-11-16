@@ -15,9 +15,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import jdk.nashorn.api.tree.Tree;
 
 import java.io.IOException;
 import javax.swing.*;
@@ -70,6 +71,7 @@ public class FileAdminController implements TabController {
         // todo - It always reloads. - Philip
         if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
+        fileTreeView.getRoot().setExpanded(true);
 
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         reloadPlantList();
@@ -189,21 +191,31 @@ public class FileAdminController implements TabController {
     }
 
     public void createFolder() {
-        if (selectedFile instanceof Folder) {
-            int expand = fileTreeView.getExpandedItemCount();
-            TextInputDialog txtInputDia = new TextInputDialog();
-            txtInputDia.getEditor().setPromptText("Skriv navnet på folderen");
-
-            Optional<String> folderName;
-            folderName = txtInputDia.showAndWait();
-
-
-            if (folderName.isPresent()) {
+        Optional<String> folderName = createFolderPopUP();
+        if (folderName.isPresent()){
+            if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder((Folder) selectedFile, name);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
             }
+            if(selectedFile instanceof Document){
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
+                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
         }
+    }
+
+    public Optional<String> createFolderPopUP(){
+        TextInputDialog txtInputDia = new TextInputDialog();
+        txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
+        txtInputDia.getEditor().setPromptText(DMSApplication.getMessage("AdminFiles.PopUp.TypeFolderName"));
+        txtInputDia.setGraphic(new ImageView("icons/menu/addfolder.png"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUp.Cancel"));
+
+        return txtInputDia.showAndWait();
     }
 
     public void deleteFile() {
