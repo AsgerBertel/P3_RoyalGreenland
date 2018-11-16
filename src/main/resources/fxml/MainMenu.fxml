@@ -50,6 +50,15 @@
                  </graphic>
              </Button>
 
+
+             <Button text="%MainMenu.Settings" onAction="#settings">
+                 <graphic>
+                     <ImageView fitWidth="23" fitHeight="25">
+                         <Image url="/icons/menu/settings.png"/>
+                     </ImageView>
+                 </graphic>
+             </Button>
+
          </children>
       </HBox>
    </left>

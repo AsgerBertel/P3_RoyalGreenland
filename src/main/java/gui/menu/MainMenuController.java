@@ -1,6 +1,7 @@
 package gui.menu;
 
 import gui.DMSApplication;
+import gui.TabController;
 import gui.TabLoader;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -35,6 +36,10 @@ public class MainMenuController {
         dmsApplication.switchWindow(TabLoader.LOG);
     }
 
+    public void settings(ActionEvent actionEvent) {
+        dmsApplication.switchWindow(TabLoader.SETTINGS);
+    }
+
     public void changeToDanish(Event actionEvent) throws Exception{
         DMSApplication.changeLanguage(new Locale("da", "DK"));
         DMSApplication.restartApp();
@@ -44,4 +49,6 @@ public class MainMenuController {
         DMSApplication.changeLanguage(new Locale("kl", "GL"));
         DMSApplication.restartApp();
     }
+
+
 }

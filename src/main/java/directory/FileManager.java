@@ -66,9 +66,9 @@ public class FileManager {
 
     }
 
-    public Folder createFolder(Folder folder, String name) {
+    public Folder createFolder(Folder parentFolder, String name) {
         // Todo Error handling
-        Folder createdFolder = new Folder(folder.getPath() + File.separator + name);
+        Folder createdFolder = new Folder(parentFolder.getPath() + File.separator + name);
 
         boolean isSuccessful = new File(createdFolder.getPath().toString()).mkdirs();
 
@@ -77,9 +77,9 @@ public class FileManager {
             return null;
         }
 
-        folder.getContents().add(createdFolder);
+        parentFolder.getContents().add(createdFolder);
         updateFilesJson();
-        return folder;
+        return createdFolder;
     }
 
     public void deleteFile(AbstractFile file) {

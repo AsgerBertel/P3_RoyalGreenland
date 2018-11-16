@@ -29,7 +29,6 @@
 #plantVBox{
     -fx-background-color: transparent;
 
-    -fx-min-height: 400px;
     -fx-min-width: 190px;
     -fx-max-width: 190px;
     -fx-pref-width: 190px;
@@ -59,7 +58,6 @@
 .plantElement:hover{
     -fx-cursor: HAND;
 }
-
 
 .plantText{
     -fx-font-size: 12px;

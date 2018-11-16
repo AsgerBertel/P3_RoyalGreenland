@@ -16,6 +16,11 @@ VBox {
     -fx-background-color: transparent;
 }
 
+/* -- Buttons -- */
+.regularButton {
+
+}
+
 /* -- Text -- */
 .darkGreyTitle {
     -fx-font-size: 15px;
@@ -36,6 +41,12 @@ VBox {
     -fx-fill: #42474c;
 }
 
+.standardTitle {
+    -fx-font-size: 18px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-fill: #42474c;
+}
+
 .standardText {
     -fx-font-size: 12px;
     -fx-font-family: "Arial", sans-serif;
@@ -48,6 +59,8 @@ VBox {
     -fx-font-style: italic;
     -fx-fill: #a9b2bd;
 }
+
+
 
 /* -- Splitters -- */
 .verticalSplitter {
@@ -157,4 +170,3 @@ VBox {
 .combo-box-base:disabled {
     -fx-opacity: .4;
 }
-

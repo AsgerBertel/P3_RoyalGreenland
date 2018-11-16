@@ -1,5 +1,10 @@
 package directory;
 
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.util.prefs.Preferences;
 
 public class PathsManager {
@@ -45,6 +50,14 @@ public class PathsManager {
         preferences.put(SERVER_PATH_PREF, serverPath);
         preferences.put(LOCAL_PATH_PREF, serverPath);
     }
+/*
+    private File chooseDirectoryPrompt(String message) {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+
+        File chosenFile = fileChooser.showDialog(new Stage());
+        if (chosenFile == null) return null;
+        return chosenFile;
+    }*/
 
     public static PathsManager getInstance() {
         if (settings == null)
@@ -73,7 +86,9 @@ public class PathsManager {
     }
 
     // Returns the absolute path of the application files on the local drive
-    public String getLocalAppFilesPath(){ return localPath + LOCAL_APP_FILES_PATH; }
+    public String getLocalAppFilesPath() {
+        return localPath + LOCAL_APP_FILES_PATH;
+    }
 
 
 }

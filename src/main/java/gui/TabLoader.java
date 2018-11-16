@@ -13,7 +13,8 @@ public enum TabLoader {
     FILE_ADMINISTRATION("FileAdministration.fxml"),
     PLANT_ADMINISTRATION("PlantAdministration.fxml"),
     LOG("LOG.fxml"),
-    DELETED_FILES("DeletedFiles.fxml");
+    DELETED_FILES("DeletedFiles.fxml"),
+    SETTINGS("Settings.fxml");
 
     private String fxmlFileName;
     private Pane node;

@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jdk.nashorn.api.tree.Tree;
 
 import java.io.IOException;
 import javax.swing.*;
@@ -76,7 +77,6 @@ public class FileAdminController implements TabController {
 
     private void reloadFileTree(){
         rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
-
         rootItem = FileTreeUtil.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
 
@@ -103,6 +103,8 @@ public class FileAdminController implements TabController {
         // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
 
+        if(selectedFile == null) setFactoryListDisabled(true);
+        else if(selectedFile instanceof Document) setFactoryListDisabled(false);
     }
 
     // Called after a plant is toggled on or off in plant checklist
