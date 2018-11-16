@@ -44,7 +44,7 @@
       </VBox>
 
 
-      <VBox >
+      <VBox>
          <children>
             <VBox id="plantSection" layoutX="82.0" layoutY="71.0" stylesheets="@/styles/factoryList.css">
                <children>
@@ -69,33 +69,33 @@
       <StackPane fx:id="switchStackPane">
          <children>
 
-            
-            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" prefHeight="766.0" prefWidth="508.0" visible="false" onKeyPressed="#keyPressedEdit">
+
+            <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" onKeyPressed="#keyPressedEdit" prefHeight="766.0" prefWidth="508.0" visible="false">
                <children>
                   <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnEditPlant" prefHeight="25.0" prefWidth="125.0" text="Rediger fabrik" />
-                  <TextField fx:id="field_EditPlantName" styleClass="standardText" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" />
-                  <TextField fx:id="field_EditPlantId" styleClass="standardText" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" />
-                  <Label layoutX="31.0" layoutY="67.0" styleClass="bigTitle" prefHeight="27.0" prefWidth="247.0" text="%PlantAdmin.EditPlant">
+                  <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" styleClass="standardText" />
+                  <TextField fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" styleClass="standardText" />
+                  <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="333.0" styleClass="bigTitle" text="%PlantAdmin.EditPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlantEdited" styleClass="standardText" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="222.0" text="%PlantAdmin.PlantUpdated" visible="false" />
+                  <Label fx:id="lblPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="222.0" styleClass="standardText" text="%PlantAdmin.PlantUpdated" visible="false" />
                </children>
             </AnchorPane>
 
-      
-                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false" onKeyPressed="#keyPressedCreate">
+
+                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" onKeyPressed="#keyPressedCreate" prefHeight="567.0" prefWidth="486.0" visible="false">
                <children>
-                  <Button fx:id="btnCreatePlant" styleClass="standardText" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="125.0" text="%PlantAdmin.CreatePlant" />
-                  <TextField fx:id="field_CreatePlantName" styleClass="standardText" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" />
-                  <TextField fx:id="field_CreatePlantId" styleClass="standardText" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" />
-                  <Label layoutX="31.0" layoutY="67.0" styleClass="bigTitle" prefHeight="27.0" prefWidth="124.0" text="%PlantAdmin.NewPlant">
+                  <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="125.0" styleClass="standardText" text="%PlantAdmin.CreatePlant" />
+                  <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" styleClass="standardText" />
+                  <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" styleClass="standardText" />
+                  <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="318.0" styleClass="bigTitle" text="%PlantAdmin.NewPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlantCreated" styleClass="standardText" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="192.0" text="%PlantAdmin.PlantCreated" visible="false" />
+                  <Label fx:id="lblPlantCreated" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="192.0" styleClass="standardText" text="%PlantAdmin.PlantCreated" visible="false" />
                </children>
             </AnchorPane>
          </children>
