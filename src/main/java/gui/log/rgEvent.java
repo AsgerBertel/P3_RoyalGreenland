@@ -1,5 +1,7 @@
 package gui.log;
 
+import gui.DMSApplication;
+
 import java.time.LocalDateTime;
 
 public class rgEvent {
@@ -32,7 +34,7 @@ public class rgEvent {
 
     public String getEvent(){
         LoggingTools lt = new LoggingTools();
-        return getFileName() +  " er " + lt.EventTypeToString(getEventType());
+        return getFileName() + " "+ DMSApplication.getMessage("Log.Is") +" "+ lt.EventTypeToString(getEventType());
     }
 
     public String getTime(){

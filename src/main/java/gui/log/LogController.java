@@ -1,17 +1,14 @@
 package gui.log;
 
 import gui.TabController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-
 import java.net.URL;
 import java.util.*;
 
@@ -31,14 +28,20 @@ public class LogController implements TabController {
     private TableColumn<rgEvent, String> time;
 
     @FXML
+    private ImageView searchImage;
+
+    @FXML
     private TextField searchField;
     private List<rgEvent> listOfEvents;
     private boolean sortedByTime = false;
+    private Image timeOld = new Image("/icons/menu/timeNew.png");
+    private Image timeNew = new Image("/icons/menu/timeOld.png");
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         LoggingTools lt = new LoggingTools();
         listOfEvents = lt.listOfAllEvents();
+        sortByTime();
         update();
     }
 
@@ -48,7 +51,6 @@ public class LogController implements TabController {
         event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
-        tableView.getItems().setAll(listOfEvents);
     }
 
 
@@ -80,10 +82,12 @@ public class LogController implements TabController {
         List<rgEvent> sortedList = listOfEvents;
         Collections.sort(sortedList, Comparator.comparing(rgEvent::getLocalDateTime));
         if(sortedByTime){
-            Collections.reverse(sortedList);
+            searchImage.setImage(timeNew);
             tableView.getItems().setAll(sortedList);
             sortedByTime = false;
         }else{
+            Collections.reverse(sortedList);
+            searchImage.setImage(timeOld);
             tableView.getItems().setAll(sortedList);
             sortedByTime = true;
         }

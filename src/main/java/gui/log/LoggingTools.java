@@ -2,6 +2,7 @@ package gui.log;
 
 
 import directory.PathsManager;
+import gui.DMSApplication;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -50,13 +51,13 @@ public class LoggingTools {
         // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
          switch (eventType){
              case CHANGED:
-                 return "ændret";
+                 return DMSApplication.getMessage("Log.Changed");
              case CREATED:
-                 return "tilføjet";
+                 return DMSApplication.getMessage("Log.Added");
              case ARCHIVED:
-                 return "arkiveret";
+                 return DMSApplication.getMessage("Log.Archived");
              case DELETED:
-                 return "slettet";
+                 return DMSApplication.getMessage("Log.Deleted");
          }
          return "error: no event named " + eventType.toString();
     }
@@ -90,6 +91,7 @@ public class LoggingTools {
     private LogEventType stringToLogEventType(String string){
 
         // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
+        // Doesnt matter here since danish word is stored in .log file only, which will never be opened
         switch (string){
             case "ændret":
                 return LogEventType.CHANGED;

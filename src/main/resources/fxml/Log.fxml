@@ -30,13 +30,12 @@
                         </Button>
                         <Button onAction="#sortByTime">
                             <graphic>
-                                <ImageView fitHeight="38" fitWidth="38">
-                                    <Image url="/icons/menu/filter.png" />
+                                <ImageView fx:id="searchImage" fitHeight="38" fitWidth="38">
                                 </ImageView>
                             </graphic>
                         </Button>
                         <HBox spacing="1" HBox.hgrow="ALWAYS">
-                        <TextField promptText="Søg efter filnavne eller brugernavne her.." fx:id="searchField" minHeight="46" HBox.hgrow="ALWAYS" onKeyReleased="#keyReleased" />
+                        <TextField promptText="%Log.SearchToolTip" fx:id="searchField" minHeight="46" HBox.hgrow="ALWAYS" onKeyReleased="#keyReleased" />
                         </HBox>
                     </HBox>
                 <TableView fx:id="tableView" VBox.vgrow="SOMETIMES">
