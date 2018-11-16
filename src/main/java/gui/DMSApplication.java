@@ -1,6 +1,8 @@
 package gui;
 
 import directory.FileManager;
+import directory.files.Document;
+import directory.files.DocumentBuilder;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -63,7 +66,7 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         //resetter file tree
-        //FileManager.getTestInstance().initFolderTree();
+        // FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();

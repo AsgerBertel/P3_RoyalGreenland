@@ -52,7 +52,7 @@ public class AdminFilesContextMenu extends ContextMenu {
     }
 
     public void uploadFile(){
-
+        fileAdminController.uploadFile();
     }
 
 }

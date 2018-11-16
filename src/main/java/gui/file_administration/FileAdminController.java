@@ -15,11 +15,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import jdk.nashorn.api.tree.Tree;
 
 import java.io.IOException;
+import javax.naming.InvalidNameException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -70,6 +72,7 @@ public class FileAdminController implements TabController {
         // todo - It always reloads. - Philip
         if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
+        fileTreeView.getRoot().setExpanded(true);
 
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         reloadPlantList();
@@ -189,21 +192,31 @@ public class FileAdminController implements TabController {
     }
 
     public void createFolder() {
-        if (selectedFile instanceof Folder) {
-            int expand = fileTreeView.getExpandedItemCount();
-            TextInputDialog txtInputDia = new TextInputDialog();
-            txtInputDia.getEditor().setPromptText("Skriv navnet på folderen");
-
-            Optional<String> folderName;
-            folderName = txtInputDia.showAndWait();
-
-
-            if (folderName.isPresent()) {
+        Optional<String> folderName = createFolderPopUP();
+        if (folderName.isPresent()){
+            if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder((Folder) selectedFile, name);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
             }
+            if(selectedFile instanceof Document){
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
+                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
         }
+    }
+
+    public Optional<String> createFolderPopUP(){
+        TextInputDialog txtInputDia = new TextInputDialog();
+        txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
+        txtInputDia.getEditor().setPromptText(DMSApplication.getMessage("AdminFiles.PopUp.TypeFolderName"));
+        txtInputDia.setGraphic(new ImageView("icons/menu/addfolder.png"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUp.Cancel"));
+
+        return txtInputDia.showAndWait();
     }
 
     public void deleteFile() {
@@ -229,6 +242,35 @@ public class FileAdminController implements TabController {
 
     public void renameFile(){
         // todo make a way to type in a new name. - Philip
+        Optional<String> optName = renameFilePopUP();
+        if(optName.isPresent()){
+            String name = optName.get();
+            if(selectedFile instanceof Document){
+                Document doc = (Document)selectedFile;
+                try {
+                    doc.renameFile(name);
+                } catch (InvalidNameException e) {
+                    System.out.println("Could not rename file");
+                    e.printStackTrace();
+                }
+            }
+            if(selectedFile instanceof Folder){
+                Folder fol = (Folder)selectedFile;
+                fol.renameFile(name);
+            }
+        }
+    }
+
+    public Optional<String> renameFilePopUP(){
+        TextInputDialog txtInputDia = new TextInputDialog();
+        txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFile"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFileInfo"));
+        txtInputDia.getEditor().setPromptText(DMSApplication.getMessage("AdminFiles.PopUpRename.TypeNewName"));
+        txtInputDia.setGraphic(new ImageView());
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.NewName"));
+        ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.Cancel"));
+
+        return txtInputDia.showAndWait();
     }
 
     public void uploadFile(){
