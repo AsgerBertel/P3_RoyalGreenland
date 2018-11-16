@@ -16,9 +16,18 @@ VBox {
     -fx-background-color: transparent;
 }
 
+.standardContainer {
+    -fx-padding: 20px;
+}
+
 /* -- Buttons -- */
 .regularButton {
-
+    -fx-border-color: #6f777e;
+    -fx-border-radius: 0;
+    -fx-border-width: 0.2;
+    -fx-background-color: white;
+    -fx-padding: 5 20 5 20;
+    -fx-translate-x: 10; /* todo  */
 }
 
 /* -- Text -- */
@@ -60,8 +69,6 @@ VBox {
     -fx-fill: #a9b2bd;
 }
 
-
-
 /* -- Splitters -- */
 .verticalSplitter {
     -fx-pref-width: 2;
@@ -74,6 +81,15 @@ VBox {
     -fx-min-height: 2;
     -fx-max-height: 2;
     -fx-background-color: #f2f7f7;
+}
+
+.text-field {
+    -fx-border-radius: 0px;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+    -fx-font-size: 18;
 }
 
 /* -- Scroll Bar --*/
