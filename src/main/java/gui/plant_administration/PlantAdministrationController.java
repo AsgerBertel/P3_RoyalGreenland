@@ -11,10 +11,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,33 +23,45 @@ import java.util.ResourceBundle;
 
 public class PlantAdministrationController implements TabController {
 
-    ArrayList<PlantElement> plantElements = new ArrayList<>();
     @FXML
     private AnchorPane createPane;
-    @FXML
-    private VBox plantVBox;
-    @FXML
-    private AnchorPane editPane;
-    @FXML
-    private Label lblPlantEdited;
-    @FXML
-    private Label lblPlantCreated;
-    @FXML
-    private TextField field_CreatePlantName;
-    @FXML
-    private TextField field_CreatePlantId;
-    @FXML
-    private TextField field_EditPlantName;
-    @FXML
-    private TextField field_EditPlantId;
-    @FXML
-    private Button btnDeletePlant;
-    @FXML
-    private Text plantCountText;
 
     public VBox getPlantVBox() {
         return plantVBox;
     }
+
+    @FXML
+    private VBox plantVBox;
+
+    @FXML
+    private AnchorPane editPane;
+
+    @FXML
+    private Label lblPlantEdited;
+
+    @FXML
+    private Label lblPlantCreated;
+
+    @FXML
+    private TextField field_CreatePlantName;
+
+    @FXML
+    private TextField field_CreatePlantId;
+
+    @FXML
+    private TextField field_EditPlantName;
+
+    @FXML
+    private TextField field_EditPlantId;
+
+    @FXML
+    private Button btnDeletePlant;
+
+    @FXML
+    private Text plantCountText;
+
+    ArrayList<PlantElement> plantElements = new ArrayList<>();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -6,6 +6,7 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
@@ -62,7 +63,9 @@ public class FileAdminController implements TabController {
     public void update() {
         // Refresh file tree if the files have changed // todo test if functional
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
-        if(currentRoot == null || !currentRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0)))
+        // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
+        // todo - It always reloads. - Philip
+        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
 
         reloadPlantList();
@@ -77,7 +80,7 @@ public class FileAdminController implements TabController {
         setFactoryListDisabled(true);
     }
 
-    private void reloadPlantList(){
+    private void reloadPlantList() {
         plantElements.clear();
         plantVBox.getChildren().clear();
 
@@ -150,15 +153,14 @@ public class FileAdminController implements TabController {
     }
 
     public void addDocument(ActionEvent actionEvent) {
-        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        if (selectedFile instanceof Folder) {
+            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
-        int returnValue = jfc.showOpenDialog(null);
-        // int returnValue = jfc.showSaveDialog(null);
+            int returnValue = jfc.showOpenDialog(null);
+            // int returnValue = jfc.showSaveDialog(null);
 
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File uploadedFile = jfc.getSelectedFile();
-
-            if (selectedFile instanceof Folder) {
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File uploadedFile = jfc.getSelectedFile();
                 try {
                     FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
                 } catch (IOException e) {
@@ -166,10 +168,15 @@ public class FileAdminController implements TabController {
                     e.printStackTrace();
                 }
                 update();
-            } else if (selectedFile instanceof Document) {
-                System.out.println("popup med dokument valgt istedet for folder");
             }
+
+        }else if (selectedFile instanceof Document) {
+            Alert popup = new Alert(Alert.AlertType.INFORMATION, DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen"));
+            popup.setTitle(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetTitle"));
+            popup.setHeaderText(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetHeader"));
+            popup.showAndWait();
         }
+
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
@@ -177,9 +184,9 @@ public class FileAdminController implements TabController {
 
     public void createFolder(ActionEvent actionEvent) {
 
-        if (selectedFile instanceof Folder){
+        if (selectedFile instanceof Folder) {
             String folderName = JOptionPane.showInputDialog("Skriv navnet på folderen");
-            if(folderName != null) {
+            if (folderName != null) {
                 FileManager.getInstance().createFolder((Folder) selectedFile, folderName);
             }
         } else {

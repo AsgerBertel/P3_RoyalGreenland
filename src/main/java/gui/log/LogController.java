@@ -30,7 +30,6 @@ public class LogController implements TabController {
     @FXML
     private TableColumn<rgEvent, String> time;
 
-
     @FXML
     private TextField searchField;
     private List<rgEvent> listOfEvents;
