@@ -61,6 +61,7 @@ public class FileAdminController implements TabController {
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
+        fileTreeView.setShowRoot(false);
 
     }
 
@@ -258,6 +259,8 @@ public class FileAdminController implements TabController {
                 Folder fol = (Folder)selectedFile;
                 fol.renameFile(name);
             }
+            // Todo tree closes when it updates. - Philip
+            update();
         }
     }
 
