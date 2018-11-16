@@ -49,6 +49,7 @@ public class FileOverviewController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
+        fileTreeView.setShowRoot(false);
     }
 
     @Override

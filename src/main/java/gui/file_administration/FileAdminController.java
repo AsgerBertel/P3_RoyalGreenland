@@ -187,7 +187,6 @@ public class FileAdminController implements TabController {
             popup.showAndWait();
         }
 
-
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
     }
@@ -242,7 +241,6 @@ public class FileAdminController implements TabController {
     }
 
     public void renameFile(){
-        // todo make a way to type in a new name. - Philip
         Optional<String> optName = renameFilePopUP();
         if(optName.isPresent()){
             String name = optName.get();
