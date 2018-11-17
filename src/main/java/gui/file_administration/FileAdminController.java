@@ -220,8 +220,8 @@ public class FileAdminController implements TabController {
     }
 
     public void deleteFile() {
-        FileManager.getInstance().deleteFile(selectedFile);
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+        FileManager.getInstance().deleteFile(selectedItem.getValue());
         selectedItem.getParent().getChildren().remove(selectedItem);
     }
 

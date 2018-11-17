@@ -1,12 +1,9 @@
 package directory.plant;
 
-import com.google.gson.Gson;
-import directory.PathsManager;
-import directory.files.DocumentBuilder;
+import directory.PreferencesManager;
 import json.JsonParser;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -93,7 +90,7 @@ public class PlantManager {
      */
     protected void updateJsonFile(){
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
+        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
             JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,7 +101,7 @@ public class PlantManager {
      * Load the JSON file into the PlantManager.
      */
     public static PlantManager readFromJsonFile(){
-        try (Reader reader = new FileReader(PathsManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
+        try (Reader reader = new FileReader(PreferencesManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
                 return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
             System.out.println("Could not read JSON plants.");
