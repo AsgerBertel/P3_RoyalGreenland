@@ -1,8 +1,7 @@
-#plantSection{
+#plantSection {
     -fx-background-color: white;
     -fx-border-width: 0;
     -fx-padding: 10;
-
     -fx-min-height: 400px;
     -fx-min-width: 250px;
     -fx-max-width: 250px;
@@ -12,21 +11,19 @@
 
 #plantScrollPane > .viewport {
     -fx-background-color: transparent;
-
 }
 
-#plantScrollPane{
+#plantScrollPane {
     -fx-border-width: 0;
     -fx-background-color: transparent;
     -fx-alignment: center;
- 
     -fx-max-height: 640;
     -fx-min-width: 210px;
     -fx-max-width: 210px;
     -fx-pref-width: 210px;
 }
 
-#plantVBox{
+#plantVBox {
     -fx-background-color: transparent;
 
     -fx-min-height: 400px;
@@ -37,48 +34,47 @@
 
 /* The box representing a single plant */
 .plantElement {
-     -fx-alignment: center-left;
-     -fx-background-color: #f2f7f7;
-     -fx-min-height: 40px;
-     -fx-max-height: 40px;
-     -fx-pref-height: 40px;
-     -fx-min-width: 200px;
-     -fx-max-width: 200px;
-     -fx-pref-width: 200px;
+    -fx-alignment: center-left;
+    -fx-background-color: #f2f7f7;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-pref-width: 200px;
 
-     /* Margin hack */
-     -fx-padding: 8px;
-     -fx-border-insets: 3px;
-     -fx-background-insets: 3px;
+    /* Margin hack */
+    -fx-padding: 8px;
+    -fx-border-insets: 3px;
+    -fx-background-insets: 3px;
 }
 
 .plantElement:focused {
     -fx-background-color: #6fd59b;
 }
 
-.plantElement:hover{
+.plantElement:hover {
     -fx-cursor: HAND;
 }
 
-
-.plantText{
+.plantText {
     -fx-font-size: 12px;
     -fx-font-family: Arial, sans-serif;
     -fx-fill: #4f5760;
 }
 
-.plantText:disabled{
+.plantText:disabled {
     -fx-fill: #d2d7dd;
 }
 
-.check-box .box{
+.check-box .box {
     -fx-background-color: white;
     -fx-border-width: 0;
     -fx-border-color: #c0c7cf;
     -fx-border-radius: 2;
 }
 
-.check-box .box:disabled{
+.check-box .box:disabled {
     -fx-background-color: white;
     -fx-border-width: 1;
     -fx-border-color: #c0c7cf;
