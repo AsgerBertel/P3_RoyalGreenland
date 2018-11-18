@@ -9,12 +9,13 @@ import java.util.ArrayList;
 /**
  * Singleton pattern.
  * Used to get all plants. All plants are stored in allPlants.JSON file.
- * Use the readFilesFromJson method to load the plants into this class.
+ * Use the readFileManagerFromJson method to load the plants into this class.
  */
 
 public class PlantManager {
     private ArrayList<Plant> allPlants = new ArrayList<>();
     private static String pathToJson = "Sample files/allPlants.JSON";
+    private static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
     private static PlantManager plantManager;
 
     /**

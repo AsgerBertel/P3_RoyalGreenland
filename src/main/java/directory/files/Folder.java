@@ -3,7 +3,6 @@ package directory.files;
 import directory.FileManager;
 import directory.plant.AccessModifier;
 
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,7 +38,7 @@ public class Folder extends AbstractFile {
 
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
-            FileManager.getInstance().updateFilesJson();
+            FileManager.getInstance().updateJsonFiles();
         }
     }
 

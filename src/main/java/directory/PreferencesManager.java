@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 public class PreferencesManager {
-
+// todo add default language setting
     private Preferences preferences;
     private static PreferencesManager settings;
 
@@ -84,14 +84,6 @@ public class PreferencesManager {
 
     public String getUsername() {
         return username;
-    }
-
-    public static String getServerPathPref() {
-        return SERVER_PATH_PREF;
-    }
-
-    public static String getLocalPathPref() {
-        return LOCAL_PATH_PREF;
     }
 
     public void setServerPath(String serverPath) {
