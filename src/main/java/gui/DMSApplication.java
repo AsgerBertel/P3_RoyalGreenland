@@ -49,8 +49,6 @@ public class DMSApplication extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
-        //System.out.println(locale.get);
-
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
 
@@ -71,9 +69,6 @@ public class DMSApplication extends Application {
         root.getChildren().add(mainMenu);
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
-
-        // resetter file tree
-        FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();

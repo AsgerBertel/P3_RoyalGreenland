@@ -4,6 +4,7 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import json.AppFilesManager;
 import json.JsonParser;
 
 import java.io.*;
@@ -22,15 +23,26 @@ public class FileManager {
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
+    private Folder mainFilesRoot;
+    private Folder archiveRoot;
+
     private static FileManager fileManager;
     private PreferencesManager preferencesManager;
 
     // Private constructor for ensuring that no other class can create a new instance this class
-    private FileManager(){}
+    private FileManager(){
+        // createFolderTree(); todo todo todo !!!!!!!!!!
+    }
 
     public static synchronized FileManager getInstance() {
         if (fileManager == null) {
-            fileManager = readFileManagerFromJson();
+            fileManager = AppFilesManager.loadFileManager();
+
+            // If still null create new FileManager and save it on the server
+            if(fileManager == null){
+                fileManager = new FileManager();
+                AppFilesManager.save(fileManager);
+            }
             fileManager.preferencesManager = PreferencesManager.getInstance();
         }
         return fileManager;
@@ -122,13 +134,15 @@ public class FileManager {
 
     public void updateJsonFiles() {
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
+        AppFilesManager.save(this);
+        /*try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
+    // todo remove when get test instance is removed
     protected static FileManager readFileManagerFromJson() {
         // String pathStr;
         PreferencesManager prefs = PreferencesManager.getInstance();
@@ -158,20 +172,32 @@ public class FileManager {
         this.pathToJson = pathToJson;
     }
 
-    public void initFolderTree() throws IOException{
-        allContent.clear();
-        Folder root = new Folder(PreferencesManager.getInstance().getServerDocumentsPath());
-        allContent.add(findAllChildren(root));
+    /**
+     * Searches the local file system and creates a folder object corresponding to the given root file.
+     * The folder will contain AbstractFile objects corresponding to the files stored within the root file.
+     * @param root the root folder from which the folder object is generated. Must be a directory.
+     * @return
+     * @throws IOException
+     */
+    public static Folder createFolderTree(File root) throws IOException{
+        if(!root.exists()){
+            // todo - Magnus
+        }
 
-        archive.clear();
-        Folder rootArchive = new Folder(PreferencesManager.getInstance().getServerArchivePath());
-        archive.add(findAllChildren(rootArchive));
+        if(!root.isDirectory()){
+            // todo illegal argument exception?? - Magnus
+        }
 
-        updateJsonFiles();
+        Folder rootFolder = new Folder(root.getPath());
+        rootFolder.getContents().addAll(findAllChildren(rootFolder));
+
+        return rootFolder;
     }
 
     // Finds all children of the given root folder in the file system and add them to the root Folder object
-    private Folder findAllChildren(Folder root) throws IOException{
+    private static ArrayList<AbstractFile> findAllChildren(Folder root) throws IOException{
+        ArrayList<AbstractFile> contents = new ArrayList<>();
+
         Files.walk(root.getPath(), 1)
                 .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
                 .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
@@ -180,7 +206,7 @@ public class FileManager {
                 .filter(Files::isRegularFile)
                 .forEach(file -> root.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
-        return root;
+        return contents;
     }
 
     private Folder getRootElement(){
