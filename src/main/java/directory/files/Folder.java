@@ -40,6 +40,7 @@ public class Folder extends AbstractFile {
             changeChildrenPath(this, oldPath, newPath);
             FileManager.getInstance().updateJsonFiles();
         }
+        FileManager.getInstance().updateJsonFiles();
     }
 
     private void changeChildrenPath(Folder folder, String oldPath, String newPath){

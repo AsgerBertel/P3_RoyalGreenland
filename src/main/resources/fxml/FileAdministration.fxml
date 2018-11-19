@@ -16,7 +16,7 @@
 
     <!-- Side menu -->
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-        <Button styleClass="menuButton" onAction="#addDocument">
+        <Button styleClass="menuButton" onAction="#uploadDocument">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/adddocument.png"/>

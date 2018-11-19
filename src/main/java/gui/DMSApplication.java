@@ -52,8 +52,6 @@ public class DMSApplication extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
-        //System.out.println(locale.get);
-
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
 
@@ -62,7 +60,6 @@ public class DMSApplication extends Application {
         }else{
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "ViewerMainMenu.fxml"), bundle);
         }
-
 
         // Improve font rendering
         System.setProperty("prism.lcdtext", "false");
@@ -81,8 +78,11 @@ public class DMSApplication extends Application {
         this.primaryStage = primaryStage;
         primaryStage.show();
 
-        switchWindow(TabLoader.FILE_ADMINISTRATION);
-
+        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+            switchWindow(TabLoader.FILE_ADMINISTRATION);
+        } else{
+            switchWindow(TabLoader.FILE_OVERVIEW);
+        }
     }
 
     // Shows the given part of the program
