@@ -163,7 +163,7 @@ public class FileAdminController implements TabController {
 
     public void addDocument(ActionEvent actionEvent) {
         if (selectedFile instanceof Folder) {
-            // Todo JFileChooser is from. swing. Use a JavaFX one. - Philip
+            // Todo JFileChooser is from swing. Use a JavaFX one. - Philip
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
             int returnValue = jfc.showOpenDialog(null);
@@ -203,6 +203,11 @@ public class FileAdminController implements TabController {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
+            if (selectedFile == null){
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getAllContent().get(0), name);
+                fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
             }
         }
     }

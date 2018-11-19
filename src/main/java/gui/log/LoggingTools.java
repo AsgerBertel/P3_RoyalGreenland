@@ -89,8 +89,6 @@ public class LoggingTools {
 
     private LogEventType stringToLogEventType(String string){
 
-        // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
-        // Doesnt matter here since danish word is stored in .log file only, which will never be opened
         switch (string){
             case "ændret":
                 return LogEventType.CHANGED;

@@ -1,5 +1,8 @@
 package directory;
 
+import gui.DMSApplication;
+
+import java.util.Locale;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
@@ -15,20 +18,28 @@ public class PreferencesManager {
     private static final String LOCAL_PATH_PREF = "local_path";
     private static final String USERNAME_PREF = "username";
 
+    //language key
+    private static final String LANGUAGE_PREF = "language";
+
     // Relative program paths
     private static final String ARCHIVE_PATH = "Archive/";
     private static final String DOCUMENTS_PATH = "Documents/";
     private static final String APP_FILES_PATH = "App Files/";
 
+
     // Other preferences
-    private static String username = "Unknown user";
+    private String username = "Unknown user";
+    private Locale language;
 
     private String serverPath, localPath;
 
     private PreferencesManager() {
         // Loads preferences
         preferences = Preferences.userNodeForPackage(PreferencesManager.class);
+        loadPreferences();
+    }
 
+    private void loadPreferences(){
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
@@ -37,9 +48,27 @@ public class PreferencesManager {
             getNewPaths();
         }
 
+        String languageString = preferences.get(LANGUAGE_PREF, DEFAULT_NULL_VALUE);
+
+        if (languageString.equals(DMSApplication.DK_LOCALE))
+            language = DMSApplication.DK_LOCALE;
+        else if (languageString.equals(DMSApplication.GL_LOCALE))
+            language = DMSApplication.GL_LOCALE;
+        else
+            setLanguage(DMSApplication.getLanguage());
+
         username = preferences.get(USERNAME_PREF, DEFAULT_NULL_VALUE);
         if(username.equals(DEFAULT_NULL_VALUE))
             setUsername(getComputerName());
+    }
+
+    public Locale getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Locale locale) {
+        this.language = locale;
+        preferences.put(LANGUAGE_PREF, language.getLanguage());
     }
 
     public void getNewPaths() {
@@ -95,7 +124,7 @@ public class PreferencesManager {
     }
 
     public void setUsername(String username) {
-        PreferencesManager.username = username;
+        this.username = username;
         preferences.put(USERNAME_PREF, username);
     }
 

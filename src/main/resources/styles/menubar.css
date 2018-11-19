@@ -14,7 +14,7 @@
     -fx-padding: 0;
 }
 
-.button {
+.menuButton {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 12px;
     -fx-background-color: #303841;
@@ -24,28 +24,29 @@
     -fx-background-insets: 0, 0, 0, 0, 0, 0, 0;
 }
 
-.button:hover{
+
+.menuButton:hover{
     -fx-background-color: #3d4652;
     -fx-background-radius: 0;
     -fx-cursor: HAND;
 }
 
-.button:focused {
+.menuButton:selected{
     -fx-background-color: #3d4652;
     -fx-background-radius: 0;
 }
 
-.button:pressed{
+.menuButton:pressed{
     -fx-background-color: #576474;
     -fx-background-radius: 0;
 }
-.horizontalMenu .button{
+.horizontalMenu .menuButton{
     -fx-min-height: 44px;
     -fx-max-height: 44px;
     -fx-pref-height: 44px;
 }
 
-.verticalMenu .button{
+.verticalMenu .menuButton{
     -fx-min-width: 60px;
     -fx-max-width: 60px;
     -fx-pref-width: 60px;

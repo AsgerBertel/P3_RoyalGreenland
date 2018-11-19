@@ -6,25 +6,26 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.ToggleButton?>
 <BorderPane styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
     <left>
         <HBox>
             <children>
-                <Button text="%MainMenu.SeeDoc" onAction="#viewDocuments">
+                <ToggleButton styleClass="menuButton" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
                     <graphic>
                         <ImageView fitWidth="20" fitHeight="24">
                             <Image url="/icons/menu/viewDocuments.png" />
                         </ImageView>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
-                <Button text="%MainMenu.Settings" onAction="#settings">
+                <ToggleButton styleClass="menuButton" text="%MainMenu.Settings" onAction="#settings">
                     <graphic>
                         <ImageView fitWidth="23" fitHeight="25">
                             <Image url="/icons/menu/settings.png"/>
                         </ImageView>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
             </children>
         </HBox>
@@ -33,21 +34,21 @@
     <right>
         <HBox>
             <children>
-                <Button onAction="#changeToDanish">
+                <ToggleButton styleClass="menuButton" onAction="#changeToDanish">
                     <graphic>
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/danish.png"  />
                         </ImageView>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
-                <Button onAction="#changeToGreenlandic">
+                <ToggleButton styleClass="menuButton" onAction="#changeToGreenlandic">
                     <graphic >
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/greenlandic.png"/>
                         </ImageView>
                     </graphic>
-                </Button>
+                </ToggleButton>
             </children>
         </HBox>
     </right>

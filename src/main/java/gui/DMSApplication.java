@@ -22,6 +22,9 @@ public class DMSApplication extends Application {
 
     private VBox root;
 
+    public static final Locale DK_LOCALE = new Locale("da", "DK");
+    public static final Locale GL_LOCALE = new Locale("gl", "GL");
+
     private static Locale locale = new Locale("da", "DK");
     private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
