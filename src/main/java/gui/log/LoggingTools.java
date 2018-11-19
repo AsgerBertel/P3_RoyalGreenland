@@ -1,7 +1,7 @@
 package gui.log;
 
 
-import directory.PathsManager;
+import directory.PreferencesManager;
 import gui.DMSApplication;
 
 import java.io.*;
@@ -30,7 +30,7 @@ public class LoggingTools {
     }
     public List<rgEvent> listOfAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
-        try(Stream<String> stream = Files.lines(Paths.get(PathsManager.getInstance().getServerAppFilesPath() + "logs.log"))){
+        try(Stream<String> stream = Files.lines(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         }catch (IOException e){
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class LoggingTools {
     private void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
             pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) +"|"+listOfEvents.get(2));
 
         } catch (IOException e) {
