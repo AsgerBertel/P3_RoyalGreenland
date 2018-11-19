@@ -19,6 +19,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import javax.naming.InvalidNameException;
@@ -163,16 +166,11 @@ public class FileAdminController implements TabController {
 
     public void addDocument(ActionEvent actionEvent) {
         if (selectedFile instanceof Folder) {
-            // Todo JFileChooser is from swing. Use a JavaFX one. - Philip
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("FileAdmin.UploadFile"));
 
-            int returnValue = jfc.showOpenDialog(null);
-            // int returnValue = jfc.showSaveDialog(null);
-
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File uploadedFile = jfc.getSelectedFile();
+            if (uploadFile != null) {
                 try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
                 } catch (IOException e) {
                     System.out.println("could not upload file");
                     e.printStackTrace();
@@ -185,10 +183,30 @@ public class FileAdminController implements TabController {
             popup.setTitle(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetTitle"));
             popup.setHeaderText(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetHeader"));
             popup.showAndWait();
+        } else if (selectedFile == null){
+            File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("FileAdmin.UploadFile"));
+
+            if (uploadFile != null) {
+                try {
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getAllContent().get(0));
+                } catch (IOException e) {
+                    System.out.println("could not upload file");
+                    e.printStackTrace();
+                }
+                update();
+            }
         }
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
+    }
+
+    private File chooseDirectoryPrompt(String message) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(message);
+        File chosenFile = fileChooser.showOpenDialog(new Stage());
+        if (chosenFile == null) return null;
+        return chosenFile;
     }
 
     public void createFolder() {
