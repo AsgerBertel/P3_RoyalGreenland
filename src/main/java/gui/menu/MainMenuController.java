@@ -38,11 +38,16 @@ public class MainMenuController {
 
     public void init(DMSApplication dmsApplication){
         viewDocuments.setToggleGroup(menuTG);
-        administrateDocuments.setToggleGroup(menuTG);
-        administratePlants.setToggleGroup(menuTG);
-        deletedFiles.setToggleGroup(menuTG);
-        log.setToggleGroup(menuTG);
         settings.setToggleGroup(menuTG);
+
+        if(administrateDocuments != null) {
+            administrateDocuments.setToggleGroup(menuTG);
+            administratePlants.setToggleGroup(menuTG);
+            deletedFiles.setToggleGroup(menuTG);
+            log.setToggleGroup(menuTG);
+        }
+
+
 
         changeToDanish.setToggleGroup(languageTG);
         changeToGreenlandic.setToggleGroup(languageTG);

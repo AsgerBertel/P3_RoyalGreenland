@@ -107,6 +107,7 @@ public class FileManager {
         }
     }
 
+    //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
