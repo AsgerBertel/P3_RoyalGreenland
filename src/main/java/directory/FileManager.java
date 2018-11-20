@@ -129,7 +129,7 @@ public class FileManager {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
-            updateJsonFiles();
+            AppFilesManager.save(this);
             //loggingTools.LogEvent(file.getName(), LogEventType.CREATED); // todo reimplement
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -147,6 +147,7 @@ public class FileManager {
         createFolderFile(Settings.getServerDocumentsPath() + name);
 
         mainFiles.add(folder);
+        AppFilesManager.save(this);
         return folder;
     }
 
@@ -157,6 +158,7 @@ public class FileManager {
         createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
 
         mainFiles.add(folder);
+        AppFilesManager.save(this);
         return folder;
     }
 
@@ -182,7 +184,7 @@ public class FileManager {
 
             Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0); // todo Implement properly (archive files no longer have a root)
             archiveFolder.getContents().add(file);
-            getInstance().updateJsonFiles();
+            AppFilesManager.save(this);
         } catch (IOException e) {
             System.out.println("Could not delete file");
             e.printStackTrace();
@@ -200,10 +202,6 @@ public class FileManager {
         Folder contentFolder = (Folder) getInstance().mainFiles.get(0); // todo Implement properly (archive files no longer have a root) - Magnus
         contentFolder.getContents().add(file);
 
-        updateJsonFiles();
-    }
-
-    public void updateJsonFiles() {
         AppFilesManager.save(this);
     }
 

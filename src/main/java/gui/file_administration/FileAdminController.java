@@ -217,13 +217,16 @@ public class FileAdminController implements TabController {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
 
+                Folder fol;
                 if(parent.isPresent())
-                    fileManager.createFolder(name, parent.get());
+                    fol = fileManager.createFolder(name, parent.get());
                 else
-                    fileManager.createFolder(name);
-            }
+                    fol = fileManager.createFolder(name);
 
-            update();
+
+                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
+            /*update();*/
         }
     }
 

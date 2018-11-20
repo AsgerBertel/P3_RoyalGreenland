@@ -6,6 +6,7 @@ import gui.DMSApplication;
 import gui.log.LogController;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
 import java.awt.*;
@@ -101,7 +102,7 @@ public class Document extends AbstractFile {
 
         LoggingTools lt = new LoggingTools();
         lt.LogEvent(getName(), LogEventType.RENAMED);
-        FileManager.getInstance().updateJsonFiles();
+        AppFilesManager.save(FileManager.getInstance());
     }
 
     public void tester(){
