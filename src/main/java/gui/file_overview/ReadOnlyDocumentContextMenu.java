@@ -1,5 +1,6 @@
 package gui.file_overview;
 
+import gui.DMSApplication;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
@@ -17,7 +18,7 @@ public class ReadOnlyDocumentContextMenu extends ContextMenu {
     public void initFolderContextMenu() {
 
 
-        MenuItem openDocument = new MenuItem("Open");
+        MenuItem openDocument = new MenuItem(DMSApplication.getMessage("FileOverview.ContextMenu.Open"));
         openDocument.setOnAction(event -> openDocument());
         this.getItems().addAll(openDocument);
     }
