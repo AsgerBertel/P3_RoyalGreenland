@@ -55,8 +55,8 @@ public class FileTreeUtil {
         return rootItem;
     }
 
-    public static TreeItem<AbstractFile> generateTree(Folder rootFile) {
-        return generateTree(rootFile, null);
+    public static TreeItem<AbstractFile> generateTree(Folder root) {
+        return generateTree(root, null);
     }
 
     // Compare function for sorting files

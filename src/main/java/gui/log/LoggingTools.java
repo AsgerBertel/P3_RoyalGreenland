@@ -21,7 +21,7 @@ public class LoggingTools {
          LocalDateTime localDateTime = LocalDateTime.now();
 
          //get Username
-         String userName = PreferencesManager.getInstance().getUsername();
+         String userName = Settings.getUsername();
 
          //create and write event
          rgEvent event = new rgEvent(fileName, userName, localDateTime, eventType);
@@ -31,7 +31,7 @@ public class LoggingTools {
 
     public List<rgEvent> getAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
-        try(Stream<String> stream = Files.lines(Paths.get(Settings.getInstance().getServerAppFilesPath() + "logs.log"))){
+        try(Stream<String> stream = Files.lines(Paths.get(Settings.getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         }catch (IOException e){
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class LoggingTools {
     private void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getInstance().getServerAppFilesPath() + "logs.log",true)))){
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log",true)))){
             pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) + "|" +listOfEvents.get(2));
 
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package gui.settings;
 
+import app.ApplicationMode;
 import directory.Settings;
 import gui.DMSApplication;
 import javafx.event.ActionEvent;
@@ -25,7 +26,6 @@ public class InitializationController implements Initializable {
     public Button previousButton;
 
     private State currentState;
-    private Settings settings;
 
     String serverPath = "", localPath = "", userName = Settings.getComputerName();
 
@@ -37,11 +37,12 @@ public class InitializationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setState(State.LOCAL_PATH);
-    }
+        if(DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN)){
+            setState(State.SERVER_PATH);
+        }else{
+            setState(State.LOCAL_PATH);
+        }
 
-    public void initSettings(Settings settings){
-        this.settings = settings;
     }
 
     private void setState(State state) {
@@ -59,7 +60,13 @@ public class InitializationController implements Initializable {
             case SERVER_PATH:
                 settingDescription.setText(DMSApplication.getMessage("Initialization.EnterServerPath"));
                 inputTextField.setText(serverPath);
-                previousButton.setVisible(true);
+
+                // Only show "previousButton" if the application is running in viewer mod (as the local path setting
+                // is irrelevant when running in admin mode)
+                if(DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN))
+                    previousButton.setVisible(false);
+                else
+                    previousButton.setVisible(true);
                 browseButton.setVisible(true);
                 break;
             case USERNAME:
@@ -130,11 +137,14 @@ public class InitializationController implements Initializable {
 
     // Close the initialization window
     private void close(){
-        //save
-        settings.setLocalPath(localPath);
-        settings.setServerPath(serverPath);
-        settings.setUsername(userName);
+        Settings.setServerPath(serverPath);
+        Settings.setUsername(userName);
 
+        // Save local path if the application is running in viewer mode
+        if(DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER))
+            Settings.setLocalPath(localPath);
+
+        // Close initialization window
         ((Stage) nextButton.getScene().getWindow()).close();
     }
 }

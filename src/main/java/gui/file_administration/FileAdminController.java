@@ -184,7 +184,7 @@ public class FileAdminController implements TabController {
 
             if (uploadFile != null) {
                 try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getAllContent().get(0));
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getMainFiles().get(0)); // todo VIGTIGT - Magnus
                 } catch (IOException e) {
                     System.out.println("could not upload file");
                     e.printStackTrace();
@@ -220,7 +220,7 @@ public class FileAdminController implements TabController {
             }
             if (selectedFile == null){
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getAllContent().get(0), name);
+                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getMainFiles().get(0), name); // todo VIGTIGT - MAGNUS
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
             }
             update();

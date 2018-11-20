@@ -4,8 +4,6 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
-import gui.log.LogEventType;
-import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.*;
@@ -39,18 +37,16 @@ public class FileManager {
 
     // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager() {
-        Settings settings = Settings.getInstance();
-
         // Create a list of AbstractFiles based on the files inside the server document path
-        Path mainFilesRootPath = Paths.get(settings.getServerDocumentsPath());
-        mainFiles = loadAbstractFiles(mainFilesRootPath);
+        Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
+        mainFiles = findFiles(mainFilesRootPath);
 
         // Initialize list of archived documents // todo should these automatic file detection features be enabled? - Magnus
-        Path archiveFilesRoot = Paths.get(settings.getServerArchivePath());
-        archiveFiles = loadAbstractFiles(archiveFilesRoot);
+        Path archiveFilesRoot = Paths.get(Settings.getServerArchivePath());
+        archiveFiles = findFiles(archiveFilesRoot);
     }
 
-    private static ArrayList<AbstractFile> loadAbstractFiles(Path root){
+    private static ArrayList<AbstractFile> findFiles(Path root){
         if (!Files.exists(root)) {
             // todo Check if server connection failure or just non-existing file throw exception maybe
         }
@@ -121,7 +117,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             updateJsonFiles();
-            loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
+            //loggingTools.LogEvent(file.getName(), LogEventType.CREATED); // todo reimplement
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
@@ -148,7 +144,7 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) {
-        Path pathWithName = Paths.get(Paths.get(Settings.getInstance().getServerArchivePath()) + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(Settings.getServerArchivePath()) + File.separator + file.getName());
         try {
             Files.move(file.getPath(), pathWithName);
             Folder parent = findParent(file);
@@ -165,9 +161,9 @@ public class FileManager {
 
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(Settings.getInstance().getServerArchivePath()) + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(Settings.getServerArchivePath()) + File.separator + file.getName());
 
-        Files.move(pathWithName, Paths.get(Settings.getInstance().getServerDocumentsPath() + File.separator + file.getName()));
+        Files.move(pathWithName, Paths.get(Settings.getServerDocumentsPath() + File.separator + file.getName()));
 
         Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0);
         archiveFolder.getContents().remove(file);
@@ -178,13 +174,7 @@ public class FileManager {
     }
 
     public void updateJsonFiles() {
-        // Write object to JSON file.
         AppFilesManager.save(this);
-        /*try (FileWriter writer = new FileWriter(Settings.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
-            JsonParser.getJsonParser().toJson(getInstance(), writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     /**
@@ -193,8 +183,6 @@ public class FileManager {
      * @return
      * @throws IOException
      */
-
-
     private Folder getRootElement() {
         return (Folder) getInstance().mainFiles.get(0);
         //todo get root of what? documents or archiveFiles? Specify or remove method - Magnus
@@ -203,7 +191,6 @@ public class FileManager {
     // todo same as above. Parent in archiveFiles or main documents?
     public Folder findParent(AbstractFile child) {
         return findParent(child, getRootElement());
-
     }
 
     private Folder findParent(AbstractFile child, Folder parent) {

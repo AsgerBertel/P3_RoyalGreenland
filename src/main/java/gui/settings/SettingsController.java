@@ -22,16 +22,13 @@ public class SettingsController implements TabController {
     public TextField usernameTextField;
     public Button saveChangesButton;
 
-    private Settings settings;
-
     static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        settings = Settings.getInstance();
-        usernameTextField.setText(settings.getUsername());
-        serverPathTextField.setText(settings.getServerPath());
-        localPathTextField.setText(settings.getLocalFilesPath());
+        usernameTextField.setText(Settings.getUsername());
+        serverPathTextField.setText(Settings.getServerPath());
+        localPathTextField.setText(Settings.getLocalFilesPath());
         saveChangesButton.setDisable(true);
 
         // Check validity of changes when
@@ -122,17 +119,11 @@ public class SettingsController implements TabController {
 
         // todo - Is this readable? - Magnus
         // Save all changes and set allChangeSaved to false if a save failed
-        allChangesSaved &= saveChange(usernameTextField, () -> settings.setUsername(usernameTextField.getText()));
-        allChangesSaved &= saveChange(serverPathTextField, () -> settings.setServerPath(serverPathTextField.getText()));
-        allChangesSaved &= saveChange(localPathTextField, () -> settings.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(usernameTextField, () -> Settings.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(serverPathTextField.getText()));
+        allChangesSaved &= saveChange(localPathTextField, () -> Settings.setUsername(usernameTextField.getText()));
 
         saveChangesButton.setDisable(allChangesSaved);
-    }
-
-    protected boolean containsErrors(){
-        return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
-                || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
-                || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
     }
 
     /* Executes the saveAction if the textField contains changes
@@ -148,5 +139,13 @@ public class SettingsController implements TabController {
 
         return true;
     }
+
+    protected boolean containsErrors(){
+        return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
+    }
+
+
 
 }
