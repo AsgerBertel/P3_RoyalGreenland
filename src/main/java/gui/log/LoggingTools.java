@@ -21,13 +21,14 @@ public class LoggingTools {
          LocalDateTime localDateTime = LocalDateTime.now();
 
          //get Username
-         String userName = System.getProperty("user.name");
+         String userName = PreferencesManager.getInstance().getUsername();
 
          //create and write event
          rgEvent event = new rgEvent(fileName, userName, localDateTime,eventType);
 
          writeEventAsLog(event);
     }
+
     public List<rgEvent> listOfAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
         try(Stream<String> stream = Files.lines(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log"))){
@@ -55,8 +56,8 @@ public class LoggingTools {
                  return DMSApplication.getMessage("Log.Added");
              case ARCHIVED:
                  return DMSApplication.getMessage("Log.Archived");
-             case DELETED:
-                 return DMSApplication.getMessage("Log.Deleted");
+             case RENAMED:
+                 return DMSApplication.getMessage("Log.Renamed");
          }
          return "error: no event named " + eventType.toString();
     }
@@ -88,7 +89,6 @@ public class LoggingTools {
     }
 
     private LogEventType stringToLogEventType(String string){
-
         switch (string){
             case "ændret":
                 return LogEventType.CHANGED;
@@ -97,7 +97,9 @@ public class LoggingTools {
             case "arkiveret":
                 return LogEventType.ARCHIVED;
             case "slettet":
-                return LogEventType.DELETED;
+                return LogEventType.RENAMED;
+            case "renamed":
+                return LogEventType.FOLDERRENAMED;
         }
         return LogEventType.CREATED;
     }
