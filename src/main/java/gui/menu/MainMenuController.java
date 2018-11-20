@@ -40,6 +40,7 @@ public class MainMenuController {
         viewDocuments.setToggleGroup(menuTG);
         settings.setToggleGroup(menuTG);
 
+        // Only adds these tabs if it's DMSAdmin
         if(administrateDocuments != null) {
             administrateDocuments.setToggleGroup(menuTG);
             administratePlants.setToggleGroup(menuTG);
@@ -47,6 +48,11 @@ public class MainMenuController {
             log.setToggleGroup(menuTG);
         }
 
+        // Highlights tab that's open from the start
+        if (administrateDocuments != null)
+            administrateDocuments.setSelected(true);
+        else
+            viewDocuments.setSelected(true);
 
 
         changeToDanish.setToggleGroup(languageTG);
