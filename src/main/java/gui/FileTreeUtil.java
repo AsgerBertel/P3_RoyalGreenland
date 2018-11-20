@@ -45,7 +45,7 @@ public class FileTreeUtil {
                 if(accessModifier == null || accessModifier.contains(((Document)child).getID())){
                     TreeItem<AbstractFile> docItem = new TreeItem<>(child);
                     docItem.setGraphic(getImageView(child));
-                    rootItem.getChildren().add(docItem);    
+                    rootItem.getChildren().add(docItem);
                 }
                 // TODO: 19-11-2018 Find a way to implement eventhandlers for drag and drop. Functions have been made - Asger.
             }
