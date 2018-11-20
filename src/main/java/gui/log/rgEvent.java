@@ -34,10 +34,10 @@ public class rgEvent {
 
     public String getEvent(){
         LoggingTools lt = new LoggingTools();
-        return getFileName() + " "+ DMSApplication.getMessage("Log.Is") +" "+ lt.EventTypeToString(getEventType());
+        return getFileName() + DMSApplication.getMessage("Log.Is") + lt.EventTypeToString(getEventType());
     }
 
     public String getTime(){
-        return getLocalDateTime().getDayOfMonth() +"/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + getLocalDateTime().getMinute();
+        return getLocalDateTime().getDayOfMonth() + "/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + getLocalDateTime().getMinute();
     }
 }

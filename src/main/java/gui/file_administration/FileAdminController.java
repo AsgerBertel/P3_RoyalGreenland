@@ -60,6 +60,8 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
+        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+
     }
 
     @Override
@@ -291,5 +293,20 @@ public class FileAdminController implements TabController {
         ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.Cancel"));
 
         return txtInputDia.showAndWait();
+    }
+    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                AbstractFile file = newValue.getValue();
+
+                if (file instanceof Document) {
+                    try {
+                        ((Document) file).openDocument();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }
