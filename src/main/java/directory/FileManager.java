@@ -26,7 +26,6 @@ public class FileManager {
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
     private static FileManager fileManager;
-    private PreferencesManager preferencesManager;
 
     // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager(){}
@@ -34,7 +33,6 @@ public class FileManager {
     public static synchronized FileManager getInstance() {
         if (fileManager == null) {
             fileManager = readFileManagerFromJson();
-            fileManager.preferencesManager = PreferencesManager.getInstance();
         }
         return fileManager;
     }
@@ -68,7 +66,7 @@ public class FileManager {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
-            updateJsonFiles();
+            getInstance().updateJsonFiles();
             loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -122,13 +120,13 @@ public class FileManager {
         Folder contentFolder = (Folder)getInstance().allContent.get(0);
         contentFolder.getContents().add(file);
 
-        getInstance().updateJsonFiles();
+        updateJsonFiles();
     }
 
     public void updateJsonFiles() {
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
-            JsonParser.getJsonParser().toJson(getInstance(), writer);
+        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
+            JsonParser.getJsonParser().toJson(fileManager, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,14 +137,13 @@ public class FileManager {
         PreferencesManager prefs = PreferencesManager.getInstance();
         Path allFilesList = Paths.get(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME);
 
-
         if(!Files.exists(allFilesList)){
             FileManager fileManager = new FileManager();
             fileManager.updateJsonFiles();
             return fileManager;
         }
-
-        try (Reader reader = new FileReader(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
+        System.out.println("Nået");
+        try (Reader reader = new FileReader(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : fileManager.allContent) {

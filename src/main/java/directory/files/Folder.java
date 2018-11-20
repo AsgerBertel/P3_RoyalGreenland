@@ -40,7 +40,6 @@ public class Folder extends AbstractFile {
 
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
-            FileManager.getInstance().updateJsonFiles();
         }
         FileManager.getInstance().updateJsonFiles();
         LoggingTools lt = new LoggingTools();

@@ -92,16 +92,16 @@ public class Document extends AbstractFile {
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent()+ File.separator + newFileName);
+        File renamedFile = new File(getPath().getParent() + File.separator + newFileName);
         setPath(Paths.get(renamedFile.getPath()));
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))
             throw new InvalidNameException();
 
-        FileManager.getInstance().updateJsonFiles();
         LoggingTools lt = new LoggingTools();
         lt.LogEvent(getName(), LogEventType.RENAMED);
+        FileManager.getInstance().updateJsonFiles();
     }
 
     public void tester(){
