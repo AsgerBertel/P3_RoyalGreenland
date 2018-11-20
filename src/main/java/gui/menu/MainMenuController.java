@@ -1,10 +1,13 @@
 package gui.menu;
 
+import directory.PreferencesManager;
 import gui.DMSApplication;
-import gui.TabController;
 import gui.TabLoader;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 
 import java.util.Locale;
 
@@ -12,42 +15,100 @@ public class MainMenuController {
 
     DMSApplication dmsApplication;
 
+    @FXML
+    ToggleButton viewDocuments;
+    @FXML
+    ToggleButton administrateDocuments;
+    @FXML
+    ToggleButton administratePlants;
+    @FXML
+    ToggleButton deletedFiles;
+    @FXML
+    ToggleButton log;
+    @FXML
+    ToggleButton settings;
+
+    @FXML
+    ToggleButton changeToDanish;
+    @FXML
+    ToggleButton changeToGreenlandic;
+
+    ToggleGroup menuTG = new ToggleGroup();
+    ToggleGroup languageTG = new ToggleGroup();
+
     public void init(DMSApplication dmsApplication){
+        viewDocuments.setToggleGroup(menuTG);
+        settings.setToggleGroup(menuTG);
+
+        if(administrateDocuments != null) {
+            administrateDocuments.setToggleGroup(menuTG);
+            administratePlants.setToggleGroup(menuTG);
+            deletedFiles.setToggleGroup(menuTG);
+            log.setToggleGroup(menuTG);
+        }
+
+
+
+        changeToDanish.setToggleGroup(languageTG);
+        changeToGreenlandic.setToggleGroup(languageTG);
+
         this.dmsApplication = dmsApplication;
+        //todo set selected language
+        if (PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
+            changeToDanish.setSelected(true);
+        } else {
+            changeToGreenlandic.setSelected(true);
+        }
     }
 
     public void administrateDocuments(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.FILE_ADMINISTRATION);
+        administrateDocuments.setSelected(true);
     }
 
     public void viewDocuments(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.FILE_OVERVIEW);
+        viewDocuments.setSelected(true);
     }
 
     public void administratePlants(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.PLANT_ADMINISTRATION);
+        administratePlants.setSelected(true);
     }
 
     public void deletedFiles(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.DELETED_FILES);
+        deletedFiles.setSelected(true);
     }
 
     public void log(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.LOG);
+        log.setSelected(true);
     }
 
     public void settings(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.SETTINGS);
+        settings.setSelected(true);
     }
 
     public void changeToDanish(Event actionEvent) throws Exception{
-        DMSApplication.changeLanguage(new Locale("da", "DK"));
-        DMSApplication.restartApp();
+        if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
+            PreferencesManager.getInstance().setLanguage(DMSApplication.DK_LOCALE);
+            dmsApplication.changeLanguage(new Locale("da", "DK"));
+            dmsApplication.restartApp();
+        }
+
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
-        DMSApplication.changeLanguage(new Locale("kl", "GL"));
-        DMSApplication.restartApp();
+
+        if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.GL_LOCALE)){
+            PreferencesManager.getInstance().setLanguage(DMSApplication.GL_LOCALE);
+            dmsApplication.changeLanguage(new Locale("kl", "GL"));
+            dmsApplication.restartApp();
+        }
+
+
     }
 
 

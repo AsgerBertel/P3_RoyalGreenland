@@ -14,7 +14,7 @@
 <HBox id="background" stylesheets="@/styles/archive.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.deleted_files.DeletedFilesController">
     <children>
         <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-            <Button fx:id="btnRestore" onAction="#restoreDocument">
+            <Button styleClass="menuButton" fx:id="btnRestore" onAction="#restoreDocument">
                 <graphic>
                     <ImageView fitHeight="40" fitWidth="40">
                         <Image url="/icons/menu/restoreDocument.png"/>

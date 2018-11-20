@@ -1,0 +1,38 @@
+
+
+.settingsVBox{
+    -fx-alignment: center-left;
+    -fx-padding: 10px;
+    -fx-translate-x: 25px;
+    -fx-translate-y: 15px;
+}
+
+.standardTitle{
+    -fx-translate-x: 10px;
+}
+
+.settingsHBox{
+    -fx-padding: 5px;
+    -fx-alignment: center-left;
+}
+
+.button{
+    -fx-translate-x: 10px;
+}
+
+#saveChangesButton{
+    -fx-translate-y: 80px;
+    -fx-translate-x: 45px;
+}
+
+
+.text-field.unsaved{
+    -fx-text-box-border: #7bad72;
+}
+
+.text-field.error{
+    -fx-text-box-border: red;
+}
+
+
+

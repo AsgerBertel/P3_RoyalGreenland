@@ -17,10 +17,6 @@
     -fx-padding: 0;
 }
 
-.tree-cell:expanded {
-
-}
-
 .tree-cell > .tree-disclosure-node > .arrow {
     -fx-background-color: black;
 }

@@ -1,7 +1,7 @@
 package gui.log;
 
 
-import directory.PathsManager;
+import directory.PreferencesManager;
 import gui.DMSApplication;
 
 import java.io.*;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    public void LogEvent(String fileName,LogEventType eventType){
+    public void LogEvent(String fileName, LogEventType eventType){
 
          //Get current system time
          LocalDateTime localDateTime = LocalDateTime.now();
@@ -30,7 +30,7 @@ public class LoggingTools {
     }
     public List<rgEvent> listOfAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
-        try(Stream<String> stream = Files.lines(Paths.get(PathsManager.getInstance().getServerAppFilesPath() + "logs.log"))){
+        try(Stream<String> stream = Files.lines(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         }catch (IOException e){
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class LoggingTools {
     private void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
             pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) +"|"+listOfEvents.get(2));
 
         } catch (IOException e) {
@@ -89,8 +89,6 @@ public class LoggingTools {
 
     private LogEventType stringToLogEventType(String string){
 
-        // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
-        // Doesnt matter here since danish word is stored in .log file only, which will never be opened
         switch (string){
             case "ændret":
                 return LogEventType.CHANGED;

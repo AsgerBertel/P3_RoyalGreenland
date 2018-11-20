@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.control.ToggleButton?>
+<BorderPane styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
+    <left>
+        <HBox>
+            <children>
+                <ToggleButton styleClass="menuButton" fx:id="viewDocuments" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="24">
+                            <Image url="/icons/menu/viewDocuments.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+
+                <ToggleButton styleClass="menuButton" fx:id="settings" text="%MainMenu.Settings" onAction="#settings">
+                    <graphic>
+                        <ImageView fitWidth="23" fitHeight="25">
+                            <Image url="/icons/menu/settings.png"/>
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+
+            </children>
+        </HBox>
+    </left>
+
+    <right>
+        <HBox>
+            <children>
+                <ToggleButton styleClass="menuButton" fx:id="changeToDanish" onAction="#changeToDanish">
+                    <graphic>
+                        <ImageView fitWidth="24" fitHeight="24">
+                            <Image url="/icons/menu/danish.png"  />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+
+                <ToggleButton styleClass="menuButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
+                    <graphic >
+                        <ImageView fitWidth="24" fitHeight="24">
+                            <Image url="/icons/menu/greenlandic.png"/>
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+            </children>
+        </HBox>
+    </right>
+</BorderPane>

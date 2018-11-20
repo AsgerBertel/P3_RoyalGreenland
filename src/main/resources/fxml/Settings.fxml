@@ -6,33 +6,32 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="gui.settings.SettingsController"
-      prefHeight="400.0" prefWidth="600.0" stylesheets="@/styles/masterSheet.css">
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@/styles/masterSheet.css, @/styles/settings.css">
 
     <!-- Server path setting -->
-    <VBox>
+    <VBox styleClass="settingsVBox">
         <Text styleClass="standardTitle" text="%Settings.ServerPath"/> <!-- todo sprog -->
-        <HBox>
-            <TextField fx:id="serverPathTextField"/>
-            <Button text="test"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="serverPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
+            <Button text="Gennemse" styleClass="darkButton" onAction="#onBrowseServerPath"/>
         </HBox>
     </VBox>
 
-    <VBox>
+    <VBox styleClass="settingsVBox">
         <Text styleClass="standardTitle" text="%Settings.LocalPath"/>
-        <HBox>
-            <TextField fx:id="localPathTextField"/>
-            <Button text="test" styleClass="regularButton"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="localPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
+            <Button text="Gennemse" styleClass="darkButton" onAction="#onBrowseLocalPath"/>
         </HBox>
     </VBox>
 
-    <VBox>
+    <VBox styleClass="settingsVBox">
         <Text styleClass="standardTitle" text="%Settings.Username"/>
-        <HBox>
-            <TextField fx:id="usernameTextField"/>
-            <Button text="test" styleClass="regularButton"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="usernameTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
         </HBox>
     </VBox>
 
-
+    <Button text="%Settings.SaveChanges" fx:id="saveChangesButton" styleClass="darkButton" id="saveChangesButton" onAction="#onSaveChanges"/>
 
 </VBox>

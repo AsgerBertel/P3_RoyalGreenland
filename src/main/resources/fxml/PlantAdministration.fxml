@@ -19,21 +19,21 @@
       <!-- Side menu -->
       <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
          <children>
-            <Button fx:id="sidebarBtnCreatePlant" onAction="#createPlantSidebar">
+            <Button styleClass="menuButton" fx:id="sidebarBtnCreatePlant" onAction="#createPlantSidebar">
                <graphic>
                   <ImageView fitHeight="40" fitWidth="40">
                      <Image url="/icons/menu/addPlant.png" />
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="btnEditPlantSidebar" onAction="#editPlantSidebar">
+            <Button styleClass="menuButton" fx:id="btnEditPlantSidebar" onAction="#editPlantSidebar">
                <graphic>
                   <ImageView fitHeight="40" fitWidth="40">
                      <Image url="/icons/menu/editPlant.png" />
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="btnDeletePlant" onAction="#deletePlant">
+            <Button styleClass="menuButton" fx:id="btnDeletePlant" onAction="#deletePlant">
                <graphic>
                   <ImageView fitHeight="40" fitWidth="40">
                      <Image url="/icons/menu/delete.png" />

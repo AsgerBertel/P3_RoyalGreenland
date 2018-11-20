@@ -1,23 +1,21 @@
 package directory.plant;
 
-import com.google.gson.Gson;
-import directory.PathsManager;
-import directory.files.DocumentBuilder;
+import directory.PreferencesManager;
 import json.JsonParser;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
  * Singleton pattern.
  * Used to get all plants. All plants are stored in allPlants.JSON file.
- * Use the readFilesFromJson method to load the plants into this class.
+ * Use the readFileManagerFromJson method to load the plants into this class.
  */
 
 public class PlantManager {
     private ArrayList<Plant> allPlants = new ArrayList<>();
     private static String pathToJson = "Sample files/allPlants.JSON";
+    private static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
     private static PlantManager plantManager;
 
     /**
@@ -93,7 +91,7 @@ public class PlantManager {
      */
     protected void updateJsonFile(){
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
+        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
             JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,7 +102,7 @@ public class PlantManager {
      * Load the JSON file into the PlantManager.
      */
     public static PlantManager readFromJsonFile(){
-        try (Reader reader = new FileReader(PathsManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
+        try (Reader reader = new FileReader(PreferencesManager.getInstance().getServerAppFilesPath() + File.separator + "allPlants.JSON")){
                 return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
         } catch (IOException e) {
             System.out.println("Could not read JSON plants.");

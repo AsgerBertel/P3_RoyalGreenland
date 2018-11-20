@@ -11,19 +11,17 @@ import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
 import gui.TabController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import javax.naming.InvalidNameException;
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -62,7 +60,6 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
-
     }
 
     @Override
@@ -161,18 +158,13 @@ public class FileAdminController implements TabController {
         }
     }
 
-    public void addDocument(ActionEvent actionEvent) {
+    public void uploadDocument() {
         if (selectedFile instanceof Folder) {
-            // Todo JFileChooser is from. swing. Use a JavaFX one. - Philip
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
 
-            int returnValue = jfc.showOpenDialog(null);
-            // int returnValue = jfc.showSaveDialog(null);
-
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File uploadedFile = jfc.getSelectedFile();
+            if (uploadFile != null) {
                 try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadedFile.getAbsolutePath()), (Folder) selectedFile);
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
                 } catch (IOException e) {
                     System.out.println("could not upload file");
                     e.printStackTrace();
@@ -181,14 +173,34 @@ public class FileAdminController implements TabController {
             }
 
         }else if (selectedFile instanceof Document) {
-            Alert popup = new Alert(Alert.AlertType.INFORMATION, DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen"));
-            popup.setTitle(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetTitle"));
-            popup.setHeaderText(DMSApplication.getMessage("FileAdmin.UploadFile.DocChosen.SetHeader"));
+            Alert popup = new Alert(Alert.AlertType.INFORMATION, DMSApplication.getMessage("AdminFiles.PopUpUpload.NotADoc"));
+            popup.setTitle(DMSApplication.getMessage("AdminFiles.PopUpUpload.AlertTitle"));
+            popup.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpUpload.AlertHeader"));
             popup.showAndWait();
+        } else if (selectedFile == null){
+            File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
+
+            if (uploadFile != null) {
+                try {
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getAllContent().get(0));
+                } catch (IOException e) {
+                    System.out.println("could not upload file");
+                    e.printStackTrace();
+                }
+                update();
+            }
         }
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
+    }
+
+    private File chooseDirectoryPrompt(String message) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(message);
+        File chosenFile = fileChooser.showOpenDialog(new Stage());
+        if (chosenFile == null) return null;
+        return chosenFile;
     }
 
     public void createFolder() {
@@ -204,6 +216,12 @@ public class FileAdminController implements TabController {
                 Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
             }
+            if (selectedFile == null){
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getAllContent().get(0), name);
+                fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
+            }
+            update();
         }
     }
 
@@ -220,9 +238,10 @@ public class FileAdminController implements TabController {
     }
 
     public void deleteFile() {
-        FileManager.getInstance().deleteFile(selectedFile);
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+        FileManager.getInstance().deleteFile(selectedItem.getValue());
         selectedItem.getParent().getChildren().remove(selectedItem);
+        update();
     }
 
     public void openFile(){
@@ -272,9 +291,5 @@ public class FileAdminController implements TabController {
         ((Button) txtInputDia.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("AdminFiles.PopUpRename.Cancel"));
 
         return txtInputDia.showAndWait();
-    }
-
-    public void uploadFile(){
-        // todo Make fileChooser to retrieve document to upload. - Philip
     }
 }

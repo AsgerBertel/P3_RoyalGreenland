@@ -1,8 +1,7 @@
 package gui;
 
+import app.ApplicationMode;
 import directory.FileManager;
-import directory.files.Document;
-import directory.files.DocumentBuilder;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,15 +13,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class DMSApplication extends Application {
 
-    private static Stage primaryStage = new Stage();
+    private Stage primaryStage = new Stage();
 
     private VBox root;
+
+    public static final Locale DK_LOCALE = new Locale("da", "DK");
+    public static final Locale GL_LOCALE = new Locale("gl", "GL");
 
     private static Locale locale = new Locale("da", "DK");
     private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
@@ -36,23 +37,29 @@ public class DMSApplication extends Application {
 
     private Node mainMenu, fileOverview, fileAdministration, plantAdministration, log;
 
-    public static void main() {
-        launch();
-    }
+    private ApplicationMode applicationMode;
+
+    // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
+    public DMSApplication(){}
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        String applicationMode = getParameters().getRaw().get(0);
+
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
-        //System.out.println(locale.get);
-
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
-        fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
+
+        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+            fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "AdminMainMenu.fxml"), bundle);
+        }else{
+            fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "ViewerMainMenu.fxml"), bundle);
+        }
 
         // Improve font rendering
         System.setProperty("prism.lcdtext", "false");
@@ -66,13 +73,16 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         // resetter file tree
-        // FileManager.getTestInstance().initFolderTree();
+        FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();
 
-        switchWindow(TabLoader.FILE_ADMINISTRATION);
-
+        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+            switchWindow(TabLoader.FILE_ADMINISTRATION);
+        } else{
+            switchWindow(TabLoader.FILE_OVERVIEW);
+        }
     }
 
     // Shows the given part of the program
@@ -96,19 +106,18 @@ public class DMSApplication extends Application {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
-            alert.setContentText("Kontakt Udvikleren");
+            alert.setContentText("Kontakt Udvikleren"); // todo lol.
 
         }
     }
 
-    public static void restartApp() throws Exception{
-        DMSApplication main = new DMSApplication();
+    public void restartApp() throws Exception{
         primaryStage.close();
-        main.start(new Stage());
+        start(new Stage());
     }
 
-    public static void changeLanguage(Locale locale) {
-        DMSApplication.locale = locale;
+    public void changeLanguage(Locale locale) {
+        this.locale = locale;
         messages = ResourceBundle.getBundle("Messages", locale);
     }
 
@@ -119,6 +128,5 @@ public class DMSApplication extends Application {
     public static String getMessage(String key){
         return messages.getString(key);
     }
-
 
 }

@@ -151,6 +151,8 @@ public class DeletedFilesController implements TabController {
         } catch (IOException e) {
             e.printStackTrace(); // todo error handling
         }
+
+        //todo restore doesnt restore correctly?
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
