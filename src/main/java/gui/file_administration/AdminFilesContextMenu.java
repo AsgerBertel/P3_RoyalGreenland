@@ -33,7 +33,7 @@ public class AdminFilesContextMenu extends ContextMenu {
         uploadFile.setOnAction(event -> uploadFile());
 
         //  fileButton.setContextMenu(this.folderContextMenu(selectedItem));
-        this.getItems().addAll(openFile, renameFile, createFolder, deleteFile, uploadFile);
+        this.getItems().addAll(openFile, renameFile, deleteFile, uploadFile,createFolder);
     }
 
     public void renameFile() {

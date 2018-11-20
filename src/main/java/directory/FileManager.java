@@ -4,6 +4,8 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 import json.JsonParser;
 
 import java.io.*;
@@ -18,6 +20,7 @@ public class FileManager {
 
     private static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
 
+    private LoggingTools loggingTools = new LoggingTools();
 
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
@@ -66,6 +69,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             updateJsonFiles();
+            loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    public void LogEvent(String fileName,LogEventType eventType){
+    public void LogEvent(String fileName, LogEventType eventType){
 
          //Get current system time
          LocalDateTime localDateTime = LocalDateTime.now();
