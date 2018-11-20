@@ -13,8 +13,6 @@ import java.net.URL;
 import java.util.*;
 
 public class LogController implements TabController {
-
-
     @FXML
     private TableView<rgEvent> tableView;
 
@@ -32,16 +30,18 @@ public class LogController implements TabController {
 
     @FXML
     private TextField searchField;
+
+    LoggingTools lt = new LoggingTools();
     private List<rgEvent> listOfEvents;
     private boolean sortedByTime = false;
+    private boolean sortedByUser = false;
+    private boolean sortedByFile = false;
     private Image timeOld = new Image("/icons/menu/timeNew.png");
     private Image timeNew = new Image("/icons/menu/timeOld.png");
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        LoggingTools lt = new LoggingTools();
-        listOfEvents = lt.listOfAllEvents();
-        sortByTime();
+        searchImage.setImage(timeOld);
         update();
     }
 
@@ -51,6 +51,10 @@ public class LogController implements TabController {
         event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
+        listOfEvents = lt.getAllEvents();
+        tableView.getItems().setAll(listOfEvents);
+        sortedByTime = false;
+        sortByTime();
     }
 
 
@@ -81,6 +85,7 @@ public class LogController implements TabController {
     public void sortByTime(){
         List<rgEvent> sortedList = listOfEvents;
         Collections.sort(sortedList, Comparator.comparing(rgEvent::getLocalDateTime));
+
         if(sortedByTime){
             searchImage.setImage(timeNew);
             tableView.getItems().setAll(sortedList);
@@ -91,6 +96,5 @@ public class LogController implements TabController {
             tableView.getItems().setAll(sortedList);
             sortedByTime = true;
         }
-
     }
 }
