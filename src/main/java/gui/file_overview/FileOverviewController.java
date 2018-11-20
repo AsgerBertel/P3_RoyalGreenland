@@ -188,6 +188,4 @@ public class FileOverviewController implements TabController {
             }
         });
     }
-
-
 }

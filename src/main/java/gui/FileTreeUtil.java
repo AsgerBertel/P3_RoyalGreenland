@@ -4,6 +4,7 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.AccessModifier;
+import javafx.scene.control.Cell;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -48,6 +49,7 @@ public class FileTreeUtil {
                     rootItem.getChildren().add(docItem);
                 }
                 // TODO: 19-11-2018 Find a way to implement eventhandlers for drag and drop. Functions have been made - Asger.
+             
             }
         }
         return rootItem;
