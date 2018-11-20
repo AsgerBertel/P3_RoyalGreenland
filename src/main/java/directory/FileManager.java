@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class FileManager {
     private ArrayList<AbstractFile> mainFiles = new ArrayList<>();
@@ -103,6 +104,18 @@ public class FileManager {
         return archiveFiles;
     }
 
+    public void uploadFile(Path src) throws IOException {
+        File file = new File(src.toString());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
+
+        if (Files.exists(dest)) {
+            deleteFile(DocumentBuilder.getInstance().createDocument(dest));
+        }
+
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
+    }
+
     public void uploadFile(Path src, Folder dstFolder) throws IOException {
         File file = new File(src.toString());
 
@@ -127,30 +140,47 @@ public class FileManager {
         //todo make some kind of counter to file name
     }
 
-    public Folder createFolder(Folder parentFolder, String name) {
-        // Todo Error handling
-        Folder createdFolder = new Folder(parentFolder.getPath() + File.separator + name);
+    // Creates a folder in the root directory of main files
+    public Folder createFolder(String name){
+        Folder folder = new Folder(name);
 
-        boolean isSuccessful = new File(createdFolder.getPath().toString()).mkdirs();
+        createFolderFile(Settings.getServerDocumentsPath() + name);
+
+        mainFiles.add(folder);
+        return folder;
+    }
+
+    // Creates a new folder inside the given parent folder
+    public Folder createFolder(String name, Folder parentFolder) {
+        Folder folder = new Folder(parentFolder.getPath() + "/" + name);
+
+        createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
+
+        mainFiles.add(folder);
+        return folder;
+    }
+
+    private void createFolderFile(String fullPath){
+        boolean isSuccessful = new File(fullPath).mkdirs();
 
         if (!isSuccessful) {
             System.out.println("mkdirs was not successful");
-            return null;
+            // Todo should probably throw an exception - Magnus
         }
-
-        parentFolder.getContents().add(createdFolder);
-        updateJsonFiles();
-        return createdFolder;
     }
 
     public void deleteFile(AbstractFile file) {
         Path pathWithName = Paths.get(Paths.get(Settings.getServerArchivePath()) + File.separator + file.getName());
         try {
             Files.move(file.getPath(), pathWithName);
-            Folder parent = findParent(file);
-            parent.getContents().remove(file);
 
-            Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0);
+            //Remove the file from its' parent if it has one
+            Optional<Folder> parent = findParent(file, getMainFiles());
+            if(parent.isPresent())
+                parent.get().getContents().remove(file);
+
+
+            Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0); // todo Implement properly (archive files no longer have a root)
             archiveFolder.getContents().add(file);
             getInstance().updateJsonFiles();
         } catch (IOException e) {
@@ -165,9 +195,9 @@ public class FileManager {
 
         Files.move(pathWithName, Paths.get(Settings.getServerDocumentsPath() + File.separator + file.getName()));
 
-        Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0);
+        Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0); // todo Implement properly (archive files no longer have a root)
         archiveFolder.getContents().remove(file);
-        Folder contentFolder = (Folder) getInstance().mainFiles.get(0);
+        Folder contentFolder = (Folder) getInstance().mainFiles.get(0); // todo Implement properly (archive files no longer have a root) - Magnus
         contentFolder.getContents().add(file);
 
         updateJsonFiles();
@@ -183,30 +213,36 @@ public class FileManager {
      * @return
      * @throws IOException
      */
-    private Folder getRootElement() {
-        return (Folder) getInstance().mainFiles.get(0);
-        //todo get root of what? documents or archiveFiles? Specify or remove method - Magnus
-    }
 
-    // todo same as above. Parent in archiveFiles or main documents?
-    public Folder findParent(AbstractFile child) {
-        return findParent(child, getRootElement());
-    }
+    public static Optional<Folder> findParent(AbstractFile child, ArrayList<AbstractFile> searchArea) {
+        for(AbstractFile file : searchArea){
+            // If the file is in the top layer of the search area it has no parent
+            if(file.equals(child))
+                return Optional.empty();
 
-    private Folder findParent(AbstractFile child, Folder parent) {
-        if (parent.getContents().contains(child)) {
-            return parent;
+            // Check if any of the subdirectories is the parent folder
+            if(file instanceof Folder){
+                Optional<Folder> parent = findParent(child, (Folder) file);
+                if(parent.isPresent())
+                    return parent;
+            }
         }
+
+        return Optional.empty();
+    }
+
+    private static Optional<Folder> findParent(AbstractFile child, Folder parent) {
+        if (parent.getContents().contains(child))
+            return Optional.of(parent);
 
         for (AbstractFile current : parent.getContents()) {
             if (current instanceof Folder) {
-                Folder folder = findParent(child, (Folder) current);
-                if (folder != null) {
+                Optional<Folder> folder = findParent(child, (Folder) current);
+                if (folder != null)
                     return folder;
-                }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
 }

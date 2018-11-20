@@ -31,8 +31,6 @@ import java.util.ResourceBundle;
 
 public class FileAdminController implements TabController {
 
-    private Folder rootFolder;
-
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     private ArrayList<Plant> plants = new ArrayList<>();
@@ -70,8 +68,8 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
         // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
         // todo - It always reloads. - Philip
-        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
-            reloadFileTree();
+//        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
+        reloadFileTree();
         fileTreeView.getRoot().setExpanded(true);
 
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
@@ -79,10 +77,8 @@ public class FileAdminController implements TabController {
     }
 
     private void reloadFileTree(){
-        rootFolder = (Folder) FileManager.getInstance().getMainFiles().get(0);
-        rootItem = FileTreeUtil.generateTree(rootFolder);
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
-
         setFactoryListDisabled(true);
     }
 
@@ -181,16 +177,16 @@ public class FileAdminController implements TabController {
             popup.showAndWait();
         } else if (selectedFile == null){
             File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
-
+/*
             if (uploadFile != null) {
                 try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getMainFiles().get(0)); // todo VIGTIGT - Magnus
+                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), FileManager.getInstance().getMainFiles()); // todo VIGTIGT - Magnus
                 } catch (IOException e) {
                     System.out.println("could not upload file");
                     e.printStackTrace();
                 }
                 update();
-            }
+            }*/
         }
 
         //todo if file already exists, the old one is deleted but this can only happen once.
@@ -206,23 +202,27 @@ public class FileAdminController implements TabController {
     }
 
     public void createFolder() {
+        FileManager fileManager = FileManager.getInstance();
         Optional<String> folderName = createFolderPopUP();
         if (folderName.isPresent()){
-            if (selectedFile instanceof Folder) {
-                String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder((Folder) selectedFile, name);
-                fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
-            }
-            if(selectedFile instanceof Document){
-                String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
-                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
-            }
             if (selectedFile == null){
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getMainFiles().get(0), name); // todo VIGTIGT - MAGNUS
+                Folder fol = FileManager.getInstance().createFolder(name);
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
+            }else if (selectedFile instanceof Folder) {
+                String name = folderName.get();
+                Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
+            }else if(selectedFile instanceof Document){
+                String name = folderName.get();
+                Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
+
+                if(parent.isPresent())
+                    fileManager.createFolder(name, parent.get());
+                else
+                    fileManager.createFolder(name);
             }
+
             update();
         }
     }

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Folder extends AbstractFile {
-    private List<AbstractFile> folderContents = new ArrayList<>();
+    private ArrayList<AbstractFile> folderContents = new ArrayList<>();
 
     public Folder(String path) {
         super(path);
@@ -55,7 +55,7 @@ public class Folder extends AbstractFile {
     }
 
     // Reads the content o path its given
-    public List<AbstractFile> getContents(){
+    public ArrayList<AbstractFile> getContents(){
         return folderContents;
     }
 

@@ -61,7 +61,7 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+        if(applicationMode.equals(ApplicationMode.ADMIN)){
             switchWindow(TabLoader.FILE_ADMINISTRATION);
         } else{
             switchWindow(TabLoader.FILE_OVERVIEW);

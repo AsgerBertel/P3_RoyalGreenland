@@ -1,57 +1,55 @@
 package directory;
 
 import directory.files.Document;
-import directory.plant.AccessModifier;
 import directory.files.AbstractFile;
 import directory.files.Folder;
+import directory.plant.AccessModifier;
 import directory.plant.Plant;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // Represents a file explorer that maneuvers through the file system
 // and provides a list of the files in the current folder
 
 public class FileExplorer {
-    private Folder rootDirectory;
     private Folder currentFolder;
-    private Plant selectedPlant;
+    private Plant viewingPlant;
 
-    public FileExplorer(Folder startingFolder, Plant selectedPlant) {
-        currentFolder = startingFolder;
-        this.selectedPlant = selectedPlant;
-        rootDirectory = startingFolder;
-    }
+    private ArrayList<AbstractFile> files;
 
-    public Folder getRootDirectory() {
-        return rootDirectory;
+    public FileExplorer(ArrayList<AbstractFile> files, Plant viewingPlant){
+        this.files = files;
+        this.viewingPlant = viewingPlant;
     }
 
     // Returns the files currently shown in the explorer
     public List<AbstractFile> getShownFiles() {
-        // todo use selectedPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
-        ArrayList<AbstractFile> filesWithAccess = new ArrayList<>();
-        List<AbstractFile> allFiles = currentFolder.getContents();
+        // todo use viewingPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
+        ArrayList<AbstractFile> allFiles;
 
-        if(selectedPlant != null){
+        if(currentFolder == null)
+            allFiles = files;
+        else
+            allFiles = currentFolder.getContents();
+
+        List<AbstractFile> shownFiles = new ArrayList<>();
+
+        // Add files if they are contained in the plant's access modifier
+        if(viewingPlant != null){
             for(AbstractFile file : allFiles){
                 if(file instanceof Folder){
-                    if(((Folder) file).containsFromAccessModifier(selectedPlant.getAccessModifier())){
-                        filesWithAccess.add(file);
-                    }
-                }
-                if(file instanceof Document){
-                    if(selectedPlant.getAccessModifier().contains(((Document) file).getID())){
-                        filesWithAccess.add(file);
-                    }
+                    if(((Folder) file).containsFromAccessModifier(viewingPlant.getAccessModifier()))
+                        shownFiles.add(file);
+                }else if(file instanceof Document){
+                    if(viewingPlant.getAccessModifier().contains(((Document) file).getID()))
+                        shownFiles.add(file);
                 }
             }
         }
 
-        return filesWithAccess;
+        return shownFiles;
     }
 
     public void navigateTo(Folder newFolder) {
@@ -59,23 +57,32 @@ public class FileExplorer {
     }
 
     // Navigates to the parent directory
-    public boolean navigateBack(List<AbstractFile> allFiles) {
-        if (!(currentFolder.getPath().equals(rootDirectory.getPath()))) {
-            currentFolder = (Folder)FileManager.getInstance().findParent(currentFolder);
-            //currentFolder = FileManager.getInstance().findParent(allFiles, currentFolder);
+    public boolean navigateBack() {
+        // Can't navigate further back if not currently in a folder
+        if(currentFolder == null)
+            return false;
+
+        // Find parent folder if it exists
+        Optional<Folder> previousFolder = FileManager.findParent(currentFolder, files);
+
+        if(previousFolder.isPresent()){
+            currentFolder = previousFolder.get();
+        }else{
+            currentFolder = null;
         }
-        return false;
+
+        return true;
     }
 
-    public Folder getCurrentFolder() {
-        return currentFolder;
+    public String getCurrentPath(){
+        if(currentFolder == null){
+            return "";
+        }else{
+            return currentFolder.getPath().toString();
+        }
     }
 
-    public List<AbstractFile> getCurrentFolderContent() {
-        return currentFolder.getContents();
-    }
-
-    public Plant getSelectedPlant() {
-        return selectedPlant;
+    public Plant getViewingPlant() {
+        return viewingPlant;
     }
 }

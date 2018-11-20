@@ -54,28 +54,28 @@ public class FileOverviewController implements TabController {
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed // todo test if functional
-        TreeItem<AbstractFile> treeRoot = fileTreeView.getRoot();
-        if(treeRoot == null || !treeRoot.getValue().equals(FileManager.getInstance().getMainFiles().get(0))){
-            reloadFileTree();
-        }
+        // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
+        reloadFileTree();
 
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
     }
 
-    private void reloadFileTree(){
-        Folder rootFolder = (Folder) FileManager.getInstance().getMainFiles().get(0);
-        rootItem = FileTreeUtil.generateTree(rootFolder);
+    private void reloadFileTree(){ ;
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
     }
 
     @FXML
     void onPlantSelected(ActionEvent event) {
-        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getMainFiles().get(0), drdPlant.getSelectionModel().getSelectedItem());
-        AccessModifier accessModifier = (fileExplorer.getSelectedPlant() == null) ? null : fileExplorer.getSelectedPlant().getAccessModifier();
-        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getMainFiles().get(0), accessModifier);
+        Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
+        // Create fileExplorer that matches the accessModifier of the selected plant
+        fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
+
+        AccessModifier accessModifier = selectedPlant.getAccessModifier();
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), accessModifier);
         fileTreeView.setRoot(rootItem);
+
         updateDisplayedFiles();
     }
 
@@ -116,7 +116,7 @@ public class FileOverviewController implements TabController {
     }
 
     // Opens the folder that is double clicked and displays its content
-    public void open(FileButton fileButton) {
+    public void open(FileButton fileButton) { // todo Duplicate code. Deduplicate that shit - Magnus
         if (fileButton.getFile() instanceof Folder) {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
@@ -133,8 +133,8 @@ public class FileOverviewController implements TabController {
 
     @FXML
     public void openPreviousFolder() {
-        if(drdPlant.getSelectionModel().getSelectedItem() != null){
-            fileExplorer.navigateBack(FileManager.getInstance().getMainFiles());
+        if(drdPlant.getSelectionModel().getSelectedItem() != null){ // todo - What does this null check do? - Magnus
+            fileExplorer.navigateBack();
             updateDisplayedFiles();
         }
     }
@@ -143,10 +143,10 @@ public class FileOverviewController implements TabController {
         int BracketCounter = 0;
         String NewString;
         if (getOperatingSystem() == "Windows") {
-            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator + File.separator, " > ");
+            NewString = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, " > ");
             NewString = NewString.replaceAll("Sample files > Server >", "");
         } else {
-            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
+            NewString = fileExplorer.getCurrentPath().replaceAll(File.separator, " > ");
             NewString = NewString.replaceAll("Sample files > Server >", "");
         }
 
@@ -156,8 +156,8 @@ public class FileOverviewController implements TabController {
                 BracketCounter++;
         }
 
-        if (BracketCounter > 3) {
-            NewString = "../" + fileExplorer.getCurrentFolder().getName();
+        if (BracketCounter > 3) {// todo make better  - Magnus
+            NewString = "../Skulle måske vise mere end bare den sidste folder"; //fileExplorer.getCurrentFolder().getName();
         } else {
             // todo This no longer works after paths are reworked.
             // NewString = NewString.substring(NewString.indexOf("Main Files"));
