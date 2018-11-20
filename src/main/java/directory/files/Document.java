@@ -3,6 +3,9 @@ package directory.files;
 import com.sun.nio.file.SensitivityWatchEventModifier;
 import directory.FileManager;
 import gui.DMSApplication;
+import gui.log.LogController;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 
 import javax.naming.InvalidNameException;
 import java.awt.*;
@@ -97,6 +100,8 @@ public class Document extends AbstractFile {
             throw new InvalidNameException();
 
         FileManager.getInstance().updateJsonFiles();
+        LoggingTools lt = new LoggingTools();
+        lt.LogEvent(getName(), LogEventType.RENAMED);
     }
 
     public void tester(){
