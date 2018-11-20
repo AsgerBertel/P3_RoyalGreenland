@@ -34,7 +34,7 @@ public class rgEvent {
 
     public String getEvent(){
         LoggingTools lt = new LoggingTools();
-        return getFileName() + DMSApplication.getMessage("Log.Is") + lt.EventTypeToString(getEventType());
+        return getFileName() + DMSApplication.getMessage("Log.Is") + lt.EventTypeToLocalizedString(getEventType());
     }
 
     public String getTime(){

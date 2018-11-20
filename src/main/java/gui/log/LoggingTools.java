@@ -24,12 +24,12 @@ public class LoggingTools {
          String userName = PreferencesManager.getInstance().getUsername();
 
          //create and write event
-         rgEvent event = new rgEvent(fileName, userName, localDateTime,eventType);
+         rgEvent event = new rgEvent(fileName, userName, localDateTime, eventType);
 
          writeEventAsLog(event);
     }
 
-    public List<rgEvent> listOfAllEvents(){
+    public List<rgEvent> getAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
         try(Stream<String> stream = Files.lines(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
@@ -42,29 +42,16 @@ public class LoggingTools {
         List<String> listOfEvents = EventToStringArray(event);
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
-            pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) +"|"+listOfEvents.get(2));
+            pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) + "|" +listOfEvents.get(2));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public String EventTypeToString(LogEventType eventType){
-         switch (eventType){
-             case CHANGED:
-                 return DMSApplication.getMessage("Log.Changed");
-             case CREATED:
-                 return DMSApplication.getMessage("Log.Added");
-             case ARCHIVED:
-                 return DMSApplication.getMessage("Log.Archived");
-             case RENAMED:
-                 return DMSApplication.getMessage("Log.Renamed");
-         }
-         return "error: no event named " + eventType.toString();
-    }
-    private List<String> EventToStringArray(rgEvent event){
 
+    private List<String> EventToStringArray(rgEvent event){
         // [YEAR/MONTH/DATE - HOUR:MINUTES]
-        String eventDate =event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
+        String eventDate = event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
                 + "-" + event.getLocalDateTime().getHour() + ":" + event.getLocalDateTime().getMinute();
 
         // FILENAME blev EVENT
@@ -88,17 +75,49 @@ public class LoggingTools {
         return new rgEvent(substrings[1],substrings[3],localDateTime, stringToLogEventType(substrings[2]));
     }
 
+    public String EventTypeToString(LogEventType eventType){
+        switch (eventType){
+            case CHANGED:
+                return "changed";
+            case CREATED:
+                return "created";
+            case ARCHIVED:
+                return "archived";
+            case RENAMED:
+                return "renamed";
+            case FOLDERRENAMED:
+                return "folderRenamed";
+        }
+        return "error: no event named " + eventType.toString();
+    }
+
+    public String EventTypeToLocalizedString(LogEventType eventType){
+        switch (eventType){
+            case CHANGED:
+                return DMSApplication.getMessage("Log.Changed");
+            case CREATED:
+                return DMSApplication.getMessage("Log.Created");
+            case ARCHIVED:
+                return DMSApplication.getMessage("Log.Archived");
+            case RENAMED:
+                return DMSApplication.getMessage("Log.Renamed");
+            case FOLDERRENAMED:
+                return DMSApplication.getMessage("Log.FolderRenamed");
+        }
+        return "error: no event named " + eventType.toString();
+    }
+
     private LogEventType stringToLogEventType(String string){
         switch (string){
-            case "ændret":
+            case "changed":
                 return LogEventType.CHANGED;
-            case "tilføjet":
+            case "created":
                 return LogEventType.CREATED;
-            case "arkiveret":
+            case "archived":
                 return LogEventType.ARCHIVED;
-            case "slettet":
-                return LogEventType.RENAMED;
             case "renamed":
+                return LogEventType.RENAMED;
+            case "folderRenamed":
                 return LogEventType.FOLDERRENAMED;
         }
         return LogEventType.CREATED;

@@ -2,6 +2,8 @@ package directory.files;
 
 import directory.FileManager;
 import directory.plant.AccessModifier;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +40,10 @@ public class Folder extends AbstractFile {
 
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
-            FileManager.getInstance().updateJsonFiles();
         }
         FileManager.getInstance().updateJsonFiles();
+        LoggingTools lt = new LoggingTools();
+        lt.LogEvent(getName(), LogEventType.FOLDERRENAMED);
     }
 
     private void changeChildrenPath(Folder folder, String oldPath, String newPath){
