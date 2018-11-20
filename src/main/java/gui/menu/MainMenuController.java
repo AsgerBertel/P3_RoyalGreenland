@@ -40,6 +40,7 @@ public class MainMenuController {
         viewDocuments.setToggleGroup(menuTG);
         settings.setToggleGroup(menuTG);
 
+        // Only adds these tabs if it's DMSAdmin
         if(administrateDocuments != null) {
             administrateDocuments.setToggleGroup(menuTG);
             administratePlants.setToggleGroup(menuTG);
@@ -47,6 +48,11 @@ public class MainMenuController {
             log.setToggleGroup(menuTG);
         }
 
+        // Highlights tab that's open from the start
+        if (administrateDocuments != null)
+            administrateDocuments.setSelected(true);
+        else
+            viewDocuments.setSelected(true);
 
 
         changeToDanish.setToggleGroup(languageTG);
@@ -56,6 +62,7 @@ public class MainMenuController {
         //todo set selected language
         if (PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
             changeToDanish.setSelected(true);
+
         } else {
             changeToGreenlandic.setSelected(true);
         }
@@ -92,6 +99,7 @@ public class MainMenuController {
     }
 
     public void changeToDanish(Event actionEvent) throws Exception{
+        changeToDanish.setSelected(true);
         if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
             PreferencesManager.getInstance().setLanguage(DMSApplication.DK_LOCALE);
             dmsApplication.changeLanguage(new Locale("da", "DK"));
@@ -101,7 +109,7 @@ public class MainMenuController {
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
-
+        changeToGreenlandic.setSelected(true);
         if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.GL_LOCALE)){
             PreferencesManager.getInstance().setLanguage(DMSApplication.GL_LOCALE);
             dmsApplication.changeLanguage(new Locale("kl", "GL"));
