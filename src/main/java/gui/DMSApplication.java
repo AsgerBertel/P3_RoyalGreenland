@@ -22,6 +22,9 @@ public class DMSApplication extends Application {
 
     private VBox root;
 
+    public static final Locale DK_LOCALE = new Locale("da", "DK");
+    public static final Locale GL_LOCALE = new Locale("gl", "GL");
+
     private static Locale locale = new Locale("da", "DK");
     private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
@@ -78,7 +81,11 @@ public class DMSApplication extends Application {
         this.primaryStage = primaryStage;
         primaryStage.show();
 
-        switchWindow(TabLoader.FILE_ADMINISTRATION);
+        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+            switchWindow(TabLoader.FILE_ADMINISTRATION);
+        } else{
+            switchWindow(TabLoader.FILE_OVERVIEW);
+        }
     }
 
     // Shows the given part of the program

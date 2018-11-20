@@ -1,13 +1,18 @@
 package directory.files;
 
+import com.sun.nio.file.SensitivityWatchEventModifier;
+import directory.FileManager;
+import gui.DMSApplication;
+import gui.log.LogController;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
+
 import javax.naming.InvalidNameException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 public class Document extends AbstractFile {
     private int ID;
@@ -49,17 +54,54 @@ public class Document extends AbstractFile {
     public void openDocument() throws IOException {
         File file = new File(getPath().toString()); // todo is this correctly implemented??
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
+
+        Path dirPath = getParentPath();
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try(WatchService watchService = FileSystems.getDefault().newWatchService()){
+                    dirPath.register(watchService, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY}, SensitivityWatchEventModifier.HIGH);
+
+                    WatchKey key;
+
+                    key = watchService.take();
+
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        System.out.println(
+                                "Event kind:" + event.kind()
+                                        + ". File affected: " + event.context() + ".");
+                    }
+
+                    boolean valid = key.reset();
+                    if (!valid) {
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.out.println("Interrupt");
+                }
+            }
+        });
+
+        thread.start();
     }
 
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent()+ File.separator + newFileName);
+        File renamedFile = new File(getPath().getParent() + File.separator + newFileName);
         setPath(Paths.get(renamedFile.getPath()));
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))
             throw new InvalidNameException();
+
+        LoggingTools lt = new LoggingTools();
+        lt.LogEvent(getName(), LogEventType.RENAMED);
+        FileManager.getInstance().updateJsonFiles();
     }
 
     public void tester(){

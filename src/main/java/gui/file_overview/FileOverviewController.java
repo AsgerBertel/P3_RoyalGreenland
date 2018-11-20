@@ -14,7 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 
 import java.io.File;
@@ -142,10 +142,14 @@ public class FileOverviewController implements TabController {
     public String PathDisplayCorrection() {
         int BracketCounter = 0;
         String NewString;
-        if (getOperatingSystem() == "Windows")
+        if (getOperatingSystem() == "Windows") {
             NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator + File.separator, " > ");
-        else
+            NewString = NewString.replaceAll("Sample files > Server >", "");
+        } else {
             NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
+            NewString = NewString.replaceAll("Sample files > Server >", "");
+        }
+
 
         for (int i = 0; i < NewString.length(); i++) {
             if (NewString.charAt(i) == '>')
@@ -156,7 +160,7 @@ public class FileOverviewController implements TabController {
             NewString = "../" + fileExplorer.getCurrentFolder().getName();
         } else {
             // todo This no longer works after paths are reworked.
-           // NewString = NewString.substring(NewString.indexOf("Main Files"));
+            // NewString = NewString.substring(NewString.indexOf("Main Files"));
         }
         return NewString;
     }

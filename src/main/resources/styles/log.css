@@ -35,7 +35,13 @@
 .button{
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-background-color: #F3F2F2;
+    -fx-background-color: transparent;
+}
+
+.button:hover{
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+    -fx-cursor: HAND;
 }
 
 #tableView .table-row-cell {

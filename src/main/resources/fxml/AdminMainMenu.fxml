@@ -6,58 +6,59 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.ToggleButton?>
 <BorderPane styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
    <left>
       <HBox>
          <children>
-             <Button text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
+             <ToggleButton styleClass="menuButton" fx:id="administrateDocuments" text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
                  <graphic>
                      <ImageView fitWidth="19" fitHeight="25">
                          <Image url="/icons/menu/adminDocuments.png" />
                      </ImageView>
                  </graphic>
-         </Button>
+         </ToggleButton>
 
-             <Button text="%MainMenu.SeeDoc" onAction="#viewDocuments">
+             <ToggleButton styleClass="menuButton" fx:id="viewDocuments" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
                  <graphic>
                      <ImageView fitWidth="20" fitHeight="24">
                          <Image url="/icons/menu/viewDocuments.png" />
                      </ImageView>
                  </graphic>
-             </Button>
+             </ToggleButton>
 
-             <Button text="%MainMenu.AdminPlant" onAction="#administratePlants">
+             <ToggleButton styleClass="menuButton" fx:id="administratePlants" text="%MainMenu.AdminPlant" onAction="#administratePlants">
                  <graphic>
                      <ImageView fitWidth="25" fitHeight="24">
                          <Image url="/icons/menu/adminPlants.png" />
                      </ImageView>
                  </graphic>
-             </Button>
+             </ToggleButton>
 
-             <Button text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
+             <ToggleButton styleClass="menuButton" fx:id="deletedFiles" text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/deletedFiles.png" />
                      </ImageView>
                  </graphic>
-             </Button>
+             </ToggleButton>
 
-             <Button text="%MainMenu.History" onAction="#log">
+             <ToggleButton styleClass="menuButton" fx:id="log" text="%MainMenu.History" onAction="#log">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/history.png"/>
                      </ImageView>
                  </graphic>
-             </Button>
+             </ToggleButton>
 
 
-             <Button text="%MainMenu.Settings" onAction="#settings">
+             <ToggleButton styleClass="menuButton" fx:id="settings" text="%MainMenu.Settings" onAction="#settings">
                  <graphic>
                      <ImageView fitWidth="23" fitHeight="25">
                          <Image url="/icons/menu/settings.png"/>
                      </ImageView>
                  </graphic>
-             </Button>
+             </ToggleButton>
 
          </children>
       </HBox>
@@ -66,21 +67,21 @@
    <right>
       <HBox>
          <children>
-            <Button onAction="#changeToDanish">
+            <ToggleButton styleClass="menuButton" fx:id="changeToDanish" onAction="#changeToDanish">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/danish.png"  />
                     </ImageView>
                 </graphic>
-            </Button>
+            </ToggleButton>
 
-            <Button onAction="#changeToGreenlandic">
+            <ToggleButton styleClass="menuButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
                 <graphic >
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/greenlandic.png"/>
                     </ImageView>
                 </graphic>
-            </Button>
+            </ToggleButton>
          </children>
       </HBox>
    </right>

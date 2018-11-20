@@ -4,6 +4,8 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.*;
@@ -119,6 +121,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             updateJsonFiles();
+            loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
@@ -160,6 +163,7 @@ public class FileManager {
         }
     }
 
+    //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(Settings.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
@@ -170,7 +174,7 @@ public class FileManager {
         Folder contentFolder = (Folder) getInstance().mainFiles.get(0);
         contentFolder.getContents().add(file);
 
-        getInstance().updateJsonFiles();
+        updateJsonFiles();
     }
 
     public void updateJsonFiles() {
