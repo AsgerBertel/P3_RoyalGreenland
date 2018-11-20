@@ -1,0 +1,77 @@
+#searchField {
+    -fx-background-image: url("/icons/menu/search.png");
+    -fx-background-size: 40 30;
+    -fx-background-position: right 10 center;
+    -fx-background-repeat: no-repeat;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-font-family: Helvetica;
+    -fx-font-size: 14;
+    -fx-border-width: 2 2 2 2;
+    -fx-border-color: #F3F2F2;
+    -fx-border-radius: 100;
+    -fx-text-fill: #F3F2F2;
+}
+#vbox{
+    -fx-background-color: #303841;
+    -fx-padding: 5;
+}
+
+
+#tableView .table-column{
+    -fx-font-family: Helvetica;
+    -fx-font-size: 12;
+    -fx-alignment: CENTER;
+    -fx-text-fill: #575757;
+}
+#tableView{
+    -fx-border-width: 0 0 0 0;
+    -fx-table-cell-border-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.button{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: #F3F2F2;
+}
+
+#tableView .table-row-cell {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #D2D1D1;
+    -fx-background-color: #F3F2F2;
+    -fx-table-cell-border-color: transparent;
+    -fx-cell-size: 40px;
+}
+#tableView:focused .table-row-cell:focused{
+    -fx-background-color: lightblue;
+}
+#tableView .column-header-background{
+    -fx-background-color: #F3F2F2;
+}
+
+#tableView .column-header{
+    -fx-border-width: 0 0 4 0;
+    -fx-border-color: #575757;
+    -fx-background-color: transparent;
+    -fx-font-family: Helvetica;
+    -fx-font-size: 18;
+}
+
+#topbar{
+    -fx-background-color: #303841;
+    -fx-padding: 5;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: transparent;
+}
+
+
+#tableView *.scroll-bar:horizontal *.increment-arrow,
+#tableView *.scroll-bar:horizontal *.decrement-arrow,
+#tableView *.scroll-bar:horizontal *.increment-button,
+#tableView *.scroll-bar:horizontal *.decrement-button{
+    -fx-padding: 0;
+    -fx-shape: null;
+}

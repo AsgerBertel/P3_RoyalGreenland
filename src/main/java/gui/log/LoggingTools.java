@@ -1,6 +1,9 @@
 package gui.log;
 
 
+import directory.PathsManager;
+import gui.DMSApplication;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,7 +30,7 @@ public class LoggingTools {
     }
     public List<rgEvent> listOfAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
-        try(Stream<String> stream = Files.lines(Paths.get("Sample Files/logs.log"))){
+        try(Stream<String> stream = Files.lines(Paths.get(PathsManager.getInstance().getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         }catch (IOException e){
             e.printStackTrace();
@@ -37,7 +40,7 @@ public class LoggingTools {
     private void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("Sample Files/logs.log",true)))){
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
             pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) +"|"+listOfEvents.get(2));
 
         } catch (IOException e) {
@@ -47,13 +50,13 @@ public class LoggingTools {
     public String EventTypeToString(LogEventType eventType){
          switch (eventType){
              case CHANGED:
-                 return "ændret";
+                 return DMSApplication.getMessage("Log.Changed");
              case CREATED:
-                 return "tilføjet";
+                 return DMSApplication.getMessage("Log.Added");
              case ARCHIVED:
-                 return "arkiveret";
+                 return DMSApplication.getMessage("Log.Archived");
              case DELETED:
-                 return "slettet";
+                 return DMSApplication.getMessage("Log.Deleted");
          }
          return "error: no event named " + eventType.toString();
     }
@@ -86,6 +89,8 @@ public class LoggingTools {
 
     private LogEventType stringToLogEventType(String string){
 
+        // Todo Should we maybe not switch on a danish word? We need greenlandic as well - Philip
+        // Doesnt matter here since danish word is stored in .log file only, which will never be opened
         switch (string){
             case "ændret":
                 return LogEventType.CHANGED;

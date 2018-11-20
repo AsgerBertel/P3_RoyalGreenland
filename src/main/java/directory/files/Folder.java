@@ -3,11 +3,14 @@ package directory.files;
 import directory.FileManager;
 import directory.plant.AccessModifier;
 
+import javax.naming.InvalidNameException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Folder extends AbstractFile {
     private List<AbstractFile> folderContents = new ArrayList<>();
@@ -21,23 +24,39 @@ public class Folder extends AbstractFile {
         if(firstTime){
             folderInit();
         }
-
     }
 
     @Override
-    public void renameFile(String newFileName){
-        // TODO: 25-10-2018 : add functionality for changing path for all child elements (in relation to the accessmodifier)
+    public void renameFile(String newFolderName){
+        String oldPath = getPath().toString();
 
-        File file = new File(getPath().toString());
         int indexOfLast = getPath().toString().lastIndexOf(File.separator);
-        File newFile = new File(getPath().toString().substring(0,indexOfLast)+ File.separator + newFileName);
-        this.setPath(newFile.toPath());
+        String newPath = getPath().toString().substring(0, indexOfLast) + File.separator + newFolderName;
+        setPath(Paths.get(newPath));
+
+        File file = new File(oldPath);
+        File newFile = new File(newPath);
 
         if(file.renameTo(newFile)) {
+            changeChildrenPath(this, oldPath, newPath);
             FileManager.getInstance().updateFilesJson();
         }
     }
 
+    private void changeChildrenPath(Folder folder, String oldPath, String newPath){
+        for(AbstractFile file : folder.getContents()){
+            if(file instanceof Document){
+                newPath = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPath));
+            }
+            if(file instanceof Folder){
+                newPath = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPath));
+                ((Folder) file).changeChildrenPath((Folder)file, oldPath, newPath);
+            }
+
+        }
+    }
 
     // Reads the content o path its given
     public List<AbstractFile> getContents(){
@@ -95,5 +114,19 @@ public class Folder extends AbstractFile {
             }
         }
         return child;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Folder folder = (Folder) o;
+        return Objects.equals(folderContents, folder.folderContents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), folderContents);
     }
 }

@@ -11,13 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FileManager {
     // todo Archive folder path should be set on setup
     private static String pathToJson = "Sample files/allFiles.JSON";
-    private String pathToFiles = "Sample files/Main Files";
-    private String pathToArchive = "Sample files/Archive";
     private ArrayList<AbstractFile> allContent = new ArrayList<>();
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
@@ -45,10 +42,15 @@ public class FileManager {
         return fileManager;
     }
 
-    public void uploadFile(Path src, Folder dstFolder) {
+    public void uploadFile(Path src, Folder dstFolder) throws IOException {
         File file = new File(src.toString());
 
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
+
+        if (Files.exists(dest)){
+            deleteFile(DocumentBuilder.getInstance().createDocument(dest));
+        }
+
         try {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
@@ -58,54 +60,63 @@ public class FileManager {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
         } // todo Error handling.
-        // todo Is this correctly implemented? We just copy the file from src to dst.
+
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
 
     }
 
-    public Folder createFolder(Path path, String name) {
+    public Folder createFolder(Folder parentFolder, String name) {
         // Todo Error handling
-        String pathToFolder = path.toString() + File.separator + name;
-        Folder folder = new Folder(Paths.get(pathToFolder).toString());
+        Folder createdFolder = new Folder(parentFolder.getPath() + File.separator + name);
 
-        boolean isSuccessful = new File(pathToFolder).mkdirs();
+        boolean isSuccessful = new File(createdFolder.getPath().toString()).mkdirs();
 
         if(!isSuccessful){
             System.out.println("mkdirs was not successful");
             return null;
         }
 
-        allContent.add(folder);
+        parentFolder.getContents().add(createdFolder);
         updateFilesJson();
-        return folder;
+        return createdFolder;
     }
 
-    public void deleteFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
-        Files.move(file.getPath(), pathWithName);
-        Folder folder = findParent(file);
-        folder.getContents().remove(file);
-        archive.add(file);
-        updateFilesJson();
+    public void deleteFile(AbstractFile file) {
+        Path pathWithName = Paths.get(Paths.get(PathsManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
+        try {
+            Files.move(file.getPath(), pathWithName);
+            Folder parent = findParent(file);
+            parent.getContents().remove(file);
+
+
+            Folder archiveFolder = (Folder)getInstance().archive.get(0);
+            archiveFolder.getContents().add(file);
+            getInstance().updateFilesJson();
+        } catch (IOException e) {
+            System.out.println("Could not delete file");
+            e.printStackTrace();
+        }
     }
 
     public void restoreFile(AbstractFile file) throws IOException {
-        Path file1 = Paths.get(Paths.get(pathToArchive) + File.separator + file.getName());
+        Path pathWithName = Paths.get(Paths.get(PathsManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
-        if (Files.exists(file.getParentPath())) {
-            Files.move(file1, file.getPath());
-        } else {
-            boolean isSuccessful = file.getParentPath().toFile().mkdirs();
-            if (isSuccessful){
-                Files.move(file1, file.getPath());
-            } else {
-                System.out.println("mkdirs was not successful");
-            }
-        }
+
+
+        Files.move(pathWithName, Paths.get(PathsManager.getInstance().getServerMainFilesPath() + File.separator + file.getName()));
+
+        Folder archiveFolder = (Folder)getInstance().archive.get(0);
+        archiveFolder.getContents().remove(file);
+        Folder contentFolder = (Folder)getInstance().allContent.get(0);
+        contentFolder.getContents().add(file);
+
+        getInstance().updateFilesJson();
     }
 
     public void updateFilesJson() {
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(pathToJson)) {
+        try (FileWriter writer = new FileWriter(PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             JsonParser.getJsonParser().toJson(getInstance(), writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,7 +125,7 @@ public class FileManager {
 
     protected static FileManager readFilesFromJson() {
         // String pathStr;
-        try (Reader reader = new FileReader(pathToJson)) {
+        try (Reader reader = new FileReader(PathsManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : fileManager.allContent) {
@@ -135,20 +146,20 @@ public class FileManager {
         // First crawl all the files
         getInstance().allContent.clear();
 
-        Folder root = new Folder(pathToFiles);
+        Folder root = new Folder(PathsManager.getInstance().getServerMainFilesPath());
 
         getInstance().allContent.add(root);
-
-        Files.walk(root.getPath(), 1)
-                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
-                .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
 
         Files.walk(root.getPath(), 1)
                 .filter(Files::isRegularFile)
                 .forEach(file -> root.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
+        Files.walk(root.getPath(), 1)
+                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
+                .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
+
         // Crawl archive
-        Folder rootArchive = new Folder(pathToArchive);
+        Folder rootArchive = new Folder(PathsManager.getInstance().getServerArchivePath());
 
         getInstance().archive.add(rootArchive);
 
@@ -160,11 +171,11 @@ public class FileManager {
                 .filter(Files::isRegularFile)
                 .forEach(file -> rootArchive.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
 
-        updateFilesJson();
+        getInstance().updateFilesJson();
     }
 
     public Folder getRootElement(){
-        return (Folder)allContent.get(0);
+        return (Folder)getInstance().allContent.get(0);
         //todo error handle if not folder
     }
 

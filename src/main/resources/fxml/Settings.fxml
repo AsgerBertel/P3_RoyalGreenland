@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.settings.SettingsController"
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@/styles/masterSheet.css">
+
+    <!-- Server path setting -->
+    <VBox>
+        <Text styleClass="standardTitle" text="%Settings.ServerPath"/> <!-- todo sprog -->
+        <HBox>
+            <TextField fx:id="serverPathTextField"/>
+            <Button text="test"/>
+        </HBox>
+    </VBox>
+
+    <VBox>
+        <Text styleClass="standardTitle" text="%Settings.LocalPath"/>
+        <HBox>
+            <TextField fx:id="localPathTextField"/>
+            <Button text="test" styleClass="regularButton"/>
+        </HBox>
+    </VBox>
+
+    <VBox>
+        <Text styleClass="standardTitle" text="%Settings.Username"/>
+        <HBox>
+            <TextField fx:id="usernameTextField"/>
+            <Button text="test" styleClass="regularButton"/>
+        </HBox>
+    </VBox>
+
+
+
+</VBox>

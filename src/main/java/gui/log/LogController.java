@@ -1,25 +1,16 @@
 package gui.log;
 
 import gui.TabController;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LogController implements TabController {
 
@@ -37,48 +28,34 @@ public class LogController implements TabController {
     private TableColumn<rgEvent, String> time;
 
     @FXML
-    private Pane box;
-
-    @FXML
-    private VBox vbox;
+    private ImageView searchImage;
 
     @FXML
     private TextField searchField;
-
-    private boolean searchToggled = false;
     private List<rgEvent> listOfEvents;
+    private boolean sortedByTime = false;
+    private Image timeOld = new Image("/icons/menu/timeNew.png");
+    private Image timeNew = new Image("/icons/menu/timeOld.png");
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         LoggingTools lt = new LoggingTools();
         listOfEvents = lt.listOfAllEvents();
+        sortByTime();
         update();
     }
 
     @Override
     public void update() {
+        tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
         user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
         time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
-        tableView.getItems().setAll(listOfEvents);
     }
 
-    public void searchClicked(ActionEvent actionEvent) {
-        if (searchToggled) {
-            box.toBack();
-            searchToggled = false;
-        } else {
-            box.toFront();
-            searchToggled = true;
-        }
-    }
 
     public void keyReleased(KeyEvent keyEvent){
-        if(keyEvent.getCode() == KeyCode.ENTER){
-            box.toBack();
-            searchToggled = false;
-        }
-        search(searchField.getText());
+        search(searchField.getText().toLowerCase());
     }
 
     private void search(String search) {
@@ -91,4 +68,29 @@ public class LogController implements TabController {
         tableView.getItems().setAll(foundEvents);
     }
 
+    public void sortByUser(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getUser));
+        tableView.getItems().setAll(sortedList);
+    }
+    public void sortByChangeType(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getEventType));
+        tableView.getItems().setAll(sortedList);
+    }
+    public void sortByTime(){
+        List<rgEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(rgEvent::getLocalDateTime));
+        if(sortedByTime){
+            searchImage.setImage(timeNew);
+            tableView.getItems().setAll(sortedList);
+            sortedByTime = false;
+        }else{
+            Collections.reverse(sortedList);
+            searchImage.setImage(timeOld);
+            tableView.getItems().setAll(sortedList);
+            sortedByTime = true;
+        }
+
+    }
 }

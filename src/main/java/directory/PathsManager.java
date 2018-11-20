@@ -1,5 +1,10 @@
 package directory;
 
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.util.prefs.Preferences;
 
 public class PathsManager {
@@ -22,9 +27,6 @@ public class PathsManager {
     private static final String LOCAL_FILES_PATH = "Documents/";
     private static final String LOCAL_APP_FILES_PATH = "App Files/";
 
-    // Temporary
-    private static final String JAR_PATH = PathsManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
     private String serverPath, localPath;
 
     private PathsManager() {
@@ -35,19 +37,27 @@ public class PathsManager {
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
         // Add new path values if non exists
-        if (serverPath.equals(DEFAULT_NULL_VALUE)) {
+        if (true || serverPath.equals(DEFAULT_NULL_VALUE)) { // todo if(true) is obvs temporary
             getNewPaths();
         }
     }
 
     public void getNewPaths() {
         // temporary hardcoded paths todo Get paths from user input
-        serverPath = JAR_PATH + "Sample files/Server/";
-        localPath = JAR_PATH + "Sample files/Local Disk/";
+        serverPath = "Sample files/Server/";
+        localPath = "Sample files/Local Disk/";
 
         preferences.put(SERVER_PATH_PREF, serverPath);
         preferences.put(LOCAL_PATH_PREF, serverPath);
     }
+/*
+    private File chooseDirectoryPrompt(String message) {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+
+        File chosenFile = fileChooser.showDialog(new Stage());
+        if (chosenFile == null) return null;
+        return chosenFile;
+    }*/
 
     public static PathsManager getInstance() {
         if (settings == null)
@@ -76,7 +86,9 @@ public class PathsManager {
     }
 
     // Returns the absolute path of the application files on the local drive
-    public String getLocalAppFilesPath(){ return localPath + LOCAL_APP_FILES_PATH; }
+    public String getLocalAppFilesPath() {
+        return localPath + LOCAL_APP_FILES_PATH;
+    }
 
 
 }

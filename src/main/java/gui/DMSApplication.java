@@ -1,6 +1,8 @@
 package gui;
 
 import directory.FileManager;
+import directory.files.Document;
+import directory.files.DocumentBuilder;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -21,7 +24,8 @@ public class DMSApplication extends Application {
 
     private VBox root;
 
-    public static Locale locale = new Locale("da", "DK");
+    private static Locale locale = new Locale("da", "DK");
+    private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
@@ -44,6 +48,8 @@ public class DMSApplication extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
+        //System.out.println(locale.get);
+
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
         fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "MainMenu.fxml"), bundle);
@@ -59,10 +65,14 @@ public class DMSApplication extends Application {
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
 
+        // resetter file tree
+        // FileManager.getTestInstance().initFolderTree();
+
         this.primaryStage = primaryStage;
         primaryStage.show();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
+
     }
 
     // Shows the given part of the program
@@ -97,7 +107,18 @@ public class DMSApplication extends Application {
         main.start(new Stage());
     }
 
-    public static void setLocale(Locale locale) {
+    public static void changeLanguage(Locale locale) {
         DMSApplication.locale = locale;
+        messages = ResourceBundle.getBundle("Messages", locale);
     }
+
+    public static Locale getLanguage(){
+        return locale;
+    }
+
+    public static String getMessage(String key){
+        return messages.getString(key);
+    }
+
+
 }
