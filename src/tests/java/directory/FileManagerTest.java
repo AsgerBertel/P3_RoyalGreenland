@@ -26,8 +26,8 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() {
-        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
-        FileManager.getTestInstance().readFileManagerFromJson();
+        /*FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
+        FileManager.getTestInstance().readFileManagerFromJson();*/ // TODO: 19/11/2018 reimplement
     }
 
     // Todo use FileManager.deleteFile() to delete file.
@@ -58,7 +58,7 @@ class FileManagerTest {
             e.printStackTrace();
         }
     }*/
-
+    /* todo reimplement
     private void deleteDocument() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
@@ -81,7 +81,7 @@ class FileManagerTest {
         FileManager.getTestInstance().deleteFile(doc);
 
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
-    }
+    }*/
 
     private void restoreDocumentWithPath() throws IOException {
 
@@ -103,7 +103,7 @@ class FileManagerTest {
         Files.move(newPath, toTestFile2);
         Files.delete(newPath.getParent());*/
     }
-
+    /*
     @Test
     void inOrder() throws IOException {
         deleteDocument();
@@ -114,7 +114,7 @@ class FileManagerTest {
     void inOrder2() throws IOException {
         deleteDocument2();
         restoreDocumentWithPath();
-    }
+    }*/
 
   /*  @Test
     void restoreFolder () throws IOException {

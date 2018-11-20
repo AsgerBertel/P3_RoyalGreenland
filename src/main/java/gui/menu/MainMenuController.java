@@ -43,6 +43,7 @@ public class MainMenuController {
     public void changeToDanish(Event actionEvent) throws Exception{
         dmsApplication.changeLanguage(new Locale("da", "DK"));
         dmsApplication.restartApp();
+
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{

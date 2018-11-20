@@ -1,7 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
-import directory.FileManager;
+import directory.Settings;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +27,7 @@ public class DMSApplication extends Application {
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
-    private static final String APP_TITLE = "RG - Document Management System";
+    public static final String APP_TITLE = "RG - Document Management System";
 
     private FXMLLoader fxmlLoader;
     public static final String fxmlPath = "/fxml/";
@@ -35,6 +35,8 @@ public class DMSApplication extends Application {
     private Node mainMenu, fileOverview, fileAdministration, plantAdministration, log;
 
     private ApplicationMode applicationMode;
+
+    private Settings settings;
 
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication(){}
@@ -49,6 +51,8 @@ public class DMSApplication extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
+        this.settings = Settings.getInstance();
+
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
 
@@ -57,6 +61,7 @@ public class DMSApplication extends Application {
         }else{
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "ViewerMainMenu.fxml"), bundle);
         }
+
 
 
         // Improve font rendering
@@ -74,7 +79,6 @@ public class DMSApplication extends Application {
         primaryStage.show();
 
         switchWindow(TabLoader.FILE_ADMINISTRATION);
-
     }
 
     // Shows the given part of the program

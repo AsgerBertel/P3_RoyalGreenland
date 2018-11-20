@@ -18,13 +18,6 @@ public class Folder extends AbstractFile {
         super(path);
     }
 
-    public Folder(String path, boolean firstTime) {
-        super(path);
-        if(firstTime){
-            folderInit();
-        }
-    }
-
     @Override
     public void renameFile(String newFolderName){
         String oldPath = getPath().toString();
@@ -60,23 +53,6 @@ public class Folder extends AbstractFile {
     // Reads the content o path its given
     public List<AbstractFile> getContents(){
         return folderContents;
-    }
-
-    // Reads the list of files within the folder
-    private void folderInit() {
-        folderContents.clear();
-
-        try {
-            Files.walk(getPath(), 1)
-                    .filter(path1 -> Files.isDirectory(path1) && !path1.equals(getPath()))
-                    .forEach(file -> folderContents.add(new Folder(file.toString(), true)));
-
-            Files.walk(getPath(), 1)
-                    .filter(Files::isRegularFile)
-                    .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean containsFromAccessModifier(AccessModifier am){

@@ -56,7 +56,7 @@ public class FileOverviewController implements TabController {
     public void update() {
         // Refresh file tree if the files have changed // todo test if functional
         TreeItem<AbstractFile> treeRoot = fileTreeView.getRoot();
-        if(treeRoot == null || !treeRoot.getValue().equals(FileManager.getInstance().getAllContent().get(0))){
+        if(treeRoot == null || !treeRoot.getValue().equals(FileManager.getInstance().getMainFiles().get(0))){
             reloadFileTree();
         }
 
@@ -65,16 +65,16 @@ public class FileOverviewController implements TabController {
     }
 
     private void reloadFileTree(){
-        Folder rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        Folder rootFolder = (Folder) FileManager.getInstance().getMainFiles().get(0);
         rootItem = FileTreeUtil.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
     }
 
     @FXML
     void onPlantSelected(ActionEvent event) {
-        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getAllContent().get(0), drdPlant.getSelectionModel().getSelectedItem());
+        fileExplorer = new FileExplorer((Folder) FileManager.getInstance().getMainFiles().get(0), drdPlant.getSelectionModel().getSelectedItem());
         AccessModifier accessModifier = (fileExplorer.getSelectedPlant() == null) ? null : fileExplorer.getSelectedPlant().getAccessModifier();
-        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getAllContent().get(0), accessModifier);
+        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getMainFiles().get(0), accessModifier);
         fileTreeView.setRoot(rootItem);
         updateDisplayedFiles();
     }
@@ -134,7 +134,7 @@ public class FileOverviewController implements TabController {
     @FXML
     public void openPreviousFolder() {
         if(drdPlant.getSelectionModel().getSelectedItem() != null){
-            fileExplorer.navigateBack(FileManager.getInstance().getAllContent());
+            fileExplorer.navigateBack(FileManager.getInstance().getMainFiles());
             updateDisplayedFiles();
         }
     }

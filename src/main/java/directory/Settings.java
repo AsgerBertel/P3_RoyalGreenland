@@ -1,12 +1,20 @@
 package directory;
 
+import gui.DMSApplication;
+import gui.settings.InitializationController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-public class PreferencesManager {
+public class Settings {
 // todo add default language setting
-    private Preferences preferences;
-    private static PreferencesManager settings;
+    private static Preferences preferences = Preferences.userNodeForPackage(Settings.class);
+    private static Settings settings;
 
     private static final String DEFAULT_NULL_VALUE = "null";
 
@@ -23,37 +31,52 @@ public class PreferencesManager {
     // Other preferences
     private static String username = "Unknown user";
 
-    private String serverPath, localPath;
+    private static String serverPath = "", localPath = "";
 
-    private PreferencesManager() {
-        // Loads preferences
-        preferences = Preferences.userNodeForPackage(PreferencesManager.class);
+    private Settings() {
+        username = preferences.get(USERNAME_PREF, DEFAULT_NULL_VALUE);
+        if(username.equals(DEFAULT_NULL_VALUE))
+            setUsername(getComputerName());
 
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
-        // Add new path values if non exists
-        if (true || serverPath.equals(DEFAULT_NULL_VALUE)) { // todo if(true) is obvs temporary
-            getNewPaths();
+        if(true || serverPath.equals(DEFAULT_NULL_VALUE) || localPath.equals(DEFAULT_NULL_VALUE)){
+            initializePathsPrompt();
+        }
+    }
+
+    // Prompt the user for the path to both server and local storage
+    private void initializePathsPrompt(){
+        try{
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+
+            ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
+            fxmlLoader.setResources(bundle);
+
+            fxmlLoader.setLocation(getClass().getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
+
+            Scene scene = new Scene(fxmlLoader.load());
+            ((InitializationController) fxmlLoader.getController()).initSettings(this);
+            stage.setTitle(DMSApplication.APP_TITLE);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        username = preferences.get(USERNAME_PREF, DEFAULT_NULL_VALUE);
-        if(username.equals(DEFAULT_NULL_VALUE))
-            setUsername(getComputerName());
     }
 
-    public void getNewPaths() {
-        // temporary hardcoded paths todo Get paths from user input
-        serverPath = "Sample files/Server/";
-        localPath = "Sample files/Local Disk/";
-
-        preferences.put(SERVER_PATH_PREF, serverPath);
-        preferences.put(LOCAL_PATH_PREF, serverPath);
+    public static boolean arePathsSet(){
+        String serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
+        String localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
+        return (!serverPath.equals(DEFAULT_NULL_VALUE) && !localPath.equals(DEFAULT_NULL_VALUE));
     }
 
-    public static PreferencesManager getInstance() {
+    public static Settings getInstance() {
         if (settings == null)
-            settings = new PreferencesManager();
+            settings = new Settings();
         return settings;
     }
 
@@ -95,11 +118,11 @@ public class PreferencesManager {
     }
 
     public void setUsername(String username) {
-        PreferencesManager.username = username;
+        Settings.username = username;
         preferences.put(USERNAME_PREF, username);
     }
 
-    private String getComputerName()
+    public static String getComputerName()
     {
         Map<String, String> env = System.getenv();
         if (env.containsKey("COMPUTERNAME"))

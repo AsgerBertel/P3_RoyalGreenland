@@ -1,6 +1,6 @@
 package directory.files;
 
-import directory.PreferencesManager;
+import directory.Settings;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -44,14 +44,14 @@ public class DocumentBuilder {
     public int readAndUpdateCurrentID() {
         int currentID = -1;
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "currentFileID"))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(Settings.getInstance().getServerAppFilesPath() + "currentFileID"))) {
             String str = reader.readLine();
             currentID = Integer.parseInt(str);
         } catch (IOException e) {
             System.out.println("Could not read file" + e.getMessage());
         }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "currentFileID"))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(Settings.getInstance().getServerAppFilesPath() + "currentFileID"))) {
             String ID = "" + (currentID + 1);
             writer.write(ID);
         } catch (IOException e) {

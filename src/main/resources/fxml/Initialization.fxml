@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.settings.InitializationController"
+            prefHeight="250" prefWidth="600.0" minWidth="600"
+            stylesheets="/styles/settings.css, /styles/masterSheet.css">
+
+    <VBox styleClass="settingsVBox">
+        <Text fx:id="settingDescription" styleClass="standardTitle"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="inputTextField" prefWidth="400" minWidth="400"/>
+            <Button fx:id="browseButton" text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowsePath"/>
+        </HBox>
+        <Text fx:id="errorText" styleClass="errorText" translateX="10"/>
+    </VBox>
+
+    <BorderPane minWidth="505" maxWidth="505" translateY="20">
+        <left>
+            <Button translateX="-50" text="%Initialization.Previous" fx:id="previousButton" styleClass="darkButton" id="saveChangesButton" onAction="#onPrevious"/>
+        </left>
+
+        <right>
+            <Button text="%Initialization.Next" fx:id="nextButton" styleClass="darkButton" id="saveChangesButton" onAction="#onNext"/>
+        </right>
+
+    </BorderPane>
+
+
+
+</VBox>

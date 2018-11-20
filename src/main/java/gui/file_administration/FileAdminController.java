@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -71,7 +70,7 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
         // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
         // todo - It always reloads. - Philip
-        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
+        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
             reloadFileTree();
         fileTreeView.getRoot().setExpanded(true);
 
@@ -80,7 +79,7 @@ public class FileAdminController implements TabController {
     }
 
     private void reloadFileTree(){
-        rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
+        rootFolder = (Folder) FileManager.getInstance().getMainFiles().get(0);
         rootItem = FileTreeUtil.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
 
