@@ -30,7 +30,7 @@
                         </Button>
                         <Button styleClass="menuButton" onAction="#sortByTime">
                             <graphic>
-                                <ImageView fx:id="searchImage" fitHeight="38" fitWidth="38"/>
+                                <ImageView fx:id="searchImage" fitHeight="40" fitWidth="40"/>
                             </graphic>
                         </Button>
                         <HBox spacing="1" HBox.hgrow="ALWAYS">
