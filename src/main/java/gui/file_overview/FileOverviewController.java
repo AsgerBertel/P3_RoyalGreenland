@@ -72,8 +72,14 @@ public class FileOverviewController implements TabController {
         // Create fileExplorer that matches the accessModifier of the selected plant
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
 
-        AccessModifier accessModifier = selectedPlant.getAccessModifier();
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), accessModifier);
+        if(selectedPlant != null){
+            AccessModifier accessModifier = selectedPlant.getAccessModifier();
+            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), accessModifier);
+
+        } else{
+            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), new AccessModifier());
+        }
+
         fileTreeView.setRoot(rootItem);
 
         updateDisplayedFiles();
