@@ -1,7 +1,7 @@
 #searchField {
     -fx-background-image: url("/icons/menu/search.png");
-    -fx-background-size: 40 30;
-    -fx-background-position: right 10 center;
+    -fx-background-size: 40 40;
+    -fx-background-position: right 3 center;
     -fx-background-repeat: no-repeat;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
