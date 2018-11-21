@@ -55,6 +55,7 @@ public class FileExplorer {
     }
 
     public void navigateTo(Folder newFolder) {
+
         currentFolder = newFolder; // todo error check
     }
 
