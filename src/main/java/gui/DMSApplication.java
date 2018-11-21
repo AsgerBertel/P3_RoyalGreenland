@@ -73,7 +73,7 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         // resetter file tree
-        // FileManager.getTestInstance().initFolderTree();
+        FileManager.getTestInstance().initFolderTree();
 
         this.primaryStage = primaryStage;
         primaryStage.show();
