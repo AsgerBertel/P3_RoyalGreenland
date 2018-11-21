@@ -131,6 +131,7 @@ public class FileManager {
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
 
         if (Files.exists(dest)) {
+            // todo should show prompt
             deleteFile(DocumentBuilder.getInstance().createDocument(dest));
         }
 

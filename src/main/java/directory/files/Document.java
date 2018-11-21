@@ -50,9 +50,9 @@ public class Document extends AbstractFile {
         Path temp = Files.move(getPath(), tempTargetPath);
         setPath(tempTargetPath);
 
-        if(temp == null){ // todo temp always null? Implement differently
+        if(temp == null) // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
-        }
+
     }
 
     // Opens the document in a window

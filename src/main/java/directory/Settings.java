@@ -46,7 +46,7 @@ public class Settings {
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
         // Prompt the user for paths if any are missing
-        if(true || serverPath.equals(DEFAULT_NULL_VALUE))
+        if(serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
         else if(DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();

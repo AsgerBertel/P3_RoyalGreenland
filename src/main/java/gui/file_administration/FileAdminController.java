@@ -11,6 +11,7 @@ import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
 import gui.TabController;
+import gui.log.LoggingTools;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -59,7 +60,6 @@ public class FileAdminController implements TabController {
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
-
     }
 
     @Override
@@ -161,12 +161,7 @@ public class FileAdminController implements TabController {
             File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
 
             if (uploadFile != null) {
-                try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
-                } catch (IOException e) {
-                    System.out.println("could not upload file");
-                    e.printStackTrace();
-                }
+                FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
                 update();
             }
 
@@ -312,4 +307,12 @@ public class FileAdminController implements TabController {
             }
         });
     }
+
+
+    public void onChangeMade(){
+
+    }
+
+
+
 }
