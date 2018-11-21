@@ -8,6 +8,7 @@ import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.AppFilesManager;
 
+import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -200,6 +201,42 @@ public class FileManager {
             System.out.println("Could not delete file");
             e.printStackTrace();
         }
+    }
+
+    public String addVersionNumber(AbstractFile file){
+        int versionNumber;
+        String name1;
+        String name2;
+        String fileName = file.getName();
+        char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
+
+        if (c == ')'){
+            String str = fileName.substring(fileName.lastIndexOf("(") + 1,
+                    fileName.lastIndexOf(")"));
+
+            versionNumber = Integer.parseInt(str);
+            versionNumber++;
+
+            name1 = fileName.substring(
+                    0,fileName.lastIndexOf("("));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf(")") + 1,
+                    fileName.length());
+        } else {
+            versionNumber = 1;
+
+            name1 = fileName.substring(
+                    0, fileName.lastIndexOf("."));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf("."),
+                    fileName.length());
+        }
+
+        String newFileName = name1 + "(" + versionNumber + ")" + name2;
+
+        return newFileName;
     }
 
     //todo restore to original path not root folder
