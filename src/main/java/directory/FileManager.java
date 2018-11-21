@@ -59,7 +59,9 @@ public class FileManager {
             throw new IllegalArgumentException("Root file must be a directory");
         }
 
-        return new Folder(root.toString(), loadChildren(root, root));
+        // TODO --------- Important ---------- The root folder is initiated with an empty path. If the path is not create folder, upload file etc. will not create files with correct relative path - Magnus
+        // TODO This doesn't seem clean but i dunno - Magnus
+        return new Folder("", loadChildren(root, root));
     }
 
     /* Find all children of the given root and creates a list of corresponding abstractFile instances with paths

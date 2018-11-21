@@ -32,6 +32,8 @@ import java.util.ResourceBundle;
 
 public class FileAdminController implements TabController {
 
+    public ListView changesListView;
+    public Button saveChangesButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     private ArrayList<Plant> plants = new ArrayList<>();
@@ -308,7 +310,7 @@ public class FileAdminController implements TabController {
         });
     }
 
-
+    
     public void onChangeMade(){
 
     }

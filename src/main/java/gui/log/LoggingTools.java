@@ -50,7 +50,6 @@ public class LoggingTools {
     }
 
     private static List<String> EventToStringArray(rgEvent event){
-
         // [YEAR/MONTH/DATE - HOUR:MINUTES]
         String eventDate = event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
                 + "-" + event.getLocalDateTime().getHour() + ":" + event.getLocalDateTime().getMinute();
