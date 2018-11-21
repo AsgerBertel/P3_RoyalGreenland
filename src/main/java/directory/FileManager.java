@@ -8,6 +8,7 @@ import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.JsonParser;
 
+import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -94,7 +95,32 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) {
-        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
+
+        String fileName = file.getName();
+
+        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+
+
+        if (Files.exists(pathWithName)){
+            fileName = addVersionNumber(file);
+            pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+
+            if (file instanceof Folder){
+                ((Folder) file).renameFile(fileName);
+            } else if (file instanceof Document){
+                try {
+                    ((Document) file).renameFile(fileName);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                    System.out.println("invalid name");
+                }
+            }
+
+            System.out.println(file.getPath().toString());
+            System.out.println(fileName);
+        }
+
+
         try {
             Files.move(file.getPath(), pathWithName);
             Folder parent = findParent(file);
@@ -107,6 +133,45 @@ public class FileManager {
             System.out.println("Could not delete file");
             e.printStackTrace();
         }
+    }
+
+    public String addVersionNumber(AbstractFile file){
+        char c = file.getName().charAt(file.getName().lastIndexOf(".") - 1);
+        int versionNumber;
+
+        if (c == ')'){
+            String str = file.getName().substring(file.getName().lastIndexOf("(") + 1,
+                    file.getName().lastIndexOf(")"));
+            System.out.println(str);
+
+            versionNumber = Integer.parseInt(str);
+            versionNumber++;
+        } else {
+            versionNumber = 1;
+        }
+
+        String name1 = file.getName().substring(
+                0,file.getName().lastIndexOf("("));
+
+        String name2 = file.getName().substring(
+                file.getName().lastIndexOf(")") + 1,
+                file.getName().length());
+
+        System.out.println(name1);
+        System.out.println(name2);
+
+        String fileName = name1 + "(" + versionNumber + ")" + name2;
+
+        System.out.println(fileName);
+
+        /*Path path = Paths.get(file.getPath().toString().substring(
+                file.getPath().toString().lastIndexOf("(") + 1,
+                file.getPath().toString().lastIndexOf(")")));*/
+
+
+
+
+        return fileName;
     }
 
     //todo restore to original path not root folder
