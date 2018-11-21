@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 
 public class DocumentBuilder {
     // Todo on setup set currentIDPath
-    private Path currentIDPath = Paths.get("Sample files/currentFileID");
+    private Path currentIDPath = Paths.get(Settings.getServerAppFilesPath()+File.separator+"currentFileID");
     public static DocumentBuilder documentBuilder;
 
     private DocumentBuilder() {

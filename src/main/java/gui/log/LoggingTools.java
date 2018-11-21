@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    public void LogEvent(String fileName, LogEventType eventType){
+    public static void LogEvent(String fileName, LogEventType eventType){
 
          //Get current system time
          LocalDateTime localDateTime = LocalDateTime.now();
@@ -38,7 +38,7 @@ public class LoggingTools {
         }
         return listOfEvents;
     }
-    private void writeEventAsLog(rgEvent event){
+    private static void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log",true)))){
@@ -49,7 +49,7 @@ public class LoggingTools {
         }
     }
 
-    private List<String> EventToStringArray(rgEvent event){
+    private static List<String> EventToStringArray(rgEvent event){
 
         // [YEAR/MONTH/DATE - HOUR:MINUTES]
         String eventDate = event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
@@ -76,7 +76,7 @@ public class LoggingTools {
         return new rgEvent(substrings[1],substrings[3],localDateTime, stringToLogEventType(substrings[2]));
     }
 
-    public String EventTypeToString(LogEventType eventType){
+    private static String EventTypeToString(LogEventType eventType){
         switch (eventType){
             case CHANGED:
                 return "changed";

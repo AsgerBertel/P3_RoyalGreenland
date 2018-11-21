@@ -1,18 +1,12 @@
 package directory.files;
 
-import directory.FileManager;
-import org.junit.jupiter.api.Test;
-
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class FolderTest {
     private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
-    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
 
 /*    @Test
     void renameFile() {

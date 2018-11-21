@@ -27,6 +27,10 @@ public class Document extends AbstractFile {
         super(path);
         this.ID = ID;
     }
+    public Document(Document document) {
+        super(document.getPath().toString());
+        this.ID = document.getID();
+    }
 
     public int getID() {
         return ID;
@@ -101,7 +105,7 @@ public class Document extends AbstractFile {
             throw new InvalidNameException();
 
         LoggingTools lt = new LoggingTools();
-        lt.LogEvent(getName(), LogEventType.RENAMED);
+        LoggingTools.LogEvent(getName(), LogEventType.RENAMED);
         AppFilesManager.save(FileManager.getInstance());
     }
 

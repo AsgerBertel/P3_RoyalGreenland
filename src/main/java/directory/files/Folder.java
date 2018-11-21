@@ -21,6 +21,15 @@ public class Folder extends AbstractFile {
         super(path);
     }
 
+    public Folder(String path, ArrayList<AbstractFile> content) {
+        super(path);
+        this.folderContents = content;
+    }
+    public Folder(Folder folder) {
+        super(folder.getPath().toString());
+        this.folderContents = new ArrayList<>(folder.getContents());
+    }
+
     @Override
     public void renameFile(String newFolderName){
         String oldPath = getPath().toString();
@@ -37,7 +46,7 @@ public class Folder extends AbstractFile {
         }
         AppFilesManager.save(FileManager.getInstance());
         LoggingTools lt = new LoggingTools();
-        lt.LogEvent(getName(), LogEventType.FOLDERRENAMED);
+        LoggingTools.LogEvent(getName(), LogEventType.FOLDERRENAMED);
     }
 
     private void changeChildrenPath(Folder folder, String oldPath, String newPath){

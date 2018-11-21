@@ -27,7 +27,7 @@ public class Settings {
     private static final String LANGUAGE_PREF = "language";
 
 
-    private static final String APPLICATION_FOLDER_NAME = "/RG DMS/";
+    private static final String APPLICATION_FOLDER_NAME = "RG DMS/";
 
     // Relative program paths
     private static final String ARCHIVE_PATH = "Archive/";
@@ -131,7 +131,8 @@ public class Settings {
 
     // Replaces backslashes with forward slashes
     public static String getUniversalPath(String path){
-        return path.replace("\\", "/");
+
+        return path.replace("\\", "/").replace("//","/");
     }
 
     // Adds the application folder name to the path if it's not already in there
@@ -164,5 +165,14 @@ public class Settings {
     }
     public static String getLocalPath() {
         return localPath;
+    }
+    public static String toString2() {
+        return  "server path:           "+getServerPath()+System.getProperty("line.separator")+
+                "server documents path: "+getServerDocumentsPath()+System.getProperty("line.separator")+
+                "server app files path  "+getServerAppFilesPath()+System.getProperty("line.separator")+
+                "server archive path    "+getServerArchivePath()+System.getProperty("line.separator")+
+                "local path:            "+getLocalFilesPath()+System.getProperty("line.separator")+
+                "local documents path:  "+getLocalFilesPath()+System.getProperty("line.separator")+
+                "local app files path:  "+System.getProperty("line.separator");
     }
 }

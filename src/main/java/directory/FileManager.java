@@ -4,6 +4,8 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.*;
@@ -12,10 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Stack;
 
 public class FileManager {
-    private ArrayList<AbstractFile> mainFiles = new ArrayList<>();
-    private ArrayList<AbstractFile> archiveFiles = new ArrayList<>();
 
     private Folder mainFilesRoot;
     private Folder archiveRoot;
@@ -40,23 +41,24 @@ public class FileManager {
     private FileManager() {
         // Create a list of AbstractFiles based on the files inside the server document path
         Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
-        mainFiles = findFiles(mainFilesRootPath);
+        mainFilesRoot = findFiles(mainFilesRootPath);
 
         // Initialize list of archived documents // todo should these automatic file detection features be enabled? - Magnus
-        Path archiveFilesRoot = Paths.get(Settings.getServerArchivePath());
-        archiveFiles = findFiles(archiveFilesRoot);
+        Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
+        archiveRoot = findFiles(archiveFilesRootPath);
     }
 
-    private static ArrayList<AbstractFile> findFiles(Path root){
+    private static Folder findFiles(Path root){
         if (!Files.exists(root)) {
             // todo Check if server connection failure or just non-existing file throw exception maybe
         }
+        System.out.println(root.toString());
 
         if (!Files.isDirectory(root)) {
             throw new IllegalArgumentException("Root file must be a directory");
         }
 
-        return loadChildren(root, root);
+        return new Folder(root.toString(), loadChildren(root, root));
     }
 
     /* Find all children of the given root and creates a list of corresponding abstractFile instances with paths
@@ -76,7 +78,14 @@ public class FileManager {
                             // Recursive call to load all child elements of this folder
                             folder.getContents().addAll(loadChildren(newFilePath, basePath));
                             children.add(folder);
-                        } else {
+                        }
+                    });
+            Files.walk(rootPath, 1)
+                    .filter(path1 -> !path1.equals(rootPath))
+                    .forEach(newFilePath -> {
+                        Path relativePath = basePath.relativize(newFilePath);
+
+                        if(!Files.isDirectory(newFilePath)) {
                             Document document = DocumentBuilder.getInstance().createDocument(relativePath);
                             children.add(document);
                         }
@@ -97,14 +106,14 @@ public class FileManager {
     }*/
 
     public ArrayList<AbstractFile> getMainFiles() {
-        return mainFiles;
+        return mainFilesRoot.getContents();
     }
 
     public ArrayList<AbstractFile> getArchiveFiles() {
-        return archiveFiles;
+        return archiveRoot.getContents();
     }
 
-    public void uploadFile(Path src) throws IOException {
+    public void uploadFile(Path src) {
         File file = new File(src.toString());
         Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
 
@@ -116,7 +125,7 @@ public class FileManager {
         //todo make some kind of counter to file name
     }
 
-    public void uploadFile(Path src, Folder dstFolder) throws IOException {
+    public void uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
@@ -130,7 +139,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
-            //loggingTools.LogEvent(file.getName(), LogEventType.CREATED); // todo reimplement
+            LoggingTools.LogEvent(file.getName(), LogEventType.CREATED);
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
@@ -146,18 +155,18 @@ public class FileManager {
 
         createFolderFile(Settings.getServerDocumentsPath() + name);
 
-        mainFiles.add(folder);
+        mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
         return folder;
     }
 
     // Creates a new folder inside the given parent folder
     public Folder createFolder(String name, Folder parentFolder) {
-        Folder folder = new Folder(parentFolder.getPath() + "/" + name);
+        Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
         createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
 
-        mainFiles.add(folder);
+        mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
         return folder;
     }
@@ -172,18 +181,19 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) {
-        Path pathWithName = Paths.get(Paths.get(Settings.getServerArchivePath()) + File.separator + file.getName());
-        try {
-            Files.move(file.getPath(), pathWithName);
+        Path archivePath = Paths.get(Settings.getServerArchivePath() + file.getPath());
 
-            //Remove the file from its' parent if it has one
-            Optional<Folder> parent = findParent(file, getMainFiles());
+        // todo maybe change mkdirs - kristian
+        try {
+            new File(archivePath.getParent().toString()).mkdirs();
+            Files.move(Paths.get(Settings.getServerDocumentsPath()+ file.getPath()), archivePath);
+            insertFile(file, mainFilesRoot, archiveRoot);
+            Optional<Folder> parent = findParent(file, mainFilesRoot.getContents());
+            LoggingTools.LogEvent(file.getName(), LogEventType.ARCHIVED);
+
             if(parent.isPresent())
                 parent.get().getContents().remove(file);
 
-
-            Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0); // todo Implement properly (archive files no longer have a root)
-            archiveFolder.getContents().add(file);
             AppFilesManager.save(this);
         } catch (IOException e) {
             System.out.println("Could not delete file");
@@ -193,25 +203,77 @@ public class FileManager {
 
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(Settings.getServerArchivePath()) + File.separator + file.getName());
+        Path pathOrigin = Paths.get(Settings.getServerDocumentsPath() + file.getPath().toString());
+        Files.move(Paths.get(Settings.getServerArchivePath() + file.getPath().toString()), pathOrigin);
 
-        Files.move(pathWithName, Paths.get(Settings.getServerDocumentsPath() + File.separator + file.getName()));
+        insertFile(file, archiveRoot, mainFilesRoot);
 
-        Folder archiveFolder = (Folder) getInstance().archiveFiles.get(0); // todo Implement properly (archive files no longer have a root)
-        archiveFolder.getContents().remove(file);
-        Folder contentFolder = (Folder) getInstance().mainFiles.get(0); // todo Implement properly (archive files no longer have a root) - Magnus
-        contentFolder.getContents().add(file);
+        Optional<Folder> rootOptional;// = findParent(file, mainFilesRoot.getContents());
+/*
+        if(file instanceof Folder)
+            rootOptional.ifPresent(parent -> parent.getContents().add(new Folder((Folder)file)));
+        else if (file instanceof Document)
+            rootOptional.ifPresent(parent -> parent.getContents().add(new Document((Document)file)));
+*/
+        rootOptional = findParent(file, archiveRoot);
+        rootOptional.ifPresent(parent -> parent.getContents().remove(file));
 
         AppFilesManager.save(this);
     }
+    private void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
+        if(file instanceof Document) {
+            insertDocument((Document)file, srcRoot, dstRoot);
+        }
+        else if (file instanceof Folder) {
+            insertFolder((Folder) file, srcRoot, dstRoot);
+        }
+    }
+    private void insertFolder(Folder folder, Folder srcRoot, Folder dstRoot) {
+        for(AbstractFile file : folder.getContents()) {
+            if(file instanceof Document)
+                insertDocument((Document)file, srcRoot, dstRoot);
+            else if (file instanceof Folder)
+                insertFolder((Folder) file, srcRoot, dstRoot);
+        }
+    }
+    private void insertDocument(Document document, Folder src, Folder dst) {
+        Stack<Folder> stack = new Stack<>();
+        Optional<Folder> optional = findParent(document, src.getContents());
+        Folder folderToInsert = dst;
+        Folder temp;
+        boolean folderExists = false;
 
-    /**
-     * Searches the filesystem and creates Abstractfile objects based on the children of the given root folder
-     *
-     * @return
-     * @throws IOException
-     */
+        while(optional.isPresent()) {
+            stack.push(optional.get());
+            optional = findParent(optional.get(), getMainFiles());
+        }
+        while(!stack.empty()) {
+            temp = new Folder(stack.peek().getPath().toString());
 
+            for(AbstractFile file : folderToInsert.getContents()) {
+                if(file.getPath().toString().equals(temp.getPath().toString()))
+                    folderExists = true;
+            }
+            if(!folderExists) {
+                folderToInsert.getContents().add(temp);
+                folderToInsert = temp;
+            }
+            else
+                folderToInsert = searchContentByPath(folderToInsert, temp);
+
+            stack.pop();
+            folderExists = false;
+        }
+        folderToInsert.getContents().add(new Document(document));
+    }
+
+    private Folder searchContentByPath(Folder folder, Folder target) {
+        for(AbstractFile file : folder.getContents()) {
+            if(file.getPath().toString().equals(target.getPath().toString()))
+                return (Folder) file;
+        }
+        return null;
+    }
     public static Optional<Folder> findParent(AbstractFile child, ArrayList<AbstractFile> searchArea) {
         for(AbstractFile file : searchArea){
             // If the file is in the top layer of the search area it has no parent
