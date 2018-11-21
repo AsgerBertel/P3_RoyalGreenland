@@ -150,7 +150,6 @@ public class FileAdminController implements TabController {
 
     // Updates the plant list to reflect the AccessModifier of the chosen document
     private void onDocumentSelected() {
-
         Document document = (Document) selectedFile;
         for (PlantCheckboxElement element : plantElements) {
             if (element.getPlant().getAccessModifier().contains(document.getID()))
@@ -186,6 +185,7 @@ public class FileAdminController implements TabController {
             }*/
         }
 
+        FileManager.getInstance().save();
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
     }
@@ -223,8 +223,9 @@ public class FileAdminController implements TabController {
 
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
             }
-            /*update();*/
         }
+
+        FileManager.getInstance().save();
     }
 
     public Optional<String> createFolderPopUP(){
@@ -244,6 +245,7 @@ public class FileAdminController implements TabController {
         FileManager.getInstance().deleteFile(selectedItem.getValue());
         selectedItem.getParent().getChildren().remove(selectedItem);
         update();
+        FileManager.getInstance().save();
     }
 
     public void openFile(){
@@ -281,6 +283,7 @@ public class FileAdminController implements TabController {
             // Todo tree closes when it updates. - Philip
             update();
         }
+        FileManager.getInstance().save();
     }
 
     public Optional<String> renameFilePopUP(){

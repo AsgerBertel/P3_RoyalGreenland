@@ -345,4 +345,8 @@ public class FileManager {
         return Optional.empty();
     }
 
+    // Saves the current instance to the json file
+    public void save() {
+        AppFilesManager.save(this);
+    }
 }
