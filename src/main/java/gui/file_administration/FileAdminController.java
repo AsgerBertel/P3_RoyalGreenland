@@ -6,19 +6,23 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.DMSApplication;
-import gui.FileTreeUtil;
-import gui.PlantCheckboxElement;
+import gui.*;
 
-import gui.TabController;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
+import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import javax.naming.InvalidNameException;
@@ -26,6 +30,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -34,9 +39,8 @@ public class FileAdminController implements TabController {
     private Folder rootFolder;
 
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
-
+    FileTreeUtil fileTreeUtil = new FileTreeUtil();
     private ArrayList<Plant> plants = new ArrayList<>();
-
     private TreeItem<AbstractFile> rootItem;
 
     @FXML
@@ -60,8 +64,11 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
-        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
 
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
+        fileTreeView.setCellFactory(new FileTreeDragAndDrop());
     }
 
     @Override
@@ -70,15 +77,14 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
         // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
         // todo - It always reloads. - Philip
-        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getAllContent()))
             reloadFileTree();
         fileTreeView.getRoot().setExpanded(true);
-
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+
         reloadPlantList();
     }
 
-    private void reloadFileTree(){
+    private void reloadFileTree() {
         rootFolder = (Folder) FileManager.getInstance().getAllContent().get(0);
         rootItem = FileTreeUtil.generateTree(rootFolder);
         fileTreeView.setRoot(rootItem);
@@ -106,8 +112,8 @@ public class FileAdminController implements TabController {
         // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
 
-        if(selectedFile == null) setFactoryListDisabled(true);
-        else if(selectedFile instanceof Document) setFactoryListDisabled(false);
+        if (selectedFile == null) setFactoryListDisabled(true);
+        else if (selectedFile instanceof Document) setFactoryListDisabled(false);
     }
 
     // Called after a plant is toggled on or off in plant checklist
@@ -174,12 +180,12 @@ public class FileAdminController implements TabController {
                 update();
             }
 
-        }else if (selectedFile instanceof Document) {
+        } else if (selectedFile instanceof Document) {
             Alert popup = new Alert(Alert.AlertType.INFORMATION, DMSApplication.getMessage("AdminFiles.PopUpUpload.NotADoc"));
             popup.setTitle(DMSApplication.getMessage("AdminFiles.PopUpUpload.AlertTitle"));
             popup.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpUpload.AlertHeader"));
             popup.showAndWait();
-        } else if (selectedFile == null){
+        } else if (selectedFile == null) {
             File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
 
             if (uploadFile != null) {
@@ -207,27 +213,27 @@ public class FileAdminController implements TabController {
 
     public void createFolder() {
         Optional<String> folderName = createFolderPopUP();
-        if (folderName.isPresent()){
+        if (folderName.isPresent()) {
             if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder((Folder) selectedFile, name);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
             }
-            if(selectedFile instanceof Document){
+            if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(FileManager.getInstance().findParent(selectedFile), name);
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
             }
-            if (selectedFile == null){
+            if (selectedFile == null) {
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder((Folder)FileManager.getInstance().getAllContent().get(0), name);
+                Folder fol = FileManager.getInstance().createFolder((Folder) FileManager.getInstance().getAllContent().get(0), name);
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
             }
             update();
         }
     }
 
-    public Optional<String> createFolderPopUP(){
+    public Optional<String> createFolderPopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
@@ -246,12 +252,12 @@ public class FileAdminController implements TabController {
         update();
     }
 
-    public void openFile(){
-        if(selectedFile instanceof Folder){
+    public void openFile() {
+        if (selectedFile instanceof Folder) {
             fileTreeView.getSelectionModel().getSelectedItem().setExpanded(true);
         }
-        if(selectedFile instanceof Document) {
-            Document doc = (Document)selectedFile;
+        if (selectedFile instanceof Document) {
+            Document doc = (Document) selectedFile;
             try {
                 doc.openDocument();
             } catch (IOException e) {
@@ -261,12 +267,12 @@ public class FileAdminController implements TabController {
         }
     }
 
-    public void renameFile(){
+    public void renameFile() {
         Optional<String> optName = renameFilePopUP();
-        if(optName.isPresent()){
+        if (optName.isPresent()) {
             String name = optName.get();
-            if(selectedFile instanceof Document){
-                Document doc = (Document)selectedFile;
+            if (selectedFile instanceof Document) {
+                Document doc = (Document) selectedFile;
                 try {
                     doc.renameFile(name);
                 } catch (InvalidNameException e) {
@@ -274,8 +280,8 @@ public class FileAdminController implements TabController {
                     e.printStackTrace();
                 }
             }
-            if(selectedFile instanceof Folder){
-                Folder fol = (Folder)selectedFile;
+            if (selectedFile instanceof Folder) {
+                Folder fol = (Folder) selectedFile;
                 fol.renameFile(name);
             }
             // Todo tree closes when it updates. - Philip
@@ -283,7 +289,7 @@ public class FileAdminController implements TabController {
         }
     }
 
-    public Optional<String> renameFilePopUP(){
+    public Optional<String> renameFilePopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFile"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFileInfo"));
@@ -294,19 +300,15 @@ public class FileAdminController implements TabController {
 
         return txtInputDia.showAndWait();
     }
-    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-        fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                AbstractFile file = newValue.getValue();
 
-                if (file instanceof Document) {
-                    try {
-                        ((Document) file).openDocument();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+    public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+        AbstractFile file = newValue.getValue();
+        if (file instanceof Document) {
+            try {
+                ((Document) file).openDocument();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 }

@@ -18,6 +18,7 @@
     -fx-background-color: transparent;
     -fx-alignment: center;
     -fx-max-height: 640;
+    -fx-min-height: 640;
     -fx-min-width: 210px;
     -fx-max-width: 210px;
     -fx-pref-width: 210px;

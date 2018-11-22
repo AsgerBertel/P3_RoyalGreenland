@@ -1,12 +1,17 @@
 package directory.files;
 
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeView;
+import javafx.util.Callback;
+
 import javax.naming.InvalidNameException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public abstract class AbstractFile {
+public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, TreeCell<AbstractFile>> , Serializable {
 
     private String path;
 
@@ -53,5 +58,10 @@ public abstract class AbstractFile {
     @Override
     public int hashCode() {
         return Objects.hash(path);
+    }
+
+    @Override
+    public TreeCell<AbstractFile> call(TreeView<AbstractFile> param) {
+        return null;
     }
 }
