@@ -1,6 +1,7 @@
 package gui.file_administration;
 
 import directory.FileManager;
+import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -11,13 +12,14 @@ import gui.FileTreeUtil;
 import gui.PlantCheckboxElement;
 
 import gui.TabController;
+import gui.log.LogEvent;
+import gui.log.LoggingTools;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -25,14 +27,14 @@ import java.io.IOException;
 import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class FileAdminController implements TabController {
 
-    public ListView changesListView;
+    public ListView<LogEvent> changesListView;
     public Button saveChangesButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
@@ -70,7 +72,7 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
         // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
         // todo - It always reloads. - Philip
-//        if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
+//      if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
         reloadFileTree();
         fileTreeView.getRoot().setExpanded(true);
 
@@ -303,6 +305,7 @@ public class FileAdminController implements TabController {
 
         return txtInputDia.showAndWait();
     }
+
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -320,10 +323,14 @@ public class FileAdminController implements TabController {
     }
 
     
-    public void onChangeMade(){
+    public void onChangesMade(LogEvent logEvent){
+
 
     }
 
+    public void onPublishChanges(){
+
+    }
 
 
 }

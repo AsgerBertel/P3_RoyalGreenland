@@ -4,11 +4,11 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.AppFilesManager;
 
-import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -148,7 +148,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
-            LoggingTools.LogEvent(file.getName(), LogEventType.CREATED);
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -203,7 +203,7 @@ public class FileManager {
             Files.move(Paths.get(Settings.getServerDocumentsPath()+ file.getPath()), archivePath);
             insertFile(file, mainFilesRoot, archiveRoot);
             Optional<Folder> parent = findParent(file, mainFilesRoot.getContents());
-            LoggingTools.LogEvent(file.getName(), LogEventType.ARCHIVED);
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
 
             if(parent.isPresent())
                 parent.get().getContents().remove(file);

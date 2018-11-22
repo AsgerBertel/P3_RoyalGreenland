@@ -2,8 +2,7 @@ package directory.files;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
 import directory.FileManager;
-import gui.DMSApplication;
-import gui.log.LogController;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.AppFilesManager;
@@ -105,11 +104,8 @@ public class Document extends AbstractFile {
             throw new InvalidNameException();
 
         LoggingTools lt = new LoggingTools();
-        LoggingTools.LogEvent(getName(), LogEventType.RENAMED);
+        LoggingTools.log(new LogEvent(getName(), LogEventType.RENAMED));
         AppFilesManager.save(FileManager.getInstance());
     }
 
-    public void tester(){
-        System.out.println(getPath());
-    }
 }

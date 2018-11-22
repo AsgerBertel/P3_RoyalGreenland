@@ -14,16 +14,16 @@ import java.util.*;
 
 public class LogController implements TabController {
     @FXML
-    private TableView<rgEvent> tableView;
+    private TableView<LogEvent> tableView;
 
     @FXML
-    private TableColumn<rgEvent, String> event;
+    private TableColumn<LogEvent, String> event;
 
     @FXML
-    private TableColumn<rgEvent, String> user;
+    private TableColumn<LogEvent, String> user;
 
     @FXML
-    private TableColumn<rgEvent, String> time;
+    private TableColumn<LogEvent, String> time;
 
     @FXML
     private ImageView searchImage;
@@ -32,7 +32,7 @@ public class LogController implements TabController {
     private TextField searchField;
 
     LoggingTools lt = new LoggingTools();
-    private List<rgEvent> listOfEvents;
+    private List<LogEvent> listOfEvents;
     private boolean sortedByTime = false;
     private boolean sortedByUser = false;
     private boolean sortedByFile = false;
@@ -48,9 +48,9 @@ public class LogController implements TabController {
     @Override
     public void update() {
         tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-        event.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Event"));
-        user.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("User"));
-        time.setCellValueFactory(new PropertyValueFactory<rgEvent, String>("Time"));
+        event.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Event"));
+        user.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("User"));
+        time.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Time"));
         listOfEvents = lt.getAllEvents();
         tableView.getItems().setAll(listOfEvents);
         sortedByTime = false;
@@ -63,8 +63,8 @@ public class LogController implements TabController {
     }
 
     private void search(String search) {
-        List<rgEvent> foundEvents = new ArrayList<>();
-        for( rgEvent e : listOfEvents){
+        List<LogEvent> foundEvents = new ArrayList<>();
+        for( LogEvent e : listOfEvents){
             if(e.getFileName().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search)){
                 foundEvents.add(e);
             }
@@ -73,18 +73,18 @@ public class LogController implements TabController {
     }
 
     public void sortByUser(){
-        List<rgEvent> sortedList = listOfEvents;
-        Collections.sort(sortedList, Comparator.comparing(rgEvent::getUser));
+        List<LogEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(LogEvent::getUser));
         tableView.getItems().setAll(sortedList);
     }
     public void sortByChangeType(){
-        List<rgEvent> sortedList = listOfEvents;
-        Collections.sort(sortedList, Comparator.comparing(rgEvent::getEventType));
+        List<LogEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(LogEvent::getEventType));
         tableView.getItems().setAll(sortedList);
     }
     public void sortByTime(){
-        List<rgEvent> sortedList = listOfEvents;
-        Collections.sort(sortedList, Comparator.comparing(rgEvent::getLocalDateTime));
+        List<LogEvent> sortedList = listOfEvents;
+        Collections.sort(sortedList, Comparator.comparing(LogEvent::getLocalDateTime));
 
         if(sortedByTime){
             searchImage.setImage(timeNew);
