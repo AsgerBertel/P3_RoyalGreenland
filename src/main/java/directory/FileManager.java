@@ -54,7 +54,7 @@ public class FileManager {
         return archive;
     }
 
-    public void uploadFile(Path src, Folder dstFolder) throws IOException {
+    public void uploadFile(Path src, Folder dstFolder){
         File file = new File(src.toString());
 
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
@@ -98,12 +98,15 @@ public class FileManager {
 
         String fileName = file.getName();
 
-        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
-
+        Path pathWithName = Paths.get(Paths.get
+                (PreferencesManager.getInstance().getServerArchivePath())
+                + File.separator + fileName);
 
         if (Files.exists(pathWithName)){
-            fileName = addVersionNumber(file);
-            pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+            fileName = setVersionNumber(file);
+            pathWithName = Paths.get(Paths.get
+                    (PreferencesManager.getInstance().getServerArchivePath())
+                    + File.separator + fileName);
 
             if (file instanceof Folder){
                 ((Folder) file).renameFile(fileName);
@@ -116,7 +119,6 @@ public class FileManager {
                 }
             }
         }
-
 
         try {
             Files.move(file.getPath(), pathWithName);
@@ -132,7 +134,7 @@ public class FileManager {
         }
     }
 
-    public String addVersionNumber(AbstractFile file){
+    private String setVersionNumber(AbstractFile file){
         int versionNumber;
         String name1;
         String name2;
@@ -172,6 +174,22 @@ public class FileManager {
     public void restoreFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
+        if (Files.exists(file.getPath())){
+            String fileName = setVersionNumber(file);
+            System.out.println(file.getPath().toString());
+            System.out.println("exists");
+            if (file instanceof Folder){
+                ((Folder) file).renameFile(fileName);
+            } else if (file instanceof Document){
+                try {
+                    ((Document) file).renameFile(fileName);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                    System.out.println("invalid name");
+                }
+            }
+
+        }
         Files.move(pathWithName, Paths.get(PreferencesManager.getInstance().getServerDocumentsPath() + File.separator + file.getName()));
 
         Folder archiveFolder = (Folder)getInstance().archive.get(0);
