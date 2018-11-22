@@ -148,7 +148,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
-            LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.Created));
             return doc;
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");

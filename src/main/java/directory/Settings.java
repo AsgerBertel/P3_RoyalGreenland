@@ -41,21 +41,24 @@ public class Settings {
     private static String serverPath;
     private static String localPath;
 
-    public static void loadSettings(){
+    public static void loadSettings() {
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
-        // Prompt the user for paths if any are missing
-        if(serverPath.equals(DEFAULT_NULL_VALUE))
-            initializeSettingsPrompt();
-        else if(DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
-            initializeSettingsPrompt();
+        username = preferences.get(USERNAME_PREF, getComputerName());
 
         String languageString = preferences.get(LANGUAGE_PREF, DEFAULT_NULL_VALUE);
         if (languageString.equals(DMSApplication.DK_LOCALE))
             language = DMSApplication.DK_LOCALE;
         else if (languageString.equals(DMSApplication.GL_LOCALE))
             language = DMSApplication.GL_LOCALE;
+
+
+        // Prompt the user for paths if any are missing
+        if (serverPath.equals(DEFAULT_NULL_VALUE))
+            initializeSettingsPrompt();
+        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
+            initializeSettingsPrompt();
     }
 
     // Prompt the user for the path to both server and local storage
@@ -83,7 +86,7 @@ public class Settings {
         return language;
     }
 
-    public static void setLanguage(Locale newLanguage){
+    public static void setLanguage(Locale newLanguage) {
         language = newLanguage;
         preferences.put(LANGUAGE_PREF, newLanguage.getLanguage());
     }
@@ -130,19 +133,19 @@ public class Settings {
     }
 
     // Replaces backslashes with forward slashes
-    public static String getUniversalPath(String path){
+    public static String getUniversalPath(String path) {
 
-        return path.replace("\\", "/").replace("//","/");
+        return path.replace("\\", "/").replace("//", "/");
     }
 
     // Adds the application folder name to the path if it's not already in there
-    private static String completeApplicationPath(String path){
+    private static String completeApplicationPath(String path) {
         String completedPath = path;
-        if(completedPath.charAt(path.length() - 1) != '/')
+        if (completedPath.charAt(path.length() - 1) != '/')
             completedPath += '/';
 
         // Append the application folder if it is not included in the given path
-        if(!completedPath.contains(APPLICATION_FOLDER_NAME))
+        if (!completedPath.contains(APPLICATION_FOLDER_NAME))
             completedPath += APPLICATION_FOLDER_NAME;
 
         return completedPath;
@@ -163,16 +166,18 @@ public class Settings {
     public static String getServerPath() {
         return serverPath;
     }
+
     public static String getLocalPath() {
         return localPath;
     }
+
     public static String toString2() {
-        return  "server path:           "+getServerPath()+System.getProperty("line.separator")+
-                "server documents path: "+getServerDocumentsPath()+System.getProperty("line.separator")+
-                "server app files path  "+getServerAppFilesPath()+System.getProperty("line.separator")+
-                "server archive path    "+getServerArchivePath()+System.getProperty("line.separator")+
-                "local path:            "+getLocalFilesPath()+System.getProperty("line.separator")+
-                "local documents path:  "+getLocalFilesPath()+System.getProperty("line.separator")+
-                "local app files path:  "+System.getProperty("line.separator");
+        return "server path:           " + getServerPath() + System.getProperty("line.separator") +
+                "server documents path: " + getServerDocumentsPath() + System.getProperty("line.separator") +
+                "server app files path  " + getServerAppFilesPath() + System.getProperty("line.separator") +
+                "server archive path    " + getServerArchivePath() + System.getProperty("line.separator") +
+                "local path:            " + getLocalFilesPath() + System.getProperty("line.separator") +
+                "local documents path:  " + getLocalFilesPath() + System.getProperty("line.separator") +
+                "local app files path:  " + System.getProperty("line.separator");
     }
 }

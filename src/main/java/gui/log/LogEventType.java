@@ -1,5 +1,19 @@
 package gui.log;
 
+import gui.DMSApplication;
+
 public enum LogEventType {
-    CREATED,ARCHIVED,CHANGED,RENAMED, FOLDER_RENAMED
+    Created("Created"),ARCHIVED("Archived"),CHANGED("Changed"),RENAMED("Renamed"), FOLDER_RENAMED("FolderRenamed");
+
+    String messageKey;
+
+    LogEventType(String messageKey){
+        this.messageKey = messageKey;
+    }
+
+    public String getLocalizedString(){
+        return DMSApplication.getMessage("Log." + messageKey);
+    }
+
+
 }

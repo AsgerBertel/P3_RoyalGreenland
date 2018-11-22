@@ -42,15 +42,16 @@ public class LogController implements TabController {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         searchImage.setImage(timeOld);
-        update();
     }
 
     @Override
     public void update() {
         tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-        event.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Event"));
-        user.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("User"));
-        time.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Time"));
+
+        event.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("EventString")); // Calls getEventString() in the LogEvent
+        user.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("User")); // Calls getUser() in the LogEvent
+        time.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Time")); // Calls getEventString() in the LogEvent
+        
         listOfEvents = lt.getAllEvents();
         tableView.getItems().setAll(listOfEvents);
         sortedByTime = false;

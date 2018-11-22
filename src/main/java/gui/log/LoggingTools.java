@@ -4,6 +4,7 @@ import directory.Settings;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,8 +14,10 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+
     public static void log(LogEvent event){
-        List<String> listOfEvents = event.toStringArray();
+        List<String> listOfEvents = toStringArray(event);
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log", true)))) {
             pw.println(listOfEvents.get(0) + "|" + listOfEvents.get(1) + "|" + listOfEvents.get(2));
@@ -24,17 +27,45 @@ public class LoggingTools {
         }
     }
 
+    private static List<String> toStringArray(LogEvent event) {
+        // Date
+        String eventDate = event.getLocalDateTime().format(formatter);
+
+        // FILENAME blev EVENT
+        String eventData = event.getFileName() + "|" + event.getEventType().toString();
+
+        //USER
+        String eventUser = event.getUser();
+
+        List<String> listOfEvents = new ArrayList<>();
+        listOfEvents.add(eventDate);
+        listOfEvents.add(eventData);
+        listOfEvents.add(eventUser);
+
+        return listOfEvents;
+    }
+
     private LogEvent parseEvent(String eventLine) {
         //split string
+
         String[] substrings = eventLine.split("[|]");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d-H:m");
+        System.out.println("attempting to parse : " + substrings[0]);
+
         LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], formatter);
-        return new LogEvent(substrings[1], substrings[3], localDateTime, LogEvent.stringToLogEventType(substrings[2]));
+        return new LogEvent(substrings[1], substrings[3], localDateTime, LogEventType.valueOf(substrings[2]));
     }
+
 
     public List<LogEvent> getAllEvents() {
         List<LogEvent> listOfEvents = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(Settings.getServerAppFilesPath() + "logs.log"))) {
+
+        Path logFile = Paths.get(Settings.getServerAppFilesPath() + "logs.log");
+
+        // Return empty list if no log can be loaded from the server
+        if(!Files.exists(logFile))
+            return listOfEvents;
+
+        try (Stream<String> stream = Files.lines(logFile)) {
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         } catch (IOException e) {
             e.printStackTrace();
