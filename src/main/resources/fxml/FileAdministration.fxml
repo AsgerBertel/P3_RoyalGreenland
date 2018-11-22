@@ -69,9 +69,9 @@
     <VBox id="changesVBox" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
         <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
         <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
+        <Text text="%AdminFiles.LastUpdated" fx:id="lastUpdatedText" styleClass="smallNote" translateY="3"/>
         <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
-
-        <ListView fx:id="changesListView" styleClass="logList"/>
+        <VBox fx:id="changesVBox"/>
         <Button fx:id="saveChangesButton" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>

@@ -12,3 +12,23 @@
 .logList {
     -fx-background-color: transparent;
 }
+
+.changesVBox{
+    -fx-alignment: center;
+    -fx-padding: 0 0 20 0;
+}
+
+.changeText{
+    -fx-text-alignment: center;
+    -fx-translate-y: 8px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-fill: #6f777e;
+
+}
+
+.changesSplitter {
+    -fx-pref-height: 1;
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-background-color: #dbe7e7;
+}

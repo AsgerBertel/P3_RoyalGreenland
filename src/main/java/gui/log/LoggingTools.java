@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
@@ -29,7 +29,7 @@ public class LoggingTools {
 
     private static List<String> toStringArray(LogEvent event) {
         // Date
-        String eventDate = event.getLocalDateTime().format(formatter);
+        String eventDate = event.getLocalDateTime().format(FORMATTER);
 
         // FILENAME blev EVENT
         String eventData = event.getSubject() + "|" + event.getEventType().toString();
@@ -50,7 +50,7 @@ public class LoggingTools {
 
         String[] substrings = eventLine.split("[|]");
 
-        LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], formatter);
+        LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], FORMATTER);
         return new LogEvent(substrings[1], substrings[3], localDateTime, LogEventType.valueOf(substrings[2]));
     }
 
@@ -85,6 +85,22 @@ public class LoggingTools {
 
         return eventsSinceLastPublish;
     }
+
+    // Returns all changes that has been made since last push
+    public static String getLastPublished() {
+        List<LogEvent> allEvents = getAllEvents();
+
+        // Find latest publish
+        for (int i = allEvents.size() - 1; i > 0; i--) {
+            if (allEvents.get(i).getEventType().equals(LogEventType.CHANGES_PUBLISHED)){
+                return allEvents.get(i).getTime();
+            }
+        }
+
+        return "--";
+    }
+
+
 
 
 }

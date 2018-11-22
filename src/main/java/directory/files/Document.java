@@ -13,9 +13,14 @@ import java.io.File;
 import java.io.IOException;
 
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Document extends AbstractFile {
     private int ID;
+    private String lastModified;
+
+    private transient final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     /**
      * Used DocumentBuilder to create a document so that it gets the correct ID.
@@ -25,7 +30,9 @@ public class Document extends AbstractFile {
     Document(String path, int ID) {
         super(path);
         this.ID = ID;
+        this.lastModified = DATE_TIME_FORMATTER.format(LocalDateTime.now());
     }
+
     public Document(Document document) {
         super(document.getPath().toString());
         this.ID = document.getID();
@@ -51,7 +58,6 @@ public class Document extends AbstractFile {
 
         if(temp == null) // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
-
     }
 
     // Opens the document in a window
@@ -75,6 +81,10 @@ public class Document extends AbstractFile {
         LoggingTools lt = new LoggingTools();
         LoggingTools.log(new LogEvent(getName(), LogEventType.RENAMED));
         AppFilesManager.save(FileManager.getInstance());
+    }
+
+    public void setLastModified(LocalDateTime localDateTime){
+        this.lastModified = DATE_TIME_FORMATTER.format(localDateTime);
     }
 
 }

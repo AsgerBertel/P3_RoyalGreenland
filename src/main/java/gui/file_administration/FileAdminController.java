@@ -33,6 +33,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -41,8 +42,10 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class FileAdminController implements TabController {
 
-    public ListView<LogEvent> changesListView;
+    @FXML
     public Button saveChangesButton;
+    public VBox changesVBox;
+    public Text lastUpdatedText;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     private ArrayList<Plant> plants = new ArrayList<>();
@@ -72,10 +75,8 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
-        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        fileTreeView.setOnMouseClicked(event -> {if(event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());});
 
-        // todo move bulk of method elsewhere?
-        changesListView.setCellFactory(param -> createLogEventListCell());
         try {
             watchService = FileSystems.getDefault().newWatchService();
         } catch (IOException e) {
@@ -349,8 +350,11 @@ public class FileAdminController implements TabController {
 
     /* ---- Changelist ---- */
     private synchronized void updateChangesList() {
-        changesListView.getItems().clear();
-        changesListView.getItems().addAll(LoggingTools.getAllUnpublishedEvents());
+        changesVBox.getChildren().clear();
+        for(LogEvent logEvent : LoggingTools.getAllUnpublishedEvents()){
+            changesVBox.getChildren().add(new ChangeBox(logEvent));
+        }
+        lastUpdatedText.setText(LoggingTools.getLastPublished());
     }
 
     public void onPublishChanges() {
@@ -424,6 +428,7 @@ public class FileAdminController implements TabController {
                     Optional<AbstractFile> changedFile = fileManager.findInMainFiles(path);
 
                     if (changedFile.isPresent() && changedFile.get() instanceof Document){
+                        ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
                             LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
                             updateChangesList();
