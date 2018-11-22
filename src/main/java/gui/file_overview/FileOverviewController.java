@@ -14,12 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -129,7 +132,7 @@ public class FileOverviewController implements TabController {
         } else {
 
             try {
-                ((Document) fileButton.getFile()).openDocument();
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -186,7 +189,7 @@ public class FileOverviewController implements TabController {
 
                 if (file instanceof Document) {
                     try {
-                        ((Document) file).openDocument();
+                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getPath()).toFile());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

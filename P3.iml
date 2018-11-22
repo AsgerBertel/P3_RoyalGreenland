@@ -12,7 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/tests/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/tests/resTest" type="java-test-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="10" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>

@@ -13,24 +13,31 @@ import gui.PlantCheckboxElement;
 
 import gui.TabController;
 import gui.log.LogEvent;
+import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class FileAdminController implements TabController {
 
@@ -44,18 +51,20 @@ public class FileAdminController implements TabController {
 
     @FXML
     public Text plantListTitle;
-
     @FXML
     private VBox plantVBox;
-
     @FXML
     private TreeView<AbstractFile> fileTreeView;
-
     @FXML
     private Text plantCountText;
 
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
+
+    // Watcher used for monitoring files and checking for changes
+    private WatchService watchService;
+    private ArrayList<WatchKey> watchKeys = new ArrayList<>();
+    private Thread watchThread;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,6 +73,16 @@ public class FileAdminController implements TabController {
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setShowRoot(false);
         fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+
+        // todo move bulk of method elsewhere?
+        changesListView.setCellFactory(param -> createLogEventListCell());
+        try {
+            watchService = FileSystems.getDefault().newWatchService();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // todo look into (javadocs) why this might throw a ClosedFileSystem exception and handle appropriately
+        }
+
     }
 
     @Override
@@ -78,9 +97,14 @@ public class FileAdminController implements TabController {
 
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         reloadPlantList();
+
+        updateChangesList();
+
+        updateFileWatcher();
     }
 
-    private void reloadFileTree(){
+
+    private void reloadFileTree() {
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
         setFactoryListDisabled(true);
@@ -106,8 +130,8 @@ public class FileAdminController implements TabController {
         // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
 
-        if(selectedFile == null) setFactoryListDisabled(true);
-        else if(selectedFile instanceof Document) setFactoryListDisabled(false);
+        if (selectedFile == null) setFactoryListDisabled(true);
+        else if (selectedFile instanceof Document) setFactoryListDisabled(false);
     }
 
     // Called after a plant is toggled on or off in plant checklist
@@ -163,9 +187,9 @@ public class FileAdminController implements TabController {
         FileManager fileManager = FileManager.getInstance();
 
         File chosenFile = chooseFilePrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
-        if(chosenFile == null){
+        if (chosenFile == null) {
             return;
-        }else if(chosenFile.isDirectory()){
+        } else if (chosenFile.isDirectory()) {
             // todo Show prompt telling user that they cannot upload directories
             return;
         }
@@ -175,24 +199,28 @@ public class FileAdminController implements TabController {
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
             fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             fileManager.save();
-        }else if (selectedFile instanceof Document) {
+        } else if (selectedFile instanceof Document) {
             // Upload as sibling to selected document
             Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFiles());
-            if(parent.isPresent()){
+            if (parent.isPresent()) {
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
-            }else{
+            } else {
                 // Upload to root
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             }
-        } else if (selectedFile == null){
+
+        } else if (selectedFile == null) {
             // Upload to root
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
             fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
         }
 
         fileManager.save();
+        update();
+
+
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
     }
@@ -209,21 +237,21 @@ public class FileAdminController implements TabController {
     public void createFolder() {
         FileManager fileManager = FileManager.getInstance();
         Optional<String> folderName = createFolderPopUP();
-        if (folderName.isPresent()){
-            if (selectedFile == null){
+        if (folderName.isPresent()) {
+            if (selectedFile == null) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name);
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
-            }else if (selectedFile instanceof Folder) {
+            } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
-            }else if(selectedFile instanceof Document){
+            } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
 
                 Folder fol;
-                if(parent.isPresent())
+                if (parent.isPresent())
                     fol = fileManager.createFolder(name, parent.get());
                 else
                     fol = fileManager.createFolder(name);
@@ -236,7 +264,7 @@ public class FileAdminController implements TabController {
         FileManager.getInstance().save();
     }
 
-    public Optional<String> createFolderPopUP(){
+    public Optional<String> createFolderPopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
@@ -252,18 +280,18 @@ public class FileAdminController implements TabController {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         FileManager.getInstance().deleteFile(selectedItem.getValue());
         selectedItem.getParent().getChildren().remove(selectedItem);
-        update();
         FileManager.getInstance().save();
+        update();
     }
 
-    public void openFile(){
-        if(selectedFile instanceof Folder){
+    public void openFile() {
+        if (selectedFile instanceof Folder) {
             fileTreeView.getSelectionModel().getSelectedItem().setExpanded(true);
         }
-        if(selectedFile instanceof Document) {
-            Document doc = (Document)selectedFile;
+        if (selectedFile instanceof Document) {
+            Document doc = (Document) selectedFile;
             try {
-                doc.openDocument();
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getPath()).toFile());
             } catch (IOException e) {
                 System.out.println("Could not open file");
                 e.printStackTrace();
@@ -271,12 +299,12 @@ public class FileAdminController implements TabController {
         }
     }
 
-    public void renameFile(){
+    public void renameFile() {
         Optional<String> optName = renameFilePopUP();
-        if(optName.isPresent()){
+        if (optName.isPresent()) {
             String name = optName.get();
-            if(selectedFile instanceof Document){
-                Document doc = (Document)selectedFile;
+            if (selectedFile instanceof Document) {
+                Document doc = (Document) selectedFile;
                 try {
                     doc.renameFile(name);
                 } catch (InvalidNameException e) {
@@ -284,8 +312,8 @@ public class FileAdminController implements TabController {
                     e.printStackTrace();
                 }
             }
-            if(selectedFile instanceof Folder){
-                Folder fol = (Folder)selectedFile;
+            if (selectedFile instanceof Folder) {
+                Folder fol = (Folder) selectedFile;
                 fol.renameFile(name);
             }
             // Todo tree closes when it updates. - Philip
@@ -294,7 +322,7 @@ public class FileAdminController implements TabController {
         FileManager.getInstance().save();
     }
 
-    public Optional<String> renameFilePopUP(){
+    public Optional<String> renameFilePopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFile"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpRename.RenameFileInfo"));
@@ -307,30 +335,108 @@ public class FileAdminController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-        fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                AbstractFile file = newValue.getValue();
+        AbstractFile file = newValue.getValue();
 
-                if (file instanceof Document) {
-                    try {
-                        ((Document) file).openDocument();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (file instanceof Document) {
+            try {
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getPath()).toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /* ---- Changelist ---- */
+    private synchronized void updateChangesList() {
+        changesListView.getItems().clear();
+        changesListView.getItems().addAll(LoggingTools.getAllUnpublishedEvents());
+    }
+
+    public void onPublishChanges() {
+        LoggingTools.log(new LogEvent(LoggingTools.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
+        update();
+    }
+
+    private synchronized ListCell<LogEvent> createLogEventListCell() {
+        return new ListCell<LogEvent>() {
+            @Override
+            protected void updateItem(LogEvent item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getEventString());
                 }
             }
-        });
+        };
     }
 
-    
-    public void onChangesMade(LogEvent logEvent){
+    // Recursively applies a watcher to every directory within the file tree root
+    private void updateFileWatcher() {
+        Path root = Paths.get(Settings.getServerDocumentsPath());
 
+        // Remove current watch keys
+        for(WatchKey key : watchKeys){
+            key.cancel();
+        }
 
+        try {
+            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    watchKeys.add(dir.register(watchService, ENTRY_MODIFY));
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            // todo - Handle exception. sorry. - Magnus
+        }
+
+        if(watchThread == null || !watchThread.isAlive())
+            startWatchThread();
     }
 
-    public void onPublishChanges(){
-
+    private void startWatchThread() {
+        Thread watchThread = new Thread(this::run);
+        watchThread.setDaemon(true);
+        watchThread.start();
     }
 
+
+    private void run() {
+        WatchKey key;
+        FileManager fileManager = FileManager.getInstance();
+        try {
+            while (null != (key = watchService.take())) {
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    WatchEvent<Path> we = (WatchEvent<Path>) event;
+                    Path path = ((Path) key.watchable());
+                    Path fileName = we.context();
+                    path = path.resolve(fileName);
+
+                    // Don't register changes to temporary word files
+                    if(fileName.toString().charAt(0) == '~' || !Files.exists(path))
+                        continue;
+
+                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(path);
+
+                    if (changedFile.isPresent() && changedFile.get() instanceof Document){
+                        Platform.runLater(() -> {
+                            LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
+                            updateChangesList();
+                        });
+                    }
+
+                }
+                Thread.sleep(100);
+                key.reset();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

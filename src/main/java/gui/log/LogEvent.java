@@ -4,31 +4,28 @@ import directory.Settings;
 import gui.DMSApplication;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LogEvent {
-   private String fileName,user;
+   private String subject,user;
    private LocalDateTime localDateTime;
    private LogEventType eventType;
 
-    public LogEvent(String fileName, String user, LocalDateTime localDateTime, LogEventType eventType) {
-        this.fileName = fileName;
+    public LogEvent(String subject, String user, LocalDateTime localDateTime, LogEventType eventType) {
+        this.subject = subject;
         this.user = user;
         this.localDateTime = localDateTime;
         this.eventType = eventType;
     }
 
-    public LogEvent(String fileName, LogEventType type){
+    public LogEvent(String subject, LogEventType type){
         this.user = Settings.getUsername();
         this.localDateTime = LocalDateTime.now();
-        this.fileName = fileName;
+        this.subject = subject;
         this.eventType = type;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getSubject() {
+        return subject;
     }
 
     public String getUser() {
@@ -48,7 +45,7 @@ public class LogEvent {
     @SuppressWarnings("unused")
     public String getEventString(){
         LoggingTools lt = new LoggingTools();
-        return getFileName() + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString();
+        return getSubject() + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString();
     }
 
     // Used in cell factory inside LogController

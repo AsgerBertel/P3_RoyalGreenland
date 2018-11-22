@@ -16,7 +16,7 @@ public class LoggingTools {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
-    public static void log(LogEvent event){
+    public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log", true)))) {
@@ -32,7 +32,7 @@ public class LoggingTools {
         String eventDate = event.getLocalDateTime().format(formatter);
 
         // FILENAME blev EVENT
-        String eventData = event.getFileName() + "|" + event.getEventType().toString();
+        String eventData = event.getSubject() + "|" + event.getEventType().toString();
 
         //USER
         String eventUser = event.getUser();
@@ -45,24 +45,23 @@ public class LoggingTools {
         return listOfEvents;
     }
 
-    private LogEvent parseEvent(String eventLine) {
+    private static LogEvent parseEvent(String eventLine) {
         //split string
 
         String[] substrings = eventLine.split("[|]");
-        System.out.println("attempting to parse : " + substrings[0]);
 
         LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], formatter);
         return new LogEvent(substrings[1], substrings[3], localDateTime, LogEventType.valueOf(substrings[2]));
     }
 
 
-    public List<LogEvent> getAllEvents() {
+    public static List<LogEvent> getAllEvents() {
         List<LogEvent> listOfEvents = new ArrayList<>();
 
         Path logFile = Paths.get(Settings.getServerAppFilesPath() + "logs.log");
 
         // Return empty list if no log can be loaded from the server
-        if(!Files.exists(logFile))
+        if (!Files.exists(logFile))
             return listOfEvents;
 
         try (Stream<String> stream = Files.lines(logFile)) {
@@ -72,5 +71,20 @@ public class LoggingTools {
         }
         return listOfEvents;
     }
+
+    // Returns all changes that has been made since last push
+    public static List<LogEvent> getAllUnpublishedEvents() {
+        List<LogEvent> allEvents = getAllEvents();
+        ArrayList<LogEvent> eventsSinceLastPublish = new ArrayList<>();
+
+        // Add events until a push is encountered
+        for (int i = allEvents.size() - 1; i > 0; i--) {
+            if (allEvents.get(i).getEventType().equals(LogEventType.CHANGES_PUBLISHED)) break;
+            eventsSinceLastPublish.add(allEvents.get(i));
+        }
+
+        return eventsSinceLastPublish;
+    }
+
 
 }

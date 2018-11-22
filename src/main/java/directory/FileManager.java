@@ -10,6 +10,7 @@ import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.*;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -357,5 +358,26 @@ public class FileManager {
     // Saves the current instance to the json file
     public void save() {
         AppFilesManager.save(this);
+    }
+
+    // Looks for a File with a path corresponding to the given path
+    public Optional<AbstractFile> findInMainFiles(Path fullPath){
+        Path basePath = Paths.get(Settings.getServerDocumentsPath());
+        Path relativePath = basePath.relativize(fullPath);
+        return findFile(relativePath, getMainFiles());
+    }
+
+    private Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea){
+        for(AbstractFile abstractFile : searchArea){
+            Path filePath = abstractFile.getPath();
+            if(fileRelativePath.startsWith(filePath)){
+                if(fileRelativePath.equals(filePath)){
+                    return Optional.of(abstractFile);
+                }else if(abstractFile instanceof Folder){
+                    return findFile(fileRelativePath, ((Folder) abstractFile).getContents());
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

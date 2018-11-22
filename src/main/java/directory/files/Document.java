@@ -60,37 +60,6 @@ public class Document extends AbstractFile {
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
 
         Path dirPath = getParentPath();
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try(WatchService watchService = FileSystems.getDefault().newWatchService()){
-                    dirPath.register(watchService, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY}, SensitivityWatchEventModifier.HIGH);
-
-                    WatchKey key;
-
-                    key = watchService.take();
-
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        System.out.println(
-                                "Event kind:" + event.kind()
-                                        + ". File affected: " + event.context() + ".");
-                    }
-
-                    boolean valid = key.reset();
-                    if (!valid) {
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    System.out.println("Interrupt");
-                }
-            }
-        });
-
-        thread.start();
     }
 
     @Override

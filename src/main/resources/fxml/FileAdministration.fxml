@@ -72,7 +72,7 @@
         <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
 
         <ListView fx:id="changesListView" styleClass="logList"/>
-        <Button fx:id="saveChangesButton" text="%AdminFiles.PublishChanges" styleClass="darkButton"/>
+        <Button fx:id="saveChangesButton" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>
 
