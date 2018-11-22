@@ -115,9 +115,6 @@ public class FileManager {
                     System.out.println("invalid name");
                 }
             }
-
-            System.out.println(file.getPath().toString());
-            System.out.println(fileName);
         }
 
 
@@ -136,42 +133,39 @@ public class FileManager {
     }
 
     public String addVersionNumber(AbstractFile file){
-        char c = file.getName().charAt(file.getName().lastIndexOf(".") - 1);
         int versionNumber;
+        String name1;
+        String name2;
+        String fileName = file.getName();
+        char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
 
         if (c == ')'){
-            String str = file.getName().substring(file.getName().lastIndexOf("(") + 1,
-                    file.getName().lastIndexOf(")"));
-            System.out.println(str);
+            String str = fileName.substring(fileName.lastIndexOf("(") + 1,
+                    fileName.lastIndexOf(")"));
 
             versionNumber = Integer.parseInt(str);
             versionNumber++;
+
+            name1 = fileName.substring(
+                    0,fileName.lastIndexOf("("));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf(")") + 1,
+                    fileName.length());
         } else {
             versionNumber = 1;
+
+            name1 = fileName.substring(
+                    0, fileName.lastIndexOf("."));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf("."),
+                    fileName.length());
         }
 
-        String name1 = file.getName().substring(
-                0,file.getName().lastIndexOf("("));
+        String newFileName = name1 + "(" + versionNumber + ")" + name2;
 
-        String name2 = file.getName().substring(
-                file.getName().lastIndexOf(")") + 1,
-                file.getName().length());
-
-        System.out.println(name1);
-        System.out.println(name2);
-
-        String fileName = name1 + "(" + versionNumber + ")" + name2;
-
-        System.out.println(fileName);
-
-        /*Path path = Paths.get(file.getPath().toString().substring(
-                file.getPath().toString().lastIndexOf("(") + 1,
-                file.getPath().toString().lastIndexOf(")")));*/
-
-
-
-
-        return fileName;
+        return newFileName;
     }
 
     //todo restore to original path not root folder
