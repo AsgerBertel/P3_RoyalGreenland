@@ -8,6 +8,7 @@ import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.JsonParser;
 
+import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,7 +27,6 @@ public class FileManager {
     private ArrayList<AbstractFile> archive = new ArrayList<>();
 
     private static FileManager fileManager;
-    private PreferencesManager preferencesManager;
 
     // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager(){}
@@ -34,7 +34,6 @@ public class FileManager {
     public static synchronized FileManager getInstance() {
         if (fileManager == null) {
             fileManager = readFileManagerFromJson();
-            fileManager.preferencesManager = PreferencesManager.getInstance();
         }
         return fileManager;
     }
@@ -68,7 +67,7 @@ public class FileManager {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
-            updateJsonFiles();
+            getInstance().updateJsonFiles();
             loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
@@ -96,7 +95,29 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) {
-        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
+
+        String fileName = file.getName();
+
+        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+
+
+        if (Files.exists(pathWithName)){
+            fileName = addVersionNumber(file);
+            pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+
+            if (file instanceof Folder){
+                ((Folder) file).renameFile(fileName);
+            } else if (file instanceof Document){
+                try {
+                    ((Document) file).renameFile(fileName);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                    System.out.println("invalid name");
+                }
+            }
+        }
+
+
         try {
             Files.move(file.getPath(), pathWithName);
             Folder parent = findParent(file);
@@ -111,6 +132,42 @@ public class FileManager {
         }
     }
 
+    public String addVersionNumber(AbstractFile file){
+        int versionNumber;
+        String name1;
+        String name2;
+        String fileName = file.getName();
+        char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
+
+        if (c == ')'){
+            String str = fileName.substring(fileName.lastIndexOf("(") + 1,
+                    fileName.lastIndexOf(")"));
+
+            versionNumber = Integer.parseInt(str);
+            versionNumber++;
+
+            name1 = fileName.substring(
+                    0,fileName.lastIndexOf("("));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf(")") + 1,
+                    fileName.length());
+        } else {
+            versionNumber = 1;
+
+            name1 = fileName.substring(
+                    0, fileName.lastIndexOf("."));
+
+            name2 = fileName.substring(
+                    fileName.lastIndexOf("."),
+                    fileName.length());
+        }
+
+        String newFileName = name1 + "(" + versionNumber + ")" + name2;
+
+        return newFileName;
+    }
+
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
@@ -122,13 +179,13 @@ public class FileManager {
         Folder contentFolder = (Folder)getInstance().allContent.get(0);
         contentFolder.getContents().add(file);
 
-        getInstance().updateJsonFiles();
+        updateJsonFiles();
     }
 
     public void updateJsonFiles() {
         // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
-            JsonParser.getJsonParser().toJson(getInstance(), writer);
+        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
+            JsonParser.getJsonParser().toJson(fileManager, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,14 +196,13 @@ public class FileManager {
         PreferencesManager prefs = PreferencesManager.getInstance();
         Path allFilesList = Paths.get(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME);
 
-
         if(!Files.exists(allFilesList)){
             FileManager fileManager = new FileManager();
             fileManager.updateJsonFiles();
             return fileManager;
         }
-
-        try (Reader reader = new FileReader(PreferencesManager.getInstance().getServerAppFilesPath() + "allFiles.JSON")) {
+        System.out.println("Nået");
+        try (Reader reader = new FileReader(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
             return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
             /* // todo change read and write json to convert to unix file system.
             for (AbstractFile file : fileManager.allContent) {

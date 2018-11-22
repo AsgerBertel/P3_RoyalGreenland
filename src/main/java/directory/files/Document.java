@@ -3,6 +3,9 @@ package directory.files;
 import com.sun.nio.file.SensitivityWatchEventModifier;
 import directory.FileManager;
 import gui.DMSApplication;
+import gui.log.LogController;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 
 import javax.naming.InvalidNameException;
 import java.awt.*;
@@ -89,13 +92,15 @@ public class Document extends AbstractFile {
     @Override
     public void renameFile(String newFileName) throws InvalidNameException {
         File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent()+ File.separator + newFileName);
+        File renamedFile = new File(getPath().getParent() + File.separator + newFileName);
         setPath(Paths.get(renamedFile.getPath()));
 
         // Rename file and throw exception if it failed
         if(!currentFile.renameTo(renamedFile))
             throw new InvalidNameException();
 
+        LoggingTools lt = new LoggingTools();
+        lt.LogEvent(getName(), LogEventType.RENAMED);
         FileManager.getInstance().updateJsonFiles();
     }
 
