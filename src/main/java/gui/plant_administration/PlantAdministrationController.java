@@ -173,13 +173,16 @@ public class PlantAdministrationController implements TabController {
                     element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
                     element.updateText();
                     isElementSelected = true;
+                    lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 }
             }
             if (!isElementSelected) {
                 lblPlantEdited.setText("PlantAdmin.SelectPlant");
             }
+
             field_EditPlantName.clear();
             field_EditPlantId.clear();
+
         } catch(NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
