@@ -121,8 +121,11 @@ public class FileManager {
         Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
 
         if (Files.exists(dest)) {
+            // todo show prompt - Magnus
             deleteFile(DocumentBuilder.getInstance().createDocument(dest));
         }
+
+        // todo add document to files list - Magnus
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
@@ -134,7 +137,7 @@ public class FileManager {
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
 
         if (Files.exists(dest)) {
-            // todo should show prompt
+            // todo should show prompt - Magnus
             deleteFile(DocumentBuilder.getInstance().createDocument(dest));
         }
 
@@ -148,6 +151,8 @@ public class FileManager {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
         } // todo Error handling.
+
+        // todo add document to files list - Magnus
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
@@ -170,7 +175,7 @@ public class FileManager {
 
         createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
 
-        mainFilesRoot.getContents().add(folder);
+        parentFolder.getContents().add(folder);
         AppFilesManager.save(this);
         return folder;
     }
