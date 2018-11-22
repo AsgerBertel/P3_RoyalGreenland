@@ -257,6 +257,7 @@ public class FileAdminController implements TabController {
             String name = optName.get();
             if(selectedFile instanceof Document){
                 Document doc = (Document)selectedFile;
+                name = name + "." + doc.getFileExtension();
                 try {
                     doc.renameFile(name);
                 } catch (InvalidNameException e) {
