@@ -51,13 +51,6 @@ public class DeletedFilesController implements TabController {
     @FXML
     private FlowPane flpFileView;
 
-    @Override
-    public void update() {
-        rootItem = FileTreeUtil.generateTree((Folder) FileManager.getInstance().getArchive().get(0));
-        fileTreeView.setRoot(rootItem);
-        fileTreeView.setShowRoot(false);
-    }
-
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setOnMouseClicked(event -> {
@@ -68,12 +61,19 @@ public class DeletedFilesController implements TabController {
         update();
     }
 
+    @Override
+    public void update() {
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getArchiveFiles());
+        fileTreeView.setRoot(rootItem);
+        fileTreeView.setShowRoot(false);
+    }
+
     @FXML
     private void updateDisplayedFiles() {
         // Remove all currently shown files
         flpFileView.getChildren().clear();
 
-        filesToShow = fileExplorer.getCurrentFolderContent();
+        filesToShow = fileExplorer.getShownFiles();
         for (AbstractFile file : filesToShow) {
             FileButton fileButton = createFileButton(file);
             flpFileView.getChildren().add(fileButton);
@@ -113,7 +113,7 @@ public class DeletedFilesController implements TabController {
     }
 
     public String PathDisplayCorrection() {
-        int BracketCounter = 0;
+        /*int BracketCounter = 0;
         String NewString;
         if (getOperatingSystem() == "Windows")
             NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator + File.separator, " > ");
@@ -129,9 +129,9 @@ public class DeletedFilesController implements TabController {
         } else {
             NewString = NewString.substring(NewString.indexOf("Archive"));
 
-        }
+        }*/
 
-        return NewString;
+        return fileExplorer.getCurrentPath();
     }
 
     public String getOperatingSystem() {

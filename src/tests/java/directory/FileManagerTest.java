@@ -2,6 +2,7 @@ package directory;
 
 import directory.files.Document;
 import directory.files.DocumentBuilder;
+import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,23 +12,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileManagerTest {
-    private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
+    private File resourcesDirectory = new File("src/tests/resTest");
     private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
     private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
     private Path toTestFile = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile1.pdf");
     private Path toTestFile2 = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
     private Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
-    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTest.JSON");
+    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
     private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTestUnix.JSON");
     private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "deleteTest");
+    private Path mainTestDir = Paths.get(resourcesDirectory + File.separator+ "Main Files Test" +File.separator+"RLFiles");
 
     @BeforeEach
     void initEach() {
-        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
-        FileManager.getTestInstance().readFileManagerFromJson();
+        Settings.setServerPath(mainTestDir.toString()+File.separator+"Server");
+        Settings.setLocalPath(mainTestDir.toString()+File.separator+"Local");
+        System.out.println(Settings.toString2());
     }
 
     // Todo use FileManager.deleteFile() to delete file.
@@ -59,61 +62,38 @@ class FileManagerTest {
         }
     }*/
 
-    private void deleteDocument() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
+    private void deleteDocument() {
+        Folder folder1 = (Folder)FileManager.getInstance().getMainFiles().get(1);
+        Folder folder2 = (Folder)folder1.getContents().get(0);
+        Document document = (Document)folder2.getContents().get(0);
 
-        FileManager.getTestInstance().deleteFile(doc);
+        FileManager.getInstance().deleteFile(document);
 
-        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
+        //assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
     }
 
     private void restoreDocument() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
+        Folder folder1 = (Folder)FileManager.getInstance().getArchiveFiles().get(0);
+        Folder folder2 = (Folder)folder1.getContents().get(0);
+        Document doc = (Document)folder2.getContents().get(0);
 
-        FileManager.getTestInstance().restoreFile(doc);
+        FileManager.getInstance().restoreFile(doc);
 
-        assertTrue(Files.exists(toTestFile2));
+        //assertTrue(Files.exists(toTestFile2));
     }
-
+/*
     private void deleteDocument2() throws IOException {
         Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
 
         FileManager.getTestInstance().deleteFile(doc);
 
         assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
-    }
-
-    private void restoreDocumentWithPath() throws IOException {
-
-        //todo FileManager is a singleton; no new instances should be created
-        /*Path newPath = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "Restore test" + File.separator + "testFile.pdf");
-
-        Document doc = DocumentBuilder.getInstance().createDocument(newPath);
-
-        FileManager fm = new FileManager();*/
-/*
-        assertFalse(Files.exists(newPath));
-
-        fm.restoreFile(doc);
-
-        assertTrue(Files.exists(newPath));
-
-        //deletes folder and moves file back
-
-        Files.move(newPath, toTestFile2);
-        Files.delete(newPath.getParent());*/
-    }
+    }*/
 
     @Test
     void inOrder() throws IOException {
         deleteDocument();
         restoreDocument();
-    }
-
-    @Test
-    void inOrder2() throws IOException {
-        deleteDocument2();
-        restoreDocumentWithPath();
     }
 
   /*  @Test

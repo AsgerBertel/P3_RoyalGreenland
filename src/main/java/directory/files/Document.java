@@ -6,6 +6,7 @@ import gui.DMSApplication;
 import gui.log.LogController;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
 import java.awt.*;
@@ -26,6 +27,10 @@ public class Document extends AbstractFile {
         super(path);
         this.ID = ID;
     }
+    public Document(Document document) {
+        super(document.getPath().toString());
+        this.ID = document.getID();
+    }
 
     public int getID() {
         return ID;
@@ -45,9 +50,9 @@ public class Document extends AbstractFile {
         Path temp = Files.move(getPath(), tempTargetPath);
         setPath(tempTargetPath);
 
-        if(temp == null){ // todo temp always null? Implement differently
+        if(temp == null) // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
-        }
+
     }
 
     // Opens the document in a window
@@ -100,8 +105,8 @@ public class Document extends AbstractFile {
             throw new InvalidNameException();
 
         LoggingTools lt = new LoggingTools();
-        lt.LogEvent(getName(), LogEventType.RENAMED);
-        FileManager.getInstance().updateJsonFiles();
+        LoggingTools.LogEvent(getName(), LogEventType.RENAMED);
+        AppFilesManager.save(FileManager.getInstance());
     }
 
     public void tester(){

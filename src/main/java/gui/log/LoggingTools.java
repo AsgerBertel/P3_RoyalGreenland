@@ -1,7 +1,7 @@
 package gui.log;
 
 
-import directory.PreferencesManager;
+import directory.Settings;
 import gui.DMSApplication;
 
 import java.io.*;
@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    public void LogEvent(String fileName, LogEventType eventType){
+    public static void LogEvent(String fileName, LogEventType eventType){
 
          //Get current system time
          LocalDateTime localDateTime = LocalDateTime.now();
 
          //get Username
-         String userName = PreferencesManager.getInstance().getUsername();
+         String userName = Settings.getUsername();
 
          //create and write event
          rgEvent event = new rgEvent(fileName, userName, localDateTime, eventType);
@@ -31,17 +31,17 @@ public class LoggingTools {
 
     public List<rgEvent> getAllEvents(){
         List<rgEvent> listOfEvents = new ArrayList<>();
-        try(Stream<String> stream = Files.lines(Paths.get(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log"))){
+        try(Stream<String> stream = Files.lines(Paths.get(Settings.getServerAppFilesPath() + "logs.log"))){
             stream.forEachOrdered(event -> listOfEvents.add(parseEvent(event)));
         }catch (IOException e){
             e.printStackTrace();
         }
         return listOfEvents;
     }
-    private void writeEventAsLog(rgEvent event){
+    private static void writeEventAsLog(rgEvent event){
         List<String> listOfEvents = EventToStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "logs.log",true)))){
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log",true)))){
             pw.println(listOfEvents.get(0) + "|" +listOfEvents.get(1) + "|" +listOfEvents.get(2));
 
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class LoggingTools {
         }
     }
 
-    private List<String> EventToStringArray(rgEvent event){
+    private static List<String> EventToStringArray(rgEvent event){
         // [YEAR/MONTH/DATE - HOUR:MINUTES]
         String eventDate = event.getLocalDateTime().getYear() + "-" + event.getLocalDateTime().getMonthValue() + "-" + event.getLocalDateTime().getDayOfMonth()
                 + "-" + event.getLocalDateTime().getHour() + ":" + event.getLocalDateTime().getMinute();
@@ -75,7 +75,7 @@ public class LoggingTools {
         return new rgEvent(substrings[1],substrings[3],localDateTime, stringToLogEventType(substrings[2]));
     }
 
-    public String EventTypeToString(LogEventType eventType){
+    private static String EventTypeToString(LogEventType eventType){
         switch (eventType){
             case CHANGED:
                 return "changed";
