@@ -4,8 +4,10 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.DMSApplication;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import javafx.scene.control.*;
 import json.JsonParser;
 
 import javax.naming.InvalidNameException;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class FileManager {
     // todo Archive folder path should be set on setup
@@ -54,13 +57,22 @@ public class FileManager {
         return archive;
     }
 
-    public void uploadFile(Path src, Folder dstFolder) throws IOException {
+    public void uploadFile(Path src, Folder dstFolder){
         File file = new File(src.toString());
 
         Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
 
         if (Files.exists(dest)){
-            deleteFile(DocumentBuilder.getInstance().createDocument(dest));
+            int bt = OverwriteFilePopUP();
+            if(bt == 1){
+                deleteFile(DocumentBuilder.getInstance().createDocument(dest));
+            } else if(bt == 0) {
+                //todo rename uploaded file and upload it
+            } else if(bt == -1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("noget gik galt");
+                return;
+            }
         }
 
         try {
@@ -94,16 +106,41 @@ public class FileManager {
         return createdFolder;
     }
 
+    public int OverwriteFilePopUP(){
+        Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
+        txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
+        ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
+        ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
+        ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite,buttonTypeKeep,buttonTypeCancel);
+
+        Optional<ButtonType> result = txtInputDia.showAndWait();
+
+        txtInputDia.showAndWait();
+
+        if (result.get() == buttonTypeOverwrite){
+            return 1;
+        } else if (result.get() == buttonTypeKeep){
+            return 0;
+        }
+
+        return -1;
+    }
+
     public void deleteFile(AbstractFile file) {
 
         String fileName = file.getName();
 
-        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
-
+        Path pathWithName = Paths.get(Paths.get
+                (PreferencesManager.getInstance().getServerArchivePath())
+                + File.separator + fileName);
 
         if (Files.exists(pathWithName)){
-            fileName = addVersionNumber(file);
-            pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + fileName);
+            fileName = setVersionNumber(file);
+            pathWithName = Paths.get(Paths.get
+                    (PreferencesManager.getInstance().getServerArchivePath())
+                    + File.separator + fileName);
 
             if (file instanceof Folder){
                 ((Folder) file).renameFile(fileName);
@@ -116,7 +153,6 @@ public class FileManager {
                 }
             }
         }
-
 
         try {
             Files.move(file.getPath(), pathWithName);
@@ -132,7 +168,7 @@ public class FileManager {
         }
     }
 
-    public String addVersionNumber(AbstractFile file){
+    private String setVersionNumber(AbstractFile file){
         int versionNumber;
         String name1;
         String name2;
@@ -165,6 +201,12 @@ public class FileManager {
 
         String newFileName = name1 + "(" + versionNumber + ")" + name2;
 
+        while(Files.exists(Paths.get(PreferencesManager.getInstance()
+                .getServerDocumentsPath() + File.separator + newFileName))){
+            versionNumber++;
+            newFileName = name1 + "(" + versionNumber + ")" + name2;
+        }
+
         return newFileName;
     }
 
@@ -172,6 +214,23 @@ public class FileManager {
     public void restoreFile(AbstractFile file) throws IOException {
         Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
 
+        if (Files.exists(Paths.get(PreferencesManager.getInstance()
+                .getServerDocumentsPath() + File.separator + file.getName()))){
+            String fileName = setVersionNumber(file);
+            System.out.println(file.getPath().toString());
+            System.out.println("exists");
+            if (file instanceof Folder){
+                ((Folder) file).renameFile(fileName);
+            } else if (file instanceof Document){
+                try {
+                    ((Document) file).renameFile(fileName);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                    System.out.println("invalid name");
+                }
+            }
+
+        }
         Files.move(pathWithName, Paths.get(PreferencesManager.getInstance().getServerDocumentsPath() + File.separator + file.getName()));
 
         Folder archiveFolder = (Folder)getInstance().archive.get(0);

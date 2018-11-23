@@ -160,12 +160,7 @@ public class FileAdminController implements TabController {
             File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
 
             if (uploadFile != null) {
-                try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
-                } catch (IOException e) {
-                    System.out.println("could not upload file");
-                    e.printStackTrace();
-                }
+                FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
                 update();
             }
 
@@ -178,12 +173,7 @@ public class FileAdminController implements TabController {
             File uploadFile = chooseDirectoryPrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
 
             if (uploadFile != null) {
-                try {
-                    FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getAllContent().get(0));
-                } catch (IOException e) {
-                    System.out.println("could not upload file");
-                    e.printStackTrace();
-                }
+                FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) FileManager.getInstance().getAllContent().get(0));
                 update();
             }
         }
@@ -288,6 +278,7 @@ public class FileAdminController implements TabController {
             String name = optName.get();
             if(selectedFile instanceof Document){
                 Document doc = (Document)selectedFile;
+                name = name + "." + doc.getFileExtension();
                 try {
                     doc.renameFile(name);
                 } catch (InvalidNameException e) {
