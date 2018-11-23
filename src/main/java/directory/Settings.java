@@ -34,6 +34,9 @@ public class Settings {
     private static final String DOCUMENTS_PATH = "Documents/";
     private static final String APP_FILES_PATH = "App Files/";
 
+    private static final String WORKING_DIRECTORY_PATH = "Working Directory/";
+    private static final String PUBLISHED_FILES_PATH = "Published Files/";
+
     // Default language is danish
     private static Locale language = DMSApplication.DK_LOCALE;
 
@@ -53,11 +56,10 @@ public class Settings {
         else if (languageString.equals(DMSApplication.GL_LOCALE))
             language = DMSApplication.GL_LOCALE;
 
-
         // Prompt the user for paths if any are missing
         if (serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
-        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
+        else if (false && DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE)) // todo REMOVE FALSE
             initializeSettingsPrompt();
     }
 
@@ -91,19 +93,27 @@ public class Settings {
         preferences.put(LANGUAGE_PREF, newLanguage.getLanguage());
     }
 
+    public static String getPublishedDocumentsPath(){
+        return serverPath + PUBLISHED_FILES_PATH + DOCUMENTS_PATH;
+    }
+
+    public static String getPublishedAppFilesPath(){
+        return serverPath + PUBLISHED_FILES_PATH + APP_FILES_PATH;
+    }
+
     // Returns the absolute path of the main files on the server
     public static String getServerDocumentsPath() {
-        return serverPath + DOCUMENTS_PATH;
+        return serverPath + WORKING_DIRECTORY_PATH + DOCUMENTS_PATH;
     }
 
     // Returns the absolute path of the archived files on the server
     public static String getServerArchivePath() {
-        return serverPath + ARCHIVE_PATH;
+        return serverPath + WORKING_DIRECTORY_PATH +ARCHIVE_PATH;
     }
 
     // Returns the absolute path of the application files on the server
     public static String getServerAppFilesPath() {
-        return serverPath + APP_FILES_PATH;
+        return serverPath + WORKING_DIRECTORY_PATH + APP_FILES_PATH;
     }
 
     // Returns the absolute path of the local file copies

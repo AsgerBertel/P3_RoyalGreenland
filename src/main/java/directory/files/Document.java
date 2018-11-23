@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Document extends AbstractFile {
     private int ID;
@@ -87,4 +88,19 @@ public class Document extends AbstractFile {
         this.lastModified = DATE_TIME_FORMATTER.format(localDateTime);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Document document = (Document) o;
+        return ID == document.ID &&
+                Objects.equals(lastModified, document.lastModified);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), ID, lastModified);
+    }
 }

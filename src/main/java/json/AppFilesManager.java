@@ -9,7 +9,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 
 public class AppFilesManager {
 
@@ -76,16 +75,24 @@ public class AppFilesManager {
         Path serverDocumentsPath = Paths.get(Settings.getServerDocumentsPath());
         Path serverArchivePath = Paths.get(Settings.getServerArchivePath());
         Path serverAppFilesPath = Paths.get(Settings.getServerAppFilesPath());
+        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
+        Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
 
         boolean succes = true;
         if(!Files.exists(serverDocumentsPath))
             succes = serverDocumentsPath.toFile().mkdirs();
 
         if(!Files.exists(serverArchivePath))
-            succes = serverArchivePath.toFile().mkdirs();
+            succes &= serverArchivePath.toFile().mkdirs();
 
         if(!Files.exists(serverAppFilesPath))
-            succes = serverAppFilesPath.toFile().mkdirs();
+            succes &= serverAppFilesPath.toFile().mkdirs();
+
+        if(!Files.exists(publishedAppFilesPath))
+            succes &= publishedAppFilesPath.toFile().mkdirs();
+
+        if(!Files.exists(publishedDocumentsPath))
+            succes &= publishedDocumentsPath.toFile().mkdirs();
 
         if(!succes){ // todo Look into whyt mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
             // todo Also in the case of the server directories connection might be a factor
