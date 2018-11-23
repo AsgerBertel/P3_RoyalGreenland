@@ -6,23 +6,18 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.DMSApplication;
-import gui.FileTreeUtil;
-import gui.PlantCheckboxElement;
-
-import gui.TabController;
+import gui.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import javax.naming.InvalidNameException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -239,10 +234,36 @@ public class FileAdminController implements TabController {
         return txtInputDia.showAndWait();
     }
 
-    public void deleteFile() {
+
+    //Popup function to determine action when pressed "OK" or "Cancel".
+    //Pressing yes, deletes the File from the Json file and the TableView. Pressing no closes the Alert.
+    public void deleteFilePopup() {
+        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
-        FileManager.getInstance().deleteFile(selectedItem.getValue());
-        selectedItem.getParent().getChildren().remove(selectedItem);
+
+        popup.setTitle(DMSApplication.getMessage("AdminFiles.PopUpDelete.Title"));
+        popup.setContentText(DMSApplication.getMessage("AdminFiles.PopUpDelete.YouSure"));
+        popup.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUpDelete.Info"));
+        Optional<ButtonType> result = popup.showAndWait();
+        if (!result.isPresent())
+            popup.close();
+
+        if (result.get() == ButtonType.OK) {
+            selectedItem.getParent().getChildren().remove(selectedItem);
+            FileManager.getInstance().deleteFile(selectedItem.getValue());
+
+            update();
+
+        }
+        if (result.get() == ButtonType.CANCEL) {
+            popup.close();
+        }
+
+    }
+
+
+    public void deleteFile() {
+        deleteFilePopup();
         update();
     }
 
