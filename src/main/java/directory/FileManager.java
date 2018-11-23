@@ -49,7 +49,7 @@ public class FileManager {
         archiveRoot = findFiles(archiveFilesRootPath);
     }
 
-    private static Folder findFiles(Path root){
+    private static Folder findFiles(Path root) {
         if (!Files.exists(root)) {
             // todo Check if server connection failure or just non-existing file throw exception maybe
         }
@@ -66,7 +66,7 @@ public class FileManager {
 
     /* Find all children of the given root and creates a list of corresponding abstractFile instances with paths
        relative to the base path */
-    private static ArrayList<AbstractFile> loadChildren(Path rootPath, Path basePath){
+    private static ArrayList<AbstractFile> loadChildren(Path rootPath, Path basePath) {
         ArrayList<AbstractFile> children = new ArrayList<>();
 
         try {
@@ -88,7 +88,7 @@ public class FileManager {
                     .forEach(newFilePath -> {
                         Path relativePath = basePath.relativize(newFilePath);
 
-                        if(!Files.isDirectory(newFilePath)) {
+                        if (!Files.isDirectory(newFilePath)) {
                             Document document = DocumentBuilder.getInstance().createDocument(relativePath);
                             children.add(document);
                         }
@@ -164,7 +164,7 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name){
+    public Folder createFolder(String name) {
         Folder folder = new Folder(name);
 
         createFolderFile(Settings.getServerDocumentsPath() + name);
@@ -185,7 +185,7 @@ public class FileManager {
         return folder;
     }
 
-    private void createFolderFile(String fullPath){
+    private void createFolderFile(String fullPath) {
         boolean isSuccessful = new File(fullPath).mkdirs();
 
         if (!isSuccessful) {
@@ -200,12 +200,12 @@ public class FileManager {
         // todo maybe change mkdirs - kristian
         try {
             new File(archivePath.getParent().toString()).mkdirs();
-            Files.move(Paths.get(Settings.getServerDocumentsPath()+ file.getPath()), archivePath);
+            Files.move(Paths.get(Settings.getServerDocumentsPath() + file.getPath()), archivePath);
             insertFile(file, mainFilesRoot, archiveRoot);
             Optional<Folder> parent = findParent(file, mainFilesRoot.getContents());
             LoggingTools.LogEvent(file.getName(), LogEventType.ARCHIVED);
 
-            if(parent.isPresent())
+            if (parent.isPresent())
                 parent.get().getContents().remove(file);
 
             AppFilesManager.save(this);
@@ -215,14 +215,14 @@ public class FileManager {
         }
     }
 
-    public String addVersionNumber(AbstractFile file){
+    public String addVersionNumber(AbstractFile file) {
         int versionNumber;
         String name1;
         String name2;
         String fileName = file.getName();
         char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
 
-        if (c == ')'){
+        if (c == ')') {
             String str = fileName.substring(fileName.lastIndexOf("(") + 1,
                     fileName.lastIndexOf(")"));
 
@@ -230,7 +230,7 @@ public class FileManager {
             versionNumber++;
 
             name1 = fileName.substring(
-                    0,fileName.lastIndexOf("("));
+                    0, fileName.lastIndexOf("("));
 
             name2 = fileName.substring(
                     fileName.lastIndexOf(")") + 1,
@@ -270,22 +270,24 @@ public class FileManager {
 
         AppFilesManager.save(this);
     }
-    private void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
-        if(file instanceof Document) {
-            insertDocument((Document)file, srcRoot, dstRoot);
-        }
-        else if (file instanceof Folder) {
+
+    public void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
+        if (file instanceof Document) {
+            insertDocument((Document) file, srcRoot, dstRoot);
+        } else if (file instanceof Folder) {
             insertFolder((Folder) file, srcRoot, dstRoot);
         }
     }
+
     private void insertFolder(Folder folder, Folder srcRoot, Folder dstRoot) {
-        for(AbstractFile file : folder.getContents()) {
-            if(file instanceof Document)
-                insertDocument((Document)file, srcRoot, dstRoot);
+        for (AbstractFile file : folder.getContents()) {
+            if (file instanceof Document)
+                insertDocument((Document) file, srcRoot, dstRoot);
             else if (file instanceof Folder)
                 insertFolder((Folder) file, srcRoot, dstRoot);
         }
     }
+
     private void insertDocument(Document document, Folder src, Folder dst) {
         Stack<Folder> stack = new Stack<>();
         Optional<Folder> optional = findParent(document, src.getContents());
@@ -293,22 +295,21 @@ public class FileManager {
         Folder temp;
         boolean folderExists = false;
 
-        while(optional.isPresent()) {
+        while (optional.isPresent()) {
             stack.push(optional.get());
             optional = findParent(optional.get(), getMainFiles());
         }
-        while(!stack.empty()) {
+        while (!stack.empty()) {
             temp = new Folder(stack.peek().getPath().toString());
 
-            for(AbstractFile file : folderToInsert.getContents()) {
-                if(file.getPath().toString().equals(temp.getPath().toString()))
+            for (AbstractFile file : folderToInsert.getContents()) {
+                if (file.getPath().toString().equals(temp.getPath().toString()))
                     folderExists = true;
             }
-            if(!folderExists) {
+            if (!folderExists) {
                 folderToInsert.getContents().add(temp);
                 folderToInsert = temp;
-            }
-            else
+            } else
                 folderToInsert = searchContentByPath(folderToInsert, temp);
 
             stack.pop();
@@ -318,22 +319,23 @@ public class FileManager {
     }
 
     private Folder searchContentByPath(Folder folder, Folder target) {
-        for(AbstractFile file : folder.getContents()) {
-            if(file.getPath().toString().equals(target.getPath().toString()))
+        for (AbstractFile file : folder.getContents()) {
+            if (file.getPath().toString().equals(target.getPath().toString()))
                 return (Folder) file;
         }
         return null;
     }
+
     public static Optional<Folder> findParent(AbstractFile child, ArrayList<AbstractFile> searchArea) {
-        for(AbstractFile file : searchArea){
+        for (AbstractFile file : searchArea) {
             // If the file is in the top layer of the search area it has no parent
-            if(file.equals(child))
+            if (file.equals(child))
                 return Optional.empty();
 
             // Check if any of the subdirectories is the parent folder
-            if(file instanceof Folder){
+            if (file instanceof Folder) {
                 Optional<Folder> parent = findParent(child, (Folder) file);
-                if(parent.isPresent())
+                if (parent.isPresent())
                     return parent;
             }
         }
@@ -357,5 +359,15 @@ public class FileManager {
     // Saves the current instance to the json file
     public void save() {
         AppFilesManager.save(this);
+    }
+
+    public void moveFile(AbstractFile file,  Folder dst) {
+        if (file instanceof Document) {
+            dst.getContents().add(new Document((Document) file));
+            findParent(file,mainFilesRoot).ifPresent(folder -> folder.getContents().remove(file));
+        } else if (file instanceof Folder) {
+            dst.getContents().add(new Folder((Folder) file));
+            findParent(file,mainFilesRoot).ifPresent(folder -> folder.getContents().remove(file));
+        }
     }
 }

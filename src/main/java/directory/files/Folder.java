@@ -49,7 +49,7 @@ public class Folder extends AbstractFile {
         LoggingTools.LogEvent(getName(), LogEventType.FOLDERRENAMED);
     }
 
-    private void changeChildrenPath(Folder folder, String oldPath, String newPath){
+    public void changeChildrenPath(Folder folder, String oldPath, String newPath){
         for(AbstractFile file : folder.getContents()){
             if(file instanceof Document){
                 newPath = file.getPath().toString().replace(oldPath, newPath);

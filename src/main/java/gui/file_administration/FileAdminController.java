@@ -70,7 +70,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-        fileTreeView.setCellFactory(new FileTreeDragAndDrop());
+        fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
     }
 
     @Override

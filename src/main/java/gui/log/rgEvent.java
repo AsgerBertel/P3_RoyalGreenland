@@ -32,11 +32,6 @@ public class rgEvent {
         return eventType;
     }
 
-    public String getEvent(){
-        LoggingTools lt = new LoggingTools();
-        return getFileName() + DMSApplication.getMessage("Log.Is") + lt.EventTypeToLocalizedString(getEventType());
-    }
-
     public String getTime(){
         String minutes;
         if(getLocalDateTime().getMinute() < 10){
@@ -46,5 +41,10 @@ public class rgEvent {
         }
 
         return getLocalDateTime().getDayOfMonth() + "/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + minutes;
+    }
+
+    public String getEvent(){
+        LoggingTools lt = new LoggingTools();
+        return getFileName() + DMSApplication.getMessage("Log.Is") + lt.EventTypeToLocalizedString(getEventType());
     }
 }
