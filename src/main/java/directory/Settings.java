@@ -59,7 +59,7 @@ public class Settings {
         // Prompt the user for paths if any are missing
         if (serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
-        else if (false && DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE)) // todo REMOVE FALSE
+        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE)) // todo REMOVE FALSE
             initializeSettingsPrompt();
     }
 

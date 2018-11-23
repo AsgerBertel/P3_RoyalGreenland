@@ -10,7 +10,6 @@ import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.*;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -149,7 +148,7 @@ public class FileManager {
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
-            LoggingTools.log(new LogEvent(file.getName(), LogEventType.Created));
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");

@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import directory.DirectoryCloner;
 import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
@@ -243,10 +244,12 @@ public class FileAdminController implements TabController {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name);
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
+                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
+                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
@@ -257,12 +260,13 @@ public class FileAdminController implements TabController {
                 else
                     fol = fileManager.createFolder(name);
 
+                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
 
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
             }
         }
-
         FileManager.getInstance().save();
+        update();
     }
 
     public Optional<String> createFolderPopUP() {
@@ -351,15 +355,20 @@ public class FileAdminController implements TabController {
     /* ---- Changelist ---- */
     private synchronized void updateChangesList() {
         changesVBox.getChildren().clear();
-        for(LogEvent logEvent : LoggingTools.getAllUnpublishedEvents()){
+        for(LogEvent logEvent : LoggingTools.getAllUnpublishedEvents())
             changesVBox.getChildren().add(new ChangeBox(logEvent));
-        }
+
         lastUpdatedText.setText(LoggingTools.getLastPublished());
     }
 
     public void onPublishChanges() {
-        LoggingTools.log(new LogEvent(LoggingTools.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
-        update();
+        try {
+            DirectoryCloner.publishFiles();
+            LoggingTools.log(new LogEvent(LoggingTools.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
+            update();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private synchronized ListCell<LogEvent> createLogEventListCell() {
