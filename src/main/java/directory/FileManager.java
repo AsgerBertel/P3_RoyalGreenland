@@ -97,8 +97,6 @@ public class FileManager {
         }
         return children;
     }
-
-
     public ArrayList<AbstractFile> getMainFiles() {
         return mainFilesRoot.getContents();
     }
@@ -106,26 +104,27 @@ public class FileManager {
     public ArrayList<AbstractFile> getArchiveFiles() {
         return archiveRoot.getContents();
     }
-
-    public void uploadFile(Path src) {
+    // Uploads a file directly to the root of the main files
+    public Document uploadFile(Path src) {
         File file = new File(src.toString());
         Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
 
         if (Files.exists(dest)) {
-            // todo show prompt - Magnus
+            // todo throw file already exists exception - Magnus
             deleteFile(DocumentBuilder.getInstance().createDocument(dest));
         }
-
-        // todo add document to files list - Magnus
+        Document newDoc = DocumentBuilder.getInstance().createDocument(src.getFileName());
+        getMainFiles().add(newDoc);
+        return newDoc;
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
     }
 
-    public void uploadFile(Path src, Folder dstFolder) {
+    public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getPath().toString() + File.separator + file.getName());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
@@ -138,15 +137,18 @@ public class FileManager {
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
             LoggingTools.LogEvent(file.getName(), LogEventType.CREATED);
+            return doc;
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
-        } // todo Error handling.
+            // todo Should probably throw new exception.
+        }
 
         // todo add document to files list - Magnus
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
+        return null;
     }
 
     // Creates a folder in the root directory of main files
@@ -253,7 +255,6 @@ public class FileManager {
         AppFilesManager.save(this);
     }
     private void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
-
         if(file instanceof Document) {
             insertDocument((Document)file, srcRoot, dstRoot);
         }

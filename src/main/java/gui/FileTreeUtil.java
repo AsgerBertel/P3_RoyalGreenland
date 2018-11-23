@@ -90,7 +90,7 @@ public class FileTreeUtil {
     }
 
     // Creates a single tree item with no children
-    private static TreeItem<AbstractFile> createTreeItem(AbstractFile file){
+    public static TreeItem<AbstractFile> createTreeItem(AbstractFile file){
         TreeItem<AbstractFile> docItem = new TreeItem<>(file);
         docItem.setGraphic(getImageView(file));
         return docItem;
