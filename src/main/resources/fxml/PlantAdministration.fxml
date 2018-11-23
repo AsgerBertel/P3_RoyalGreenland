@@ -36,7 +36,7 @@
             <Button styleClass="menuButton" fx:id="btnDeletePlant" onAction="#deletePlant">
                <graphic>
                   <ImageView fitHeight="40" fitWidth="40">
-                     <Image url="/icons/menu/delete.png" />
+                     <Image url="/icons/menu/removePlant.png" />
                   </ImageView>
                </graphic>
             </Button>
