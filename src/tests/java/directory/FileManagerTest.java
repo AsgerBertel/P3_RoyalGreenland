@@ -27,9 +27,14 @@ class FileManagerTest {
     private Path mainTestDir = Paths.get(resourcesDirectory + File.separator+ "Main Files Test" +File.separator+"RLFiles");
 
     @BeforeEach
-    void initEach() {
+    void initEach() throws IOException {
         Settings.setServerPath(mainTestDir.toString()+File.separator+"Server");
         Settings.setLocalPath(mainTestDir.toString()+File.separator+"Local");
+        if(Files.exists(Paths.get(Settings.getServerAppFilesPath()+"allFiles.JSON"))
+                && Files.exists(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
+            Files.delete(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"));
+            Files.delete(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"));
+        }
         System.out.println(Settings.toString2());
     }
 

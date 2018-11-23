@@ -199,8 +199,9 @@ public class FileAdminController implements TabController {
     }
 
     public void createFolder() {
-        FileManager fileManager = FileManager.getInstance();
+
         Optional<String> folderName = createFolderPopUP();
+        Folder parent;
         if (folderName.isPresent()){
             if (selectedFile == null){
                 String name = folderName.get();
@@ -212,16 +213,18 @@ public class FileAdminController implements TabController {
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
             }else if(selectedFile instanceof Document){
                 String name = folderName.get();
-                Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
+                Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
 
-                Folder fol;
-                if(parent.isPresent())
-                    fol = fileManager.createFolder(name, parent.get());
-                else
-                    fol = fileManager.createFolder(name);
+                if(parentOpt.isPresent()) {
+                    parent = parentOpt.get();
 
-
-                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+                    Folder fol;
+                    if (!parent.equals(FileManager.getInstance().getMainFilesRoot()))
+                        fol = FileManager.getInstance().createFolder(name, parent);
+                    else
+                        fol = FileManager.getInstance().createFolder(name);
+                    fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
+                }
             }
         }
 

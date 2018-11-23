@@ -8,7 +8,6 @@ import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.AppFilesManager;
 
-import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +52,6 @@ public class FileManager {
         if (!Files.exists(root)) {
             // todo Check if server connection failure or just non-existing file throw exception maybe
         }
-        System.out.println(root.toString());
 
         if (!Files.isDirectory(root)) {
             throw new IllegalArgumentException("Root file must be a directory");
@@ -99,14 +97,7 @@ public class FileManager {
         }
         return children;
     }
-/*
-    //todo temporary
-    public static synchronized FileManager getTestInstance() {
-        if (fileManager == null) {
-            fileManager = new FileManager();
-        }
-        return fileManager;
-    }*/
+
 
     public ArrayList<AbstractFile> getMainFiles() {
         return mainFilesRoot.getContents();
@@ -190,18 +181,16 @@ public class FileManager {
     }
 
     public void deleteFile(AbstractFile file) {
-        Path archivePath = Paths.get(Settings.getServerArchivePath() + file.getPath());
+        Path archivePath = Paths.get(Settings.getServerArchivePath() + file.getOSPath());
 
         // todo maybe change mkdirs - kristian
         try {
             new File(archivePath.getParent().toString()).mkdirs();
-            Files.move(Paths.get(Settings.getServerDocumentsPath()+ file.getPath()), archivePath);
+            Files.move(Paths.get(Settings.getServerDocumentsPath()+ file.getOSPath()), archivePath);
             insertFile(file, mainFilesRoot, archiveRoot);
-            Optional<Folder> parent = findParent(file, mainFilesRoot.getContents());
             LoggingTools.LogEvent(file.getName(), LogEventType.ARCHIVED);
-
-            if(parent.isPresent())
-                parent.get().getContents().remove(file);
+            Optional<Folder> parent = findParent(file, mainFilesRoot);
+            parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
             AppFilesManager.save(this);
         } catch (IOException e) {
@@ -248,24 +237,23 @@ public class FileManager {
 
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathOrigin = Paths.get(Settings.getServerDocumentsPath() + file.getPath().toString());
-        Files.move(Paths.get(Settings.getServerArchivePath() + file.getPath().toString()), pathOrigin);
+        Path pathOrigin = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        Files.move(Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString()), pathOrigin);
 
         insertFile(file, archiveRoot, mainFilesRoot);
-
-        Optional<Folder> rootOptional;// = findParent(file, mainFilesRoot.getContents());
 /*
         if(file instanceof Folder)
             rootOptional.ifPresent(parent -> parent.getContents().add(new Folder((Folder)file)));
         else if (file instanceof Document)
             rootOptional.ifPresent(parent -> parent.getContents().add(new Document((Document)file)));
 */
-        rootOptional = findParent(file, archiveRoot);
-        rootOptional.ifPresent(parent -> parent.getContents().remove(file));
+        Optional<Folder> parent = findParent(file, archiveRoot);
+        parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
         AppFilesManager.save(this);
     }
     private void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
+
         if(file instanceof Document) {
             insertDocument((Document)file, srcRoot, dstRoot);
         }
@@ -283,75 +271,77 @@ public class FileManager {
     }
     private void insertDocument(Document document, Folder src, Folder dst) {
         Stack<Folder> stack = new Stack<>();
-        Optional<Folder> optional = findParent(document, src.getContents());
+        Optional<Folder> parent = findParent(document, src);
         Folder folderToInsert = dst;
         Folder temp;
         boolean folderExists = false;
 
-        while(optional.isPresent()) {
-            stack.push(optional.get());
-            optional = findParent(optional.get(), getMainFiles());
+
+        while(parent.isPresent()) {
+            stack.push(parent.get());
+            parent = findParent(parent.get(), src);
         }
         while(!stack.empty()) {
             temp = new Folder(stack.peek().getPath().toString());
 
-            for(AbstractFile file : folderToInsert.getContents()) {
-                if(file.getPath().toString().equals(temp.getPath().toString()))
-                    folderExists = true;
+            if(folderToInsert.getPath().toString().equals(temp.getPath().toString()))
+                folderExists = true;
+            else {
+                for (AbstractFile file : folderToInsert.getContents()) {
+                    if (file.getPath().toString().equals(temp.getPath().toString()))
+                        folderExists = true;
+                }
             }
             if(!folderExists) {
                 folderToInsert.getContents().add(temp);
                 folderToInsert = temp;
             }
-            else
-                folderToInsert = searchContentByPath(folderToInsert, temp);
-
+            else {
+                for(AbstractFile file : folderToInsert.getContents()) {
+                    if (file.getPath().toString().equals(temp.getPath().toString()))
+                        folderToInsert = (Folder) file;
+                }
+            }
             stack.pop();
             folderExists = false;
         }
-        folderToInsert.getContents().add(new Document(document));
+        if (folderToInsert != null)
+            folderToInsert.getContents().add(new Document(document));
     }
 
-    private Folder searchContentByPath(Folder folder, Folder target) {
+    private boolean containsByPath(Folder folder, AbstractFile target) {
         for(AbstractFile file : folder.getContents()) {
             if(file.getPath().toString().equals(target.getPath().toString()))
-                return (Folder) file;
+                return true;
         }
-        return null;
+        return false;
     }
-    public static Optional<Folder> findParent(AbstractFile child, ArrayList<AbstractFile> searchArea) {
-        for(AbstractFile file : searchArea){
-            // If the file is in the top layer of the search area it has no parent
-            if(file.equals(child))
-                return Optional.empty();
+    public static Optional<Folder> findParent(AbstractFile child, Folder root) {
+        Optional<Folder> parent = Optional.empty();
+        String str = root.getPath().toString()+" og "+child.getParentPath();
 
-            // Check if any of the subdirectories is the parent folder
-            if(file instanceof Folder){
-                Optional<Folder> parent = findParent(child, (Folder) file);
-                if(parent.isPresent())
-                    return parent;
-            }
-        }
+        if(root.getPath().equals(child.getParentPath()))
+            return Optional.of(root);
 
-        return Optional.empty();
-    }
-
-    private static Optional<Folder> findParent(AbstractFile child, Folder parent) {
-        if (parent.getContents().contains(child))
-            return Optional.of(parent);
-
-        for (AbstractFile current : parent.getContents()) {
+        for (AbstractFile current : root.getContents()) {
             if (current instanceof Folder) {
-                Optional<Folder> folder = findParent(child, (Folder) current);
-                if (folder != null)
-                    return folder;
+                parent = findParent(child, (Folder) current);
+                if(parent.isPresent())
+                    break;
             }
         }
-        return Optional.empty();
+        return parent;
     }
-
     // Saves the current instance to the json file
     public void save() {
         AppFilesManager.save(this);
+    }
+
+    public Folder getMainFilesRoot() {
+        return mainFilesRoot;
+    }
+
+    public Folder getArchiveRoot() {
+        return archiveRoot;
     }
 }

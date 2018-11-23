@@ -63,13 +63,8 @@ public class FileExplorer {
             return false;
 
         // Find parent folder if it exists
-        Optional<Folder> previousFolder = FileManager.findParent(currentFolder, files);
-
-        if(previousFolder.isPresent()){
-            currentFolder = previousFolder.get();
-        }else{
-            currentFolder = null;
-        }
+        Optional<Folder> folder = FileManager.findParent(currentFolder, FileManager.getInstance().getMainFilesRoot());
+        currentFolder = folder.orElse(null);
 
         return true;
     }

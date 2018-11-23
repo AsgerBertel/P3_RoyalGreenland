@@ -26,7 +26,7 @@ public class Folder extends AbstractFile {
         this.folderContents = content;
     }
     public Folder(Folder folder) {
-        super(folder.getPath().toString());
+        super(folder);
         this.folderContents = new ArrayList<>(folder.getContents());
     }
 
@@ -45,7 +45,6 @@ public class Folder extends AbstractFile {
             changeChildrenPath(this, oldPath, newPath);
         }
         AppFilesManager.save(FileManager.getInstance());
-        LoggingTools lt = new LoggingTools();
         LoggingTools.LogEvent(getName(), LogEventType.FOLDERRENAMED);
     }
 
