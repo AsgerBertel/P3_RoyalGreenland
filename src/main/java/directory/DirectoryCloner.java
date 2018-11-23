@@ -53,16 +53,6 @@ public class DirectoryCloner {
         replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
-    private static void replaceIfExists(Path src, Path dst) throws IOException {
-        if (!Files.exists(src))
-            throw new IllegalArgumentException("Given src file does not exist");
-
-        if (Files.exists(dst))
-            Files.delete(dst);
-
-        Files.copy(src, dst);
-    }
-
     // for testing. Recursively prints tree
     private static void printTree(ArrayList<AbstractFile> files, int offset) {
         for (AbstractFile file : files) {
@@ -126,7 +116,6 @@ public class DirectoryCloner {
                 }
             }
         }
-
         return modifiedOldFiles;
     }
 
@@ -178,7 +167,7 @@ public class DirectoryCloner {
 
 
             if (addedFile instanceof Folder) {
-                copyDirectory(newFileRoot.resolve(addedFile.getPath()), publishPath);
+                copyFolder(newFileRoot.resolve(addedFile.getPath()), publishPath);
             } else {
                 Files.copy(newFileRoot.resolve(addedFile.getPath()), publishPath);
             }
@@ -187,10 +176,6 @@ public class DirectoryCloner {
         }
 
         return modifiedOldFiles;
-    }
-
-    public static void copyDirectory(Path src, Path dst) throws IOException {
-        Files.walkFileTree(src, new CopyFileVisitor(dst));
     }
 
     private static boolean containsFolderWithPath(ArrayList<AbstractFile> files, Path path) {
@@ -220,6 +205,21 @@ public class DirectoryCloner {
         return false;
     }
 
+    private static void copyFolder(Path src, Path dst) throws IOException {
+        Files.createDirectories(dst);
+        File[] fileToCopy = src.toFile().listFiles();
+        if(fileToCopy == null) return;
+        for(File file : fileToCopy){
+            if(file.isDirectory()){
+                copyFolder(src.resolve(file.getName()), dst.resolve(file.getName()));
+            }else{
+                Files.copy(file.toPath(), dst.resolve(file.getName()));
+            }
+        }
+
+
+    }
+
     public static void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if (files != null) { //some JVMs return null for empty dirs
@@ -234,36 +234,14 @@ public class DirectoryCloner {
         folder.delete();
     }
 
-    // File visitor for copying an entire directory with all children
-    private static class CopyFileVisitor extends SimpleFileVisitor<Path> {
-        private final Path targetPath;
-        private Path sourcePath = null;
+    private static void replaceIfExists(Path src, Path dst) throws IOException {
+        if (!Files.exists(src))
+            throw new IllegalArgumentException("Given src file does not exist");
 
-        public CopyFileVisitor(Path targetPath) {
-            this.targetPath = targetPath;
-        }
+        if (Files.exists(dst))
+            Files.delete(dst);
 
-        @Override
-        public FileVisitResult preVisitDirectory(final Path dir,
-                                                 final BasicFileAttributes attrs) throws IOException {
-            if (sourcePath == null) {
-                sourcePath = dir;
-            } else {
-                Files.createDirectories(targetPath.resolve(sourcePath
-                        .relativize(dir)));
-            }
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFile(final Path file,
-                                         final BasicFileAttributes attrs) throws IOException {
-            Path target = targetPath.resolve(sourcePath.relativize(file));
-            if (!Files.exists(target.getParent())) target.getParent().toFile().mkdirs();
-
-            Files.move(file, target, StandardCopyOption.REPLACE_EXISTING);
-            return FileVisitResult.CONTINUE;
-        }
+        Files.copy(src, dst);
     }
 
 
