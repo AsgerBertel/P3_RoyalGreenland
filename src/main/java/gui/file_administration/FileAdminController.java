@@ -175,7 +175,7 @@ public class FileAdminController implements TabController {
             fileManager.save();
         }else if (selectedFile instanceof Document) {
             // Upload as sibling to selected document
-            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFiles());
+            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
             if(parent.isPresent()){
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
