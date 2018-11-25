@@ -34,6 +34,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -46,6 +47,7 @@ public class FileAdminController implements TabController {
     public VBox changesVBox;
     public Text lastUpdatedText;
     public ScrollPane changesScrollPane;
+    public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     @FXML
@@ -96,9 +98,7 @@ public class FileAdminController implements TabController {
 //      if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
         reloadFileTree();
         reloadPlantList();
-
         updateChangesList();
-
         updateFileWatcher();
     }
 
@@ -111,7 +111,9 @@ public class FileAdminController implements TabController {
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
+
         setFactoryListDisabled(true);
+        deleteFileButton.setDisable(true);
     }
 
     private void reloadPlantList() {
@@ -154,6 +156,7 @@ public class FileAdminController implements TabController {
         if (newValue != null && newValue != oldValue) {
             AbstractFile chosenFile = newValue.getValue();
             clearPlantSelection();
+            deleteFileButton.setDisable(false);
 
             if (chosenFile instanceof Document) {
                 selectedFile = chosenFile;
@@ -163,7 +166,10 @@ public class FileAdminController implements TabController {
                 setFactoryListDisabled(true);
                 selectedFile = chosenFile;
             }
+        }else{
+            deleteFileButton.setDisable(true);
         }
+
     }
 
     // Disables clicking on elements in the factory list
@@ -350,7 +356,15 @@ public class FileAdminController implements TabController {
     /* ---- Changelist ---- */
     private synchronized void updateChangesList() {
         changesVBox.getChildren().clear();
-        for(LogEvent logEvent : LoggingTools.getAllUnpublishedEvents())
+        List<LogEvent> unpublishedChanges = LoggingTools.getAllUnpublishedEvents();
+        if(unpublishedChanges.size() <= 0){
+            saveChangesButton.setDisable(true);
+            return;
+        }else{
+            saveChangesButton.setDisable(false);
+        }
+
+        for(LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
 
         lastUpdatedText.setText(LoggingTools.getLastPublished());
