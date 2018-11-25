@@ -90,8 +90,15 @@ public class DirectoryCloner {
 
         // Remove files from both the list and the disk
         for (AbstractFile fileToDelete : filesToDelete) {
+            Path fileToDeletePath = oldFilesRoot.resolve(fileToDelete.getOSPath());
+            boolean success;
             // Remove file from disk
-            boolean success = Files.deleteIfExists(oldFilesRoot.resolve(fileToDelete.getOSPath()));
+            if(fileToDelete instanceof Folder){
+                success = deleteFolder(fileToDeletePath.toFile());
+            }else{
+                success = Files.deleteIfExists(fileToDeletePath);
+            }
+
             if (!success)
                 throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + oldFilesRoot.toString());
             // A custom .remove() is used as the folders .equals() does not fit this use case
@@ -214,22 +221,21 @@ public class DirectoryCloner {
                 Files.copy(file.toPath(), dst.resolve(file.getName()));
             }
         }
-
-
     }
 
-    public static void deleteFolder(File folder) {
+    public static boolean deleteFolder(File folder) {
+        boolean success = true;
         File[] files = folder.listFiles();
         if (files != null) { //some JVMs return null for empty dirs
             for (File f : files) {
                 if (f.isDirectory()) {
-                    deleteFolder(f);
+                    success &= deleteFolder(f);
                 } else {
-                    f.delete();
+                    success &= f.delete();
                 }
             }
         }
-        folder.delete();
+        return folder.delete() && success;
     }
 
     private static void replaceIfExists(Path src, Path dst) throws IOException {
