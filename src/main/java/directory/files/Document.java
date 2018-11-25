@@ -35,7 +35,7 @@ public class Document extends AbstractFile {
     }
 
     public Document(Document document) {
-        super(document.getPath().toString());
+        super(document);
         this.ID = document.getID();
     }
 

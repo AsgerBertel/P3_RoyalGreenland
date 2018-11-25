@@ -70,8 +70,6 @@ public class DirectoryCloner {
         }
     }
 
-    // todo skrev den her rekursive klammert klokken 02:30 så det virker jo nok ikke.
-    // todo ok måske virker den faktisk
     public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws Exception {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);

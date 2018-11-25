@@ -49,10 +49,6 @@ public class FileAdminController implements TabController {
     public Text lastUpdatedText;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
-    private ArrayList<Plant> plants = new ArrayList<>();
-
-    private TreeItem<AbstractFile> rootItem;
-
     @FXML
     public Text plantListTitle;
     @FXML
@@ -61,6 +57,9 @@ public class FileAdminController implements TabController {
     private TreeView<AbstractFile> fileTreeView;
     @FXML
     private Text plantCountText;
+
+    private ArrayList<Plant> plants = new ArrayList<>();
+    private TreeItem<AbstractFile> rootItem;
 
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
@@ -203,7 +202,7 @@ public class FileAdminController implements TabController {
             fileManager.save();
         } else if (selectedFile instanceof Document) {
             // Upload as sibling to selected document
-            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFiles());
+            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
             if (parent.isPresent()) {
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
@@ -252,7 +251,7 @@ public class FileAdminController implements TabController {
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
-                Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
+                Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
 
                 Folder fol;
                 if (parent.isPresent())
@@ -391,9 +390,8 @@ public class FileAdminController implements TabController {
         Path root = Paths.get(Settings.getServerDocumentsPath());
 
         // Remove current watch keys
-        for(WatchKey key : watchKeys){
+        for(WatchKey key : watchKeys)
             key.cancel();
-        }
 
         try {
             Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
@@ -408,12 +406,14 @@ public class FileAdminController implements TabController {
             // todo - Handle exception. sorry. - Magnus
         }
 
-        if(watchThread == null || !watchThread.isAlive())
-            startWatchThread();
+        startWatchThread();
     }
 
     private void startWatchThread() {
-        Thread watchThread = new Thread(this::run);
+        // Don't start watcher thread if it's already running
+        if(watchThread != null && watchThread.isAlive()) return;
+
+        watchThread = new Thread(this::run);
         watchThread.setDaemon(true);
         watchThread.start();
     }
@@ -425,8 +425,13 @@ public class FileAdminController implements TabController {
         try {
             while (null != (key = watchService.take())) {
                 for (WatchEvent<?> event : key.pollEvents()) {
+                    @SuppressWarnings("unchecked") // This watchService only generates keys from paths
                     WatchEvent<Path> we = (WatchEvent<Path>) event;
-                    Path path = ((Path) key.watchable());
+
+                    // Get the path of the parent folder whose child was changed
+                    Path path = (Path) key.watchable();
+
+                    // Add the file name of the changed file to the path
                     Path fileName = we.context();
                     path = path.resolve(fileName);
 
@@ -445,7 +450,11 @@ public class FileAdminController implements TabController {
                     }
 
                 }
+                /* On saving a file the filesystem occasionally registers two changes instead of one. These occur within
+                * a very short time frame. To ensure that only one change is registered the listener is paused for a
+                * short while. */
                 Thread.sleep(100);
+                // Reset the key to start listening for changes on this file again
                 key.reset();
             }
         } catch (InterruptedException e) {

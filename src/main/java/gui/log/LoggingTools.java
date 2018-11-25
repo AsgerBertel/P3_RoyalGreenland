@@ -78,7 +78,7 @@ public class LoggingTools {
         ArrayList<LogEvent> eventsSinceLastPublish = new ArrayList<>();
 
         // Add events until a push is encountered
-        for (int i = allEvents.size() - 1; i > 0; i--) {
+        for (int i = allEvents.size() - 1; i >= 0; i--) {
             if (allEvents.get(i).getEventType().equals(LogEventType.CHANGES_PUBLISHED)) break;
             eventsSinceLastPublish.add(allEvents.get(i));
         }
