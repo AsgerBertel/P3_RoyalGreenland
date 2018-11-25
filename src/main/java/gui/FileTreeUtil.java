@@ -24,15 +24,51 @@ public class FileTreeUtil {
     private TreeCell<AbstractFile> dropZone;
     private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 
+
+    /**
+     * Generates a tree with the given folder as the root element
+     * @param root the root of the tree
+     * @return a TreeItem created from the given root folder, containing all child files
+     */
+    public static TreeItem<AbstractFile> generateTree(Folder root) {
+        return generateTree(root, null);
+    }
+
+
+    public static TreeItem<AbstractFile> generateTree(ArrayList<AbstractFile> files){
+        return generateTree(files, null);
+    }
+
+    /**
+     * Generates dummy TreeItem as the root. Adds all given files and potential sub directories to the tree.
+     * @param files the list of files that will be included in the tree. Children of any folder will also be added to the tree.
+     * @return a dummy root element containing all the given files.
+     */
+    public static TreeItem<AbstractFile> generateTree(ArrayList<AbstractFile> files, AccessModifier accessModifier){
+        TreeItem<AbstractFile> root = new TreeItem<>();
+
+        // Add all files to the tree if they are contained in accessModifier or if no accessModifier is given
+        for(AbstractFile file : files){
+            if(file instanceof Folder){
+                if(accessModifier == null || ((Folder) file).containsFromAccessModifier(accessModifier))
+                    root.getChildren().add(generateTree((Folder) file));
+            }else{
+                if(accessModifier == null || accessModifier.contains(((Document) file).getID()))
+                    root.getChildren().add(createTreeItem((Document) file));
+            }
+        }
+
+        return root;
+    }
+
     // Recursively generates a tree from a root folder. The tree will only contain files from the given access modifier
     // If the access modifier is null all files will be shown in the tree
-    public static TreeItem<AbstractFile> generateTree(Folder rootFolder, AccessModifier accessModifier) {
+    private static TreeItem<AbstractFile> generateTree(Folder rootFolder, AccessModifier accessModifier) {
         // Add folder element to tree
-        TreeItem<AbstractFile> rootItem = new TreeItem<>(rootFolder);
-        rootItem.setGraphic(getImageView(rootFolder));
+        TreeItem<AbstractFile> rootItem = createTreeItem(rootFolder);
 
         List<AbstractFile> children = rootFolder.getContents();
-        // Sort to show files in order of file type and name
+        // Sort to show files in order of file type and then name
         children.sort(FileTreeUtil::compareFiles);
 
         for (AbstractFile child : children) {
@@ -43,11 +79,9 @@ public class FileTreeUtil {
 
             }else if(child instanceof Document){
                 // Add file to the tree if it is contained within the accessModifier or there is no accessModifier
-                if(accessModifier == null || accessModifier.contains(((Document)child).getID())){
-                    TreeItem<AbstractFile> docItem = new TreeItem<>(child);
-                    docItem.setGraphic(getImageView(child));
-                    rootItem.getChildren().add(docItem);
-                }
+                if(accessModifier == null || accessModifier.contains(((Document)child).getID()))
+                    rootItem.getChildren().add(createTreeItem(child));
+
                 // TODO: 19-11-2018 Find a way to implement eventhandlers for drag and drop. Functions have been made - Asger.
              
             }
@@ -55,14 +89,17 @@ public class FileTreeUtil {
         return rootItem;
     }
 
-    public static TreeItem<AbstractFile> generateTree(Folder rootFile) {
-        return generateTree(rootFile, null);
+    // Creates a single tree item with no children
+    public static TreeItem<AbstractFile> createTreeItem(AbstractFile file){
+        TreeItem<AbstractFile> docItem = new TreeItem<>(file);
+        docItem.setGraphic(getImageView(file));
+        return docItem;
     }
 
     // Compare function for sorting files
     private static int compareFiles(AbstractFile o1, AbstractFile o2) {
         if (o1.getClass().equals(o2.getClass())) {
-            // Compare name is both classes are the same (both are folders or both are documents)
+            // Compare name if both classes are the same (both are folders or both are documents)
             return o1.getName().compareTo(o2.getName());
         } else {
             // Folders before documents

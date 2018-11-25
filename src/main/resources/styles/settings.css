@@ -1,5 +1,3 @@
-
-
 .settingsVBox{
     -fx-alignment: center-left;
     -fx-padding: 10px;
@@ -33,6 +31,4 @@
 .text-field.error{
     -fx-text-box-border: red;
 }
-
-
 
