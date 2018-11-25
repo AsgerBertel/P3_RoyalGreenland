@@ -8,6 +8,7 @@ import directory.files.Document;
 import directory.files.Folder;
 import gui.FileTreeUtil;
 import gui.TabController;
+import gui.TreeState;
 import gui.file_overview.FileButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,14 +64,17 @@ public class DeletedFilesController implements TabController {
             if (event.getClickCount() == 2)
                 fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
         });
+        fileTreeView.setRoot(new TreeItem<>());
 
         update();
     }
 
     @Override
     public void update() {
+        TreeState oldTreeState = new TreeState(fileTreeView);
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getArchiveFiles());
         fileTreeView.setRoot(rootItem);
+        oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setShowRoot(false);
     }
 

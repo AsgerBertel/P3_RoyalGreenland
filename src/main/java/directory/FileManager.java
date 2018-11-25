@@ -243,8 +243,10 @@ public class FileManager {
 
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathOrigin = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
-        Files.move(Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString()), pathOrigin);
+        Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
+        if(!Files.exists(newPath))Files.move(oldPath, newPath);
+        else;  // todo create new name for restored file
 
         insertFile(file, archiveRoot, mainFilesRoot);
 /*

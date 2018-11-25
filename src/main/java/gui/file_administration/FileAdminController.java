@@ -8,11 +8,8 @@ import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
-import gui.DMSApplication;
-import gui.FileTreeUtil;
-import gui.PlantCheckboxElement;
+import gui.*;
 
-import gui.TabController;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
@@ -59,7 +56,7 @@ public class FileAdminController implements TabController {
     private Text plantCountText;
 
     private ArrayList<Plant> plants = new ArrayList<>();
-    private TreeItem<AbstractFile> rootItem;
+    private TreeItem<AbstractFile> rootItem = new TreeItem<>();
 
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
@@ -74,6 +71,7 @@ public class FileAdminController implements TabController {
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
+        fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(false);
         fileTreeView.setOnMouseClicked(event -> {if(event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());});
 
@@ -106,8 +104,13 @@ public class FileAdminController implements TabController {
 
 
     private void reloadFileTree() {
+        // Copy current item expansion state
+        TreeState oldTreeState = new TreeState(fileTreeView);
+
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
+
         setFactoryListDisabled(true);
     }
 
@@ -198,30 +201,24 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Folder) {
             // Upload inside selected folder
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
-            fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             fileManager.save();
         } else if (selectedFile instanceof Document) {
             // Upload as sibling to selected document
             Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
             if (parent.isPresent()) {
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
-                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             } else {
                 // Upload to root
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
-                fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             }
 
         } else if (selectedFile == null) {
             // Upload to root
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
-            fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
         }
 
         fileManager.save();
         update();
-
-
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
     }
@@ -247,7 +244,6 @@ public class FileAdminController implements TabController {
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
-                fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
@@ -260,8 +256,6 @@ public class FileAdminController implements TabController {
                     fol = fileManager.createFolder(name);
 
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
-
-                fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.generateTree(fol));
             }
         }
         FileManager.getInstance().save();
@@ -283,7 +277,6 @@ public class FileAdminController implements TabController {
     public void deleteFile() {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         FileManager.getInstance().deleteFile(selectedItem.getValue());
-        selectedItem.getParent().getChildren().remove(selectedItem);
         FileManager.getInstance().save();
         update();
     }
