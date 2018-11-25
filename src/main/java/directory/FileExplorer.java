@@ -19,9 +19,14 @@ public class FileExplorer {
 
     private ArrayList<AbstractFile> files;
 
-    public FileExplorer(ArrayList<AbstractFile> files, Plant viewingPlant){
+    public FileExplorer(ArrayList<AbstractFile> files, Plant viewingPlant) {
         this.files = files;
         this.viewingPlant = viewingPlant;
+    }
+
+    public FileExplorer(ArrayList<AbstractFile> files) {
+        this.files = files;
+        this.viewingPlant = null;
     }
 
     // Returns the files currently shown in the explorer
@@ -29,7 +34,7 @@ public class FileExplorer {
         // todo use viewingPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
         ArrayList<AbstractFile> allFiles;
 
-        if(currentFolder == null)
+        if (currentFolder == null)
             allFiles = files;
         else
             allFiles = currentFolder.getContents();
@@ -37,17 +42,16 @@ public class FileExplorer {
         List<AbstractFile> shownFiles = new ArrayList<>();
 
         // Add files if they are contained in the plant's access modifier
-        if(viewingPlant != null){
-            for(AbstractFile file : allFiles){
-                if(file instanceof Folder){
-                    if(((Folder) file).containsFromAccessModifier(viewingPlant.getAccessModifier()))
-                        shownFiles.add(file);
-                }else if(file instanceof Document){
-                    if(viewingPlant.getAccessModifier().contains(((Document) file).getID()))
-                        shownFiles.add(file);
-                }
+        for (AbstractFile file : allFiles) {
+            if (file instanceof Folder) {
+                if (viewingPlant == null || ((Folder) file).containsFromAccessModifier(viewingPlant.getAccessModifier()))
+                    shownFiles.add(file);
+            } else if (file instanceof Document) {
+                if (viewingPlant == null || viewingPlant.getAccessModifier().contains(((Document) file).getID()))
+                    shownFiles.add(file);
             }
         }
+
 
         return shownFiles;
     }
@@ -60,7 +64,7 @@ public class FileExplorer {
     // Navigates to the parent directory
     public boolean navigateBack() {
         // Can't navigate further back if not currently in a folder
-        if(currentFolder == null)
+        if (currentFolder == null)
             return false;
 
         // Find parent folder if it exists
@@ -70,10 +74,10 @@ public class FileExplorer {
         return true;
     }
 
-    public String getCurrentPath(){
-        if(currentFolder == null){
+    public String getCurrentPath() {
+        if (currentFolder == null) {
             return "";
-        }else{
+        } else {
             return currentFolder.getPath().toString();
         }
     }
