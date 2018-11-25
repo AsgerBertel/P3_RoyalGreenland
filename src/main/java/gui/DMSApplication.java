@@ -1,7 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
-import directory.FileManager;
+import directory.Settings;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import json.AppFilesManager;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -30,22 +31,46 @@ public class DMSApplication extends Application {
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
-    private static final String APP_TITLE = "RG - Document Management System";
+    public static final String APP_TITLE = "RG - Document Management System";
 
     private FXMLLoader fxmlLoader;
     public static final String fxmlPath = "/fxml/";
 
     private Node mainMenu, fileOverview, fileAdministration, plantAdministration, log;
 
-    private ApplicationMode applicationMode;
+    private static ApplicationMode applicationMode;
+
+    private Settings settings;
+
 
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication(){}
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        String applicationMode = getParameters().getRaw().get(0);
+        // Figure out if program should run in admin or viewer mode
+        String appModeParameter = getParameters().getRaw().get(0);
+        applicationMode = ApplicationMode.valueOf(appModeParameter);
 
+        // Load settings from preferences and prompt the user for new path if necessary
+        initializeApplication();
+
+        loadRootElement();
+
+        primaryStage.setTitle(APP_TITLE);
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+
+
+
+        if(applicationMode.equals(ApplicationMode.ADMIN)){
+            switchWindow(TabLoader.FILE_ADMINISTRATION);
+        } else{
+            switchWindow(TabLoader.FILE_OVERVIEW);
+        }
+    }
+
+    private void loadRootElement() throws IOException{
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
@@ -55,7 +80,7 @@ public class DMSApplication extends Application {
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
 
-        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
+        if(applicationMode.equals(ApplicationMode.ADMIN)){
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "AdminMainMenu.fxml"), bundle);
         }else{
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "ViewerMainMenu.fxml"), bundle);
@@ -69,20 +94,6 @@ public class DMSApplication extends Application {
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
         root.getChildren().add(mainMenu);
-        primaryStage.setTitle(APP_TITLE);
-        primaryStage.setScene(new Scene(root));
-
-        // resetter file tree
-        FileManager.getTestInstance().initFolderTree();
-
-        this.primaryStage = primaryStage;
-        primaryStage.show();
-
-        if(applicationMode.equals(ApplicationMode.ADMIN.toString())){
-            switchWindow(TabLoader.FILE_ADMINISTRATION);
-        } else{
-            switchWindow(TabLoader.FILE_OVERVIEW);
-        }
     }
 
     // Shows the given part of the program
@@ -107,7 +118,6 @@ public class DMSApplication extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
             alert.setContentText("Kontakt Udvikleren"); // todo lol.
-
         }
     }
 
@@ -127,6 +137,34 @@ public class DMSApplication extends Application {
 
     public static String getMessage(String key){
         return messages.getString(key);
+    }
+
+    public static ApplicationMode getApplicationMode(){
+        return applicationMode;
+    }
+
+    private void initializeApplication(){
+        // Load settings and initialize paths if non are saved
+        Settings.loadSettings();
+
+        // Create application folder if they are missing
+        if(applicationMode.equals(ApplicationMode.VIEWER)){
+            try {
+                // Create any local app directories that might be missing
+                AppFilesManager.createLocalDirectories();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // todo Ask user to choose local path again probably
+            }
+        }else if(applicationMode.equals(ApplicationMode.ADMIN)){
+            try {
+                // Create any server side directories that might be missing
+                AppFilesManager.createServerDirectories();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // todo Ask user to check connection to the server or choose server path again
+            }
+        }
     }
 
 }

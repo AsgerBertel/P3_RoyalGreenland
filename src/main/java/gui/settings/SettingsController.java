@@ -1,6 +1,6 @@
 package gui.settings;
 
-import directory.PreferencesManager;
+import directory.Settings;
 import gui.DMSApplication;
 import gui.TabController;
 import javafx.event.ActionEvent;
@@ -22,16 +22,13 @@ public class SettingsController implements TabController {
     public TextField usernameTextField;
     public Button saveChangesButton;
 
-    private PreferencesManager preferencesManager;
-
-    private static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
+    static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferencesManager = PreferencesManager.getInstance();
-        usernameTextField.setText(preferencesManager.getUsername());
-        serverPathTextField.setText(preferencesManager.getServerPath());
-        localPathTextField.setText(preferencesManager.getLocalFilesPath());
+        usernameTextField.setText(Settings.getUsername());
+        serverPathTextField.setText(Settings.getServerPath());
+        localPathTextField.setText(Settings.getLocalFilesPath());
         saveChangesButton.setDisable(true);
 
         // Check validity of changes when
@@ -61,12 +58,16 @@ public class SettingsController implements TabController {
         }
     }
 
-    private File chooseDirectoryPrompt(String message) {
+    static File chooseDirectoryPrompt(String message) {
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle(message);
         File chosenFile = fileChooser.showDialog(new Stage());
         if (chosenFile == null) return null;
         return chosenFile;
+    }
+
+    public static boolean isValidPath(String path){
+        return path != null && !path.isEmpty();
     }
 
     private void onUserNameChanged() {
@@ -104,7 +105,9 @@ public class SettingsController implements TabController {
             if (!textField.getStyleClass().contains(styleClass))
                 textField.getStyleClass().add(styleClass);
 
-            saveChangesButton.setDisable(false);
+            if(!containsErrors()){
+                saveChangesButton.setDisable(false);
+            }
         } else {
             textField.getStyleClass().removeAll(Collections.singleton(styleClass));
         }
@@ -116,9 +119,9 @@ public class SettingsController implements TabController {
 
         // todo - Is this readable? - Magnus
         // Save all changes and set allChangeSaved to false if a save failed
-        allChangesSaved &= saveChange(usernameTextField, () -> preferencesManager.setUsername(usernameTextField.getText()));
-        allChangesSaved &= saveChange(serverPathTextField, () -> preferencesManager.setServerPath(serverPathTextField.getText()));
-        allChangesSaved &= saveChange(localPathTextField, () -> preferencesManager.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(usernameTextField, () -> Settings.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(serverPathTextField.getText()));
+        allChangesSaved &= saveChange(localPathTextField, () -> Settings.setUsername(usernameTextField.getText()));
 
         saveChangesButton.setDisable(allChangesSaved);
     }
@@ -136,5 +139,13 @@ public class SettingsController implements TabController {
 
         return true;
     }
+
+    protected boolean containsErrors(){
+        return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
+    }
+
+
 
 }

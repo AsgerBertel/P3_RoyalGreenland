@@ -2,10 +2,10 @@ package directory.files;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
 import directory.FileManager;
-import gui.DMSApplication;
-import gui.log.LogController;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
 import java.awt.*;
@@ -13,9 +13,15 @@ import java.io.File;
 import java.io.IOException;
 
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Document extends AbstractFile {
     private int ID;
+    private String lastModified;
+
+    private transient final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     /**
      * Used DocumentBuilder to create a document so that it gets the correct ID.
@@ -25,6 +31,12 @@ public class Document extends AbstractFile {
     Document(String path, int ID) {
         super(path);
         this.ID = ID;
+        this.lastModified = DATE_TIME_FORMATTER.format(LocalDateTime.now());
+    }
+
+    public Document(Document document) {
+        super(document);
+        this.ID = document.getID();
     }
 
     public int getID() {
@@ -45,9 +57,8 @@ public class Document extends AbstractFile {
         Path temp = Files.move(getPath(), tempTargetPath);
         setPath(tempTargetPath);
 
-        if(temp == null){ // todo temp always null? Implement differently
+        if(temp == null) // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
-        }
     }
 
     // Opens the document in a window
@@ -56,37 +67,6 @@ public class Document extends AbstractFile {
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
 
         Path dirPath = getParentPath();
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try(WatchService watchService = FileSystems.getDefault().newWatchService()){
-                    dirPath.register(watchService, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY}, SensitivityWatchEventModifier.HIGH);
-
-                    WatchKey key;
-
-                    key = watchService.take();
-
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        System.out.println(
-                                "Event kind:" + event.kind()
-                                        + ". File affected: " + event.context() + ".");
-                    }
-
-                    boolean valid = key.reset();
-                    if (!valid) {
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    System.out.println("Interrupt");
-                }
-            }
-        });
-
-        thread.start();
     }
 
     @Override
@@ -100,11 +80,27 @@ public class Document extends AbstractFile {
             throw new InvalidNameException();
 
         LoggingTools lt = new LoggingTools();
-        lt.LogEvent(getName(), LogEventType.RENAMED);
-        FileManager.getInstance().updateJsonFiles();
+        LoggingTools.log(new LogEvent(getName(), LogEventType.RENAMED));
+        AppFilesManager.save(FileManager.getInstance());
     }
 
-    public void tester(){
-        System.out.println(getPath());
+    public void setLastModified(LocalDateTime localDateTime){
+        this.lastModified = DATE_TIME_FORMATTER.format(localDateTime);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Document document = (Document) o;
+        return ID == document.ID &&
+                Objects.equals(lastModified, document.lastModified);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), ID, lastModified);
     }
 }

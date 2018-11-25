@@ -1,6 +1,7 @@
 package directory.files;
 
 import javax.naming.InvalidNameException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,13 +12,31 @@ public abstract class AbstractFile {
     private String path;
 
     AbstractFile(String path) {
-        this.path = path;
+        this.path = trimPath(path);
+    }
+    AbstractFile (AbstractFile file) {
+        this.path = file.getPath().toString();
     }
 
     abstract void renameFile(String newFileName) throws InvalidNameException;
 
     public Path getPath() {
         return Paths.get(path);
+    }
+
+    /**
+     * Returns the OS directive path, without artificial root folder.
+     * @return
+     */
+    private String trimPath(String path) {
+        if(!path.contains("root"))
+            return "root"+File.separator+"".concat(path);
+        else
+            return path;
+    }
+
+    public Path getOSPath() {
+        return Paths.get(path.replace("root"+File.separator,""));
     }
 
     public Path getAbsolutePath(){
