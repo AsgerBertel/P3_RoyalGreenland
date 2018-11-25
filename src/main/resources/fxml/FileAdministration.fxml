@@ -66,13 +66,17 @@
     </VBox>
 
     <!-- Changes overview -->
-    <VBox id="changesVBox" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
+    <VBox fx:id="changesSection" id="changesSection" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
         <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
         <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
         <Text text="%AdminFiles.LastUpdated" fx:id="lastUpdatedText" styleClass="smallNote" translateY="3"/>
         <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
-        <VBox fx:id="changesVBox"/>
-        <Button fx:id="saveChangesButton" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
+
+        <ScrollPane fx:id="changesScrollPane" id="changesScrollPane" maxHeight="${changesSection.height * 0.7}" minWidth="${changesSection.width}">
+            <VBox fx:id="changesVBox" styleClass="changesVBox" minWidth="${changesSection.width}"/>
+        </ScrollPane>
+
+        <Button fx:id="saveChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>
 

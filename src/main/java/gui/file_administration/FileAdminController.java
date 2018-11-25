@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -44,6 +45,7 @@ public class FileAdminController implements TabController {
     public Button saveChangesButton;
     public VBox changesVBox;
     public Text lastUpdatedText;
+    public ScrollPane changesScrollPane;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
     @FXML
@@ -74,7 +76,8 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(false);
         fileTreeView.setOnMouseClicked(event -> {if(event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());});
-
+        fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+        changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         try {
             watchService = FileSystems.getDefault().newWatchService();
         } catch (IOException e) {
@@ -92,9 +95,6 @@ public class FileAdminController implements TabController {
         // todo - It always reloads. - Philip
 //      if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
         reloadFileTree();
-        fileTreeView.getRoot().setExpanded(true);
-
-        fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         reloadPlantList();
 
         updateChangesList();
@@ -110,7 +110,7 @@ public class FileAdminController implements TabController {
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
-
+        selectedFile = null;
         setFactoryListDisabled(true);
     }
 

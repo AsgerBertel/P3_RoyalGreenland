@@ -20,7 +20,7 @@ public class ChangeBox extends VBox {
         this.setMinWidth(BOX_WIDTH);
         this.setMaxWidth(BOX_WIDTH);
 
-        getStyleClass().add("changesVBox");
+        getStyleClass().add("changeElement");
 
         text = new Text();
         text.setWrappingWidth(TEXT_WIDTH);
