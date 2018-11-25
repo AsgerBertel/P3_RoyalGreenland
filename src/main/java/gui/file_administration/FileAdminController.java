@@ -304,10 +304,12 @@ public class FileAdminController implements TabController {
                 Document doc = (Document)selectedFile;
                 name = name + "." + doc.getFileExtension();
                 try {
-                    doc.renameFile(name);
+                    FileManager.getInstance().renameFile(doc, name);
                 } catch (InvalidNameException e) {
                     System.out.println("Could not rename file");
                     e.printStackTrace();
+                    // todo show alert
+                    return;
                 }
             }
             if (selectedFile instanceof Folder) {

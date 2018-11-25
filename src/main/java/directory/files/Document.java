@@ -69,21 +69,6 @@ public class Document extends AbstractFile {
         Path dirPath = getParentPath();
     }
 
-    @Override
-    public void renameFile(String newFileName) throws InvalidNameException {
-        File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent() + File.separator + newFileName);
-        setPath(Paths.get(renamedFile.getPath()));
-
-        // Rename file and throw exception if it failed
-        if(!currentFile.renameTo(renamedFile))
-            throw new InvalidNameException();
-
-        LoggingTools lt = new LoggingTools();
-        LoggingTools.log(new LogEvent(getName(), LogEventType.RENAMED));
-        AppFilesManager.save(FileManager.getInstance());
-    }
-
     public void setLastModified(LocalDateTime localDateTime){
         this.lastModified = DATE_TIME_FORMATTER.format(localDateTime);
     }

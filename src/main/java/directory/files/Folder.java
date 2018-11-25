@@ -29,7 +29,6 @@ public class Folder extends AbstractFile {
         this.folderContents = new ArrayList<>(folder.getContents());
     }
 
-    @Override
     public void renameFile(String newFolderName){
         String oldPath = getPath().toString();
 

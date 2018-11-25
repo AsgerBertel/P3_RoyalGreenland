@@ -26,7 +26,6 @@ public class Settings {
     private static final String USERNAME_PREF = "username";
     private static final String LANGUAGE_PREF = "language";
 
-
     private static final String APPLICATION_FOLDER_NAME = "RG DMS/";
 
     // Relative program paths
@@ -59,7 +58,7 @@ public class Settings {
         // Prompt the user for paths if any are missing
         if (serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
-        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE)) // todo REMOVE FALSE
+        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
     }
 

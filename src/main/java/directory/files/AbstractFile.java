@@ -18,8 +18,6 @@ public abstract class AbstractFile {
         this.path = file.getPath().toString();
     }
 
-    abstract void renameFile(String newFileName) throws InvalidNameException;
-
     public Path getPath() {
         return Paths.get(path);
     }
@@ -49,6 +47,11 @@ public abstract class AbstractFile {
 
     public String getName() {
         return Paths.get(path).getFileName().toString();
+    }
+
+    public void setName(String name){
+        String parent = Paths.get(path).getParent().toString();
+        this.path = parent + "/" + name;
     }
 
     public void setPath(Path path) {

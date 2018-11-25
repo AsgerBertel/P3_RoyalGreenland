@@ -157,12 +157,11 @@ public class DeletedFilesController implements TabController {
         AbstractFile selectedFile = selectedItem.getValue();
         try {
             FileManager.getInstance().restoreFile(selectedFile);
-            selectedItem.getParent().getChildren().remove(selectedItem);
         } catch (IOException e) {
             e.printStackTrace(); // todo error handling
         }
 
-        //todo restore doesnt restore correctly?
+        update();
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {

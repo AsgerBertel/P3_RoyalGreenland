@@ -83,7 +83,7 @@ public class DirectoryCloner {
             } else if (file instanceof Folder) {
                 // Folder's .equals() implementation also compares children which is not relevant here.
                 // Therefore a custom contains() is used.
-                if (!containsFolderWithPath(newFiles, file.getPath()))
+                if (!containsFolderWithPath(newFiles, file.getOSPath()))
                     filesToDelete.add(file);
             }
         }
@@ -91,18 +91,18 @@ public class DirectoryCloner {
         // Remove files from both the list and the disk
         for (AbstractFile fileToDelete : filesToDelete) {
             // Remove file from disk
-            boolean success = Files.deleteIfExists(oldFilesRoot.resolve(fileToDelete.getPath()));
+            boolean success = Files.deleteIfExists(oldFilesRoot.resolve(fileToDelete.getOSPath()));
             if (!success)
-                throw new IOException("Could not delete file " + fileToDelete.getPath() + " from " + oldFilesRoot.toString());
+                throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + oldFilesRoot.toString());
             // A custom .remove() is used as the folders .equals() does not fit this use case
-            removeFileWithPath(modifiedOldFiles, fileToDelete.getPath());
+            removeFileWithPath(modifiedOldFiles, fileToDelete.getOSPath());
         }
 
         // Recursively repeat procedure on any sub folders that are common between new and old
         for (AbstractFile oldFile : modifiedOldFiles) {
             if (oldFile instanceof Folder) {
                 // Find matching folder in newFiles
-                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFile.getPath());
+                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFile.getOSPath());
 
                 if (newFolder.isPresent() && newFolder.get() instanceof Folder) {
                     Folder oldFolder = ((Folder) oldFile);
@@ -130,7 +130,7 @@ public class DirectoryCloner {
                 if (!modifiedOldFiles.contains(file))
                     filesToAdd.add(file);
             } else {
-                if (!containsFolderWithPath(modifiedOldFiles, file.getPath()))
+                if (!containsFolderWithPath(modifiedOldFiles, file.getOSPath()))
                     filesToAdd.add(file);
             }
         }
@@ -140,7 +140,7 @@ public class DirectoryCloner {
             if (oldFile instanceof Folder) {
                 Folder oldFolder = (Folder) oldFile;
 
-                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFolder.getPath()); // todo would this cause exception if they renamed a file to the name a folder had before? - Magnus
+                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFolder.getOSPath()); // todo would this cause exception if they renamed a file to the name a folder had before? - Magnus
 
                 if (newFolder.isPresent() && newFolder.get() instanceof Folder) {
                     ArrayList<AbstractFile> newChildren = addNewFiles(oldFolder.getContents(), ((Folder) newFolder.get()).getContents(), oldFilesRoot, newFileRoot);
@@ -154,7 +154,7 @@ public class DirectoryCloner {
 
         // Add the new files
         for (AbstractFile addedFile : filesToAdd) {
-            Path publishPath = (oldFilesRoot.resolve(addedFile.getPath()));
+            Path publishPath = (oldFilesRoot.resolve(addedFile.getOSPath()));
             if (Files.exists(publishPath)) {
                 if (addedFile instanceof Folder) {
                     deleteFolder(publishPath.toFile());
@@ -165,9 +165,9 @@ public class DirectoryCloner {
 
 
             if (addedFile instanceof Folder) {
-                copyFolder(newFileRoot.resolve(addedFile.getPath()), publishPath);
+                copyFolder(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
             } else {
-                Files.copy(newFileRoot.resolve(addedFile.getPath()), publishPath);
+                Files.copy(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
             }
 
             modifiedOldFiles.add(addedFile);
@@ -178,7 +178,7 @@ public class DirectoryCloner {
 
     private static boolean containsFolderWithPath(ArrayList<AbstractFile> files, Path path) {
         for (AbstractFile file : files) {
-            if (file.getPath().equals(path))
+            if (file.getOSPath().equals(path))
                 return true;
         }
         return false;
@@ -186,7 +186,7 @@ public class DirectoryCloner {
 
     private static Optional<AbstractFile> getFileByPath(ArrayList<AbstractFile> files, Path path) {
         for (AbstractFile file : files) {
-            if (file.getPath().equals(path))
+            if (file.getOSPath().equals(path))
                 return Optional.of(file);
         }
         return Optional.empty();
@@ -195,7 +195,7 @@ public class DirectoryCloner {
 
     private static boolean removeFileWithPath(ArrayList<AbstractFile> files, Path path) {
         for (AbstractFile file : files) {
-            if (file.getPath().equals(path)) {
+            if (file.getOSPath().equals(path)) {
                 files.remove(file);
                 return true;
             }

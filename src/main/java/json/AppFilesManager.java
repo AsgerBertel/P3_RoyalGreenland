@@ -92,23 +92,23 @@ public class AppFilesManager {
         Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
         Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
 
-        boolean succes = true;
+        boolean success = true;
         if(!Files.exists(serverDocumentsPath))
-            succes = serverDocumentsPath.toFile().mkdirs();
+            success = serverDocumentsPath.toFile().mkdirs();
 
         if(!Files.exists(serverArchivePath))
-            succes &= serverArchivePath.toFile().mkdirs();
+            success &= serverArchivePath.toFile().mkdirs();
 
         if(!Files.exists(serverAppFilesPath))
-            succes &= serverAppFilesPath.toFile().mkdirs();
+            success &= serverAppFilesPath.toFile().mkdirs();
 
         if(!Files.exists(publishedAppFilesPath))
-            succes &= publishedAppFilesPath.toFile().mkdirs();
+            success &= publishedAppFilesPath.toFile().mkdirs();
 
         if(!Files.exists(publishedDocumentsPath))
-            succes &= publishedDocumentsPath.toFile().mkdirs();
+            success &= publishedDocumentsPath.toFile().mkdirs();
 
-        if(!succes){ // todo Look into whyt mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
+        if(!success){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
             // todo Also in the case of the server directories connection might be a factor
             throw new IOException("Could not create application directories");
         }
