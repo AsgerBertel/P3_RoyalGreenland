@@ -34,26 +34,19 @@ public class Folder extends AbstractFile {
     public void renameFile(String newFolderName){
         String newPath = null;
         String oldPath = getOSPath().toString();
-        //System.out.println("Old Path: " + oldPath);
 
         if(getOSPath().toString().contains("/")){
             int indexOfLast = getPath().toString().lastIndexOf('/');
             newPath = getOSPath().toString().substring(0, indexOfLast) + newFolderName;
-            //System.out.println("If");
         }
         else {
-            //System.out.println("Else");
             newPath = getOSPath().toString().replace(getName(),"") + newFolderName;
         }
 
-        //System.out.println("NewPath: " + newPath);
         setPath(Paths.get(newPath));
 
         File file = new File(Settings.getServerDocumentsPath() + oldPath);
         File newFile = new File(Settings.getServerDocumentsPath() + getPath().toString());
-
-        //System.out.println("Old OS: " + file.getAbsolutePath());
-        //System.out.println("New OS: " + newFile.getAbsolutePath() );
 
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
