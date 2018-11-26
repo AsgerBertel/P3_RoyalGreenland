@@ -460,13 +460,19 @@ public class FileManager {
     }
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
-        Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath());
+        Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        System.out.println("Old Path: " + oldPath.toString());
         Path newPath = oldPath.getParent().resolve(newName);
+        System.out.println("New Path: " + newPath.toString());
 
         if (Files.exists(newPath))
             throw new InvalidNameException("Name is already in use");
 
         file.setName(newName);
-        return oldPath.toFile().renameTo(newPath.toFile());
+        if(oldPath.toFile().renameTo(newPath.toFile())){
+            return true;
+        }
+
+        return false;
     }
 }

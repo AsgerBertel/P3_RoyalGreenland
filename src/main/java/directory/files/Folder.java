@@ -1,6 +1,7 @@
 package directory.files;
 
 import directory.FileManager;
+import directory.Settings;
 import directory.plant.AccessModifier;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
@@ -8,6 +9,7 @@ import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +32,26 @@ public class Folder extends AbstractFile {
     }
 
     public void renameFile(String newFolderName){
-        String oldPath = getPath().toString();
+        String newPath = null;
+        String oldPath = getOSPath().toString();
 
-        int indexOfLast = getPath().toString().lastIndexOf(File.separator);
-        String newPath = getPath().toString().substring(0, indexOfLast) + File.separator + newFolderName;
+        if(getOSPath().toString().contains("/")){
+            int indexOfLast = getPath().toString().lastIndexOf('/');
+            newPath = getOSPath().toString().substring(0, indexOfLast) + newFolderName;
+        }
+        else {
+            newPath = getOSPath().toString().replace(getName(),"") + newFolderName;
+        }
+
         setPath(Paths.get(newPath));
 
-        File file = new File(oldPath);
-        File newFile = new File(newPath);
+        File file = new File(Settings.getServerDocumentsPath() + oldPath);
+        File newFile = new File(Settings.getServerDocumentsPath() + getPath().toString());
 
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
         }
         AppFilesManager.save(FileManager.getInstance());
-        LoggingTools lt = new LoggingTools();
         LoggingTools.log(new LogEvent(getName(), LogEventType.FOLDER_RENAMED));
     }
 

@@ -39,7 +39,7 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
     }
 
     public Path getOSPath() {
-        return Paths.get(path.replace("root"+File.separator,""));
+        return Paths.get(path.replace("root" + File.separator,""));
     }
 
     public Path getAbsolutePath(){
