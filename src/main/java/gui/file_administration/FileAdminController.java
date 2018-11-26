@@ -244,22 +244,49 @@ public class FileAdminController implements TabController {
         if (folderName.isPresent()) {
             if (selectedFile == null) {
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder(name);
+                Folder fol = null;
+                try {
+                    fol = FileManager.getInstance().createFolder(name);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InvalidNameException e) {
+                    e.printStackTrace(); // todo add exception handling
+                }
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                try {
+                    Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace(); // todo Show alert that folder already exists
+                } catch (IOException e) {
+                    e.printStackTrace(); // todo add exception handling
+                }
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
 
-                Folder fol;
+
                 if (parent.isPresent())
-                    fol = fileManager.createFolder(name, parent.get());
-                else
-                    fol = fileManager.createFolder(name);
+                    try{ // todo add exception handling
+                        fileManager.createFolder(name, parent.get());
+                    } catch (InvalidNameException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                else {
+                    try { // todo add exception handling
+                        fileManager.createFolder(name);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InvalidNameException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             }
@@ -268,7 +295,7 @@ public class FileAdminController implements TabController {
         update();
     }
 
-    public Optional<String> createFolderPopUP() {
+    public Optional<String> createFolderPopUP(){
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
@@ -345,7 +372,7 @@ public class FileAdminController implements TabController {
 
         if (file instanceof Document) {
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getPath()).toFile());
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getOSPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }

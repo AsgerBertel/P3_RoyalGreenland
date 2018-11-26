@@ -157,10 +157,12 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name) {
+    public Folder createFolder(String name) throws IOException, InvalidNameException{
         Folder folder = new Folder(name);
+        Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
+        if(Files.exists(fullPath)) throw new InvalidNameException();
 
-        createFolderFile(Settings.getServerDocumentsPath() + name);
+        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
         mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
@@ -168,23 +170,20 @@ public class FileManager {
     }
 
     // Creates a new folder inside the given parent folder
-    public Folder createFolder(String name, Folder parentFolder) {
+    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException{
+        Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
+        if(Files.exists(fullFolderPath)) throw new InvalidNameException("Folder with name " + name + " Already exists");
         Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
-        createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
+        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getPath()));
 
         parentFolder.getContents().add(folder);
         AppFilesManager.save(this);
         return folder;
     }
 
-    private void createFolderFile(String fullPath) {
-        boolean isSuccessful = new File(fullPath).mkdirs();
-
-        if (!isSuccessful) {
-            System.out.println("mkdirs was not successful");
-            // Todo should probably throw an exception - Magnus
-        }
+    private void createFolderFile(Path fullPath) throws IOException{
+        Files.createDirectories(fullPath);
     }
 
     public int OverwriteFilePopUP() {
@@ -470,4 +469,6 @@ public class FileManager {
         file.setName(newName);
         return oldPath.toFile().renameTo(newPath.toFile());
     }
+
+
 }
