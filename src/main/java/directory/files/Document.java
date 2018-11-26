@@ -1,16 +1,27 @@
 package directory.files;
 
+import com.sun.nio.file.SensitivityWatchEventModifier;
+import directory.FileManager;
+import gui.log.LogEvent;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
+import json.AppFilesManager;
+
 import javax.naming.InvalidNameException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Document extends AbstractFile {
     private int ID;
+    private String lastModified;
+
+    private transient final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     /**
      * Used DocumentBuilder to create a document so that it gets the correct ID.
@@ -20,6 +31,12 @@ public class Document extends AbstractFile {
     Document(String path, int ID) {
         super(path);
         this.ID = ID;
+        this.lastModified = DATE_TIME_FORMATTER.format(LocalDateTime.now());
+    }
+
+    public Document(Document document) {
+        super(document);
+        this.ID = document.getID();
     }
 
     public int getID() {
@@ -40,29 +57,35 @@ public class Document extends AbstractFile {
         Path temp = Files.move(getPath(), tempTargetPath);
         setPath(tempTargetPath);
 
-        if(temp == null){ // todo temp always null? Implement differently
+        if(temp == null) // todo temp always null? Implement differently
             throw new IOException("Failed to move file");
-        }
     }
 
     // Opens the document in a window
     public void openDocument() throws IOException {
         File file = new File(getPath().toString()); // todo is this correctly implemented??
         Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
+
+        Path dirPath = getParentPath();
+    }
+
+    public void setLastModified(LocalDateTime localDateTime){
+        this.lastModified = DATE_TIME_FORMATTER.format(localDateTime);
     }
 
     @Override
-    public void renameFile(String newFileName) throws InvalidNameException {
-        File currentFile = getPath().toFile();
-        File renamedFile = new File(getPath().getParent()+ File.separator + newFileName);
-        setPath(Paths.get(renamedFile.getPath()));
-
-        // Rename file and throw exception if it failed
-        if(!currentFile.renameTo(renamedFile))
-            throw new InvalidNameException();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Document document = (Document) o;
+        return ID == document.ID &&
+                Objects.equals(lastModified, document.lastModified);
     }
 
-    public void tester(){
-        System.out.println(getPath());
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), ID, lastModified);
     }
 }

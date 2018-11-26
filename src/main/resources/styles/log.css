@@ -1,7 +1,7 @@
 #searchField {
     -fx-background-image: url("/icons/menu/search.png");
-    -fx-background-size: 40 30;
-    -fx-background-position: right 10 center;
+    -fx-background-size: 40 40;
+    -fx-background-position: right 3 center;
     -fx-background-repeat: no-repeat;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -35,7 +35,13 @@
 .button{
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-background-color: #F3F2F2;
+    -fx-background-color: transparent;
+}
+
+.button:hover{
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+    -fx-cursor: HAND;
 }
 
 #tableView .table-row-cell {

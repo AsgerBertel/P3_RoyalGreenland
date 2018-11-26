@@ -77,7 +77,9 @@ public class PlantAdministrationController implements TabController {
         plantVBox.getChildren().clear();
 
         //Fills ArrayList with plants from Json-File.
-        for (Plant plant : PlantManager.getInstance().readFromJsonFile().getAllPlants()) {
+        PlantManager plantManager = PlantManager.getInstance();
+        // plantManager.updateFromServer(); todo necessary? This method didn't work before so it's now removed - Magnus
+        for (Plant plant : PlantManager.getInstance().getAllPlants()) {
             PlantElement plantElement = new PlantElement(plant);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
@@ -173,13 +175,16 @@ public class PlantAdministrationController implements TabController {
                     element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
                     element.updateText();
                     isElementSelected = true;
+                    lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 }
             }
             if (!isElementSelected) {
                 lblPlantEdited.setText("PlantAdmin.SelectPlant");
             }
+
             field_EditPlantName.clear();
             field_EditPlantId.clear();
+
         } catch(NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }

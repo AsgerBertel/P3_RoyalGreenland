@@ -16,7 +16,7 @@
 
     <!-- Side menu -->
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-        <Button onAction="#addDocument">
+        <Button styleClass="menuButton" onAction="#uploadDocument">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/adddocument.png"/>
@@ -24,7 +24,7 @@
             </graphic>
         </Button>
 
-        <Button onAction="#createFolder">
+        <Button styleClass="menuButton" onAction="#createFolder">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/addfolder.png"/>
@@ -32,7 +32,7 @@
             </graphic>
         </Button>
 
-        <Button onAction="#deleteFile">
+        <Button fx:id="deleteFileButton" styleClass="menuButton" onAction="#deleteFile">
             <graphic>
                 <ImageView fitHeight="39" fitWidth="39">
                     <Image url="/icons/menu/delete.png"/>
@@ -64,12 +64,18 @@
         </ScrollPane>
     </VBox>
 
-
     <!-- Changes overview -->
-    <VBox fx:id="changesVBox" id="changesVBox" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
+    <VBox fx:id="changesSection" id="changesSection" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
         <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
         <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
+        <Text text="%AdminFiles.LastUpdated" fx:id="lastUpdatedText" styleClass="smallNote" translateY="3"/>
         <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
+
+        <ScrollPane fx:id="changesScrollPane" id="changesScrollPane" maxHeight="${changesSection.height * 0.7}" minWidth="${changesSection.width}">
+            <VBox fx:id="changesVBox" styleClass="changesVBox" minWidth="${changesSection.width}"/>
+        </ScrollPane>
+
+        <Button fx:id="saveChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>
 
