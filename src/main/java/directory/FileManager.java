@@ -233,6 +233,7 @@ public class FileManager {
             Optional<Folder> parent = findParent(file, mainFilesRoot);
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
+
             AppFilesManager.save(this);
         } catch (IOException e) {
             System.out.println("Could not delete file");

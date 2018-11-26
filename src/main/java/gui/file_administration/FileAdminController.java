@@ -220,7 +220,7 @@ public class FileAdminController implements TabController {
 
         } else if (selectedFile == null) {
             // Upload to root
-            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
+            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), fileManager.getMainFilesRoot());
         }
 
         fileManager.save();
