@@ -345,7 +345,6 @@ public class FileAdminController implements TabController {
 
         if (file instanceof Document) {
             try {
-                System.out.println(file.getOSPath().toString());
                 Desktop.getDesktop().open(Paths.get(file.getOSPath().toString()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
