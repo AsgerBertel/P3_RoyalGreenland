@@ -215,7 +215,7 @@ public class FileAdminController implements TabController {
 
         } else if (selectedFile == null) {
             // Upload to root
-            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
+            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), fileManager.getMainFilesRoot());
         }
 
         fileManager.save();
@@ -342,8 +342,11 @@ public class FileAdminController implements TabController {
             }
             if (selectedFile instanceof Folder) {
                 Folder fol = (Folder) selectedFile;
-
-                fol.renameFile(name);
+                try {
+                    FileManager.getInstance().renameFile(fol,name);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                }
             }
             // Todo tree closes when it updates. - Philip
             update();

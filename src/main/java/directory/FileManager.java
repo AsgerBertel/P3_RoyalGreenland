@@ -223,6 +223,7 @@ public class FileManager {
             Optional<Folder> parent = findParent(file, mainFilesRoot);
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
+
             AppFilesManager.save(this);
         } catch (IOException e) {
             System.out.println("Could not delete file");
@@ -451,18 +452,33 @@ public class FileManager {
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
-        System.out.println("Old Path: " + oldPath.toString());
         Path newPath = oldPath.getParent().resolve(newName);
-        System.out.println("New Path: " + newPath.toString());
 
         if (Files.exists(newPath))
             throw new InvalidNameException("Name is already in use");
 
-        file.setName(newName);
         if(oldPath.toFile().renameTo(newPath.toFile())){
+            if(file instanceof Folder){
+                Folder fol = (Folder)file;
+                Path oldOSPath = file.getOSPath();
+                fol.setName(newName);
+
+                Path newOSPath = file.getOSPath();
+                fol.changeChildrenPath(fol, oldOSPath.toString(), newOSPath.toString());
+
+                AppFilesManager.save(FileManager.getInstance());
+                LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
+            }
+            if(file instanceof Document){
+                Document doc = (Document)file;
+                doc.setName(newName);
+
+                AppFilesManager.save(FileManager.getInstance());
+                LoggingTools.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
+            }
+
             return true;
         }
-
         return false;
     }
 }
