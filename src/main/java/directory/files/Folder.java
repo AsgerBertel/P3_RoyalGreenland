@@ -2,32 +2,33 @@ package directory.files;
 
 import directory.FileManager;
 import directory.plant.AccessModifier;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import json.AppFilesManager;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Folder extends AbstractFile {
-    private List<AbstractFile> folderContents = new ArrayList<>();
+    private ArrayList<AbstractFile> folderContents = new ArrayList<>();
 
     public Folder(String path) {
         super(path);
     }
 
-    public Folder(String path, boolean firstTime) {
+    public Folder(String path, ArrayList<AbstractFile> content) {
         super(path);
-        if(firstTime){
-            folderInit();
-        }
+        this.folderContents = content;
+    }
+    public Folder(Folder folder) {
+        super(folder.getPath().toString());
+        this.folderContents = new ArrayList<>(folder.getContents());
     }
 
-    @Override
     public void renameFile(String newFolderName){
         String oldPath = getPath().toString();
 
@@ -41,9 +42,9 @@ public class Folder extends AbstractFile {
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
         }
-        FileManager.getInstance().updateJsonFiles();
+        AppFilesManager.save(FileManager.getInstance());
         LoggingTools lt = new LoggingTools();
-        lt.LogEvent(getName(), LogEventType.FOLDERRENAMED);
+        LoggingTools.log(new LogEvent(getName(), LogEventType.FOLDER_RENAMED));
     }
 
     private void changeChildrenPath(Folder folder, String oldPath, String newPath){
@@ -62,25 +63,8 @@ public class Folder extends AbstractFile {
     }
 
     // Reads the content o path its given
-    public List<AbstractFile> getContents(){
+    public ArrayList<AbstractFile> getContents(){
         return folderContents;
-    }
-
-    // Reads the list of files within the folder
-    private void folderInit() {
-        folderContents.clear();
-
-        try {
-            Files.walk(getPath(), 1)
-                    .filter(path1 -> Files.isDirectory(path1) && !path1.equals(getPath()))
-                    .forEach(file -> folderContents.add(new Folder(file.toString(), true)));
-
-            Files.walk(getPath(), 1)
-                    .filter(Files::isRegularFile)
-                    .forEach(file -> folderContents.add(DocumentBuilder.getInstance().createDocument(file)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean containsFromAccessModifier(AccessModifier am){

@@ -1,6 +1,7 @@
 package directory.plant;
 
-import directory.PreferencesManager;
+import directory.Settings;
+import json.AppFilesManager;
 import json.JsonParser;
 
 import java.io.*;
@@ -24,17 +25,14 @@ public class PlantManager {
      */
     public static synchronized PlantManager getInstance(){
         if(plantManager == null){
-            plantManager = readFromJsonFile();
+            plantManager = AppFilesManager.loadPlantManager();
+
+            if(plantManager == null) {
+                plantManager = new PlantManager();
+                AppFilesManager.save(plantManager);
+            }
         }
         return plantManager;
-    }
-
-    public void setPathToJson(String pathToJson) {
-        getInstance().pathToJson = pathToJson;
-    }
-
-    public ArrayList<Plant> ReadJsonAndGetAllPlants(){
-        return allPlants;
     }
 
     /**
@@ -91,36 +89,6 @@ public class PlantManager {
      */
     protected void updateJsonFile(){
         // Write object to JSON file.
-        System.out.println(PreferencesManager.getInstance().getServerAppFilesPath() + "allPlants.JSON");
-        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + "allPlants.JSON")){
-            JsonParser.getJsonParser().toJson(plantManager, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Load the JSON file into the PlantManager.
-     */
-    public static PlantManager readFromJsonFile(){
-        try (Reader reader = new FileReader(PreferencesManager.getInstance().getServerAppFilesPath() + "allPlants.JSON")){
-                return JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
-        } catch (IOException e) {
-            System.out.println("Could not read JSON plants.");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Load the JSON file into the PlantManager.
-     */
-    public void readFromJsonFile(String pathToJson){
-        try (Reader reader = new FileReader(pathToJson)){
-            plantManager = JsonParser.getJsonParser().fromJson(reader, PlantManager.class);
-        } catch (IOException e) {
-            System.out.println("Could not read JSON plants.");
-            e.printStackTrace();
-        }
+        AppFilesManager.save(this);
     }
 }

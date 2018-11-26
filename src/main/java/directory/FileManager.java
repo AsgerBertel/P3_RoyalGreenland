@@ -5,10 +5,12 @@ import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import gui.DMSApplication;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import javafx.scene.control.*;
 import json.JsonParser;
+import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
 import java.io.*;
@@ -17,165 +19,273 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Optional;
+import java.util.Stack;
 
 public class FileManager {
-    // todo Archive folder path should be set on setup
-    private static String pathToJson = "Sample files/allFiles.JSON";
 
-    private static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
-
-    private LoggingTools loggingTools = new LoggingTools();
-
-    private ArrayList<AbstractFile> allContent = new ArrayList<>();
-    private ArrayList<AbstractFile> archive = new ArrayList<>();
+    private Folder mainFilesRoot;
+    private Folder archiveRoot;
 
     private static FileManager fileManager;
 
-    // Private constructor for ensuring that no other class can create a new instance this class
-    private FileManager(){}
-
     public static synchronized FileManager getInstance() {
         if (fileManager == null) {
-            fileManager = readFileManagerFromJson();
+            // Attempt to load file list from the server
+            fileManager = AppFilesManager.loadFileManager();
+
+            // If still null create new FileManager and save it on the server
+            if (fileManager == null) {
+                fileManager = new FileManager();
+                AppFilesManager.save(fileManager);
+            }
         }
         return fileManager;
     }
 
-    //todo temporary
-    public static synchronized FileManager getTestInstance() {
-        if (fileManager == null) {
-            fileManager = new FileManager();
+    // Private constructor for ensuring that no other class can create a new instance this class
+    private FileManager() {
+        // Create a list of AbstractFiles based on the files inside the server document path
+        Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
+        mainFilesRoot = findFiles(mainFilesRootPath);
+
+        // Initialize list of archived documents // todo should these automatic file detection features be enabled? - Magnus
+        Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
+        archiveRoot = findFiles(archiveFilesRootPath);
+    }
+
+    private static Folder findFiles(Path root) {
+        if (!Files.exists(root)) {
+            // todo Check if server connection failure or just non-existing file throw exception maybe
         }
-        return fileManager;
+
+        if (!Files.isDirectory(root)) {
+            throw new IllegalArgumentException("Root file must be a directory");
+        }
+
+        // TODO --------- Important ---------- The root folder is initiated with an empty path. If the path is not create folder, upload file etc. will not create files with correct relative path - Magnus
+        // TODO This doesn't seem clean but i dunno - Magnus
+        return new Folder("", loadChildren(root, root));
     }
 
-    public ArrayList<AbstractFile> getAllContent() {
-        return allContent;
+    /* Find all children of the given root and creates a list of corresponding abstractFile instances with paths
+       relative to the base path */
+    private static ArrayList<AbstractFile> loadChildren(Path rootPath, Path basePath) {
+        ArrayList<AbstractFile> children = new ArrayList<>();
+
+        try { // todo should be rewritten for readability. Use listFiles() instead - Magnus
+            // Iterate through all files within the rootFolder and add them to the files list
+            Files.walk(rootPath, 1)
+                    .filter(path -> !path.equals(rootPath))
+                    .forEach(newFilePath -> {
+                        Path relativePath = basePath.relativize(newFilePath);
+
+                        if (Files.isDirectory(newFilePath)) {
+                            Folder folder = new Folder(relativePath.toString());
+                            // Recursive call to load all child elements of this folder
+                            folder.getContents().addAll(loadChildren(newFilePath, basePath));
+                            children.add(folder);
+                        } else {
+                            // exclude temporary word files
+                            String fileName = relativePath.getFileName().toString();
+                            if(fileName.startsWith("~"))
+                                return;
+
+                            Document document = DocumentBuilder.getInstance().createDocument(relativePath);
+                            children.add(document);
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace(); // todo handle properly
+        }
+        return children;
     }
 
-    public ArrayList<AbstractFile> getArchive() {
-        return archive;
+    public ArrayList<AbstractFile> getMainFiles() {
+        return mainFilesRoot.getContents();
     }
 
-    public void uploadFile(Path src, Folder dstFolder){
+    public ArrayList<AbstractFile> getArchiveFiles() {
+        return archiveRoot.getContents();
+    }
+
+    // Uploads a file directly to the root of the main files
+    public Document uploadFile(Path src) {
+        File file = new File(src.toString());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
+
+        if (Files.exists(dest)) {
+            // todo throw file already exists exception - Magnus
+            // todo rename to file(2)
+        }
+        Document newDoc = DocumentBuilder.getInstance().createDocument(src.getFileName());
+        getMainFiles().add(newDoc);
+        return newDoc;
+
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
+    }
+
+    public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(dstFolder.getPath().toString() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + file.getName());
 
-        if (Files.exists(dest)){
-            int bt = OverwriteFilePopUP();
-            if(bt == 1){
-                deleteFile(DocumentBuilder.getInstance().createDocument(dest));
-            } else if(bt == 0) {
-                //todo rename uploaded file and upload it
-            } else if(bt == -1) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("noget gik galt");
-                return;
-            }
+        if (Files.exists(dest)) {
+            // todo should show prompt - Magnus
+
         }
 
         try {
             Files.copy(src, dest);
             Document doc = DocumentBuilder.getInstance().createDocument(dest);
             dstFolder.getContents().add(doc);
-            getInstance().updateJsonFiles();
-            loggingTools.LogEvent(file.getName(), LogEventType.CREATED);
+            AppFilesManager.save(this);
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
+            return doc;
         } catch (IOException e) {
             System.out.println("Could not copy/upload file");
             e.printStackTrace();
-        } // todo Error handling.
+            // todo Should probably throw new exception.
+        }
+
+        // todo add document to files list - Magnus
 
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
+        return null;
     }
 
-    public Folder createFolder(Folder parentFolder, String name) {
-        // Todo Error handling
-        Folder createdFolder = new Folder(parentFolder.getPath() + File.separator + name);
+    // Creates a folder in the root directory of main files
+    public Folder createFolder(String name) {
+        Folder folder = new Folder(name);
 
-        boolean isSuccessful = new File(createdFolder.getPath().toString()).mkdirs();
+        createFolderFile(Settings.getServerDocumentsPath() + name);
 
-        if(!isSuccessful){
+        mainFilesRoot.getContents().add(folder);
+        AppFilesManager.save(this);
+        return folder;
+    }
+
+    // Creates a new folder inside the given parent folder
+    public Folder createFolder(String name, Folder parentFolder) {
+        Folder folder = new Folder(parentFolder.getOSPath() + File.separator + name);
+
+        createFolderFile(Settings.getServerDocumentsPath() + folder.getOSPath());
+
+        parentFolder.getContents().add(folder);
+        AppFilesManager.save(this);
+        return folder;
+    }
+
+    private void createFolderFile(String fullPath) {
+        boolean isSuccessful = new File(fullPath).mkdirs();
+
+        if (!isSuccessful) {
             System.out.println("mkdirs was not successful");
-            return null;
+            // Todo should probably throw an exception - Magnus
         }
-
-        parentFolder.getContents().add(createdFolder);
-        updateJsonFiles();
-        return createdFolder;
     }
 
-    public int OverwriteFilePopUP(){
+    public int OverwriteFilePopUP() {
         Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
         txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
         ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
         ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
         ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite,buttonTypeKeep,buttonTypeCancel);
+        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite, buttonTypeKeep, buttonTypeCancel);
 
         Optional<ButtonType> result = txtInputDia.showAndWait();
 
         txtInputDia.showAndWait();
 
-        if (result.get() == buttonTypeOverwrite){
+        if (result.get() == buttonTypeOverwrite) {
             return 1;
-        } else if (result.get() == buttonTypeKeep){
+        } else if (result.get() == buttonTypeKeep) {
             return 0;
         }
 
         return -1;
     }
 
+    // Removes a file from main files
     public void deleteFile(AbstractFile file) {
-
-        String fileName = file.getName();
-
-        Path pathWithName = Paths.get(Paths.get
-                (PreferencesManager.getInstance().getServerArchivePath())
-                + File.separator + fileName);
-
-        if (Files.exists(pathWithName)){
-            fileName = setVersionNumber(file);
-            pathWithName = Paths.get(Paths.get
-                    (PreferencesManager.getInstance().getServerArchivePath())
-                    + File.separator + fileName);
-
-            if (file instanceof Folder){
-                ((Folder) file).renameFile(fileName);
-            } else if (file instanceof Document){
-                try {
-                    ((Document) file).renameFile(fileName);
-                } catch (InvalidNameException e) {
-                    e.printStackTrace();
-                    System.out.println("invalid name");
-                }
-            }
-        }
+        Path originalPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath());
+        Path archivePath = Paths.get(Settings.getServerArchivePath() + file.getOSPath());
 
         try {
-            Files.move(file.getPath(), pathWithName);
-            Folder parent = findParent(file);
-            parent.getContents().remove(file);
+            // Create parent folders if they don't exist
+            new File(archivePath.getParent().toString()).mkdirs();
 
-            Folder archiveFolder = (Folder)getInstance().archive.get(0);
-            archiveFolder.getContents().add(file);
-            getInstance().updateJsonFiles();
+            if (Files.exists(archivePath)) {
+                if (!Files.isDirectory(originalPath)) {
+                    // Give the document a new name if it already exists
+                    archivePath = generateUniqueFileName(archivePath);
+                    file.setName(archivePath.getFileName().toString());
+                    Files.move(originalPath, archivePath);
+                }
+            } else {
+                Files.move(Paths.get(Settings.getServerDocumentsPath() + file.getOSPath()), archivePath);
+            }
+
+            insertFile(file, mainFilesRoot, archiveRoot);
+            LoggingTools.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
+            Optional<Folder> parent = findParent(file, mainFilesRoot);
+            parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+
+            AppFilesManager.save(this);
         } catch (IOException e) {
             System.out.println("Could not delete file");
             e.printStackTrace();
         }
     }
 
-    private String setVersionNumber(AbstractFile file){
+    // Append incremental number at the end of file name to
+    private static Path generateUniqueFileName(Path filePath) {
+        Path parent = filePath.getParent();
+        String extension = getExtension(filePath);
+        String fileName = filePath.getName(filePath.getNameCount() - 1).toString().replace(extension, "");
+
+        Path newUniquePath = filePath;
+        int appendedNumber = 0;
+        while (Files.exists(newUniquePath)) {
+            appendedNumber++;
+
+            // If the file name already has a number appended to it then replace the current number with the next one
+            if (fileName.endsWith(")") && Character.isDigit(fileName.charAt(fileName.length() - 2))) {
+                String currentNumberString = fileName.substring(fileName.lastIndexOf('('), fileName.lastIndexOf(')') + 1);
+                fileName = fileName.replace(currentNumberString, "(" + appendedNumber + ")");
+            } else {// Otherwise just append the number to the filename
+                fileName += "(" + appendedNumber + ")";
+            }
+            newUniquePath = parent.resolve(fileName + extension);
+        }
+
+        return newUniquePath;
+    }
+
+    /**
+     * @return an empty string if the file has no extension
+     */
+    private static String getExtension(Path filePath) {
+        String pathString = filePath.toString();
+        int indexOfSeperator = pathString.lastIndexOf('.');
+        String extension = pathString.substring(indexOfSeperator, pathString.length());
+        if (extension.contains("/") || extension.contains(File.separator))
+            return "";
+
+        return extension;
+    }
+
+    private String setVersionNumber(AbstractFile file) {
         int versionNumber;
         String name1;
         String name2;
         String fileName = file.getName();
         char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
 
-        if (c == ')'){
+        if (c == ')') {
             String str = fileName.substring(fileName.lastIndexOf("(") + 1,
                     fileName.lastIndexOf(")"));
 
@@ -183,7 +293,7 @@ public class FileManager {
             versionNumber++;
 
             name1 = fileName.substring(
-                    0,fileName.lastIndexOf("("));
+                    0, fileName.lastIndexOf("("));
 
             name2 = fileName.substring(
                     fileName.lastIndexOf(")") + 1,
@@ -201,8 +311,7 @@ public class FileManager {
 
         String newFileName = name1 + "(" + versionNumber + ")" + name2;
 
-        while(Files.exists(Paths.get(PreferencesManager.getInstance()
-                .getServerDocumentsPath() + File.separator + newFileName))){
+        while (Files.exists(Paths.get(Settings.getServerDocumentsPath() + File.separator + newFileName))) {
             versionNumber++;
             newFileName = name1 + "(" + versionNumber + ")" + name2;
         }
@@ -212,122 +321,153 @@ public class FileManager {
 
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
-        Path pathWithName = Paths.get(Paths.get(PreferencesManager.getInstance().getServerArchivePath()) + File.separator + file.getName());
+        // Move the file on the file system
+        Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
 
-        if (Files.exists(Paths.get(PreferencesManager.getInstance()
-                .getServerDocumentsPath() + File.separator + file.getName()))){
-            String fileName = setVersionNumber(file);
-            System.out.println(file.getPath().toString());
-            System.out.println("exists");
-            if (file instanceof Folder){
-                ((Folder) file).renameFile(fileName);
-            } else if (file instanceof Document){
-                try {
-                    ((Document) file).renameFile(fileName);
-                } catch (InvalidNameException e) {
-                    e.printStackTrace();
-                    System.out.println("invalid name");
+        if (!Files.exists(newPath))
+            Files.move(oldPath, newPath);
+        else {
+            // Find new name if it's a document and it already exists
+            if (!Files.isDirectory(oldPath)) {
+                newPath = generateUniqueFileName(newPath);
+                Files.move(oldPath, newPath);
+                file.setName(newPath.getFileName().toString());
+            }
+        }
+
+        // Insert the file into the main files list
+        insertFile(file, archiveRoot, mainFilesRoot);
+
+        // Remove the folder from the archive files list
+        Optional<Folder> parent = findParent(file, archiveRoot);
+        parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+
+        AppFilesManager.save(this);
+    }
+
+    private void insertFile(AbstractFile file, Folder srcRoot, Folder dstRoot) {
+        if (file instanceof Document) {
+            insertDocument((Document) file, srcRoot, dstRoot);
+        } else if (file instanceof Folder) {
+            insertFolder((Folder) file, srcRoot, dstRoot);
+        }
+    }
+
+    private void insertFolder(Folder folder, Folder srcRoot, Folder dstRoot) {
+        for (AbstractFile file : folder.getContents()) {
+            if (file instanceof Document)
+                insertDocument((Document) file, srcRoot, dstRoot);
+            else if (file instanceof Folder)
+                insertFolder((Folder) file, srcRoot, dstRoot);
+        }
+    }
+
+    private void insertDocument(Document document, Folder src, Folder dst) {
+        Stack<Folder> stack = new Stack<>();
+        Optional<Folder> parent = findParent(document, src);
+        Folder folderToInsert = dst;
+        Folder temp;
+        boolean folderExists = false;
+
+        while (parent.isPresent()) {
+            stack.push(parent.get());
+            parent = findParent(parent.get(), src);
+        }
+        while (!stack.empty()) {
+            temp = new Folder(stack.peek().getPath().toString());
+
+            if (folderToInsert.getPath().toString().equals(temp.getPath().toString()))
+                folderExists = true;
+            else {
+                for (AbstractFile file : folderToInsert.getContents()) {
+                    if (file.getPath().toString().equals(temp.getPath().toString()))
+                        folderExists = true;
                 }
             }
-
+            if (!folderExists) {
+                folderToInsert.getContents().add(temp);
+                folderToInsert = temp;
+            } else {
+                for (AbstractFile file : folderToInsert.getContents()) {
+                    if (file.getPath().toString().equals(temp.getPath().toString()))
+                        folderToInsert = (Folder) file;
+                }
+            }
+            stack.pop();
+            folderExists = false;
         }
-        Files.move(pathWithName, Paths.get(PreferencesManager.getInstance().getServerDocumentsPath() + File.separator + file.getName()));
-
-        Folder archiveFolder = (Folder)getInstance().archive.get(0);
-        archiveFolder.getContents().remove(file);
-        Folder contentFolder = (Folder)getInstance().allContent.get(0);
-        contentFolder.getContents().add(file);
-
-        updateJsonFiles();
+        if (folderToInsert != null)
+            folderToInsert.getContents().add(new Document(document));
     }
 
-    public void updateJsonFiles() {
-        // Write object to JSON file.
-        try (FileWriter writer = new FileWriter(PreferencesManager.getInstance().getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
-            JsonParser.getJsonParser().toJson(fileManager, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private boolean containsByPath(Folder folder, AbstractFile target) {
+        for (AbstractFile file : folder.getContents()) {
+            if (file.getPath().toString().equals(target.getPath().toString()))
+                return true;
         }
+        return false;
     }
 
-    protected static FileManager readFileManagerFromJson() {
-        // String pathStr;
-        PreferencesManager prefs = PreferencesManager.getInstance();
-        Path allFilesList = Paths.get(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME);
+    public static Optional<Folder> findParent(AbstractFile child, Folder root) {
+        Optional<Folder> parent = Optional.empty();
+        String str = root.getPath().toString() + " og " + child.getParentPath();
 
-        if(!Files.exists(allFilesList)){
-            FileManager fileManager = new FileManager();
-            fileManager.updateJsonFiles();
-            return fileManager;
-        }
-        System.out.println("Nået");
-        try (Reader reader = new FileReader(prefs.getServerAppFilesPath() + FILES_LIST_FILE_NAME)) {
-            return JsonParser.getJsonParser().fromJson(reader, FileManager.class);
-            /* // todo change read and write json to convert to unix file system.
-            for (AbstractFile file : fileManager.allContent) {
-                pathStr = file.getPath().toString().replace("\\", "/");
-                        file.setPath(Paths.get(pathStr));
-            }*/
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+        if (root.getPath().equals(child.getParentPath()))
+            return Optional.of(root);
 
-    public void setPathToJson(String pathToJson) {
-        this.pathToJson = pathToJson;
-    }
-
-    public void initFolderTree() throws IOException{
-        allContent.clear();
-        Folder root = new Folder(PreferencesManager.getInstance().getServerDocumentsPath());
-        allContent.add(findAllChildren(root));
-
-        archive.clear();
-        Folder rootArchive = new Folder(PreferencesManager.getInstance().getServerArchivePath());
-        archive.add(findAllChildren(rootArchive));
-
-        updateJsonFiles();
-    }
-
-    // Finds all children of the given root folder in the file system and add them to the root Folder object
-    private Folder findAllChildren(Folder root) throws IOException{
-        Files.walk(root.getPath(), 1)
-                .filter(path1 -> Files.isDirectory(path1) && !path1.equals(root.getPath()))
-                .forEach(file -> root.getContents().add(new Folder(file.toString(), true)));
-
-        Files.walk(root.getPath(), 1)
-                .filter(Files::isRegularFile)
-                .forEach(file -> root.getContents().add(DocumentBuilder.getInstance().createDocument(file)));
-
-        return root;
-    }
-
-    private Folder getRootElement(){
-        return (Folder)getInstance().allContent.get(0);
-        //todo get root of what? documents or archive? Specify or remove method - Magnus
-    }
-
-    // todo same as above. Parent in archive or main documents?
-    public Folder findParent(AbstractFile child) {
-        return findParent(child, getRootElement());
-
-    }
-
-    private Folder findParent(AbstractFile child, Folder parent) {
-        if (parent.getContents().contains(child)){
-            return parent;
-        }
-
-        for (AbstractFile current : parent.getContents()) {
+        for (AbstractFile current : root.getContents()) {
             if (current instanceof Folder) {
-                Folder folder = findParent(child, (Folder)current);
-                if (folder != null){
-                    return folder;
+                parent = findParent(child, (Folder) current);
+                if (parent.isPresent())
+                    break;
+            }
+        }
+        return parent;
+    }
+
+    // Saves the current instance to the json file
+    public void save() {
+        AppFilesManager.save(this);
+    }
+
+    public Folder getMainFilesRoot() {
+        return mainFilesRoot;
+    }
+
+    public Folder getArchiveRoot() {
+        return archiveRoot;
+    }
+
+    // Looks for a File with a path corresponding to the given path
+    public Optional<AbstractFile> findInMainFiles(Path fullPath) {
+        Path basePath = Paths.get(Settings.getServerDocumentsPath());
+        Path relativePath = basePath.relativize(fullPath);
+        return findFile(relativePath, getMainFiles());
+    }
+
+    private Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
+        for (AbstractFile abstractFile : searchArea) {
+            Path filePath = abstractFile.getPath();
+            if (fileRelativePath.startsWith(filePath)) {
+                if (fileRelativePath.equals(filePath)) {
+                    return Optional.of(abstractFile);
+                } else if (abstractFile instanceof Folder) {
+                    return findFile(fileRelativePath, ((Folder) abstractFile).getContents());
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
+    public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
+        Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath());
+        Path newPath = oldPath.getParent().resolve(newName);
+
+        if (Files.exists(newPath))
+            throw new InvalidNameException("Name is already in use");
+
+        file.setName(newName);
+        return oldPath.toFile().renameTo(newPath.toFile());
+    }
 }

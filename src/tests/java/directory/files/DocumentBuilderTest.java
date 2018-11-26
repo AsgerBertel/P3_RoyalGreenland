@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DocumentBuilderTest {
     File resourcesDirectory = new File("src/tests/resTest");
     private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFile.pdf");
-    private Path pathToCurrentID = Paths.get( resourcesDirectory.getAbsolutePath() + "/currentFileIDTest");
+    private Path pathToCurrentID = Paths.get( resourcesDirectory.getAbsolutePath() + "/currentFileID");
 
 
     @Test

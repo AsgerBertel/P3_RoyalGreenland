@@ -1,6 +1,6 @@
 package gui.menu;
 
-import directory.PreferencesManager;
+import directory.Settings;
 import gui.DMSApplication;
 import gui.TabLoader;
 import javafx.event.ActionEvent;
@@ -60,7 +60,7 @@ public class MainMenuController {
 
         this.dmsApplication = dmsApplication;
         //todo set selected language
-        if (PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
+        if (Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
             changeToDanish.setSelected(true);
 
         } else {
@@ -100,8 +100,8 @@ public class MainMenuController {
 
     public void changeToDanish(Event actionEvent) throws Exception{
         changeToDanish.setSelected(true);
-        if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.DK_LOCALE)){
-            PreferencesManager.getInstance().setLanguage(DMSApplication.DK_LOCALE);
+        if (!Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
+            Settings.setLanguage(DMSApplication.DK_LOCALE);
             dmsApplication.changeLanguage(new Locale("da", "DK"));
             dmsApplication.restartApp();
         }
@@ -110,8 +110,8 @@ public class MainMenuController {
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
         changeToGreenlandic.setSelected(true);
-        if (!PreferencesManager.getInstance().getLanguage().equals(DMSApplication.GL_LOCALE)){
-            PreferencesManager.getInstance().setLanguage(DMSApplication.GL_LOCALE);
+        if (!Settings.getLanguage().equals(DMSApplication.GL_LOCALE)){
+            Settings.setLanguage(DMSApplication.GL_LOCALE);
             dmsApplication.changeLanguage(new Locale("kl", "GL"));
             dmsApplication.restartApp();
         }
