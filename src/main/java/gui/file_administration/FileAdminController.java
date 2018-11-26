@@ -87,7 +87,7 @@ public class FileAdminController implements TabController {
         reloadPlantList();
     }
 
-    private void reloadFileTree(){
+    private void reloadFileTree() {
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
 
@@ -114,8 +114,8 @@ public class FileAdminController implements TabController {
         // Update selected plants according to the currently selected file
         onTreeItemSelected(null, fileTreeView.getSelectionModel().getSelectedItem());
 
-        if(selectedFile == null) setFactoryListDisabled(true);
-        else if(selectedFile instanceof Document) setFactoryListDisabled(false);
+        if (selectedFile == null) setFactoryListDisabled(true);
+        else if (selectedFile instanceof Document) setFactoryListDisabled(false);
     }
 
     // Called after a plant is toggled on or off in plant checklist
@@ -172,9 +172,9 @@ public class FileAdminController implements TabController {
         FileManager fileManager = FileManager.getInstance();
 
         File chosenFile = chooseFilePrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
-        if(chosenFile == null){
+        if (chosenFile == null) {
             return;
-        }else if(chosenFile.isDirectory()){
+        } else if (chosenFile.isDirectory()) {
             // todo Show prompt telling user that they cannot upload directories
             return;
         }
@@ -184,18 +184,18 @@ public class FileAdminController implements TabController {
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
             fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             fileManager.save();
-        }else if (selectedFile instanceof Document) {
+        } else if (selectedFile instanceof Document) {
             // Upload as sibling to selected document
             Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFiles());
-            if(parent.isPresent()){
+            if (parent.isPresent()) {
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
                 fileTreeView.getSelectionModel().getSelectedItem().getParent().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
-            }else{
+            } else {
                 // Upload to root
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
             }
-        } else if (selectedFile == null){
+        } else if (selectedFile == null) {
             // Upload to root
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
             fileTreeView.getRoot().getChildren().add(FileTreeUtil.createTreeItem(uploadedDoc));
@@ -218,21 +218,21 @@ public class FileAdminController implements TabController {
     public void createFolder() {
         FileManager fileManager = FileManager.getInstance();
         Optional<String> folderName = createFolderPopUP();
-        if (folderName.isPresent()){
-            if (selectedFile == null){
+        if (folderName.isPresent()) {
+            if (selectedFile == null) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name);
                 fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
-            }else if (selectedFile instanceof Folder) {
+            } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
                 fileTreeView.getSelectionModel().getSelectedItem().getChildren().add(FileTreeUtil.generateTree(fol));
-            }else if(selectedFile instanceof Document){
+            } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFiles());
 
                 Folder fol;
-                if(parent.isPresent())
+                if (parent.isPresent())
                     fol = fileManager.createFolder(name, parent.get());
                 else
                     fol = fileManager.createFolder(name);
@@ -316,21 +316,22 @@ public class FileAdminController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-        AbstractFile file = newValue.getValue();
-        if (file instanceof Document) {
-            try {
-                ((Document) file).openDocument();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (fileTreeView.getSelectionModel().getSelectedItem() != null) {
+            AbstractFile file = newValue.getValue();
+            if (file instanceof Document) {
+                try {
+                    ((Document) file).openDocument();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
 
-    public void onChangeMade(){
+    public void onChangeMade() {
 
     }
-
 
 
 }

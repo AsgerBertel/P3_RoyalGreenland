@@ -5,6 +5,7 @@ import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import gui.file_administration.FileAdminController;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -14,9 +15,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -102,7 +107,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         TreeItem<AbstractFile> newParent = treeCell.getTreeItem();
         TreeItem<AbstractFile> itemToBeMoved = draggedItem;
         FileManager fileManager = FileManager.getInstance();
-        if (!(newParent.getValue().getPath().toString().contains(itemToBeMoved.getValue().getPath().toString()))) {
+
 
         Optional<Folder> toBeMovedParent = FileManager.findParent(itemToBeMoved.getValue(), fileManager.getMainFiles());
         if (toBeMovedParent.isPresent()) {
@@ -111,50 +116,37 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         } else {
             fileManager.getMainFiles().remove(itemToBeMoved.getValue());
         }
+
         if (itemToBeMoved.getValue() instanceof Folder) {
 
-                Folder parentFolderToBeMoved;
-                parentFolderToBeMoved = (Folder) itemToBeMoved.getValue();
-                parentFolderToBeMoved.changeChildrenPath(parentFolderToBeMoved, parentFolderToBeMoved.getPath().toString(), parentFolderToBeMoved.getPath() + "/" + newParent.getValue().getName());
-                Folder newParentFolder = (Folder) newParent.getValue();
-                newParentFolder.getContents().add(itemToBeMoved.getValue());
-            }
+            subFileExists(newParent.getValue().getAbsolutePath(), itemToBeMoved.getValue().getName());
 
-
+            Folder parentFolderToBeMoved;
+            parentFolderToBeMoved = (Folder) itemToBeMoved.getValue();
+            parentFolderToBeMoved.changeChildrenPath(parentFolderToBeMoved, parentFolderToBeMoved.getPath().toString(), parentFolderToBeMoved.getPath() + "/" + newParent.getValue().getName());
+            Folder newParentFolder = (Folder) newParent.getValue();
+            newParentFolder.getContents().add(itemToBeMoved.getValue());
+        }
 
         try {
+
             Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getPath().toString() + "/" + itemToBeMoved.getValue().getName()));
             itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
+
+
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Look, an Information Dialog");
+            alert.setContentText("I have a great message for you!");
+            alert.showAndWait();
         }
 
         fileManager.save();
         fileAdminController.update();
-
-
-     /*   if (newParent.getValue() instanceof Folder) {
-            fileManager.moveFile(itemToBeMoved.getValue(), (Folder) newParent.getValue());
-
-        }*/
-
-        // remove from previous location
-        //     droppedItemParent.getChildren().remove(draggedItem);
-
-        // dropping on parent node makes it the first child
-      /* if (Objects.equals(itemToBeMoved, newParent)) {
-            thisItem.getChildren().add(0, draggedItem);
-            treeView.getSelectionModel().select(draggedItem);
-
-
-        } else {
-            // add to new location
-           int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
-            thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
-        }*/
         treeView.getSelectionModel().select(draggedItem);
         event.setDropCompleted(success);
-        }
+
 
     }
 
@@ -180,5 +172,26 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             imageView.setFitHeight(16);
         }
         return imageView;
+    }
+
+    private boolean subFileExists(Path folderPath, String nameOfFile) {
+
+        // create a file that is really a directory
+        File subFolder = new File(folderPath.toString());
+
+        // get a listing of all files in the directory
+        File[] filesInDir = subFolder.listFiles();
+
+        // sort the list of files (optional)
+        // Arrays.sort(filesInDir);
+
+        // have everything i need, just print it now
+        if (filesInDir == null)
+            return false;
+        System.out.println(filesInDir.length);
+        for (int i = 0; i < filesInDir.length; i++) {
+            System.out.println("file: " + filesInDir[i]);
+        }
+        return true;
     }
 }
