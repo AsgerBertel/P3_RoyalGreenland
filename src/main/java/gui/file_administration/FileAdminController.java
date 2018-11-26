@@ -347,8 +347,11 @@ public class FileAdminController implements TabController {
             }
             if (selectedFile instanceof Folder) {
                 Folder fol = (Folder) selectedFile;
-
-                fol.renameFile(name);
+                try {
+                    FileManager.getInstance().renameFile(fol,name);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                }
             }
             // Todo tree closes when it updates. - Philip
             update();
