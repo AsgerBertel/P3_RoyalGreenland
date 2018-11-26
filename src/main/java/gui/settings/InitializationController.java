@@ -27,7 +27,7 @@ public class InitializationController implements Initializable {
 
     private State currentState;
 
-    String serverPath = "", localPath = "", userName = Settings.getComputerName();
+    String serverPath = "", localPath = "", userName = Settings.getUsername();
 
     private enum State {
         LOCAL_PATH,
@@ -42,6 +42,7 @@ public class InitializationController implements Initializable {
         }else{
             setState(State.LOCAL_PATH);
         }
+
 
     }
 

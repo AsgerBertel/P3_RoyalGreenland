@@ -109,7 +109,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         FileManager fileManager = FileManager.getInstance();
 
 
-        Optional<Folder> toBeMovedParent = FileManager.findParent(itemToBeMoved.getValue(), fileManager.getMainFiles());
+        Optional<Folder> toBeMovedParent = FileManager.findParent(itemToBeMoved.getValue(), fileManager.getMainFilesRoot());
+
         if (toBeMovedParent.isPresent()) {
             Folder folder = toBeMovedParent.get();
             folder.getContents().remove(itemToBeMoved.getValue());

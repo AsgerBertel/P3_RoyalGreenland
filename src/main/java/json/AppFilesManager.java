@@ -3,18 +3,19 @@ package json;
 
 import directory.FileManager;
 import directory.Settings;
+import directory.files.AbstractFile;
 import directory.plant.PlantManager;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class AppFilesManager {
 
-    private static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
-    private static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
+    public static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
+    public static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
 
     /**
      * Loads the FileManager instance stored in App Files. Returns null if no file is found or an error occurred
@@ -36,6 +37,15 @@ public class AppFilesManager {
         return loadInstanceFromJsonFile(path, PlantManager.class);
     }
 
+    public static ArrayList<AbstractFile> loadPublishedFileList(){
+        String path = Settings.getPublishedAppFilesPath() + FILES_LIST_FILE_NAME;
+        // todo Violates the singleton pattern. Do we care?
+        FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
+        if(publishedFileManager != null)
+            return publishedFileManager.getMainFiles();
+        return new ArrayList<>();
+    }
+
     private static <T> T loadInstanceFromJsonFile(String path, java.lang.Class<T> classOfT){
         if(!Files.exists(Paths.get(path)))
             return null;
@@ -48,6 +58,9 @@ public class AppFilesManager {
             return null;
         }
     }
+
+
+
 
 
     public static void save(FileManager fileManager){
@@ -76,18 +89,26 @@ public class AppFilesManager {
         Path serverDocumentsPath = Paths.get(Settings.getServerDocumentsPath());
         Path serverArchivePath = Paths.get(Settings.getServerArchivePath());
         Path serverAppFilesPath = Paths.get(Settings.getServerAppFilesPath());
+        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
+        Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
 
-        boolean succes = true;
+        boolean success = true;
         if(!Files.exists(serverDocumentsPath))
-            succes = serverDocumentsPath.toFile().mkdirs();
+            success = serverDocumentsPath.toFile().mkdirs();
 
         if(!Files.exists(serverArchivePath))
-            succes = serverArchivePath.toFile().mkdirs();
+            success &= serverArchivePath.toFile().mkdirs();
 
         if(!Files.exists(serverAppFilesPath))
-            succes = serverAppFilesPath.toFile().mkdirs();
+            success &= serverAppFilesPath.toFile().mkdirs();
 
-        if(!succes){ // todo Look into whyt mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
+        if(!Files.exists(publishedAppFilesPath))
+            success &= publishedAppFilesPath.toFile().mkdirs();
+
+        if(!Files.exists(publishedDocumentsPath))
+            success &= publishedDocumentsPath.toFile().mkdirs();
+
+        if(!success){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
             // todo Also in the case of the server directories connection might be a factor
             throw new IOException("Could not create application directories");
         }

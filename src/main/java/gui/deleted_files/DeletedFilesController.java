@@ -2,23 +2,30 @@ package gui.deleted_files;
 
 import directory.FileExplorer;
 import directory.FileManager;
+import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import gui.FileTreeUtil;
 import gui.TabController;
+import gui.TreeState;
 import gui.file_overview.FileButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -57,14 +64,17 @@ public class DeletedFilesController implements TabController {
             if (event.getClickCount() == 2)
                 fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
         });
+        fileTreeView.setRoot(new TreeItem<>());
 
         update();
     }
 
     @Override
     public void update() {
+        TreeState oldTreeState = new TreeState(fileTreeView);
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getArchiveFiles());
         fileTreeView.setRoot(rootItem);
+        oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setShowRoot(false);
     }
 
@@ -105,7 +115,7 @@ public class DeletedFilesController implements TabController {
         } else {
 
             try {
-                ((Document) fileButton.getFile()).openDocument();
+                Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + fileButton.getFile().getPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -147,12 +157,11 @@ public class DeletedFilesController implements TabController {
         AbstractFile selectedFile = selectedItem.getValue();
         try {
             FileManager.getInstance().restoreFile(selectedFile);
-            selectedItem.getParent().getChildren().remove(selectedItem);
         } catch (IOException e) {
             e.printStackTrace(); // todo error handling
         }
 
-        //todo restore doesnt restore correctly?
+        update();
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
@@ -161,7 +170,7 @@ public class DeletedFilesController implements TabController {
                 AbstractFile file = newValue.getValue();
                 if (file instanceof Document) {
                     try {
-                        ((Document) file).openDocument();
+                        Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + file.getPath()).toFile());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

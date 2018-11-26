@@ -2,13 +2,12 @@ package directory.files;
 
 import directory.FileManager;
 import directory.plant.AccessModifier;
+import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import json.AppFilesManager;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,6 @@ public class Folder extends AbstractFile {
         this.folderContents = new ArrayList<>(folder.getContents());
     }
 
-    @Override
     public void renameFile(String newFolderName){
         String oldPath = getPath().toString();
 
@@ -46,7 +44,7 @@ public class Folder extends AbstractFile {
         }
         AppFilesManager.save(FileManager.getInstance());
         LoggingTools lt = new LoggingTools();
-        LoggingTools.LogEvent(getName(), LogEventType.FOLDERRENAMED);
+        LoggingTools.log(new LogEvent(getName(), LogEventType.FOLDER_RENAMED));
     }
 
     public void changeChildrenPath(Folder folder, String oldPath, String newPath){

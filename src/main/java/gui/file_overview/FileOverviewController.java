@@ -14,12 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,6 +55,8 @@ public class FileOverviewController implements TabController {
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
         fileTreeView.setShowRoot(false);
+        fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
+        updateDisplayedFiles();
     }
 
     @Override
@@ -59,11 +64,12 @@ public class FileOverviewController implements TabController {
         // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
         reloadFileTree();
 
+
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
     }
 
-    private void reloadFileTree(){ ;
+    private void reloadFileTree() {
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
     }
@@ -74,11 +80,11 @@ public class FileOverviewController implements TabController {
         // Create fileExplorer that matches the accessModifier of the selected plant
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
 
-        if(selectedPlant != null){
+        if (selectedPlant != null) {
             AccessModifier accessModifier = selectedPlant.getAccessModifier();
             rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), accessModifier);
 
-        } else{
+        } else {
             rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), new AccessModifier());
         }
 
@@ -131,7 +137,7 @@ public class FileOverviewController implements TabController {
         } else {
 
             try {
-                ((Document) fileButton.getFile()).openDocument();
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -141,10 +147,8 @@ public class FileOverviewController implements TabController {
 
     @FXML
     public void openPreviousFolder() {
-        if(drdPlant.getSelectionModel().getSelectedItem() != null){ // todo - What does this null check do? - Magnus
-            fileExplorer.navigateBack();
-            updateDisplayedFiles();
-        }
+        fileExplorer.navigateBack();
+        updateDisplayedFiles();
     }
 
     public String PathDisplayCorrection() {

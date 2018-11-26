@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.ListView?>
 <HBox fx:id="fileAdminHBox" stylesheets="@/styles/masterSheet.css,@/styles/fileAdministration.css"
       xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="gui.file_administration.FileAdminController">
@@ -33,7 +32,7 @@
             </graphic>
         </Button>
 
-        <Button styleClass="menuButton" onAction="#deleteFile">
+        <Button fx:id="deleteFileButton" styleClass="menuButton" onAction="#deleteFile">
             <graphic>
                 <ImageView fitHeight="39" fitWidth="39">
                     <Image url="/icons/menu/delete.png"/>
@@ -66,13 +65,17 @@
     </VBox>
 
     <!-- Changes overview -->
-    <VBox id="changesVBox" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
+    <VBox fx:id="changesSection" id="changesSection" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
         <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
         <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
+        <Text text="%AdminFiles.LastUpdated" fx:id="lastUpdatedText" styleClass="smallNote" translateY="3"/>
         <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
 
-        <ListView fx:id="changesListView" styleClass="logList"/>
-        <Button fx:id="saveChangesButton" text="%AdminFiles.PublishChanges" styleClass="darkButton"/>
+        <ScrollPane fx:id="changesScrollPane" id="changesScrollPane" maxHeight="${changesSection.height * 0.7}" minWidth="${changesSection.width}">
+            <VBox fx:id="changesVBox" styleClass="changesVBox" minWidth="${changesSection.width}"/>
+        </ScrollPane>
+
+        <Button fx:id="saveChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>
 

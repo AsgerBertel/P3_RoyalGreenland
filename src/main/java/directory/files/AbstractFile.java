@@ -5,6 +5,7 @@ import javafx.scene.control.TreeView;
 import javafx.util.Callback;
 
 import javax.naming.InvalidNameException;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -16,13 +17,29 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
     private String path;
 
     AbstractFile(String path) {
-        this.path = path;
+        this.path = trimPath(path);
     }
-
-    abstract void renameFile(String newFileName) throws InvalidNameException;
+    AbstractFile (AbstractFile file) {
+        this.path = file.getPath().toString();
+    }
 
     public Path getPath() {
         return Paths.get(path);
+    }
+
+    /**
+     * Returns the OS directive path, without artificial root folder.
+     * @return
+     */
+    private String trimPath(String path) {
+        if(!path.contains("root"))
+            return "root"+File.separator+"".concat(path);
+        else
+            return path;
+    }
+
+    public Path getOSPath() {
+        return Paths.get(path.replace("root"+File.separator,""));
     }
 
     public Path getAbsolutePath(){
@@ -35,6 +52,11 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
 
     public String getName() {
         return Paths.get(path).getFileName().toString();
+    }
+
+    public void setName(String name){
+        String parent = Paths.get(path).getParent().toString();
+        this.path = parent + "/" + name;
     }
 
     public void setPath(Path path) {
