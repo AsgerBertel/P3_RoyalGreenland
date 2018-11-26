@@ -117,7 +117,7 @@ public class FileManager {
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
@@ -328,10 +328,12 @@ public class FileManager {
 
         // Insert the file into the main files list
         insertFile(file, archiveRoot, mainFilesRoot);
+        LoggingTools.log(new LogEvent(file.getName(), LogEventType.RESTORED));
 
         // Remove the folder from the archive files list
         Optional<Folder> parent = findParent(file, archiveRoot);
         parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+        removeEmptyFolders(archiveRoot);
 
         AppFilesManager.save(this);
     }
@@ -391,12 +393,29 @@ public class FileManager {
             folderToInsert.getContents().add(new Document(document));
     }
 
-    private boolean containsByPath(Folder folder, AbstractFile target) {
-        for (AbstractFile file : folder.getContents()) {
-            if (file.getPath().toString().equals(target.getPath().toString()))
-                return true;
+    private void removeEmptyFolders(Folder src) {
+
+        src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
+    }
+    private boolean isEmpty(Folder src) {
+        if(src.getContents().size() == 0)
+            return true;
+
+        src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
+
+        return src.getContents().size() == 0;
+    }
+    private void deleteEmptyDirectories (Folder src) {
+
+        try {
+            Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath())).filter(path -> !path.equals(Settings.getServerArchivePath() + src.getOSPath())).forEach(filePath -> {
+                if(Files.isDirectory(filePath))
+                    if(new File(filePath.toString()).list().length <= 0)
+                        new File(filePath.toString()).delete();
+            });
+        } catch(IOException e) {
+            e.printStackTrace();
         }
-        return false;
     }
 
     public static Optional<Folder> findParent(AbstractFile child, Folder root) {
