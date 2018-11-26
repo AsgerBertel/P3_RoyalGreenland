@@ -129,7 +129,7 @@ public class FileManager {
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getPath().toString() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + file.getName());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
@@ -175,7 +175,7 @@ public class FileManager {
         if(Files.exists(fullFolderPath)) throw new InvalidNameException("Folder with name " + name + " Already exists");
         Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
-        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getPath()));
+        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
 
         parentFolder.getContents().add(folder);
         AppFilesManager.save(this);
@@ -469,6 +469,4 @@ public class FileManager {
         file.setName(newName);
         return oldPath.toFile().renameTo(newPath.toFile());
     }
-
-
 }
