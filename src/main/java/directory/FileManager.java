@@ -111,19 +111,7 @@ public class FileManager {
 
     // Uploads a file directly to the root of the main files
     public Document uploadFile(Path src) {
-        File file = new File(src.toString());
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
-
-        if (Files.exists(dest)) {
-            // todo throw file already exists exception - Magnus
-            // todo rename to file(2)
-        }
-        Document newDoc = DocumentBuilder.getInstance().createDocument(src.getFileName());
-        getMainFiles().add(newDoc);
-        return newDoc;
-
-        //todo if file already exists, the old one is deleted but this can only happen once.
-        //todo make some kind of counter to file name
+        return uploadFile(src, this.mainFilesRoot);
     }
 
     public Document uploadFile(Path src, Folder dstFolder) {
@@ -133,12 +121,14 @@ public class FileManager {
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
-
         }
 
         try {
             Files.copy(src, dest);
-            Document doc = DocumentBuilder.getInstance().createDocument(dest);
+
+            Path relativePath = Paths.get(Settings.getServerDocumentsPath()).relativize(dest);
+            Document doc = DocumentBuilder.getInstance().createDocument(relativePath);
+
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));

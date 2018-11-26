@@ -52,11 +52,10 @@ public class LogEvent {
     @SuppressWarnings("unused")
     public String getTime(){
         String minutes;
-        if(getLocalDateTime().getMinute() < 10){
+        if(getLocalDateTime().getMinute() < 10)
             minutes = "0"+getLocalDateTime().getMinute();
-        }else{
+        else
             minutes = String.valueOf(getLocalDateTime().getMinute());
-        }
 
         return getLocalDateTime().getDayOfMonth() + "/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + minutes;
     }

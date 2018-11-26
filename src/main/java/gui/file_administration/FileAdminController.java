@@ -77,7 +77,9 @@ public class FileAdminController implements TabController {
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(false);
-        fileTreeView.setOnMouseClicked(event -> {if(event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());});
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         try {
@@ -86,20 +88,14 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
             // todo look into (javadocs) why this might throw a ClosedFileSystem exception and handle appropriately
         }
-
     }
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed // todo test if functional
-        TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
-        // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
-        // todo - It always reloads. - Philip
-//      if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
         reloadFileTree();
         reloadPlantList();
-        updateChangesList();
-        updateFileWatcher();
+        reloadChangesList();
+        reloadFileWatcher();
     }
 
 
@@ -144,11 +140,10 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected()) {
+        if (plantElement.isSelected())
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
-        } else {
+        else
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
-        }
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
@@ -166,7 +161,7 @@ public class FileAdminController implements TabController {
                 setFactoryListDisabled(true);
                 selectedFile = chosenFile;
             }
-        }else{
+        } else {
             deleteFileButton.setDisable(true);
         }
 
@@ -270,7 +265,7 @@ public class FileAdminController implements TabController {
 
 
                 if (parent.isPresent())
-                    try{ // todo add exception handling
+                    try { // todo add exception handling
                         fileManager.createFolder(name, parent.get());
                     } catch (InvalidNameException e) {
                         e.printStackTrace();
@@ -295,7 +290,7 @@ public class FileAdminController implements TabController {
         update();
     }
 
-    public Optional<String> createFolderPopUP(){
+    public Optional<String> createFolderPopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolderInfo"));
@@ -333,8 +328,8 @@ public class FileAdminController implements TabController {
         Optional<String> optName = renameFilePopUP();
         if (optName.isPresent()) {
             String name = optName.get();
-            if(selectedFile instanceof Document){
-                Document doc = (Document)selectedFile;
+            if (selectedFile instanceof Document) {
+                Document doc = (Document) selectedFile;
                 name = name + "." + doc.getFileExtension();
                 try {
                     FileManager.getInstance().renameFile(doc, name);
@@ -382,17 +377,17 @@ public class FileAdminController implements TabController {
 
 
     /* ---- Changelist ---- */
-    private synchronized void updateChangesList() {
+    private synchronized void reloadChangesList() {
         changesVBox.getChildren().clear();
         List<LogEvent> unpublishedChanges = LoggingTools.getAllUnpublishedEvents();
-        if(unpublishedChanges.size() <= 0){
+        if (unpublishedChanges.size() <= 0) {
             saveChangesButton.setDisable(true);
             return;
-        }else{
+        } else {
             saveChangesButton.setDisable(false);
         }
 
-        for(LogEvent logEvent : unpublishedChanges)
+        for (LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
 
         lastUpdatedText.setText(LoggingTools.getLastPublished());
@@ -424,11 +419,11 @@ public class FileAdminController implements TabController {
     }
 
     // Recursively applies a watcher to every directory within the file tree root
-    private void updateFileWatcher() {
+    private void reloadFileWatcher() {
         Path root = Paths.get(Settings.getServerDocumentsPath());
 
         // Remove current watch keys
-        for(WatchKey key : watchKeys)
+        for (WatchKey key : watchKeys)
             key.cancel();
 
         try {
@@ -449,7 +444,7 @@ public class FileAdminController implements TabController {
 
     private void startWatchThread() {
         // Don't start watcher thread if it's already running
-        if(watchThread != null && watchThread.isAlive()) return;
+        if (watchThread != null && watchThread.isAlive()) return;
 
         watchThread = new Thread(this::run);
         watchThread.setDaemon(true);
@@ -464,7 +459,7 @@ public class FileAdminController implements TabController {
             while (null != (key = watchService.take())) {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     @SuppressWarnings("unchecked") // This watchService only generates keys from paths
-                    WatchEvent<Path> we = (WatchEvent<Path>) event;
+                            WatchEvent<Path> we = (WatchEvent<Path>) event;
 
                     // Get the path of the parent folder whose child was changed
                     Path path = (Path) key.watchable();
@@ -474,23 +469,23 @@ public class FileAdminController implements TabController {
                     path = path.resolve(fileName);
 
                     // Don't register changes to temporary word files
-                    if(fileName.toString().charAt(0) == '~' || !Files.exists(path))
+                    if (fileName.toString().charAt(0) == '~' || !Files.exists(path))
                         continue;
 
                     Optional<AbstractFile> changedFile = fileManager.findInMainFiles(path);
 
-                    if (changedFile.isPresent() && changedFile.get() instanceof Document){
+                    if (changedFile.isPresent() && changedFile.get() instanceof Document) {
                         ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
                             LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
-                            updateChangesList();
+                            reloadChangesList();
                         });
                     }
 
                 }
                 /* On saving a file the filesystem occasionally registers two changes instead of one. These occur within
-                * a very short time frame. To ensure that only one change is registered the listener is paused for a
-                * short while. */
+                 * a very short time frame. To ensure that only one change is registered the listener is paused for a
+                 * short while. */
                 Thread.sleep(100);
                 // Reset the key to start listening for changes on this file again
                 key.reset();
