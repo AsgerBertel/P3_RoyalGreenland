@@ -111,19 +111,7 @@ public class FileManager {
 
     // Uploads a file directly to the root of the main files
     public Document uploadFile(Path src) {
-        File file = new File(src.toString());
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + file.getName());
-
-        if (Files.exists(dest)) {
-            // todo throw file already exists exception - Magnus
-            // todo rename to file(2)
-        }
-        Document newDoc = DocumentBuilder.getInstance().createDocument(src.getFileName());
-        getMainFiles().add(newDoc);
-        return newDoc;
-
-        //todo if file already exists, the old one is deleted but this can only happen once.
-        //todo make some kind of counter to file name
+        return uploadFile(src, this.mainFilesRoot);
     }
 
     public Document uploadFile(Path src, Folder dstFolder) {
@@ -133,12 +121,14 @@ public class FileManager {
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
-
         }
 
         try {
             Files.copy(src, dest);
-            Document doc = DocumentBuilder.getInstance().createDocument(dest);
+
+            Path relativePath = Paths.get(Settings.getServerDocumentsPath()).relativize(dest);
+            Document doc = DocumentBuilder.getInstance().createDocument(relativePath);
+
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
@@ -157,10 +147,12 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name) {
+    public Folder createFolder(String name) throws IOException, InvalidNameException{
         Folder folder = new Folder(name);
+        Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
+        if(Files.exists(fullPath)) throw new InvalidNameException();
 
-        createFolderFile(Settings.getServerDocumentsPath() + name);
+        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
         mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
@@ -168,23 +160,20 @@ public class FileManager {
     }
 
     // Creates a new folder inside the given parent folder
-    public Folder createFolder(String name, Folder parentFolder) {
-        Folder folder = new Folder(parentFolder.getOSPath() + File.separator + name);
+    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException{
+        Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
+        if(Files.exists(fullFolderPath)) throw new InvalidNameException("Folder with name " + name + " Already exists");
+        Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
-        createFolderFile(Settings.getServerDocumentsPath() + folder.getOSPath());
+        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
 
         parentFolder.getContents().add(folder);
         AppFilesManager.save(this);
         return folder;
     }
 
-    private void createFolderFile(String fullPath) {
-        boolean isSuccessful = new File(fullPath).mkdirs();
-
-        if (!isSuccessful) {
-            System.out.println("mkdirs was not successful");
-            // Todo should probably throw an exception - Magnus
-        }
+    private void createFolderFile(Path fullPath) throws IOException{
+        Files.createDirectories(fullPath);
     }
 
     public int OverwriteFilePopUP() {
@@ -233,6 +222,7 @@ public class FileManager {
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
             Optional<Folder> parent = findParent(file, mainFilesRoot);
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+
 
             AppFilesManager.save(this);
         } catch (IOException e) {
@@ -462,18 +452,33 @@ public class FileManager {
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
-        System.out.println("Old Path: " + oldPath.toString());
         Path newPath = oldPath.getParent().resolve(newName);
-        System.out.println("New Path: " + newPath.toString());
 
         if (Files.exists(newPath))
             throw new InvalidNameException("Name is already in use");
 
-        file.setName(newName);
         if(oldPath.toFile().renameTo(newPath.toFile())){
+            if(file instanceof Folder){
+                Folder fol = (Folder)file;
+                Path oldOSPath = file.getOSPath();
+                fol.setName(newName);
+
+                Path newOSPath = file.getOSPath();
+                fol.changeChildrenPath(fol, oldOSPath.toString(), newOSPath.toString());
+
+                AppFilesManager.save(FileManager.getInstance());
+                LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
+            }
+            if(file instanceof Document){
+                Document doc = (Document)file;
+                doc.setName(newName);
+
+                AppFilesManager.save(FileManager.getInstance());
+                LoggingTools.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
+            }
+
             return true;
         }
-
         return false;
     }
 }
