@@ -93,6 +93,7 @@ public class FileAdminController implements TabController {
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
         try {
             watchService = FileSystems.getDefault().newWatchService();
         } catch (IOException e) {
@@ -395,14 +396,10 @@ public class FileAdminController implements TabController {
         if (fileTreeView.getSelectionModel().getSelectedItem() != null) {
             AbstractFile file = newValue.getValue();
             if (file instanceof Document) {
-                try {
-                    ((Document) file).openDocument();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    openFile();
             }
         }
-        AbstractFile file = newValue.getValue();
+    /*    AbstractFile file = newValue.getValue();
 
         if (file instanceof Document) {
             try {
@@ -410,7 +407,7 @@ public class FileAdminController implements TabController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
 
