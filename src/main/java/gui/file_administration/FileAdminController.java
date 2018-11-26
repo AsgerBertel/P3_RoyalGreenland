@@ -321,7 +321,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Paths.get(doc.getOSPath().toString()).toFile());
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
             } catch (IOException e) {
                 System.out.println("Could not open file");
                 e.printStackTrace();
@@ -347,6 +347,7 @@ public class FileAdminController implements TabController {
             }
             if (selectedFile instanceof Folder) {
                 Folder fol = (Folder) selectedFile;
+
                 fol.renameFile(name);
             }
             // Todo tree closes when it updates. - Philip
