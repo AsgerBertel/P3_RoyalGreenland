@@ -34,46 +34,38 @@ public class Folder extends AbstractFile {
     public void renameFile(String newFolderName){
         String newPath = null;
         String oldPath = getOSPath().toString();
-        //System.out.println("Old Path: " + oldPath);
 
         if(getOSPath().toString().contains("/")){
             int indexOfLast = getPath().toString().lastIndexOf('/');
             newPath = getOSPath().toString().substring(0, indexOfLast) + newFolderName;
-            //System.out.println("If");
         }
         else {
-            //System.out.println("Else");
             newPath = getOSPath().toString().replace(getName(),"") + newFolderName;
         }
 
-        //System.out.println("NewPath: " + newPath);
         setPath(Paths.get(newPath));
 
         File file = new File(Settings.getServerDocumentsPath() + oldPath);
         File newFile = new File(Settings.getServerDocumentsPath() + getPath().toString());
 
-        //System.out.println("Old OS: " + file.getAbsolutePath());
-        //System.out.println("New OS: " + newFile.getAbsolutePath() );
-
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
         }
-        AppFilesManager.save(FileManager.getInstance());
-        LoggingTools.log(new LogEvent(getName(), LogEventType.FOLDER_RENAMED));
+
     }
 
-    private void changeChildrenPath(Folder folder, String oldPath, String newPath){
+    public void changeChildrenPath(Folder folder, String oldPath, String newPath){
+        String newPathFile;
         for(AbstractFile file : folder.getContents()){
             if(file instanceof Document){
-                newPath = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPath));
+                newPathFile = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPathFile));
             }
             if(file instanceof Folder){
-                newPath = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPath));
+                newPathFile = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPathFile));
                 ((Folder) file).changeChildrenPath((Folder)file, oldPath, newPath);
             }
-
         }
     }
 
