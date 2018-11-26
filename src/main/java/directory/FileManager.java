@@ -129,7 +129,7 @@ public class FileManager {
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getPath().toString() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + file.getName());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
@@ -169,9 +169,9 @@ public class FileManager {
 
     // Creates a new folder inside the given parent folder
     public Folder createFolder(String name, Folder parentFolder) {
-        Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
+        Folder folder = new Folder(parentFolder.getOSPath() + File.separator + name);
 
-        createFolderFile(Settings.getServerDocumentsPath() + folder.getPath());
+        createFolderFile(Settings.getServerDocumentsPath() + folder.getOSPath());
 
         parentFolder.getContents().add(folder);
         AppFilesManager.save(this);

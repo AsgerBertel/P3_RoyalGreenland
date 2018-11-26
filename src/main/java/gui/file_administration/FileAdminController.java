@@ -249,7 +249,7 @@ public class FileAdminController implements TabController {
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
-                Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                FileManager.getInstance().createFolder(name, (Folder) selectedFile);
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
@@ -294,7 +294,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getPath()).toFile());
+                Desktop.getDesktop().open(Paths.get(doc.getOSPath().toString()).toFile());
             } catch (IOException e) {
                 System.out.println("Could not open file");
                 e.printStackTrace();
@@ -345,7 +345,8 @@ public class FileAdminController implements TabController {
 
         if (file instanceof Document) {
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getPath()).toFile());
+                System.out.println(file.getOSPath().toString());
+                Desktop.getDesktop().open(Paths.get(file.getOSPath().toString()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }

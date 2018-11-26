@@ -136,7 +136,7 @@ public class FileOverviewController implements TabController {
         } else {
 
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getPath()).toFile());
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
