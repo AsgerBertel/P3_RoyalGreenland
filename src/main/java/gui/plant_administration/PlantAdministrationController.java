@@ -178,7 +178,7 @@ public class PlantAdministrationController implements TabController {
                 }
             }
             if (!isElementSelected) {
-                lblPlantEdited.setText("PlantAdmin.SelectPlant");
+                lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.SelectPlant"));
             }
             field_EditPlantName.clear();
             field_EditPlantId.clear();

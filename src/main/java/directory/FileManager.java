@@ -44,7 +44,8 @@ public class FileManager {
         Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
         mainFilesRoot = findFiles(mainFilesRootPath);
 
-        // Initialize list of archived documents // todo should these automatic file detection features be enabled? - Magnus
+        // Initialize list of archived documents //
+        // todo should these automatic file detection features be enabled? - Magnus
         Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
         archiveRoot = findFiles(archiveFilesRootPath);
     }
