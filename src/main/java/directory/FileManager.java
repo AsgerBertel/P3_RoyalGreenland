@@ -315,6 +315,10 @@ public class FileManager {
         Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
 
+        // Create parent folders if they don't exist
+        if(!Files.exists(newPath.getParent()))
+            Files.createDirectories(newPath.getParent());
+
         if (!Files.exists(newPath))
             Files.move(oldPath, newPath);
         else {
