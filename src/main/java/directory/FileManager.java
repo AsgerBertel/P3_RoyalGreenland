@@ -209,7 +209,7 @@ public class FileManager {
     }
 
     // Append incremental number at the end of file name to
-    private static Path generateUniqueFileName(Path filePath) {
+    public static Path generateUniqueFileName(Path filePath) {
         Path parent = filePath.getParent();
         String extension = getExtension(filePath);
         String fileName = filePath.getName(filePath.getNameCount() - 1).toString().replace(extension, "");
@@ -255,9 +255,14 @@ public class FileManager {
         if(!Files.exists(newPath.getParent()))
             Files.createDirectories(newPath.getParent());
 
-        if (!Files.exists(newPath))
-            Files.move(oldPath, newPath);
-        else {
+        if (!Files.exists(newPath)){
+            if(Files.isDirectory(oldPath)){
+                DirectoryCloner.copyFolder(oldPath, newPath);
+            }else{
+                Files.move(oldPath, newPath);
+            }
+
+        } else {
             // Find new name if it's a document and it already exists
             if (!Files.isDirectory(oldPath)) {
                 newPath = generateUniqueFileName(newPath);

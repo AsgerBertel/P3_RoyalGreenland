@@ -385,7 +385,7 @@ public class FileAdminController implements TabController {
                     e.printStackTrace();
                 }
             }
-            // Todo tree closes when it updates. - Philip
+
             update();
         }
         FileManager.getInstance().save();

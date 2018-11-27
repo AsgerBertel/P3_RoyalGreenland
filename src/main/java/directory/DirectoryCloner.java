@@ -210,7 +210,7 @@ public class DirectoryCloner {
         return false;
     }
 
-    private static void copyFolder(Path src, Path dst) throws IOException {
+    public static void copyFolder(Path src, Path dst) throws IOException {
         Files.createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
         if(fileToCopy == null) return;
@@ -222,6 +222,33 @@ public class DirectoryCloner {
             }
         }
     }
+
+    public static void mergeFolders(Path src, Path dst, boolean replace) throws IOException {
+        Files.createDirectories(dst);
+        File[] fileToCopy = src.toFile().listFiles();
+        if(fileToCopy == null) return;
+        for(File originalFile : fileToCopy){
+            Path newFilePath = dst.resolve(originalFile.getName());
+            if(originalFile.isDirectory()){
+                copyFolder(originalFile.toPath(), newFilePath);
+            }else{
+                if(Files.exists(newFilePath)){
+                    if(replace){
+                        Files.delete(newFilePath);
+                        Files.copy(originalFile.toPath(), newFilePath);
+                    }else{
+                        // Generate new unique name for the file by appending a number to the end
+                        newFilePath = FileManager.generateUniqueFileName(newFilePath);
+                        Files.copy(originalFile.toPath(), newFilePath);
+                    }
+                }else{
+                    Files.copy(originalFile.toPath(), dst.resolve(originalFile.getName()));
+                }
+
+            }
+        }
+    }
+
 
     public static boolean deleteFolder(File folder) {
         boolean success = true;
