@@ -103,7 +103,7 @@ public class FileAdminController implements TabController {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
 
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
