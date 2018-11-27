@@ -117,7 +117,7 @@ public class FileManager {
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + src.getFileName());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
