@@ -528,5 +528,10 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
     }
+    @FXML
+    public void testpane(){
+        System.out.println("test");
+
+    }
 
 }

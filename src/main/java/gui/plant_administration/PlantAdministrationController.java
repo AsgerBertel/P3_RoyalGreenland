@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -88,6 +89,7 @@ public class PlantAdministrationController implements TabController {
 
         plantCountText.setText("(" + plantElements.size() + ")");
     }
+
     //Select plant function
     private void onPlantToggle(PlantElement plantElement) {
         for (PlantElement element : plantElements) {
@@ -105,6 +107,7 @@ public class PlantAdministrationController implements TabController {
         lblPlantCreated.setText("");
         lblPlantCreated.setVisible(true);
     }
+
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
     void editPlantSidebar(ActionEvent event) {
@@ -112,6 +115,7 @@ public class PlantAdministrationController implements TabController {
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
     }
+
     //Function to switch between panes. Used to switch "Create pane" and "edit pane".
     private void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
         activatedPane.setVisible(true);
@@ -138,6 +142,7 @@ public class PlantAdministrationController implements TabController {
     void btnEditPlant(ActionEvent event) {
         editPlant();
     }
+
     //Create plant function gets text from user and creates a new plant. Adds them to
     //both thePlantManager and the ArrayList of plants.
     void createPlant() {
@@ -164,6 +169,7 @@ public class PlantAdministrationController implements TabController {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
     }
+
     //Edit plant function checks if a plant is selected. If so, replaces the current name and
     // ID with new values.
     void editPlant() {
@@ -185,11 +191,11 @@ public class PlantAdministrationController implements TabController {
             field_EditPlantName.clear();
             field_EditPlantId.clear();
 
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
-
     }
+
     //Function to make it possible to press ENTER to create a plant.
     @FXML
     void keyPressedCreate(KeyEvent event) {
@@ -197,6 +203,7 @@ public class PlantAdministrationController implements TabController {
             createPlant();
         }
     }
+
     //Function to make it possible to press ENTER to edit a plant.
     @FXML
     void keyPressedEdit(KeyEvent event) {
@@ -204,11 +211,13 @@ public class PlantAdministrationController implements TabController {
             editPlant();
         }
     }
+
     //Making Alert popup for delete plant function.
     public void popup() {
         Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
         btnPressedPopup(popup);
     }
+
     //Popup function to determine action when pressed "OK" or "Cancel".
     //Pressing yes, deletes the plant from the PlantManager and the Arraylist. Pressing no closes the Alert.
     public PlantElement btnPressedPopup(Alert popup) {

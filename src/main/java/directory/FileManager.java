@@ -88,7 +88,7 @@ public class FileManager {
                         } else {
                             // exclude temporary word files
                             String fileName = relativePath.getFileName().toString();
-                            if(fileName.startsWith("~"))
+                            if (fileName.startsWith("~"))
                                 return;
 
                             Document document = DocumentBuilder.getInstance().createDocument(relativePath);
@@ -157,10 +157,10 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name) throws IOException, InvalidNameException{
+    public Folder createFolder(String name) throws IOException, InvalidNameException {
         Folder folder = new Folder(name);
         Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
-        if(Files.exists(fullPath)) throw new InvalidNameException();
+        if (Files.exists(fullPath)) throw new InvalidNameException();
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
@@ -170,9 +170,10 @@ public class FileManager {
     }
 
     // Creates a new folder inside the given parent folder
-    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException{
+    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException {
         Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
-        if(Files.exists(fullFolderPath)) throw new InvalidNameException("Folder with name " + name + " Already exists");
+        if (Files.exists(fullFolderPath))
+            throw new InvalidNameException("Folder with name " + name + " Already exists");
         Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
@@ -182,7 +183,7 @@ public class FileManager {
         return folder;
     }
 
-    private void createFolderFile(Path fullPath) throws IOException{
+    private void createFolderFile(Path fullPath) throws IOException {
         Files.createDirectories(fullPath);
     }
 
@@ -469,7 +470,7 @@ public class FileManager {
             throw new InvalidNameException("Name is already in use");
 
         file.setName(newName);
-        if(oldPath.toFile().renameTo(newPath.toFile())){
+        if (oldPath.toFile().renameTo(newPath.toFile())) {
             return true;
         }
 

@@ -42,7 +42,7 @@
     </VBox>
 
     <!-- File tree -->
-    <VBox fx:id="leftSideVbox">
+    <VBox fx:id="leftSideVbox" onMouseClicked="#testpane">
         <HBox styleClass="filler" minHeight="40" maxHeight="40" prefWidth="${fileAdminHBox.width}">
             <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="%AdminFiles.Files"/>
         </HBox>

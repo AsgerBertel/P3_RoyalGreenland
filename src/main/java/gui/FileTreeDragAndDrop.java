@@ -60,9 +60,11 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 setText(item.getName());
             }
         };
+
         cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
         cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
         cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
+
         cell.setOnDragDone((DragEvent event) -> clearDropLocation());
         return cell;
     }
@@ -72,8 +74,9 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
 
         // root can't be dragged
         if (draggedItem.getParent() == null) return;
+        int test = treeCell.getIndex();
         Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
-
+        treeView.getSelectionModel().clearSelection(test);
         ClipboardContent content = new ClipboardContent();
         content.put(JAVA_FORMAT, draggedItem.getValue());
         db.setContent(content);
@@ -85,7 +88,6 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
 
         if (!event.getDragboard().hasContent(JAVA_FORMAT)) return;
         TreeItem<AbstractFile> thisItem = treeCell.getTreeItem();
-
         // can't drop on itself
         if (draggedItem == null || thisItem == null || thisItem == draggedItem) return;
         // ignore if this is the root
@@ -117,7 +119,6 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         } else {
             fileManager.getMainFiles().remove(itemToBeMoved.getValue());
         }
-        //
         if (itemToBeMoved.getValue() instanceof Folder) {
             if (isSubFolder((Folder) newParent.getValue(), itemToBeMoved.getValue()) && isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())) {
                 Folder parentFolderToBeMoved;
@@ -129,11 +130,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                     Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
                     itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
                 } catch (IOException e) {
-           /* Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Look, an Information Dialog");
-            alert.setContentText("I have a great message for you!");
-            alert.showAndWait();*/
+
                     e.printStackTrace();
                 }
 
@@ -141,8 +138,6 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 fileAdminController.update();
                 treeView.getSelectionModel().select(draggedItem);
                 event.setDropCompleted(success);
-
-
             }
         } else {
             Folder newParentFolder = (Folder) newParent.getValue();
@@ -156,8 +151,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             fileAdminController.update();
             treeView.getSelectionModel().select(draggedItem);
             event.setDropCompleted(success);
-
         }
+
     }
 
     private void clearDropLocation() {
