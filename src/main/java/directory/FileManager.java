@@ -17,10 +17,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Optional;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class FileManager {
 
@@ -177,6 +176,7 @@ public class FileManager {
     }
 
     public int OverwriteFilePopUP() {
+
         Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
         txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
         txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
@@ -334,6 +334,7 @@ public class FileManager {
         Optional<Folder> parent = findParent(file, archiveRoot);
         parent.ifPresent(parent1 -> parent1.getContents().remove(file));
         removeEmptyFolders(archiveRoot);
+        deleteEmptyDirectories(archiveRoot);
 
         AppFilesManager.save(this);
     }
@@ -406,15 +407,30 @@ public class FileManager {
         return src.getContents().size() == 0;
     }
     private void deleteEmptyDirectories (Folder src) {
+        boolean allDeleted = false;
+        boolean hasDeleted;
+        List<Path> pathsToDelete = new ArrayList<>();
+        System.out.println("hej");
+        System.out.println(Settings.getServerArchivePath() + src.getOSPath());
 
         try {
-            Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath())).filter(path -> !path.equals(Settings.getServerArchivePath() + src.getOSPath())).forEach(filePath -> {
-                if(Files.isDirectory(filePath))
-                    if(new File(filePath.toString()).list().length <= 0)
-                        new File(filePath.toString()).delete();
-            });
+            while(!allDeleted) {
+                hasDeleted = false;
+                pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
+                        .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
+                        .filter(path -> Files.isDirectory(path))
+                        .filter(path -> new File(path.toString()).list().length <= 0)
+                        .collect(Collectors.toList());
+                if(pathsToDelete.size() > 0) {
+                    pathsToDelete.forEach(path -> new File(path.toString()).delete());
+                    pathsToDelete.clear();
+                }
+                else
+                    allDeleted= true;
+            }
         } catch(IOException e) {
             e.printStackTrace();
+
         }
     }
 
