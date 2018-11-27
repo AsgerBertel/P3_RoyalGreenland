@@ -13,7 +13,7 @@ public class FileButton extends Button {
     private Image icon;
 
     private static Image wordFileIcon = new Image("/icons/bigWordDoc.png");
-    private static Image pdfFileIcon = new Image("/icons/bigPDFDoc.png");
+    private static Image pdfFileIcon = new Image("/icons/bigPdfDoc.png");
     private static Image folderIcon = new Image("/icons/bigFolder.png");
 
     private static Image defaultIcon = wordFileIcon;
