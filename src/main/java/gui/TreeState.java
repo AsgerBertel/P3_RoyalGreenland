@@ -31,8 +31,7 @@ public class TreeState{
         for(TreeItem<AbstractFile> child : children){
             if(child.getValue() instanceof Folder){
                 expandedStateByPath.put(child.getValue().getOSPath(), child.isExpanded());
-                if(child.isExpanded())
-                    mapChildren(child);
+                mapChildren(child);
             }
         }
     }
@@ -42,6 +41,7 @@ public class TreeState{
         for(TreeItem<AbstractFile> child : children){
             if(child.getValue() instanceof Folder){
                 child.setExpanded(expandedStateByPath.getOrDefault(child.getValue().getOSPath(), Boolean.FALSE));
+                replicateTreeExpansion(child);
             }
         }
     }
