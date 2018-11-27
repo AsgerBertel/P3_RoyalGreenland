@@ -6,6 +6,8 @@ import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
+import gui.log.LogEvent;
+import gui.log.LoggingTools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,6 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static gui.log.LogEventType.PLANT_CREATED;
 
 public class PlantAdministrationController implements TabController {
 
@@ -160,6 +164,8 @@ public class PlantAdministrationController implements TabController {
             field_CreatePlantName.setText("");
             field_CreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
+
+            LoggingTools.log(new LogEvent( DMSApplication.getMessage("Log.Plant") + " " + plant.getName() + " ID: " + plant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }

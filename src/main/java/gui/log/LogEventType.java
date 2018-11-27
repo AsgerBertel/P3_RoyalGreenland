@@ -4,7 +4,7 @@ import gui.DMSApplication;
 
 public enum LogEventType {
     CREATED("Created"),ARCHIVED("Archived"),CHANGED("Changed"),RENAMED("Renamed"), FOLDER_RENAMED("FolderRenamed"),
-    CHANGES_PUBLISHED("Published"), RESTORED("Restored");
+    CHANGES_PUBLISHED("Published"), RESTORED("Restored"), PLANT_CREATED("PlantCreated");
 
     String messageKey;
 
