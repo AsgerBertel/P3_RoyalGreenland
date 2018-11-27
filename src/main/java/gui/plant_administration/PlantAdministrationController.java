@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static gui.log.LogEventType.PLANT_CREATED;
+import static gui.log.LogEventType.*;
 
 public class PlantAdministrationController implements TabController {
 
@@ -128,7 +128,7 @@ public class PlantAdministrationController implements TabController {
     //Button function when "Delete plant" button in sidebar is pressed.
     @FXML
     void deletePlant(ActionEvent event) {
-        popup();
+        deletePopUp();
         btnDeletePlant.setDisable(true);
         btnDeletePlant.setOpacity(0.5);
     }
@@ -165,7 +165,7 @@ public class PlantAdministrationController implements TabController {
             field_CreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
 
-            LoggingTools.log(new LogEvent( DMSApplication.getMessage("Log.Plant") + " " + plant.getName() + " ID: " + plant.getId(), PLANT_CREATED));
+            LoggingTools.log(new LogEvent( DMSApplication.getMessage("Log.Plant") + " " + plant.getName() + ", " + plant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
@@ -173,12 +173,20 @@ public class PlantAdministrationController implements TabController {
     //Edit plant function checks if a plant is selected. If so, replaces the current name and
     // ID with new values.
     void editPlant() {
+        String oldName = null;
+        String newName = null;
+        int oldID = 0;
+        int newID = 0;
         try {
             boolean isElementSelected = false;
             for (PlantElement element : plantElements) {
                 if (element.isSelected()) {
-                    element.getPlant().setName(field_EditPlantName.getText());
-                    element.getPlant().setId(Integer.parseInt(field_EditPlantId.getText()));
+                    oldName = element.getPlant().getName();
+                    oldID = element.getPlant().getId();
+                    newName = field_EditPlantName.getText();
+                    newID = Integer.parseInt(field_EditPlantId.getText());
+                    element.getPlant().setName(newName);
+                    element.getPlant().setId(newID);
                     element.updateText();
                     isElementSelected = true;
                     lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
@@ -190,7 +198,8 @@ public class PlantAdministrationController implements TabController {
 
             field_EditPlantName.clear();
             field_EditPlantId.clear();
-
+            String logmsg = "(" + DMSApplication.getMessage("Log.Plant") + ": " + oldName +  ", " + oldID + " )" + " -> " + " (" + DMSApplication.getMessage("Log.Plant") + ", " + newName + ", " + newID + " )";
+            LoggingTools.log(new LogEvent(logmsg, PLANT_EDITED));
         } catch(NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
@@ -210,19 +219,21 @@ public class PlantAdministrationController implements TabController {
             editPlant();
         }
     }
-    //Making Alert popup for delete plant function.
-    public void popup() {
+    //Making Alert deletePopUp for delete plant function.
+    public void deletePopUp() {
         Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
-        btnPressedPopup(popup);
+        btnDeletePressedPopup(popup);
     }
     //Popup function to determine action when pressed "OK" or "Cancel".
     //Pressing yes, deletes the plant from the PlantManager and the Arraylist. Pressing no closes the Alert.
-    public PlantElement btnPressedPopup(Alert popup) {
+    public PlantElement btnDeletePressedPopup(Alert popup) {
         for (PlantElement element : plantElements) {
             if (element.isSelected()) {
                 popup.setTitle(DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
                 popup.setHeaderText(DMSApplication.getMessage("PlantAdmin.Popup.Info"));
                 popup.setContentText(DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
+                ((Button) popup.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+                ((Button) popup.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
                 Optional<ButtonType> result = popup.showAndWait();
                 if (!result.isPresent())
                     popup.close();
@@ -233,6 +244,8 @@ public class PlantAdministrationController implements TabController {
                     btnDeletePlant.setDisable(true);
                     btnDeletePlant.setStyle("-fx-opacity: 0.5");
                     plantCountText.setText("(" + plantElements.size() + ")");
+
+                    LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + element.getPlant().getName() + ", " + element.getPlant().getId(), PLANT_DELETED));
                     return element;
                 }
                 if (result.get() == ButtonType.CANCEL) {
