@@ -12,7 +12,7 @@ public enum TabLoader {
     FILE_OVERVIEW("FileOverview.fxml"),
     FILE_ADMINISTRATION("FileAdministration.fxml"),
     PLANT_ADMINISTRATION("PlantAdministration.fxml"),
-    LOG("LOG.fxml"),
+    LOG("Log.fxml"),
     DELETED_FILES("DeletedFiles.fxml"),
     SETTINGS("Settings.fxml");
 
