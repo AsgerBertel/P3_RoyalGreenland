@@ -63,7 +63,6 @@ public abstract class AbstractFile {
         return getName();
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

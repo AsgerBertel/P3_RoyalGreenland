@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class DMSApplication extends Application {
 
-    private static Stage primaryStage = new Stage();
+    private static Stage primaryStage;
 
     private VBox root;
 
@@ -55,8 +55,8 @@ public class DMSApplication extends Application {
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
-        loadRootElement();
         this.primaryStage = stage;
+        loadRootElement();
 
         // Load settings from preferences and prompt the user for new path if necessary
         initializeApplication();
@@ -145,7 +145,7 @@ public class DMSApplication extends Application {
 
     private void initializeApplication(){
         // Load settings and initialize paths if non are saved
-        Settings.loadSettings();
+        Settings.loadSettings(applicationMode);
 
         // Create application folder if they are missing
         if(applicationMode.equals(ApplicationMode.VIEWER)){

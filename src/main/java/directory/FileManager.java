@@ -87,7 +87,7 @@ public class FileManager {
                         } else {
                             // exclude temporary word files
                             String fileName = relativePath.getFileName().toString();
-                            if(fileName.startsWith("~"))
+                            if (fileName.startsWith("~"))
                                 return;
 
                             Document document = DocumentBuilder.getInstance().createDocument(relativePath);
@@ -146,10 +146,10 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name) throws IOException, InvalidNameException{
+    public Folder createFolder(String name) throws IOException, InvalidNameException {
         Folder folder = new Folder(name);
         Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
-        if(Files.exists(fullPath)) throw new InvalidNameException();
+        if (Files.exists(fullPath)) throw new InvalidNameException();
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
@@ -159,9 +159,10 @@ public class FileManager {
     }
 
     // Creates a new folder inside the given parent folder
-    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException{
+    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException {
         Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
-        if(Files.exists(fullFolderPath)) throw new InvalidNameException("Folder with name " + name + " Already exists");
+        if (Files.exists(fullFolderPath))
+            throw new InvalidNameException("Folder with name " + name + " Already exists");
         Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
@@ -171,7 +172,7 @@ public class FileManager {
         return folder;
     }
 
-    private void createFolderFile(Path fullPath) throws IOException{
+    private void createFolderFile(Path fullPath) throws IOException {
         Files.createDirectories(fullPath);
     }
 
@@ -190,16 +191,23 @@ public class FileManager {
                     archivePath = generateUniqueFileName(archivePath);
                     file.setName(archivePath.getFileName().toString());
                     Files.move(originalPath, archivePath);
+                } else {
+                    DirectoryCloner.mergeFolders(originalPath, archivePath, false);
+                    DirectoryCloner.deleteFolder(originalPath.toFile());
                 }
             } else {
-                Files.move(Paths.get(Settings.getServerDocumentsPath() + file.getOSPath()), archivePath);
+                if (Files.isDirectory(originalPath)) {
+                    DirectoryCloner.copyFolder(originalPath, archivePath);
+                    DirectoryCloner.deleteFolder(originalPath.toFile());
+                } else {
+                    Files.move(originalPath, archivePath);
+                }
             }
 
             insertFile(file, mainFilesRoot, archiveRoot);
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
             Optional<Folder> parent = findParent(file, mainFilesRoot);
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
-
 
             AppFilesManager.save(this);
         } catch (IOException e) {
@@ -252,19 +260,17 @@ public class FileManager {
         Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
 
         // Create parent folders if they don't exist
-        if(!Files.exists(newPath.getParent()))
+        if (!Files.exists(newPath.getParent()))
             Files.createDirectories(newPath.getParent());
 
-        if (!Files.exists(newPath)){
-            if(Files.isDirectory(oldPath)){
-                DirectoryCloner.copyFolder(oldPath, newPath);
-            }else{
-                Files.move(oldPath, newPath);
-            }
-
+        if (!Files.exists(newPath)) {
+            Files.move(oldPath, newPath);
         } else {
             // Find new name if it's a document and it already exists
-            if (!Files.isDirectory(oldPath)) {
+            if (Files.isDirectory(oldPath)) {
+                DirectoryCloner.mergeFolders(oldPath, newPath, false);
+                DirectoryCloner.deleteFolder(oldPath.toFile());
+            } else {
                 newPath = generateUniqueFileName(newPath);
                 Files.move(oldPath, newPath);
                 file.setName(newPath.getFileName().toString());
@@ -343,15 +349,17 @@ public class FileManager {
 
         src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
     }
+
     private boolean isEmpty(Folder src) {
-        if(src.getContents().size() == 0)
+        if (src.getContents().size() == 0)
             return true;
 
         src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
 
         return src.getContents().size() == 0;
     }
-    private void deleteEmptyDirectories (Folder src) {
+
+    private void deleteEmptyDirectories(Folder src) {
         boolean allDeleted = false;
         boolean hasDeleted;
         List<Path> pathsToDelete = new ArrayList<>();
@@ -359,21 +367,20 @@ public class FileManager {
         System.out.println(Settings.getServerArchivePath() + src.getOSPath());
 
         try {
-            while(!allDeleted) {
+            while (!allDeleted) {
                 hasDeleted = false;
                 pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
                         .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
                         .filter(path -> Files.isDirectory(path))
                         .filter(path -> new File(path.toString()).list().length <= 0)
                         .collect(Collectors.toList());
-                if(pathsToDelete.size() > 0) {
+                if (pathsToDelete.size() > 0) {
                     pathsToDelete.forEach(path -> new File(path.toString()).delete());
                     pathsToDelete.clear();
-                }
-                else
-                    allDeleted= true;
+                } else
+                    allDeleted = true;
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
 
         }
@@ -437,9 +444,9 @@ public class FileManager {
         if (Files.exists(newPath))
             throw new InvalidNameException("Name is already in use");
 
-        if(oldPath.toFile().renameTo(newPath.toFile())){
-            if(file instanceof Folder){
-                Folder fol = (Folder)file;
+        if (oldPath.toFile().renameTo(newPath.toFile())) {
+            if (file instanceof Folder) {
+                Folder fol = (Folder) file;
                 Path oldOSPath = file.getOSPath();
                 fol.setName(newName);
 
@@ -449,8 +456,8 @@ public class FileManager {
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
             }
-            if(file instanceof Document){
-                Document doc = (Document)file;
+            if (file instanceof Document) {
+                Document doc = (Document) file;
                 doc.setName(newName);
 
                 AppFilesManager.save(FileManager.getInstance());

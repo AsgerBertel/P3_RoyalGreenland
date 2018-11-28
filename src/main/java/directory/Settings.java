@@ -43,7 +43,7 @@ public class Settings {
     private static String serverPath;
     private static String localPath;
 
-    public static void loadSettings() {
+    public static void loadSettings(ApplicationMode applicationMode) {
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
@@ -58,7 +58,7 @@ public class Settings {
         // Prompt the user for paths if any are missing
         if (serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
-        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
+        else if (applicationMode == ApplicationMode.VIEWER && localPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
     }
 
