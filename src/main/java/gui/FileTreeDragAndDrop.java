@@ -1,5 +1,6 @@
 package gui;
 
+import directory.DirectoryCloner;
 import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
@@ -143,9 +144,13 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             if(isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())){
                 Folder newParentFolder = (Folder) newParent.getValue();
                 newParentFolder.getContents().add(itemToBeMoved.getValue());
+                String oldPath =Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString();
+                String newPath = Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName();
                 try {
-                    Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
-                    itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
+                    DirectoryCloner.copyFolder(Paths.get(oldPath),Paths.get(newPath));
+                    DirectoryCloner.deleteFolder(Paths.get(oldPath).toFile());
+                  /*  Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
+                    itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));*/
                 } catch (IOException e) {
                 }
                 fileManager.save();

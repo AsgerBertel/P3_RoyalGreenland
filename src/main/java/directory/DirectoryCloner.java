@@ -210,7 +210,7 @@ public class DirectoryCloner {
         return false;
     }
 
-    private static void copyFolder(Path src, Path dst) throws IOException {
+    public static void copyFolder(Path src, Path dst) throws IOException {
         Files.createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
         if(fileToCopy == null) return;
