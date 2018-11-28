@@ -47,7 +47,7 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
     }
 
     public String getName() {
-        return Paths.get(path).getFileName().toString();
+        return Paths.get(path.replace(":","")).getFileName().toString();
     }
 
     public void setName(String name){

@@ -87,7 +87,9 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setRoot(rootItem);
-        fileTreeView.setShowRoot(false);
+        fileTreeView.setShowRoot(true);
+
+
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
@@ -121,7 +123,7 @@ public class FileAdminController implements TabController {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
 
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
@@ -528,10 +530,6 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
     }
-    @FXML
-    public void testpane(){
-        System.out.println("test");
 
-    }
 
 }

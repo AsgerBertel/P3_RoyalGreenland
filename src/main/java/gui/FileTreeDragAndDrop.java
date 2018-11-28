@@ -74,9 +74,9 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
 
         // root can't be dragged
         if (draggedItem.getParent() == null) return;
-        int test = treeCell.getIndex();
+        int selectedCellId = treeCell.getIndex();
         Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
-        treeView.getSelectionModel().clearSelection(test);
+        treeView.getSelectionModel().clearSelection(selectedCellId);
         ClipboardContent content = new ClipboardContent();
         content.put(JAVA_FORMAT, draggedItem.getValue());
         db.setContent(content);
@@ -140,17 +140,20 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 event.setDropCompleted(success);
             }
         } else {
-            Folder newParentFolder = (Folder) newParent.getValue();
-            newParentFolder.getContents().add(itemToBeMoved.getValue());
-            try {
-                Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
-                itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
-            } catch (IOException e) {
+            if(isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())){
+                Folder newParentFolder = (Folder) newParent.getValue();
+                newParentFolder.getContents().add(itemToBeMoved.getValue());
+                try {
+                    Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
+                    itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
+                } catch (IOException e) {
+                }
+                fileManager.save();
+                fileAdminController.update();
+                treeView.getSelectionModel().select(draggedItem);
+                event.setDropCompleted(success);
             }
-            fileManager.save();
-            fileAdminController.update();
-            treeView.getSelectionModel().select(draggedItem);
-            event.setDropCompleted(success);
+
         }
 
     }
@@ -185,7 +188,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         for (AbstractFile file : listOfFiles) {
             if (file instanceof Folder && file.getName().equals(fileToBeMoved.getName())) {
                 return false;
-            } else if (file instanceof Document && file.getName() == fileToBeMoved.getName()) {
+            } else if (file instanceof Document && file.getName().equals(fileToBeMoved.getName())) {
                 return false;
             }
         }
