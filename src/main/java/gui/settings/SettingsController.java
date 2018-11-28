@@ -22,7 +22,7 @@ public class SettingsController implements TabController {
     public TextField usernameTextField;
     public Button saveChangesButton;
 
-    static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
+    public static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

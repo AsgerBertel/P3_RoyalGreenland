@@ -77,6 +77,7 @@ public class DMSApplication extends Application {
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
+        root.getStylesheets().add("/styles/masterSheet.css");
 
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);

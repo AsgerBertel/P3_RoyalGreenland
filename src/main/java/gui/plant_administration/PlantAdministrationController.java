@@ -8,8 +8,10 @@ import gui.PlantElement;
 import gui.TabController;
 import gui.log.LogEvent;
 import gui.log.LoggingTools;
+import gui.settings.SettingsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -83,8 +85,6 @@ public class PlantAdministrationController implements TabController {
         plantElements.clear();
         plantVBox.getChildren().clear();
 
-        //Fills ArrayList with plants from Json-File.
-        PlantManager plantManager = PlantManager.getInstance();
         // plantManager.updateFromServer(); todo necessary? This method didn't work before so it's now removed - Magnus
         for (Plant plant : PlantManager.getInstance().getAllPlants()) {
             PlantElement plantElement = new PlantElement(plant);
@@ -123,8 +123,9 @@ public class PlantAdministrationController implements TabController {
 
         field_EditPlantName.setText(selectedPlantElement.getPlant().getName());
         field_EditPlantId.setText("" + selectedPlantElement.getPlant().getId());
-
     }
+
+
     //Function to switch between panes. Used to switch "Create pane" and "edit pane".
     private void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
         activatedPane.setVisible(true);
@@ -155,16 +156,22 @@ public class PlantAdministrationController implements TabController {
     //both thePlantManager and the ArrayList of plants.
     void createPlant() {
         try {
-            Plant plant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
+            Plant newPlant = new Plant(Integer.parseInt(field_CreatePlantId.getText()), field_CreatePlantName.getText(), new AccessModifier());
             for (PlantElement element : plantElements) {
-                if (element.getPlant().equals(plant)) {
+                Plant oldPlant = element.getPlant();
+                if (oldPlant.getName().equals(oldPlant.getName()) || oldPlant.getId() == newPlant.getId()) {
                     lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.IdAlreadyExists"));
                     lblPlantCreated.setVisible(true);
+                    if(oldPlant.getName().equals(newPlant.getName())){
+                        addErrorClass(field_CreatePlantName);
+                    }else{
+                        addErrorClass(field_CreatePlantId);
+                    }
                     return;
                 }
             }
-            PlantElement newPlantElement = new PlantElement(plant);
-            PlantManager.getInstance().addPlant(plant);
+            PlantElement newPlantElement = new PlantElement(newPlant);
+            PlantManager.getInstance().addPlant(newPlant);
             plantElements.add(newPlantElement);
             newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
             plantVBox.getChildren().add(newPlantElement);
@@ -174,11 +181,22 @@ public class PlantAdministrationController implements TabController {
             field_CreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
 
-            LoggingTools.log(new LogEvent( DMSApplication.getMessage("Log.Plant") + " " + plant.getName() + ", " + plant.getId(), PLANT_CREATED));
+            LoggingTools.log(new LogEvent( DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
         }
     }
+
+    private void addErrorClass(Node node){
+        if(node.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS))
+            node.getStyleClass().add(SettingsController.ERROR_STYLE_CLASS);
+    }
+
+    private void removeErrorClass(Node node){
+        if(!node.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS))
+            node.getStyleClass().remove(SettingsController.ERROR_STYLE_CLASS);
+    }
+
     //Edit plant function checks if a plant is selected. If so, replaces the current name and
     // ID with new values.
     void savePlantEdit() {

@@ -20,7 +20,6 @@ public class DirectoryCloner {
         mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
     }
 
-
     public static void publishFiles() throws Exception {
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
@@ -210,7 +209,6 @@ public class DirectoryCloner {
     }
 
     /**
-     *
      * @param src the folder from which data is copied
      * @param dst the destination folder
      * @param replace if true the method will overwrite any duplicate files with the files from src. If false a new name
@@ -230,7 +228,6 @@ public class DirectoryCloner {
                 }else{
                     copyFolder(originalFile.toPath(), newFilePath);
                 }
-
             }else{
                 if(Files.exists(newFilePath)){
                     if(replace){
