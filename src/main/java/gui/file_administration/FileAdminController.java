@@ -5,6 +5,7 @@ import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
+import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
@@ -103,7 +104,7 @@ public class FileAdminController implements TabController {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
 
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
@@ -199,6 +200,22 @@ public class FileAdminController implements TabController {
             return;
         }
 
+        Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
+
+        if (Files.exists(path)){
+            int i = OverwriteFilePopUP();
+            if(i == 1){
+                //todo delete old file and replace with new file.
+                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
+                FileManager.getInstance().deleteFile(oldFile.get());
+
+            } else if (i == 0){
+                //todo give old file new name and upload new file.
+            } else {
+                return;
+            }
+        }
+
         if (selectedFile instanceof Folder) {
             // Upload inside selected folder
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
@@ -222,6 +239,26 @@ public class FileAdminController implements TabController {
         update();
         //todo if file already exists, the old one is deleted but this can only happen once.
         //todo make some kind of counter to file name
+    }
+
+    public int OverwriteFilePopUP() {
+        Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
+        txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
+        ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
+        ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
+        ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite, buttonTypeKeep, buttonTypeCancel);
+
+        Optional<ButtonType> result = txtInputDia.showAndWait();
+
+        if (result.get() == buttonTypeOverwrite) {
+            return 1;
+        } else if (result.get() == buttonTypeKeep) {
+            return 0;
+        }
+
+        return -1;
     }
 
     // Prompts the user to choose a file (return null if cancelled)

@@ -17,10 +17,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Optional;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class FileManager {
 
@@ -117,7 +116,7 @@ public class FileManager {
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
 
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + file.getName());
+        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + src.getFileName());
 
         if (Files.exists(dest)) {
             // todo should show prompt - Magnus
@@ -174,28 +173,6 @@ public class FileManager {
 
     private void createFolderFile(Path fullPath) throws IOException{
         Files.createDirectories(fullPath);
-    }
-
-    public int OverwriteFilePopUP() {
-        Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
-        txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
-        txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
-        ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
-        ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
-        ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite, buttonTypeKeep, buttonTypeCancel);
-
-        Optional<ButtonType> result = txtInputDia.showAndWait();
-
-        txtInputDia.showAndWait();
-
-        if (result.get() == buttonTypeOverwrite) {
-            return 1;
-        } else if (result.get() == buttonTypeKeep) {
-            return 0;
-        }
-
-        return -1;
     }
 
     // Removes a file from main files
@@ -268,52 +245,15 @@ public class FileManager {
         return extension;
     }
 
-    private String setVersionNumber(AbstractFile file) {
-        int versionNumber;
-        String name1;
-        String name2;
-        String fileName = file.getName();
-        char c = fileName.charAt(fileName.lastIndexOf(".") - 1);
-
-        if (c == ')') {
-            String str = fileName.substring(fileName.lastIndexOf("(") + 1,
-                    fileName.lastIndexOf(")"));
-
-            versionNumber = Integer.parseInt(str);
-            versionNumber++;
-
-            name1 = fileName.substring(
-                    0, fileName.lastIndexOf("("));
-
-            name2 = fileName.substring(
-                    fileName.lastIndexOf(")") + 1,
-                    fileName.length());
-        } else {
-            versionNumber = 1;
-
-            name1 = fileName.substring(
-                    0, fileName.lastIndexOf("."));
-
-            name2 = fileName.substring(
-                    fileName.lastIndexOf("."),
-                    fileName.length());
-        }
-
-        String newFileName = name1 + "(" + versionNumber + ")" + name2;
-
-        while (Files.exists(Paths.get(Settings.getServerDocumentsPath() + File.separator + newFileName))) {
-            versionNumber++;
-            newFileName = name1 + "(" + versionNumber + ")" + name2;
-        }
-
-        return newFileName;
-    }
-
     //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
         // Move the file on the file system
         Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
+
+        // Create parent folders if they don't exist
+        if(!Files.exists(newPath.getParent()))
+            Files.createDirectories(newPath.getParent());
 
         if (!Files.exists(newPath))
             Files.move(oldPath, newPath);
@@ -328,10 +268,13 @@ public class FileManager {
 
         // Insert the file into the main files list
         insertFile(file, archiveRoot, mainFilesRoot);
+        LoggingTools.log(new LogEvent(file.getName(), LogEventType.RESTORED));
 
         // Remove the folder from the archive files list
         Optional<Folder> parent = findParent(file, archiveRoot);
         parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+        removeEmptyFolders(archiveRoot);
+        deleteEmptyDirectories(archiveRoot);
 
         AppFilesManager.save(this);
     }
@@ -391,12 +334,44 @@ public class FileManager {
             folderToInsert.getContents().add(new Document(document));
     }
 
-    private boolean containsByPath(Folder folder, AbstractFile target) {
-        for (AbstractFile file : folder.getContents()) {
-            if (file.getPath().toString().equals(target.getPath().toString()))
-                return true;
+    private void removeEmptyFolders(Folder src) {
+
+        src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
+    }
+    private boolean isEmpty(Folder src) {
+        if(src.getContents().size() == 0)
+            return true;
+
+        src.getContents().removeIf(e -> e instanceof Folder && isEmpty((Folder) e));
+
+        return src.getContents().size() == 0;
+    }
+    private void deleteEmptyDirectories (Folder src) {
+        boolean allDeleted = false;
+        boolean hasDeleted;
+        List<Path> pathsToDelete = new ArrayList<>();
+        System.out.println("hej");
+        System.out.println(Settings.getServerArchivePath() + src.getOSPath());
+
+        try {
+            while(!allDeleted) {
+                hasDeleted = false;
+                pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
+                        .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
+                        .filter(path -> Files.isDirectory(path))
+                        .filter(path -> new File(path.toString()).list().length <= 0)
+                        .collect(Collectors.toList());
+                if(pathsToDelete.size() > 0) {
+                    pathsToDelete.forEach(path -> new File(path.toString()).delete());
+                    pathsToDelete.clear();
+                }
+                else
+                    allDeleted= true;
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+
         }
-        return false;
     }
 
     public static Optional<Folder> findParent(AbstractFile child, Folder root) {
@@ -438,7 +413,7 @@ public class FileManager {
 
     private Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
         for (AbstractFile abstractFile : searchArea) {
-            Path filePath = abstractFile.getPath();
+            Path filePath = abstractFile.getOSPath();
             if (fileRelativePath.startsWith(filePath)) {
                 if (fileRelativePath.equals(filePath)) {
                     return Optional.of(abstractFile);

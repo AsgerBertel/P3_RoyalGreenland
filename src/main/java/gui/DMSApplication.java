@@ -4,6 +4,8 @@ import app.ApplicationMode;
 import directory.Settings;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
 import java.io.IOException;
@@ -19,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class DMSApplication extends Application {
 
-    private Stage primaryStage = new Stage();
+    private static Stage primaryStage = new Stage();
 
     private VBox root;
 
@@ -47,21 +50,19 @@ public class DMSApplication extends Application {
     public DMSApplication(){}
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage stage) throws Exception{
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
+        loadRootElement();
+        this.primaryStage = stage;
+
         // Load settings from preferences and prompt the user for new path if necessary
         initializeApplication();
-
-        loadRootElement();
-
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-
 
         if(applicationMode.equals(ApplicationMode.ADMIN)){
             switchWindow(TabLoader.FILE_ADMINISTRATION);
@@ -122,8 +123,7 @@ public class DMSApplication extends Application {
     }
 
     public void restartApp() throws Exception{
-        primaryStage.close();
-        start(new Stage());
+        start(primaryStage);
     }
 
     public void changeLanguage(Locale locale) {
