@@ -161,6 +161,12 @@ public class FileOverviewController implements TabController {
 
         String path = fileExplorer.getCurrentPath();
 
+        if (getOperatingSystem() == "Windows") {
+            path = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, "/");
+        } else {
+            path = fileExplorer.getCurrentPath().replaceAll(File.separator, " / ");
+        }
+
         String tempString = "";
         for(int i = 0; i < path.length(); ++i){
             if(path.charAt(i) != '/'){
