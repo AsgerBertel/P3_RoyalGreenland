@@ -13,7 +13,7 @@
         <Text styleClass="standardTitle" text="%Settings.ServerPath"/> <!-- todo sprog -->
         <HBox styleClass="settingsHBox">
             <TextField fx:id="serverPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
-            <Button text="Gennemse" styleClass="darkButton" onAction="#onBrowseServerPath"/>
+            <Button text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowseServerPath"/>
         </HBox>
     </VBox>
 
@@ -21,7 +21,7 @@
         <Text styleClass="standardTitle" text="%Settings.LocalPath"/>
         <HBox styleClass="settingsHBox">
             <TextField fx:id="localPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
-            <Button text="Gennemse" styleClass="darkButton" onAction="#onBrowseLocalPath"/>
+            <Button text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowseLocalPath"/>
         </HBox>
     </VBox>
 
