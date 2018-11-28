@@ -244,8 +244,6 @@ public class FileAdminController implements TabController {
 
         fileManager.save();
         update();
-        //todo if file already exists, the old one is deleted but this can only happen once.
-        //todo make some kind of counter to file name
     }
 
     public int OverwriteFilePopUP() {
