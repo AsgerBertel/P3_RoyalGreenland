@@ -205,12 +205,19 @@ public class FileAdminController implements TabController {
         if (Files.exists(path)){
             int i = OverwriteFilePopUP();
             if(i == 1){
-                //todo delete old file and replace with new file.
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
                 FileManager.getInstance().deleteFile(oldFile.get());
-
             } else if (i == 0){
-                //todo give old file new name and upload new file.
+
+                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
+                Optional<String> newName = renameFilePopUP();
+                String newNameExt = newName.get() + "." + ((Document)oldFile.get()).getFileExtension();
+
+                try {
+                    FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                }
             } else {
                 return;
             }
