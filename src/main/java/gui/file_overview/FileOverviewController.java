@@ -185,6 +185,22 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+
+        //todo make enter button open work
+        fileTreeView.setOnKeyPressed(event1 -> {
+            if (event1.getCode().getCode() == 13) {
+                AbstractFile file = newValue.getValue();
+
+                if (file instanceof Document) {
+                    try {
+                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 AbstractFile file = newValue.getValue();

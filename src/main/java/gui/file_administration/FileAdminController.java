@@ -15,12 +15,15 @@ import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -80,6 +83,11 @@ public class FileAdminController implements TabController {
         fileTreeView.setShowRoot(false);
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
+
+        //todo make enter button open work
+        fileTreeView.setOnKeyPressed(event -> {
+            if (event.getCode().getCode() == 13) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
