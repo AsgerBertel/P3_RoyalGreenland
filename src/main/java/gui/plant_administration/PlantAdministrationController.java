@@ -6,6 +6,7 @@ import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
+import gui.file_administration.AdminFilesContextMenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -81,7 +82,7 @@ public class PlantAdministrationController implements TabController {
         PlantManager plantManager = PlantManager.getInstance();
         // plantManager.updateFromServer(); todo necessary? This method didn't work before so it's now removed - Magnus
         for (Plant plant : PlantManager.getInstance().getAllPlants()) {
-            PlantElement plantElement = new PlantElement(plant);
+            PlantElement plantElement = new PlantElement(plant, this);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
         }
@@ -102,22 +103,22 @@ public class PlantAdministrationController implements TabController {
 
     //Button function when "create plant" button in sidebar is pressed.
     @FXML
-    void createPlantSidebar(ActionEvent event) {
-        activatePane(createPane, editPane);
+    void createPlantSidebar() {
         lblPlantCreated.setText("");
         lblPlantCreated.setVisible(true);
+        activatePane(createPane, editPane);
     }
 
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
-    void editPlantSidebar(ActionEvent event) {
+    void editPlantSidebar() {
         lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.LblEditPlant"));
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
     }
 
     //Function to switch between panes. Used to switch "Create pane" and "edit pane".
-    private void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
+    public void activatePane(AnchorPane activatedPane, AnchorPane disabledPane) {
         activatedPane.setVisible(true);
         activatedPane.setDisable(false);
         disabledPane.setVisible(false);
@@ -128,9 +129,7 @@ public class PlantAdministrationController implements TabController {
     //Button function when "Delete plant" button in sidebar is pressed.
     @FXML
     void deletePlant(ActionEvent event) {
-        popup();
-        btnDeletePlant.setDisable(true);
-        btnDeletePlant.setOpacity(0.5);
+        popUpDeletePlant();
     }
 
     @FXML
@@ -155,7 +154,7 @@ public class PlantAdministrationController implements TabController {
                     return;
                 }
             }
-            PlantElement newPlantElement = new PlantElement(plant);
+            PlantElement newPlantElement = new PlantElement(plant, this);
             PlantManager.getInstance().addPlant(plant);
             plantElements.add(newPlantElement);
             newPlantElement.setOnSelectedListener(() -> onPlantToggle(newPlantElement));
@@ -212,10 +211,12 @@ public class PlantAdministrationController implements TabController {
         }
     }
 
-    //Making Alert popup for delete plant function.
-    public void popup() {
+    //Making Alert popUpDeletePlant for delete plant function.
+    public void popUpDeletePlant() {
         Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
         btnPressedPopup(popup);
+        btnDeletePlant.setDisable(true);
+        btnDeletePlant.setOpacity(0.5);
     }
 
     //Popup function to determine action when pressed "OK" or "Cancel".

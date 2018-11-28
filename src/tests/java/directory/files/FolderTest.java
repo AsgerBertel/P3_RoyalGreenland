@@ -9,7 +9,7 @@ class FolderTest {
     private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
 
 /*    @Test
-    void renameFile() {
+    void createPlant() {
         Path pathToTestDir = Paths.get("src/tests/resTest/Main Files Test");
         File newDirectory = new File(pathToTestDir.toString());
 
@@ -18,9 +18,9 @@ class FolderTest {
 
         FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
 
-        Folder folder = FileManager.getTestInstance().createFolder(newDirectory.toPath(), "renameTestFolder");
+        Folder folder = FileManager.getTestInstance().deletePlant(newDirectory.toPath(), "renameTestFolder");
 
-        folder.renameFile("renamedTestFolder");
+        folder.createPlant("renamedTestFolder");
         assertEquals("renamedTestFolder", folder.getName());
         assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").exists());
         assertTrue(new File(pathToTestDir.toString() + File.separator + "renamedTestFolder").delete());

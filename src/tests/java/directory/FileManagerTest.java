@@ -56,8 +56,8 @@ class FileManagerTest {
     }*/
 
 /*    @Test
-    void createFolder() {
-        Folder folder = FileManager.getTestInstance().createFolder(pathToTestDir, "TestFolder");
+    void deletePlant() {
+        Folder folder = FileManager.getTestInstance().deletePlant(pathToTestDir, "TestFolder");
         assertEquals("TestFolder", folder.getName());
 
         try {
@@ -103,7 +103,7 @@ class FileManagerTest {
 
   /*  @Test
     void restoreFolder () throws IOException {
-        Folder folder = FileManager.getTestInstance().createFolder(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
+        Folder folder = FileManager.getTestInstance().deletePlant(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
 
         FileManager.getTestInstance().deleteFile(folder);
 
