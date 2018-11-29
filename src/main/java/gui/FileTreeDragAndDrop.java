@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.util.Callback;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, TreeCell<AbstractFile>> {
     private TreeCell<AbstractFile> dropZone;
     private TreeItem<AbstractFile> draggedItem;
+
 
     private static final Image folderImage = new Image("/icons/smallFolder.png");
     private static final Image documentImage = new Image("/icons/smallBlueDoc.png");
@@ -127,40 +129,41 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 parentFolderToBeMoved.changeChildrenPath(parentFolderToBeMoved, parentFolderToBeMoved.getPath().toString(), parentFolderToBeMoved.getPath() + "/" + newParent.getValue().getName());
                 Folder newParentFolder = (Folder) newParent.getValue();
                 newParentFolder.getContents().add(itemToBeMoved.getValue());
+                Path oldPath = Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString());
+                Path newPath = Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString());
                 try {
-                    Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
+                    FileUtils.moveToDirectory(
+                            FileUtils.getFile(oldPath.toFile()),
+                            FileUtils.getFile(newPath.toFile()), false);
+                    //     Files.move(Paths.get(, Paths.get());
                     itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
                 } catch (IOException e) {
 
                     e.printStackTrace();
                 }
-
-                fileManager.save();
-                fileAdminController.update();
-                treeView.getSelectionModel().select(draggedItem);
-                event.setDropCompleted(success);
+                DirectoryCloner.printTree(fileManager.getInstance().getMainFilesRoot().getContents(),2);
             }
+
         } else {
-            if(isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())){
+            if (isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())) {
                 Folder newParentFolder = (Folder) newParent.getValue();
                 newParentFolder.getContents().add(itemToBeMoved.getValue());
-                String oldPath =Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString();
-                String newPath = Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName();
+                Path oldPath = Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString());
+                Path newPath = Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString());
                 try {
-                    DirectoryCloner.copyFolder(Paths.get(oldPath),Paths.get(newPath));
-                    DirectoryCloner.deleteFolder(Paths.get(oldPath).toFile());
-                  /*  Files.move(Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString()), Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString() + "/" + itemToBeMoved.getValue().getName()));
-                    itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));*/
+                    FileUtils.moveToDirectory(
+                            FileUtils.getFile(oldPath.toFile()),
+                            FileUtils.getFile(newPath.toFile()), false);
+
                 } catch (IOException e) {
                 }
-                fileManager.save();
-                fileAdminController.update();
-                treeView.getSelectionModel().select(draggedItem);
-                event.setDropCompleted(success);
             }
-
         }
 
+        fileManager.save();
+        fileAdminController.update();
+        treeView.getSelectionModel().select(draggedItem);
+        event.setDropCompleted(success);
     }
 
     private void clearDropLocation() {
@@ -190,6 +193,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
     private boolean isNameAvaliable(Folder newParent, AbstractFile fileToBeMoved) {
 
         ArrayList<AbstractFile> listOfFiles = newParent.getContents();
+        if (fileToBeMoved.getParentPath().equals(newParent.getPath()))
+            return false;
         for (AbstractFile file : listOfFiles) {
             if (file instanceof Folder && file.getName().equals(fileToBeMoved.getName())) {
                 return false;
@@ -197,6 +202,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 return false;
             }
         }
+
         return true;
     }
 

@@ -127,7 +127,7 @@ public class FileAdminController implements TabController {
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
-
+        fileTreeView.getRoot().setExpanded(true);
         setFactoryListDisabled(true);
         deleteFileButton.setDisable(true);
     }

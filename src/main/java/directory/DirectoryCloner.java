@@ -54,7 +54,7 @@ public class DirectoryCloner {
     }
 
     // for testing. Recursively prints tree
-    private static void printTree(ArrayList<AbstractFile> files, int offset) {
+    public static void printTree(ArrayList<AbstractFile> files, int offset) {
         for (AbstractFile file : files) {
             printOffset(offset);
             System.out.println(file.getName());
