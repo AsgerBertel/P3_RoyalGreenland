@@ -17,12 +17,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.TextAlignment;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -103,6 +105,9 @@ public class FileOverviewController implements TabController {
             flpFileView.getChildren().add(fileButton);
         }
         lblVisualPath.setText(PathDisplayCorrection());
+        lblVisualPath.setMaxWidth(550);
+        // Make sure, that the text is cut from the left.
+        lblVisualPath.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
     }
 
     // Creates a FileButton from a File
@@ -151,29 +156,50 @@ public class FileOverviewController implements TabController {
     }
 
     public String PathDisplayCorrection() {
-        int BracketCounter = 0;
-        String NewString;
+        ArrayList<String> pathSteps = new ArrayList<>();
+        String newString = "";
+
+        String path = fileExplorer.getCurrentPath();
+
         if (getOperatingSystem() == "Windows") {
-            NewString = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, " > ");
-            NewString = NewString.replaceAll("Sample files > Server >", "");
+            path = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, "/");
         } else {
-            NewString = fileExplorer.getCurrentPath().replaceAll(File.separator, " > ");
-            NewString = NewString.replaceAll("Sample files > Server >", "");
+            path = fileExplorer.getCurrentPath().replaceAll(File.separator, " / ");
         }
 
-
-        for (int i = 0; i < NewString.length(); i++) {
-            if (NewString.charAt(i) == '>')
-                BracketCounter++;
+        String tempString = "";
+        for(int i = 0; i < path.length(); ++i){
+            if(path.charAt(i) != '/'){
+                tempString = tempString + path.charAt(i);
+            } else{
+                pathSteps.add(tempString);
+                tempString = "";
+            }
+            if(i == path.length() - 1 && pathSteps.size() == 0){
+                pathSteps.add(tempString);
+            }else if (i == path.length() - 1){
+                pathSteps.add(tempString);
+            }
         }
 
-        if (BracketCounter > 3) {// todo make better  - Magnus
-            NewString = "../Skulle måske vise mere end bare den sidste folder"; //fileExplorer.getCurrentFolder().getName();
+        int bracketCount = pathSteps.size();
+
+        String tmpString = "";
+
+        if(bracketCount > 3){
+            for(int i = pathSteps.size() - 3; i < pathSteps.size(); ++i){
+                if(i == pathSteps.size() - 3){
+                    newString = newString + "...";
+                }
+                newString = newString + " / " + pathSteps.get(i);
+            }
         } else {
-            // todo This no longer works after paths are reworked.
-            // NewString = NewString.substring(NewString.indexOf("Main Files"));
+            for (int i = 0; i < pathSteps.size(); ++i){
+                newString = newString + " / " + pathSteps.get(i);
+            }
         }
-        return NewString;
+
+        return newString;
     }
 
     public String getOperatingSystem() {
@@ -185,6 +211,22 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+
+        //todo make enter button open work
+        fileTreeView.setOnKeyPressed(event1 -> {
+            if (event1.getCode().getCode() == 13) {
+                AbstractFile file = newValue.getValue();
+
+                if (file instanceof Document) {
+                    try {
+                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 AbstractFile file = newValue.getValue();

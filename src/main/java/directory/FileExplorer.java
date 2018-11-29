@@ -78,7 +78,7 @@ public class FileExplorer {
         if (currentFolder == null) {
             return "";
         } else {
-            return currentFolder.getPath().toString();
+            return currentFolder.getOSPath().toString();
         }
     }
 

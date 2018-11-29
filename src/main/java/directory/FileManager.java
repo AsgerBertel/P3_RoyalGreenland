@@ -429,8 +429,11 @@ public class FileManager {
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
-        if (Files.exists(newPath))
+        if (Files.exists(newPath)){
+            fileNameAlreadyExistsPopUp();
             throw new InvalidNameException("Name is already in use");
+        }
+
 
         if(oldPath.toFile().renameTo(newPath.toFile())){
             if(file instanceof Folder){
@@ -455,5 +458,12 @@ public class FileManager {
             return true;
         }
         return false;
+    }
+
+    public void fileNameAlreadyExistsPopUp(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Title"));
+        alert.setHeaderText(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Header"));
+        alert.showAndWait();
     }
 }

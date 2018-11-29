@@ -15,12 +15,15 @@ import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -80,6 +83,11 @@ public class FileAdminController implements TabController {
         fileTreeView.setShowRoot(false);
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
+
+        //todo make enter button open work
+        fileTreeView.setOnKeyPressed(event -> {
+            if (event.getCode().getCode() == 13) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -205,12 +213,19 @@ public class FileAdminController implements TabController {
         if (Files.exists(path)){
             int i = OverwriteFilePopUP();
             if(i == 1){
-                //todo delete old file and replace with new file.
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
                 FileManager.getInstance().deleteFile(oldFile.get());
-
             } else if (i == 0){
-                //todo give old file new name and upload new file.
+
+                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
+                Optional<String> newName = renameFilePopUP();
+                String newNameExt = newName.get() + "." + ((Document)oldFile.get()).getFileExtension();
+
+                try {
+                    FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                }
             } else {
                 return;
             }
@@ -237,8 +252,6 @@ public class FileAdminController implements TabController {
 
         fileManager.save();
         update();
-        //todo if file already exists, the old one is deleted but this can only happen once.
-        //todo make some kind of counter to file name
     }
 
     public int OverwriteFilePopUP() {
