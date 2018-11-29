@@ -5,7 +5,6 @@ import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
-import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
@@ -25,6 +24,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.awt.*;
 import java.io.IOException;
@@ -32,14 +33,9 @@ import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class FileAdminController implements TabController {
 
@@ -66,10 +62,6 @@ public class FileAdminController implements TabController {
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
 
-    // Watcher used for monitoring files and checking for changes
-    private WatchService watchService;
-    private ArrayList<WatchKey> watchKeys = new ArrayList<>();
-    private Thread watchThread;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,12 +75,7 @@ public class FileAdminController implements TabController {
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        try {
-            watchService = FileSystems.getDefault().newWatchService();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // todo look into (javadocs) why this might throw a ClosedFileSystem exception and handle appropriately
-        }
+        watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
     }
 
     @Override
@@ -96,7 +83,6 @@ public class FileAdminController implements TabController {
         reloadFileTree();
         reloadPlantList();
         reloadChangesList();
-        reloadFileWatcher();
     }
 
 
@@ -458,81 +444,63 @@ public class FileAdminController implements TabController {
         };
     }
 
-    // Recursively applies a watcher to every directory within the file tree root
-    private void reloadFileWatcher() {
-        Path root = Paths.get(Settings.getServerDocumentsPath());
-
-        // Remove current watch keys
-        for (WatchKey key : watchKeys)
-            key.cancel();
-
-        try {
-            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    watchKeys.add(dir.register(watchService, ENTRY_MODIFY));
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            // todo - Handle exception. sorry. - Magnus
-        }
-
-        startWatchThread();
-    }
-
-    private void startWatchThread() {
-        // Don't start watcher thread if it's already running
-        if (watchThread != null && watchThread.isAlive()) return;
-
-        watchThread = new Thread(this::run);
-        watchThread.setDaemon(true);
-        watchThread.start();
-    }
-
-
-    private void run() {
-        WatchKey key;
+    /**
+     * Watches directory for changes, Listener only reacts on changes and calls update() incase invoked.
+     * Thread sleeps for 0,2 hereafter, for good measure.
+     * @param root path to directory to watch
+     */
+    private void watchRootFiles(Path root) {
         FileManager fileManager = FileManager.getInstance();
-        try {
-            while (null != (key = watchService.take())) {
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    @SuppressWarnings("unchecked") // This watchService only generates keys from paths
-                            WatchEvent<Path> we = (WatchEvent<Path>) event;
-
-                    // Get the path of the parent folder whose child was changed
-                    Path path = (Path) key.watchable();
-
-                    // Add the file name of the changed file to the path
-                    Path fileName = we.context();
-                    path = path.resolve(fileName);
-
-                    // Don't register changes to temporary word files
-                    if (fileName.toString().charAt(0) == '~' || !Files.exists(path))
-                        continue;
-
-                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(path);
+        Thread monitorThread;
+        File directory = new File(root.toString());
+        FileAlterationObserver observer = new FileAlterationObserver(directory);
+        observer.addListener(new FileAlterationListener() {
+            @Override
+            public void onStart(FileAlterationObserver fileAlterationObserver) { }
+            @Override
+            public void onDirectoryCreate(File file) { }
+            @Override
+            public void onDirectoryChange(File file) { }
+            @Override
+            public void onDirectoryDelete(File file) { }
+            @Override
+            public void onFileCreate(File file) { }
+            @Override
+            public void onFileChange(File file) {
+                // Don't register changes to temporary word files
+                if (!(file.getName().charAt(0) == '~') || Files.exists(file.toPath())) {
+                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(file.toPath());
 
                     if (changedFile.isPresent() && changedFile.get() instanceof Document) {
                         ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
                             LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
-                            reloadChangesList();
+                            update();
                         });
                     }
-
                 }
-                /* On saving a file the filesystem occasionally registers two changes instead of one. These occur within
-                 * a very short time frame. To ensure that only one change is registered the listener is paused for a
-                 * short while. */
-                Thread.sleep(100);
-                // Reset the key to start listening for changes on this file again
-                key.reset();
             }
-        } catch (InterruptedException e) {
+            @Override
+            public void onFileDelete(File file) { }
+            @Override
+            public void onStop(FileAlterationObserver fileAlterationObserver) { }
+        });
+        try {
+            observer.initialize();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        monitorThread = new Thread(() -> {
+            while(true) {
+                try {
+                    observer.checkAndNotify();
+                    Thread.sleep(200);
+                } catch (InterruptedException e) { // todo error handling 10hif9s -kristian
+                    e.printStackTrace();
+                }
+            }
+        });
+        monitorThread.start();
     }
 
 }
