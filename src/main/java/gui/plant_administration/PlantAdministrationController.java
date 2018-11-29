@@ -189,6 +189,7 @@ public class PlantAdministrationController implements TabController {
             LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
+            addErrorClass(field_EditPlantId);
         }
     }
 
@@ -216,8 +217,33 @@ public class PlantAdministrationController implements TabController {
                 oldName = selectedPlant.getName();
                 oldID = selectedPlant.getId();
 
+
                 newName = field_EditPlantName.getText();
                 newID = Integer.parseInt(field_EditPlantId.getText());
+
+                // Check if id or name already exists
+                for (PlantElement plantElement : plantElements) {
+                    Plant plant = plantElement.getPlant();
+                    if (plant.getId() == newID || plant.getName().equals(newName)) {
+                        // Continue if the duplicate is the same factory that is being edited
+                        if (plant.getId() == oldID && plant.getName().equals(oldName))
+                            continue;
+
+                        // Otherwise indicate that id or name is already in use
+                        if (plant.getId() == newID){
+                            addErrorClass(field_EditPlantId);
+                        }
+
+                        if (plant.getName().equals(newName)){
+                            addErrorClass(field_EditPlantName);
+                        }
+
+                        // Cancel save
+                        return;
+                    }
+                }
+
+                // Save the change
                 selectedPlant.setName(newName);
                 selectedPlant.setId(newID);
                 update();
@@ -233,6 +259,7 @@ public class PlantAdministrationController implements TabController {
             field_EditPlantId.clear();
         } catch (NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
+            addErrorClass(field_EditPlantId);
         }
     }
 
@@ -252,9 +279,11 @@ public class PlantAdministrationController implements TabController {
     void keyPressedEdit(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             savePlantEdit();
+        } else {
+            removeErrorClass(field_EditPlantId);
+            removeErrorClass(field_EditPlantName);
         }
-        removeErrorClass(field_EditPlantId);
-        removeErrorClass(field_EditPlantName);
+
     }
 
     //Making Alert deletePopUp for delete plant function.
@@ -286,9 +315,9 @@ public class PlantAdministrationController implements TabController {
                 LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
                 return selectedPlantElement;
             }
-            if (result.get() == ButtonType.CANCEL) {
+            if (result.get() == ButtonType.CANCEL)
                 popup.close();
-            }
+
         }
         return null;
     }
