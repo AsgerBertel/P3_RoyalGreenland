@@ -100,17 +100,17 @@ button:hover{
 }
 
 .error{
-    -fx-background-color: red;
+    -fx-border-color: red;
 }
 
 .text-field:focused{
     -fx-text-box-border: #7da3e8;
 }
 
+
 .text-field.error{
     -fx-text-box-border: red;
 }
-
 
 /* -- Splitters -- */
 .verticalSplitter {
