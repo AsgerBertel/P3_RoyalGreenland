@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -23,6 +25,9 @@ public class SettingsController implements TabController {
     public Button saveChangesButton;
 
     public static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved", ERROR_STYLE_CLASS = "error";
+    public ToggleButton changeToGreenlandic;
+    public ToggleButton changeToDanish;
+    private ToggleGroup languageGroup = new ToggleGroup();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -30,6 +35,9 @@ public class SettingsController implements TabController {
         serverPathTextField.setText(Settings.getServerPath());
         localPathTextField.setText(Settings.getLocalFilesPath());
         saveChangesButton.setDisable(true);
+
+        changeToGreenlandic.setToggleGroup(languageGroup);
+        changeToDanish.setToggleGroup(languageGroup);
 
         // Check validity of changes when
         usernameTextField.setOnKeyReleased(e -> onUserNameChanged());
@@ -147,5 +155,11 @@ public class SettingsController implements TabController {
     }
 
 
+    public void changeToDanish(ActionEvent actionEvent) {
 
+    }
+
+    public void changeToGreenlandic(ActionEvent actionEvent) {
+
+    }
 }

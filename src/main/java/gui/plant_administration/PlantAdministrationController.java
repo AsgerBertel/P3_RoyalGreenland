@@ -175,6 +175,7 @@ public class PlantAdministrationController implements TabController {
                     return;
                 }
             }
+
             PlantElement newPlantElement = new PlantElement(newPlant);
             PlantManager.getInstance().addPlant(newPlant);
             plantElements.add(newPlantElement);
@@ -182,6 +183,7 @@ public class PlantAdministrationController implements TabController {
             plantVBox.getChildren().add(newPlantElement);
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.PlantCreated"));
             lblPlantCreated.setVisible(true);
+
             field_CreatePlantName.setText("");
             field_CreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");

@@ -500,6 +500,7 @@ public class FileAdminController implements TabController {
                 }
             }
         });
+        monitorThread.setDaemon(true);
         monitorThread.start();
     }
 

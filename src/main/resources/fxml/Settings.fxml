@@ -3,6 +3,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="gui.settings.SettingsController"
@@ -30,6 +32,29 @@
         <HBox styleClass="settingsHBox">
             <TextField fx:id="usernameTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
         </HBox>
+    </VBox>
+
+    <VBox styleClass="settingsVBox" stylesheets="/styles/menubar.css">
+        <Text styleClass="standardTitle" text="%Settings.Sprog"/>
+
+        <HBox translateY="10">
+            <ToggleButton  translateX="10" text="%Settings.Dansk" styleClass="darkButton" fx:id="changeToDanish" onAction="#changeToDanish">
+                <graphic>
+                    <ImageView fitWidth="24" fitHeight="24">
+                        <Image url="/icons/menu/danish.png"  />
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+
+            <ToggleButton translateX="25" text="%Settings.Grønlandsk" styleClass="darkButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
+                <graphic >
+                    <ImageView fitWidth="24" fitHeight="24">
+                        <Image url="/icons/menu/greenlandic.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+        </HBox>
+
     </VBox>
 
     <Button text="%Settings.SaveChanges" fx:id="saveChangesButton" styleClass="darkButton" id="saveChangesButton" onAction="#onSaveChanges"/>
