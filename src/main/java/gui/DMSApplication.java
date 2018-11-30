@@ -4,6 +4,8 @@ import app.ApplicationMode;
 import directory.Settings;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,22 +13,24 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class DMSApplication extends Application {
 
-    private Stage primaryStage = new Stage();
+    private static Stage primaryStage;
 
     private VBox root;
 
     public static final Locale DK_LOCALE = new Locale("da", "DK");
-    public static final Locale GL_LOCALE = new Locale("gl", "GL");
+    public static final Locale GL_LOCALE = new Locale("kl", "GL");
 
-    private static Locale locale = new Locale("da", "DK");
+    private static Locale locale = DK_LOCALE;
     private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
     private static final int MIN_WIDTH = 1024;
@@ -47,21 +51,20 @@ public class DMSApplication extends Application {
     public DMSApplication(){}
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage stage) throws Exception{
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
-        // Load settings from preferences and prompt the user for new path if necessary
         initializeApplication();
 
-        loadRootElement();
+        this.primaryStage = stage;
 
+        // Load settings from preferences and prompt the user for new path if necessary
+        loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-
 
         if(applicationMode.equals(ApplicationMode.ADMIN)){
             switchWindow(TabLoader.FILE_ADMINISTRATION);
@@ -76,6 +79,7 @@ public class DMSApplication extends Application {
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
+        root.getStylesheets().add("/styles/masterSheet.css");
 
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
@@ -105,7 +109,7 @@ public class DMSApplication extends Application {
         Pane newPane = null;
 
         try {
-            newPane = programPart.getPane();
+            newPane = programPart.getPane(this);
 
             // Make sure the new pane scales to the rest of the window
             newPane.prefHeightProperty().bind(root.heightProperty());
@@ -122,13 +126,13 @@ public class DMSApplication extends Application {
     }
 
     public void restartApp() throws Exception{
-        primaryStage.close();
-        start(new Stage());
+        start(primaryStage);
     }
 
-    public void changeLanguage(Locale locale) {
-        this.locale = locale;
-        messages = ResourceBundle.getBundle("Messages", locale);
+    public void changeLanguage(Locale newLocale) {
+        locale = newLocale;
+        Settings.setLanguage(newLocale);
+        messages = ResourceBundle.getBundle("Messages", newLocale);
     }
 
     public static Locale getLanguage(){
@@ -145,8 +149,9 @@ public class DMSApplication extends Application {
 
     private void initializeApplication(){
         // Load settings and initialize paths if non are saved
-        Settings.loadSettings();
-
+        Settings.loadSettings(applicationMode);
+        this.locale = Settings.getLanguage();
+        this.messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
         if(applicationMode.equals(ApplicationMode.VIEWER)){
             try {

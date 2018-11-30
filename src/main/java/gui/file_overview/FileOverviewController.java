@@ -7,6 +7,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
 import javafx.collections.FXCollections;
@@ -47,6 +48,8 @@ public class FileOverviewController implements TabController {
     @FXML
     private ComboBox<Plant> drdPlant;
 
+    private DMSApplication dmsApplication;
+
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setOnMouseClicked(event -> {
@@ -60,10 +63,14 @@ public class FileOverviewController implements TabController {
     }
 
     @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
+    }
+
+    @Override
     public void update() {
         // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
         reloadFileTree();
-
 
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);

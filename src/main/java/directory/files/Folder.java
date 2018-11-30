@@ -51,22 +51,21 @@ public class Folder extends AbstractFile {
         if(file.renameTo(newFile)) {
             changeChildrenPath(this, oldPath, newPath);
         }
-        AppFilesManager.save(FileManager.getInstance());
-        LoggingTools.log(new LogEvent(getName(), LogEventType.FOLDER_RENAMED));
+
     }
 
     public void changeChildrenPath(Folder folder, String oldPath, String newPath){
+        String newPathFile;
         for(AbstractFile file : folder.getContents()){
             if(file instanceof Document){
-                newPath = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPath));
+                newPathFile = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPathFile));
             }
             if(file instanceof Folder){
-                newPath = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPath));
+                newPathFile = file.getPath().toString().replace(oldPath, newPath);
+                file.setPath(Paths.get(newPathFile));
                 ((Folder) file).changeChildrenPath((Folder)file, oldPath, newPath);
             }
-
         }
     }
 

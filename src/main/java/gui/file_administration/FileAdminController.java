@@ -31,6 +31,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.awt.*;
 import java.io.IOException;
@@ -38,15 +40,11 @@ import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class FileAdminController implements TabController {
 
@@ -58,15 +56,14 @@ public class FileAdminController implements TabController {
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
+    private DMSApplication dmsApplication;
+
     @FXML
     public Text plantListTitle;
-
     @FXML
     private VBox plantVBox;
-
     @FXML
     private TreeView<AbstractFile> fileTreeView;
-
     @FXML
     private Text plantCountText;
 
@@ -76,10 +73,6 @@ public class FileAdminController implements TabController {
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
 
-    // Watcher used for monitoring files and checking for changes
-    private WatchService watchService;
-    private ArrayList<WatchKey> watchKeys = new ArrayList<>();
-    private Thread watchThread;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,20 +95,18 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
             // todo look into (javadocs) why this might throw a ClosedFileSystem exception and handle appropriately
         }
+    }
 
+    @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
     }
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed // todo test if functional
-        TreeItem<AbstractFile> currentRoot = fileTreeView.getRoot();
-        // todo This if statement doesnt work. It should only reload, if the content is changed or the root is null.
-        // todo - It always reloads. - Philip
-//      if(currentRoot == null || !((Folder)currentRoot.getValue()).getContents().equals(FileManager.getInstance().getMainFiles()))
         reloadFileTree();
         reloadPlantList();
-        updateChangesList();
-        updateFileWatcher();
+        reloadChangesList();
     }
 
 
@@ -160,11 +151,10 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected()) {
+        if (plantElement.isSelected())
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
-        } else {
+        else
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
-        }
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
@@ -220,39 +210,65 @@ public class FileAdminController implements TabController {
             return;
         }
 
-        if (selectedFile instanceof Folder) {
-            File uploadFile = chooseFilePrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
+        Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
 
-            if (uploadFile != null) {
-                FileManager.getInstance().uploadFile(Paths.get(uploadFile.getAbsolutePath()), (Folder) selectedFile);
-                update();
+        if (Files.exists(path)){
+            int i = OverwriteFilePopUP();
+            if(i == 1){
+                //todo delete old file and replace with new file.
+                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
+                FileManager.getInstance().deleteFile(oldFile.get());
+
+            } else if (i == 0){
+                //todo give old file new name and upload new file.
+            } else {
+                return;
             }
+        }
 
-
-            if (selectedFile instanceof Folder) {
-                // Upload inside selected folder
-                Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
-                fileManager.save();
-            } else if (selectedFile instanceof Document) {
-                // Upload as sibling to selected document
-                Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
-                if (parent.isPresent()) {
-                    Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
-                } else {
-                    // Upload to root
-                    Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
-                }
-
-            } else if (selectedFile == null) {
+        if (selectedFile instanceof Folder) {
+            // Upload inside selected folder
+            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
+            fileManager.save();
+        } else if (selectedFile instanceof Document) {
+            // Upload as sibling to selected document
+            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
+            if (parent.isPresent()) {
+                Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
+            } else {
                 // Upload to root
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
             }
 
-            fileManager.save();
-            update();
-            //todo if file already exists, the old one is deleted but this can only happen once.
-            //todo make some kind of counter to file name
+        } else if (selectedFile == null) {
+            // Upload to root
+            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), fileManager.getMainFilesRoot());
         }
+
+        fileManager.save();
+        update();
+        //todo if file already exists, the old one is deleted but this can only happen once.
+        //todo make some kind of counter to file name
+    }
+
+    public int OverwriteFilePopUP() {
+        Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
+        txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
+        txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
+        ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
+        ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
+        ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        txtInputDia.getButtonTypes().setAll(buttonTypeOverwrite, buttonTypeKeep, buttonTypeCancel);
+
+        Optional<ButtonType> result = txtInputDia.showAndWait();
+
+        if (result.get() == buttonTypeOverwrite) {
+            return 1;
+        } else if (result.get() == buttonTypeKeep) {
+            return 0;
+        }
+
+        return -1;
     }
 
     // Prompts the user to choose a file (return null if cancelled)
@@ -321,7 +337,6 @@ public class FileAdminController implements TabController {
         update();
     }
 
-
     public Optional<String> createFolderPopUP() {
         TextInputDialog txtInputDia = new TextInputDialog();
         txtInputDia.setTitle(DMSApplication.getMessage("AdminFiles.PopUp.CreateFolder"));
@@ -362,6 +377,7 @@ public class FileAdminController implements TabController {
             String name = optName.get();
             if (selectedFile instanceof Document) {
                 Document doc = (Document) selectedFile;
+                name = name + "." + doc.getFileExtension();
                 try {
                     FileManager.getInstance().renameFile(doc, name);
                 } catch (InvalidNameException e) {
@@ -373,10 +389,13 @@ public class FileAdminController implements TabController {
             }
             if (selectedFile instanceof Folder) {
                 Folder fol = (Folder) selectedFile;
-
-                fol.renameFile(name);
+                try {
+                    FileManager.getInstance().renameFile(fol,name);
+                } catch (InvalidNameException e) {
+                    e.printStackTrace();
+                }
             }
-            // Todo tree closes when it updates. - Philip
+
             update();
         }
         FileManager.getInstance().save();
@@ -401,20 +420,11 @@ public class FileAdminController implements TabController {
                     openFile();
             }
         }
-    /*    AbstractFile file = newValue.getValue();
-
-        if (file instanceof Document) {
-            try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getOSPath()).toFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
 
     /* ---- Changelist ---- */
-    private synchronized void updateChangesList() {
+    private synchronized void reloadChangesList() {
         changesVBox.getChildren().clear();
         List<LogEvent> unpublishedChanges = LoggingTools.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
@@ -455,81 +465,64 @@ public class FileAdminController implements TabController {
         };
     }
 
-    // Recursively applies a watcher to every directory within the file tree root
-    private void updateFileWatcher() {
-        Path root = Paths.get(Settings.getServerDocumentsPath());
-
-        // Remove current watch keys
-        for (WatchKey key : watchKeys)
-            key.cancel();
-
-        try {
-            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    watchKeys.add(dir.register(watchService, ENTRY_MODIFY));
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            // todo - Handle exception. sorry. - Magnus
-        }
-
-        startWatchThread();
-    }
-
-    private void startWatchThread() {
-        // Don't start watcher thread if it's already running
-        if (watchThread != null && watchThread.isAlive()) return;
-
-        watchThread = new Thread(this::run);
-        watchThread.setDaemon(true);
-        watchThread.start();
-    }
-
-    private void run() {
-        WatchKey key;
+    /**
+     * Watches directory for changes, Listener only reacts on changes and calls update() incase invoked.
+     * Thread sleeps for 0,2 hereafter, for good measure.
+     * @param root path to directory to watch
+     */
+    private void watchRootFiles(Path root) {
         FileManager fileManager = FileManager.getInstance();
-        try {
-            while (null != (key = watchService.take())) {
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    @SuppressWarnings("unchecked") // This watchService only generates keys from paths
-                            WatchEvent<Path> we = (WatchEvent<Path>) event;
-
-                    // Get the path of the parent folder whose child was changed
-                    Path path = (Path) key.watchable();
-
-                    // Add the file name of the changed file to the path
-                    Path fileName = we.context();
-                    path = path.resolve(fileName);
-
-                    // Don't register changes to temporary word files
-                    if (fileName.toString().charAt(0) == '~' || !Files.exists(path))
-                        continue;
-
-                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(path);
+        Thread monitorThread;
+        File directory = new File(root.toString());
+        FileAlterationObserver observer = new FileAlterationObserver(directory);
+        observer.addListener(new FileAlterationListener() {
+            @Override
+            public void onStart(FileAlterationObserver fileAlterationObserver) { }
+            @Override
+            public void onDirectoryCreate(File file) { }
+            @Override
+            public void onDirectoryChange(File file) { }
+            @Override
+            public void onDirectoryDelete(File file) { }
+            @Override
+            public void onFileCreate(File file) { }
+            @Override
+            public void onFileChange(File file) {
+                // Don't register changes to temporary word files
+                if (!(file.getName().charAt(0) == '~') || Files.exists(file.toPath())) {
+                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(file.toPath());
 
                     if (changedFile.isPresent() && changedFile.get() instanceof Document) {
                         ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
                             LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
-                            updateChangesList();
+                            update();
                         });
                     }
-
-                    /* On saving a file the filesystem occasionally registers two changes instead of one. These occur within
-                     * a very short time frame. To ensure that only one change is registered the listener is paused for a
-                     * short while. */
-                    Thread.sleep(100);
-                    // Reset the key to start listening for changes on this file again
-                    key.reset();
                 }
             }
-        } catch (InterruptedException e) {
+            @Override
+            public void onFileDelete(File file) { }
+            @Override
+            public void onStop(FileAlterationObserver fileAlterationObserver) { }
+        });
+        try {
+            observer.initialize();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        monitorThread = new Thread(() -> {
+            while(true) {
+                try {
+                    observer.checkAndNotify();
+                    Thread.sleep(200);
+                } catch (InterruptedException e) { // todo error handling 10hif9s -kristian
+                    e.printStackTrace();
+                }
+            }
+        });
+        monitorThread.setDaemon(true);
+        monitorThread.start();
     }
-
 
 }

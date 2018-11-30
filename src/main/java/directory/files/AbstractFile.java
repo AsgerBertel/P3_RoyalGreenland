@@ -64,7 +64,6 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
         return getName();
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
