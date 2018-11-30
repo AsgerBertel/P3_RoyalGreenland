@@ -40,6 +40,11 @@ button:hover{
     -fx-background-color: #1f2429;
 }
 
+.darkButton:selected{
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+}
+
 .darkButton:disabled {
     -fx-background-color: #737272;
     -fx-border-color: #737272;

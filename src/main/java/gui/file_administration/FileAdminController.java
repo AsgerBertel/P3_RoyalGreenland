@@ -47,6 +47,8 @@ public class FileAdminController implements TabController {
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
 
+    private DMSApplication dmsApplication;
+
     @FXML
     public Text plantListTitle;
     @FXML
@@ -76,6 +78,11 @@ public class FileAdminController implements TabController {
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
+    }
+
+    @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
     }
 
     @Override

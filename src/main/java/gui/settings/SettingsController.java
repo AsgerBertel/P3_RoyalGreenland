@@ -29,6 +29,8 @@ public class SettingsController implements TabController {
     public ToggleButton changeToDanish;
     private ToggleGroup languageGroup = new ToggleGroup();
 
+    private DMSApplication dmsApplication;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         usernameTextField.setText(Settings.getUsername());
@@ -36,13 +38,23 @@ public class SettingsController implements TabController {
         localPathTextField.setText(Settings.getLocalFilesPath());
         saveChangesButton.setDisable(true);
 
-        changeToGreenlandic.setToggleGroup(languageGroup);
-        changeToDanish.setToggleGroup(languageGroup);
-
         // Check validity of changes when
         usernameTextField.setOnKeyReleased(e -> onUserNameChanged());
         serverPathTextField.setOnKeyReleased(e -> onServerPathChanged());
         localPathTextField.setOnKeyReleased(e -> onLocalPathChange());
+
+        changeToGreenlandic.setToggleGroup(languageGroup);
+        changeToDanish.setToggleGroup(languageGroup);
+
+        if(Settings.getLanguage().equals(DMSApplication.DK_LOCALE))
+            changeToDanish.setSelected(true);
+        else
+            changeToGreenlandic.setSelected(true);
+    }
+
+    @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
     }
 
     @Override
@@ -74,7 +86,7 @@ public class SettingsController implements TabController {
         return chosenFile;
     }
 
-    public static boolean isValidPath(String path){
+    public static boolean isValidPath(String path) {
         return path != null && !path.isEmpty();
     }
 
@@ -93,7 +105,7 @@ public class SettingsController implements TabController {
     }
 
 
-    private void verifyNotEmpty(TextField textField){
+    private void verifyNotEmpty(TextField textField) {
         if (textField.getText().isEmpty()) {
             setStyleClassEnabled(textField, true, ERROR_STYLE_CLASS);
         } else {
@@ -113,7 +125,7 @@ public class SettingsController implements TabController {
             if (!textField.getStyleClass().contains(styleClass))
                 textField.getStyleClass().add(styleClass);
 
-            if(!containsErrors()){
+            if (!containsErrors()) {
                 saveChangesButton.setDisable(false);
             }
         } else {
@@ -131,7 +143,19 @@ public class SettingsController implements TabController {
         allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(serverPathTextField.getText()));
         allChangesSaved &= saveChange(localPathTextField, () -> Settings.setUsername(usernameTextField.getText()));
 
+        // Only disable save button if all changes are saved correctly
         saveChangesButton.setDisable(allChangesSaved);
+
+        // Save language if different from the current language
+        Locale language = changeToDanish.isSelected() ? DMSApplication.DK_LOCALE : DMSApplication.GL_LOCALE;
+        if (!language.equals(DMSApplication.getLanguage())) {
+            try {
+                dmsApplication.changeLanguage(language);
+                dmsApplication.restartApp();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /* Executes the saveAction if the textField contains changes
@@ -148,7 +172,7 @@ public class SettingsController implements TabController {
         return true;
     }
 
-    protected boolean containsErrors(){
+    protected boolean containsErrors() {
         return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
                 || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
                 || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
@@ -156,10 +180,14 @@ public class SettingsController implements TabController {
 
 
     public void changeToDanish(ActionEvent actionEvent) {
-
+        if(DMSApplication.getLanguage().equals(DMSApplication.GL_LOCALE))
+            saveChangesButton.setDisable(false);
+        changeToDanish.setSelected(true);
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) {
-
+        if(DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE))
+            saveChangesButton.setDisable(false);
+        changeToGreenlandic.setSelected(true);
     }
 }

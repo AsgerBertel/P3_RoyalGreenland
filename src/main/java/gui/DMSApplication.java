@@ -19,6 +19,7 @@ import json.AppFilesManager;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class DMSApplication extends Application {
 
@@ -27,9 +28,9 @@ public class DMSApplication extends Application {
     private VBox root;
 
     public static final Locale DK_LOCALE = new Locale("da", "DK");
-    public static final Locale GL_LOCALE = new Locale("gl", "GL");
+    public static final Locale GL_LOCALE = new Locale("kl", "GL");
 
-    private static Locale locale = new Locale("da", "DK");
+    private static Locale locale = DK_LOCALE;
     private static ResourceBundle messages = ResourceBundle.getBundle("Messages", locale);
 
     private static final int MIN_WIDTH = 1024;
@@ -55,11 +56,12 @@ public class DMSApplication extends Application {
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
+        initializeApplication();
+
         this.primaryStage = stage;
-        loadRootElement();
 
         // Load settings from preferences and prompt the user for new path if necessary
-        initializeApplication();
+        loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -107,7 +109,7 @@ public class DMSApplication extends Application {
         Pane newPane = null;
 
         try {
-            newPane = programPart.getPane();
+            newPane = programPart.getPane(this);
 
             // Make sure the new pane scales to the rest of the window
             newPane.prefHeightProperty().bind(root.heightProperty());
@@ -127,9 +129,10 @@ public class DMSApplication extends Application {
         start(primaryStage);
     }
 
-    public void changeLanguage(Locale locale) {
-        this.locale = locale;
-        messages = ResourceBundle.getBundle("Messages", locale);
+    public void changeLanguage(Locale newLocale) {
+        locale = newLocale;
+        Settings.setLanguage(newLocale);
+        messages = ResourceBundle.getBundle("Messages", newLocale);
     }
 
     public static Locale getLanguage(){
@@ -147,7 +150,8 @@ public class DMSApplication extends Application {
     private void initializeApplication(){
         // Load settings and initialize paths if non are saved
         Settings.loadSettings(applicationMode);
-
+        this.locale = Settings.getLanguage();
+        this.messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
         if(applicationMode.equals(ApplicationMode.VIEWER)){
             try {

@@ -67,6 +67,8 @@ public class PlantAdministrationController implements TabController {
     @FXML
     private Text plantCountText;
 
+    private DMSApplication dmsApplication;
+
     public VBox getPlantVBox() {
         return plantVBox;
     }
@@ -79,6 +81,11 @@ public class PlantAdministrationController implements TabController {
         btnDeletePlant.setDisable(true);
     }
 
+
+    @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
+    }
 
     @Override
     public void update() {

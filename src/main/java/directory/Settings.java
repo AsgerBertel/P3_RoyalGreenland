@@ -50,9 +50,9 @@ public class Settings {
         username = preferences.get(USERNAME_PREF, getComputerName());
 
         String languageString = preferences.get(LANGUAGE_PREF, DEFAULT_NULL_VALUE);
-        if (languageString.equals(DMSApplication.DK_LOCALE))
+        if (languageString.equals(DMSApplication.DK_LOCALE.toString()))
             language = DMSApplication.DK_LOCALE;
-        else if (languageString.equals(DMSApplication.GL_LOCALE))
+        else if (languageString.equals(DMSApplication.GL_LOCALE.toString()))
             language = DMSApplication.GL_LOCALE;
 
         // Prompt the user for paths if any are missing
@@ -89,7 +89,7 @@ public class Settings {
 
     public static void setLanguage(Locale newLanguage) {
         language = newLanguage;
-        preferences.put(LANGUAGE_PREF, newLanguage.getLanguage());
+        preferences.put(LANGUAGE_PREF, newLanguage.toString());
     }
 
     public static String getPublishedDocumentsPath(){
