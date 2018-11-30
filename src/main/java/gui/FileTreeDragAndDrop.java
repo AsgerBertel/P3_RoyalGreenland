@@ -7,6 +7,9 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
 import gui.file_administration.FileAdminController;
+import gui.log.LogEvent;
+import gui.log.LogEventType;
+import gui.log.LoggingTools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -16,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.util.Callback;
+import jdk.jfr.EventType;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -142,8 +146,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                     e.printStackTrace();
                 }
                 DirectoryCloner.printTree(fileManager.getInstance().getMainFilesRoot().getContents(),2);
+                LoggingTools.log(new LogEvent(parentFolderToBeMoved.getName(), newParent.getValue().getName(), LogEventType.FILE_MOVED));
             }
-
         } else {
             if (isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())) {
                 Folder newParentFolder = (Folder) newParent.getValue();
@@ -157,6 +161,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
 
                 } catch (IOException e) {
                 }
+                LoggingTools.log(new LogEvent(itemToBeMoved.getValue().getName(), newParentFolder.getName(), LogEventType.FILE_MOVED));
             }
         }
 

@@ -18,11 +18,8 @@ public class RestoreTestConditions {
         Path replacementFolder = Paths.get(Settings.getServerPath()).getParent().getParent().resolve(REPLACEMENT_FOLDER_NAME);
         Path alteredFolder = Paths.get(Settings.getServerPath()).getParent();
 
-        System.out.println(Files.exists(replacementFolder));
-
         DirectoryCloner.deleteFolder(alteredFolder.toFile());
         DirectoryCloner.copyFolder(replacementFolder, alteredFolder);
-
     }
 
 

@@ -4,28 +4,36 @@ import directory.Settings;
 import gui.DMSApplication;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class LogEvent {
-   private String subject,user;
+   private String prefixString,user;
+   private String suffixString;
    private LocalDateTime localDateTime;
    private LogEventType eventType;
 
-    public LogEvent(String subject, String user, LocalDateTime localDateTime, LogEventType eventType) {
-        this.subject = subject;
-        this.user = user;
-        this.localDateTime = localDateTime;
-        this.eventType = eventType;
+    public LogEvent(String prefixString, LogEventType type){
+        this(prefixString, "", type);
     }
 
-    public LogEvent(String subject, LogEventType type){
+    public LogEvent(String prefixString, String suffixString, LogEventType type){
+        this.prefixString = prefixString;
+        this.suffixString = suffixString;
         this.user = Settings.getUsername();
         this.localDateTime = LocalDateTime.now();
-        this.subject = subject;
         this.eventType = type;
     }
 
-    public String getSubject() {
-        return subject;
+    public LogEvent(String prefixString, String suffixString, String user, LocalDateTime localDateTime, LogEventType logEventType) {
+        this.prefixString = prefixString;
+        this.suffixString = suffixString;
+        this.user = user;
+        this.localDateTime = localDateTime;
+        this.eventType =logEventType;
+    }
+
+    public String getPrefixString() {
+        return prefixString;
     }
 
     public String getUser() {
@@ -45,7 +53,7 @@ public class LogEvent {
     @SuppressWarnings("unused")
     public String getEventString(){
         LoggingTools lt = new LoggingTools();
-        return getSubject() + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString();
+        return prefixString + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString() + " " + suffixString;
     }
 
     // Used in cell factory inside LogController
@@ -58,5 +66,9 @@ public class LogEvent {
             minutes = String.valueOf(getLocalDateTime().getMinute());
 
         return getLocalDateTime().getDayOfMonth() + "/" +getLocalDateTime().getMonthValue() + "-" + getLocalDateTime().getYear() + " - "+getLocalDateTime().getHour() +":" + minutes;
+    }
+
+    public String getSuffixString() {
+        return suffixString;
     }
 }

@@ -34,7 +34,7 @@ public class PlantContextMenu extends ContextMenu {
 
     public void editPlant(){ plantAdministrationController.editPlantSidebar(); }
 
-    public void deletePlant(){ plantAdministrationController.popUpDeletePlant(); }
+    public void deletePlant(){ plantAdministrationController.deletePlant(); }
 
 
 }

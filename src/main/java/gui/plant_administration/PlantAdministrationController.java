@@ -117,7 +117,7 @@ public class PlantAdministrationController implements TabController {
 
     //Button function when "create plant" button in sidebar is pressed.
     @FXML
-    void createPlantSidebar(ActionEvent event) {
+    void createPlantSidebar() {
         activatePane(createPane, editPane);
         lblPlantCreated.setText("");
         lblPlantCreated.setVisible(true);
@@ -125,7 +125,7 @@ public class PlantAdministrationController implements TabController {
 
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
-    void editPlantSidebar(ActionEvent event) {
+    void editPlantSidebar() {
         lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.LblEditPlant"));
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
@@ -146,7 +146,7 @@ public class PlantAdministrationController implements TabController {
 
     //Button function when "Delete plant" button in sidebar is pressed.
     @FXML
-    void deletePlant(ActionEvent event) {
+    void deletePlant() {
         deletePopUp();
         btnDeletePlant.setDisable(true);
         btnDeletePlant.setOpacity(0.5);

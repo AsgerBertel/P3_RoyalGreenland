@@ -89,12 +89,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        try {
-            watchService = FileSystems.getDefault().newWatchService();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // todo look into (javadocs) why this might throw a ClosedFileSystem exception and handle appropriately
-        }
+        watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
     }
 
     @Override
