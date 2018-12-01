@@ -482,7 +482,9 @@ public class FileManager {
 
     private void mergeFolders(Folder src, Folder dst) throws IOException {
         ArrayList<AbstractFile> children = src.getContents();
-        for (AbstractFile child : children) {
+        ArrayList<AbstractFile> copyChildren = new ArrayList<>();
+        copyChildren.addAll(children);
+        for (AbstractFile child : copyChildren) {
             Path childDst = Paths.get(Settings.getServerDocumentsPath() + dst.getOSPath() + File.separator + child.getName());
 
             if (child instanceof Document || !Files.exists(childDst)) {
@@ -497,6 +499,8 @@ public class FileManager {
                 }
             }
         }
+        findParent(src, mainFilesRoot).get().getContents().remove(src);
+        Files.delete(Paths.get(Settings.getServerDocumentsPath() + src.getOSPath()));
     }
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
