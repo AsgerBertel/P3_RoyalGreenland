@@ -79,8 +79,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
     private void dragDetected(MouseEvent event, TreeCell<AbstractFile> treeCell, TreeView<AbstractFile> treeView) {
         draggedItem = treeCell.getTreeItem();
 
-        // root can't be dragged
-        if (draggedItem.getParent() == null) return;
+        // Root can't be dragged and can't drag nothing
+        if (draggedItem == null || draggedItem.getParent() == null) return;
         int selectedCellId = treeCell.getIndex();
         Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
         treeView.getSelectionModel().clearSelection(selectedCellId);
@@ -110,114 +110,54 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
         }
     }
 
-    private void drop(DragEvent event, TreeCell<AbstractFile> treeCell, TreeView<AbstractFile> treeView) {
-        Dragboard db = event.getDragboard();
-        boolean success = false;
-        TreeItem<AbstractFile> newParent = treeCell.getTreeItem();
-        TreeItem<AbstractFile> itemToBeMoved = draggedItem;
+    //
+    private void drop(DragEvent event, TreeCell<AbstractFile> destinationTreeCell, TreeView<AbstractFile> treeView) {
+        // Do nothing if no item was dragged
+        if(!event.getDragboard().hasContent(JAVA_FORMAT))
+            return;
+
+        // Do nothing if dragged into the folder that it's already in
+        if(destinationTreeCell.getTreeItem().equals(draggedItem.getParent()))
+            return;
+
+        TreeItem<AbstractFile> newParent = destinationTreeCell.getTreeItem();
         FileManager fileManager = FileManager.getInstance();
 
+        AbstractFile fileToMove = draggedItem.getValue();
+        AbstractFile destinationFile = destinationTreeCell.getItem();
+        Folder destinationFolder;
 
-        Optional<Folder> toBeMovedParent = FileManager.findParent(itemToBeMoved.getValue(), fileManager.getMainFilesRoot());
-        if (!db.hasContent(JAVA_FORMAT)) return;
-        if (toBeMovedParent.isPresent()) {
-            Folder NewFolderParent = toBeMovedParent.get();
-            NewFolderParent.getContents().remove(itemToBeMoved.getValue());
+        // Determine folder that the file should be moved into
+        if (destinationFile instanceof Folder) {
+            destinationFolder = (Folder) destinationFile;
         } else {
-            fileManager.getMainFiles().remove(itemToBeMoved.getValue());
-        }
-        if (itemToBeMoved.getValue() instanceof Folder) {
-            if (isSubFolder((Folder) newParent.getValue(), itemToBeMoved.getValue()) && isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())) {
-                Folder parentFolderToBeMoved;
-                parentFolderToBeMoved = (Folder) itemToBeMoved.getValue();
-                parentFolderToBeMoved.changeChildrenPath(parentFolderToBeMoved, parentFolderToBeMoved.getPath().toString(), parentFolderToBeMoved.getPath() + "/" + newParent.getValue().getName());
-                Folder newParentFolder = (Folder) newParent.getValue();
-                newParentFolder.getContents().add(itemToBeMoved.getValue());
-                Path oldPath = Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString());
-                Path newPath = Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString());
-                try {
-                    FileUtils.moveToDirectory(
-                            FileUtils.getFile(oldPath.toFile()),
-                            FileUtils.getFile(newPath.toFile()), false);
-                    //     Files.move(Paths.get(, Paths.get());
-                    itemToBeMoved.getValue().setPath(Paths.get(newParent.getValue().getPath() + "/" + itemToBeMoved.getValue().getName()));
-                } catch (IOException e) {
-
-                    e.printStackTrace();
-                }
-                DirectoryCloner.printTree(fileManager.getInstance().getMainFilesRoot().getContents(),2);
-                LoggingTools.log(new LogEvent(parentFolderToBeMoved.getName(), newParent.getValue().getName(), LogEventType.FILE_MOVED));
-            }
-        } else {
-            if (isNameAvaliable((Folder) newParent.getValue(), itemToBeMoved.getValue())) {
-                Folder newParentFolder = (Folder) newParent.getValue();
-                newParentFolder.getContents().add(itemToBeMoved.getValue());
-                Path oldPath = Paths.get(Settings.getServerDocumentsPath() + itemToBeMoved.getValue().getOSPath().toString());
-                Path newPath = Paths.get(Settings.getServerDocumentsPath() + newParent.getValue().getOSPath().toString());
-                try {
-                    FileUtils.moveToDirectory(
-                            FileUtils.getFile(oldPath.toFile()),
-                            FileUtils.getFile(newPath.toFile()), false);
-
-                } catch (IOException e) {
-                }
-                LoggingTools.log(new LogEvent(itemToBeMoved.getValue().getName(), newParentFolder.getName(), LogEventType.FILE_MOVED));
-            }
+            // If the file is dropped on a document then set the destination to be the parent folder
+            Optional<Folder> destinationParent = FileManager.findParent(fileToMove, fileManager.getMainFilesRoot());
+            if (destinationParent.isPresent())
+                destinationFolder = destinationParent.get();
+            else
+                throw new RuntimeException("The document that the file was dropped on does not have a parent"); // todo more specific exception type - Magnus
         }
 
+        // Don't allow folder to be drag into on of its' subfolders
+        if (fileToMove instanceof Folder && destinationFolder.isSubFolderOf((Folder) fileToMove))
+            return;
+
+
+        try {
+            FileManager.getInstance().moveFile(fileToMove, destinationFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LoggingTools.log(new LogEvent(fileToMove.getName(), destinationFolder.getName(), LogEventType.FILE_MOVED));
         fileManager.save();
         fileAdminController.update();
         treeView.getSelectionModel().select(draggedItem);
-        event.setDropCompleted(success);
+        event.setDropCompleted(true);
     }
 
     private void clearDropLocation() {
         if (dropZone != null) dropZone.setStyle("");
-    }
-
-    // Returns an image view with an appropriate icon according to the file-type
-    private static ImageView getImageView(AbstractFile file) {
-        ImageView imageView;
-        if (file instanceof Folder) {
-            imageView = new ImageView(folderImage);
-
-            // Set scaling of image
-            imageView.setFitWidth(16);
-            imageView.setFitHeight(16);
-        } else {
-            // todo add icons for multiple filetypes
-            imageView = new ImageView(documentImage);
-
-            //Set scaling of image
-            imageView.setFitWidth(14);
-            imageView.setFitHeight(16);
-        }
-        return imageView;
-    }
-
-    private boolean isNameAvaliable(Folder newParent, AbstractFile fileToBeMoved) {
-
-        ArrayList<AbstractFile> listOfFiles = newParent.getContents();
-        if (fileToBeMoved.getParentPath().equals(newParent.getPath()))
-            return false;
-        for (AbstractFile file : listOfFiles) {
-            if (file instanceof Folder && file.getName().equals(fileToBeMoved.getName())) {
-                return false;
-            } else if (file instanceof Document && file.getName().equals(fileToBeMoved.getName())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean isSubFolder(Folder newParent, AbstractFile fileToBeMoved) {
-
-        if (newParent.getOSPath().toString().contains(fileToBeMoved.getOSPath().toString())) {
-            return false;
-
-        } else {
-            return true;
-        }
     }
 }
