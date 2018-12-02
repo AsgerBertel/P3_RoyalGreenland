@@ -40,6 +40,11 @@ button:hover{
     -fx-background-color: #1f2429;
 }
 
+.darkButton:selected{
+    -fx-background-color: #3d4652;
+    -fx-background-radius: 0;
+}
+
 .darkButton:disabled {
     -fx-background-color: #737272;
     -fx-border-color: #737272;
@@ -99,14 +104,18 @@ button:hover{
     -fx-padding: 8px;
 }
 
+.error{
+    -fx-border-color: red;
+}
+
 .text-field:focused{
     -fx-text-box-border: #7da3e8;
 }
 
+
 .text-field.error{
     -fx-text-box-border: red;
 }
-
 
 /* -- Splitters -- */
 .verticalSplitter {

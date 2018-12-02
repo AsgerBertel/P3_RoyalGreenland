@@ -6,6 +6,7 @@ import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
 import gui.TreeState;
@@ -32,7 +33,7 @@ import java.util.ResourceBundle;
 public class DeletedFilesController implements TabController {
 
     private FileExplorer fileExplorer;
-
+    private DMSApplication dmsApplication;
     private TreeItem<AbstractFile> rootItem;
 
     List<AbstractFile> filesToShow;
@@ -70,6 +71,11 @@ public class DeletedFilesController implements TabController {
     }
 
     @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
+    }
+
+    @Override
     public void update() {
         TreeState oldTreeState = new TreeState(fileTreeView);
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getArchiveFiles());
@@ -97,8 +103,8 @@ public class DeletedFilesController implements TabController {
         filebutton.getStyleClass().add("FileButton");
         filebutton.setContentDisplay(ContentDisplay.TOP);
         filebutton.setOnMouseClicked(this::onFileButtonClick);
-        // Add appropriate context menu
 
+        // Add appropriate context menu
         return filebutton;
     }
 
