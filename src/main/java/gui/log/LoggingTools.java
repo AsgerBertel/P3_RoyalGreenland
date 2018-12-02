@@ -32,7 +32,7 @@ public class LoggingTools {
         String eventDate = event.getLocalDateTime().format(FORMATTER);
 
         // FILENAME blev EVENT
-        String eventData = event.getSubject() + "|" + event.getEventType().toString();
+        String eventData = event.getPrefixString() + "|" + event.getEventType().toString() + "|" + event.getSuffixString();
 
         //USER
         String eventUser = event.getUser();
@@ -51,7 +51,8 @@ public class LoggingTools {
         String[] substrings = eventLine.split("[|]");
 
         LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], FORMATTER);
-        return new LogEvent(substrings[1], substrings[3], localDateTime, LogEventType.valueOf(substrings[2]));
+
+        return new LogEvent(substrings[1], substrings[3], substrings[4], localDateTime, LogEventType.valueOf(substrings[2]));
     }
 
 

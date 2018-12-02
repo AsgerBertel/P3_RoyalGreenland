@@ -54,7 +54,9 @@ public class FileOverviewController implements TabController {
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
         fileTreeView.setShowRoot(false);
@@ -217,34 +219,13 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-
-        //todo make enter button open work
-        fileTreeView.setOnKeyPressed(event1 -> {
-            if (event1.getCode().getCode() == 13) {
-                AbstractFile file = newValue.getValue();
-
-                if (file instanceof Document) {
-                    try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        AbstractFile file = newValue.getValue();
+        if (file instanceof Document) {
+            try {
+                ((Document) file).openDocument();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-
-        fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                AbstractFile file = newValue.getValue();
-
-                if (file instanceof Document) {
-                    try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        }
     }
 }

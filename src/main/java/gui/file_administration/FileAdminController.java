@@ -15,18 +15,25 @@ import gui.log.LogEventType;
 import gui.log.LoggingTools;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
@@ -37,6 +44,8 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.*;
 import java.util.List;
 
@@ -74,7 +83,9 @@ public class FileAdminController implements TabController {
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setRoot(rootItem);
-        fileTreeView.setShowRoot(false);
+        fileTreeView.setShowRoot(true);
+
+
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
@@ -85,6 +96,7 @@ public class FileAdminController implements TabController {
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
         watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
     }
 
@@ -109,7 +121,7 @@ public class FileAdminController implements TabController {
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
         selectedFile = null;
-
+        fileTreeView.getRoot().setExpanded(true);
         setFactoryListDisabled(true);
         deleteFileButton.setDisable(true);
     }
@@ -285,13 +297,13 @@ public class FileAdminController implements TabController {
                 Folder fol = null;
                 try {
                     fol = FileManager.getInstance().createFolder(name);
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (InvalidNameException e) {
                     e.printStackTrace(); // todo add exception handling
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
+                    LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
                 }
-                fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
-                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 try {
@@ -410,13 +422,10 @@ public class FileAdminController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-        AbstractFile file = newValue.getValue();
-
-        if (file instanceof Document) {
-            try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + file.getOSPath()).toFile());
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (fileTreeView.getSelectionModel().getSelectedItem() != null) {
+            AbstractFile file = newValue.getValue();
+            if (file instanceof Document) {
+                    openFile();
             }
         }
     }
