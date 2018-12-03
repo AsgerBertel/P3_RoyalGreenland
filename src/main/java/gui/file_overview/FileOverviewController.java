@@ -7,6 +7,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
 import javafx.collections.FXCollections;
@@ -49,9 +50,13 @@ public class FileOverviewController implements TabController {
     @FXML
     private ComboBox<Plant> drdPlant;
 
+    private DMSApplication dmsApplication;
+
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
-        fileTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openFileTreeElement(newValue));
+        fileTreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+        });
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
         fileTreeView.setShowRoot(false);
@@ -60,17 +65,20 @@ public class FileOverviewController implements TabController {
     }
 
     @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
+    }
+
+    @Override
     public void update() {
         // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
         reloadFileTree();
-
 
         plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
         drdPlant.setItems(plantList);
     }
 
     private void reloadFileTree() {
-        ;
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
         fileTreeView.setRoot(rootItem);
     }
@@ -211,34 +219,13 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-
-        //todo make enter button open work
-        fileTreeView.setOnKeyPressed(event1 -> {
-            if (event1.getCode().getCode() == 13) {
-                AbstractFile file = newValue.getValue();
-
-                if (file instanceof Document) {
-                    try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        AbstractFile file = newValue.getValue();
+        if (file instanceof Document) {
+            try {
+                ((Document) file).openDocument();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-
-        fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                AbstractFile file = newValue.getValue();
-
-                if (file instanceof Document) {
-                    try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + newValue.getValue().getOSPath()).toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        }
     }
 }

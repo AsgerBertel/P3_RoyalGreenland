@@ -1,5 +1,6 @@
 package gui.log;
 
+import gui.DMSApplication;
 import gui.TabController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -31,6 +32,8 @@ public class LogController implements TabController {
     @FXML
     private TextField searchField;
 
+    private DMSApplication dmsApplication;
+
     LoggingTools lt = new LoggingTools();
     private List<LogEvent> listOfEvents;
     private boolean sortedByTime = false;
@@ -42,6 +45,11 @@ public class LogController implements TabController {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         searchImage.setImage(timeOld);
+    }
+
+    @Override
+    public void initReference(DMSApplication dmsApplication) {
+        this.dmsApplication = dmsApplication;
     }
 
     @Override
@@ -59,6 +67,8 @@ public class LogController implements TabController {
     }
 
 
+
+
     public void keyReleased(KeyEvent keyEvent){
         search(searchField.getText().toLowerCase());
     }
@@ -66,7 +76,7 @@ public class LogController implements TabController {
     private void search(String search) {
         List<LogEvent> foundEvents = new ArrayList<>();
         for( LogEvent e : listOfEvents){
-            if(e.getSubject().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search)){
+            if(e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search)){
                 foundEvents.add(e);
             }
         }

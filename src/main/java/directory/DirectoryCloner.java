@@ -17,25 +17,8 @@ public class DirectoryCloner {
 
 
     public static void main(String[] args) throws Exception {
-        Settings.loadSettings();
-        ArrayList<AbstractFile> newFiles = AppFilesManager.loadFileManager().getMainFiles();
-        ArrayList<AbstractFile> oldFiles = new ArrayList<>();
-        oldFiles.addAll(newFiles);
-        printTree(newFiles, 0);
-        System.out.println("\n\n");
-
-        newFiles.add((FileManager.getInstance().createFolder("bessefar", (Folder) newFiles.get(0))));
-        ((Folder) (((Folder) newFiles.get(1)).getContents().get(0))).getContents().remove(2);
-        newFiles.remove(3);
-        newFiles.remove(2);
-
-        oldFiles = removeOutdatedFiles(oldFiles, newFiles, Paths.get("/test/"));
-        oldFiles = addNewFiles(oldFiles, newFiles, Paths.get("/test"), Paths.get("/tester"));
-
-        System.out.println("New tree \n\n");
-        printTree(oldFiles, 0);
+        mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
     }
-
 
     public static void publishFiles() throws Exception {
         FileManager fileManager = AppFilesManager.loadFileManager();
@@ -45,7 +28,9 @@ public class DirectoryCloner {
         ArrayList<AbstractFile> newFiles = fileManager.getMainFiles();
         ArrayList<AbstractFile> oldFiles = AppFilesManager.loadPublishedFileList();
 
+        // Remove files that are no longer up to date
         oldFiles = removeOutdatedFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()));
+        // Add any files that have been deleted
         oldFiles = addNewFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()), Paths.get(Settings.getServerDocumentsPath()));
 
         // Replace app files
@@ -54,7 +39,7 @@ public class DirectoryCloner {
     }
 
     // for testing. Recursively prints tree
-    private static void printTree(ArrayList<AbstractFile> files, int offset) {
+    public static void printTree(ArrayList<AbstractFile> files, int offset) {
         for (AbstractFile file : files) {
             printOffset(offset);
             System.out.println(file.getName());
@@ -210,7 +195,7 @@ public class DirectoryCloner {
         return false;
     }
 
-    private static void copyFolder(Path src, Path dst) throws IOException {
+    public static void copyFolder(Path src, Path dst) throws IOException {
         Files.createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
         if(fileToCopy == null) return;
@@ -222,6 +207,45 @@ public class DirectoryCloner {
             }
         }
     }
+
+    /**
+     * @param src the folder from which data is copied
+     * @param dst the destination folder
+     * @param replace if true the method will overwrite any duplicate files with the files from src. If false a new name
+     *                will be generated for the src file.
+     */
+    // Merges src folder into dst folder.
+    public static void mergeFolders(Path src, Path dst, boolean replace) throws IOException {
+        // Create folder in the new path in case it doesn't exist
+        Files.createDirectories(dst);
+        File[] fileToCopy = src.toFile().listFiles();
+        if(fileToCopy == null) return;
+        for(File originalFile : fileToCopy){
+            Path newFilePath = dst.resolve(originalFile.getName());
+            if(originalFile.isDirectory()){
+                if(Files.exists(newFilePath)){
+                    mergeFolders(originalFile.toPath(), newFilePath, replace);
+                }else{
+                    copyFolder(originalFile.toPath(), newFilePath);
+                }
+            }else{
+                if(Files.exists(newFilePath)){
+                    if(replace){
+                        Files.delete(newFilePath);
+                        Files.copy(originalFile.toPath(), newFilePath);
+                    }else{
+                        // Generate new unique name for the file by appending a number to the end
+                        newFilePath = FileManager.generateUniqueFileName(newFilePath);
+                        Files.copy(originalFile.toPath(), newFilePath);
+                    }
+                }else{
+                    Files.copy(originalFile.toPath(), dst.resolve(originalFile.getName()));
+                }
+
+            }
+        }
+    }
+
 
     public static boolean deleteFolder(File folder) {
         boolean success = true;

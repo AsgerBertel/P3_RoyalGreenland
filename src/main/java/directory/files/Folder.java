@@ -31,42 +31,21 @@ public class Folder extends AbstractFile {
         this.folderContents = new ArrayList<>(folder.getContents());
     }
 
-    public void renameFile(String newFolderName){
-        String newPath = null;
-        String oldPath = getOSPath().toString();
-
-        if(getOSPath().toString().contains("/")){
-            int indexOfLast = getPath().toString().lastIndexOf('/');
-            newPath = getOSPath().toString().substring(0, indexOfLast) + newFolderName;
-        }
-        else {
-            newPath = getOSPath().toString().replace(getName(),"") + newFolderName;
-        }
-
-        setPath(Paths.get(newPath));
-
-        File file = new File(Settings.getServerDocumentsPath() + oldPath);
-        File newFile = new File(Settings.getServerDocumentsPath() + getPath().toString());
-
-        if(file.renameTo(newFile)) {
-            changeChildrenPath(this, oldPath, newPath);
-        }
-
+    @Override
+    public void setPath(Path path) {
+        super.setPath(path);
+        updateChildrenPaths();
     }
 
-    public void changeChildrenPath(Folder folder, String oldPath, String newPath){
-        String newPathFile;
-        for(AbstractFile file : folder.getContents()){
-            if(file instanceof Document){
-                newPathFile = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPathFile));
-            }
-            if(file instanceof Folder){
-                newPathFile = file.getPath().toString().replace(oldPath, newPath);
-                file.setPath(Paths.get(newPathFile));
-                ((Folder) file).changeChildrenPath((Folder)file, oldPath, newPath);
-            }
-        }
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        updateChildrenPaths();
+    }
+
+    private void updateChildrenPaths(){
+        for(AbstractFile child : folderContents)
+            child.setPath(getPath().resolve(child.getName()));
     }
 
     // Reads the content o path its given
@@ -123,4 +102,11 @@ public class Folder extends AbstractFile {
     public int hashCode() {
         return Objects.hash(super.hashCode(), folderContents);
     }
+
+
+    public boolean isSubFolderOf(Folder parent) {
+        return getOSPath().toString().contains(parent.getOSPath().toString());
+
+    }
+
 }

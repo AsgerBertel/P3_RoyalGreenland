@@ -73,8 +73,8 @@
             <AnchorPane fx:id="editPane" minHeight="0.0" minWidth="0.0" onKeyPressed="#keyPressedEdit" prefHeight="766.0" prefWidth="508.0" visible="false">
                <children>
                   <Button fx:id="btnEditPlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnEditPlant" prefHeight="25.0" prefWidth="125.0" text="Rediger fabrik" />
-                  <TextField fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" styleClass="standardText" />
-                  <TextField fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" styleClass="standardText" />
+                  <TextField onKeyPressed="#keyPressedEdit" fx:id="field_EditPlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" styleClass="standardText" />
+                  <TextField onKeyPressed="#keyPressedEdit" fx:id="field_EditPlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" styleClass="standardText" />
                   <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="333.0" styleClass="bigTitle" text="%PlantAdmin.EditPlant">
                      <font>
                         <Font size="18.0" />
@@ -85,11 +85,11 @@
             </AnchorPane>
 
 
-                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" onKeyPressed="#keyPressedCreate" prefHeight="567.0" prefWidth="486.0" visible="false">
+                  <AnchorPane fx:id="createPane" minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="486.0" visible="false">
                <children>
                   <Button fx:id="btnCreatePlant" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnCreatePlant" prefHeight="25.0" prefWidth="200.0" styleClass="standardText" text="%PlantAdmin.CreatePlant" />
-                  <TextField fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" styleClass="standardText" prefWidth="200.0"/>
-                  <TextField fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" styleClass="standardText" prefWidth="200.0"/>
+                  <TextField onKeyPressed="#keyPressedCreate" fx:id="field_CreatePlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.PlantName" styleClass="standardText" prefWidth="200.0"/>
+                  <TextField onKeyPressed="#keyPressedCreate" fx:id="field_CreatePlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.PlantID" styleClass="standardText" prefWidth="200.0"/>
                   <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="318.0" styleClass="bigTitle" text="%PlantAdmin.NewPlant">
                      <font>
                         <Font size="18.0" />

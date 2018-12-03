@@ -55,12 +55,12 @@ class DocumentTest {
     }
 /*
     @Test todo
-    void renameFile() {
+    void createPlant() {
         // Store original name and new name
         String originalName = doc.getName();
         String newName = "name.pdf";
         try {
-            doc.renameFile(newName);
+            doc.createPlant(newName);
         } catch (InvalidNameException e) {
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ class DocumentTest {
 
         // Change name back to original.
         try {
-            doc.renameFile(originalName);
+            doc.createPlant(originalName);
         } catch (InvalidNameException e) {
             e.printStackTrace();
         }
@@ -83,7 +83,7 @@ class DocumentTest {
         //Try changing one document name to the same as the other
         String originalName = doc.getName();
         assertThrows(InvalidNameException.class, () ->
-                wrongDoc.renameFile(originalName));
+                wrongDoc.createPlant(originalName));
     }*/
 
     @Test

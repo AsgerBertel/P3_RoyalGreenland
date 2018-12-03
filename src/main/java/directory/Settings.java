@@ -43,22 +43,22 @@ public class Settings {
     private static String serverPath;
     private static String localPath;
 
-    public static void loadSettings() {
+    public static void loadSettings(ApplicationMode applicationMode) {
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
         localPath = preferences.get(LOCAL_PATH_PREF, DEFAULT_NULL_VALUE);
 
         username = preferences.get(USERNAME_PREF, getComputerName());
 
         String languageString = preferences.get(LANGUAGE_PREF, DEFAULT_NULL_VALUE);
-        if (languageString.equals(DMSApplication.DK_LOCALE))
+        if (languageString.equals(DMSApplication.DK_LOCALE.toString()))
             language = DMSApplication.DK_LOCALE;
-        else if (languageString.equals(DMSApplication.GL_LOCALE))
+        else if (languageString.equals(DMSApplication.GL_LOCALE.toString()))
             language = DMSApplication.GL_LOCALE;
 
         // Prompt the user for paths if any are missing
         if (serverPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
-        else if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER) && localPath.equals(DEFAULT_NULL_VALUE))
+        else if (applicationMode == ApplicationMode.VIEWER && localPath.equals(DEFAULT_NULL_VALUE))
             initializeSettingsPrompt();
     }
 
@@ -89,7 +89,7 @@ public class Settings {
 
     public static void setLanguage(Locale newLanguage) {
         language = newLanguage;
-        preferences.put(LANGUAGE_PREF, newLanguage.getLanguage());
+        preferences.put(LANGUAGE_PREF, newLanguage.toString());
     }
 
     public static String getPublishedDocumentsPath(){

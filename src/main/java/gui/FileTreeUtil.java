@@ -81,8 +81,6 @@ public class FileTreeUtil {
                 // Add file to the tree if it is contained within the accessModifier or there is no accessModifier
                 if(accessModifier == null || accessModifier.contains(((Document)child).getID()))
                     rootItem.getChildren().add(createTreeItem(child));
-
-                // TODO: 19-11-2018 Find a way to implement eventhandlers for drag and drop. Functions have been made - Asger.
              
             }
         }
