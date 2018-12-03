@@ -9,97 +9,95 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 
-import java.util.Locale;
-
 public class MainMenuController {
 
     DMSApplication dmsApplication;
 
     @FXML
-    ToggleButton viewDocuments;
+    ToggleButton viewDocumentsButton;
     @FXML
-    ToggleButton administrateDocuments;
+    ToggleButton administrateDocumentsButton;
     @FXML
-    ToggleButton administratePlants;
+    ToggleButton administratePlantsButton;
     @FXML
-    ToggleButton deletedFiles;
+    ToggleButton deletedFilesButton;
     @FXML
-    ToggleButton log;
+    ToggleButton logButton;
     @FXML
-    ToggleButton settings;
+    ToggleButton settingsButton;
 
     @FXML
-    ToggleButton changeToDanish;
+    ToggleButton danishButton;
     @FXML
-    ToggleButton changeToGreenlandic;
+    ToggleButton greenlandicButton;
 
     ToggleGroup menuTG = new ToggleGroup();
     ToggleGroup languageTG = new ToggleGroup();
 
     public void init(DMSApplication dmsApplication){
-        viewDocuments.setToggleGroup(menuTG);
-        settings.setToggleGroup(menuTG);
+        viewDocumentsButton.setToggleGroup(menuTG);
+        settingsButton.setToggleGroup(menuTG);
 
         // Only adds these tabs if it's DMSAdmin
-        if(administrateDocuments != null) {
-            administrateDocuments.setToggleGroup(menuTG);
-            administratePlants.setToggleGroup(menuTG);
-            deletedFiles.setToggleGroup(menuTG);
-            log.setToggleGroup(menuTG);
+        if(administrateDocumentsButton != null) {
+            administrateDocumentsButton.setToggleGroup(menuTG);
+            administratePlantsButton.setToggleGroup(menuTG);
+            deletedFilesButton.setToggleGroup(menuTG);
+            logButton.setToggleGroup(menuTG);
         }
 
         // Highlights tab that's open from the start
-        if (administrateDocuments != null)
-            administrateDocuments.setSelected(true);
+        if (administrateDocumentsButton != null)
+            administrateDocumentsButton.setSelected(true);
         else
-            viewDocuments.setSelected(true);
+            viewDocumentsButton.setSelected(true);
 
 
-        changeToDanish.setToggleGroup(languageTG);
-        changeToGreenlandic.setToggleGroup(languageTG);
+        danishButton.setToggleGroup(languageTG);
+        greenlandicButton.setToggleGroup(languageTG);
 
         this.dmsApplication = dmsApplication;
         //todo set selected language
         if (Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
-            changeToDanish.setSelected(true);
+            danishButton.setSelected(true);
 
         } else {
-            changeToGreenlandic.setSelected(true);
+            greenlandicButton.setSelected(true);
         }
     }
 
     public void administrateDocuments(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.FILE_ADMINISTRATION);
-        administrateDocuments.setSelected(true);
+        administrateDocumentsButton.setSelected(true);
     }
 
     public void viewDocuments(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.FILE_OVERVIEW);
-        viewDocuments.setSelected(true);
+        viewDocumentsButton.setSelected(true);
     }
 
     public void administratePlants(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.PLANT_ADMINISTRATION);
-        administratePlants.setSelected(true);
+        administratePlantsButton.setSelected(true);
     }
 
     public void deletedFiles(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.DELETED_FILES);
-        deletedFiles.setSelected(true);
+        deletedFilesButton.setSelected(true);
     }
 
     public void log(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.LOG);
-        log.setSelected(true);
+        logButton.setSelected(true);
     }
 
     public void settings(ActionEvent actionEvent) {
         dmsApplication.switchWindow(TabLoader.SETTINGS);
-        settings.setSelected(true);
+        settingsButton.setSelected(true);
     }
 
     public void changeToDanish(Event actionEvent) throws Exception{
-        changeToDanish.setSelected(true);
+        danishButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.DK_LOCALE);
             dmsApplication.restartApp();
@@ -108,7 +106,7 @@ public class MainMenuController {
     }
 
     public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
-        changeToGreenlandic.setSelected(true);
+        greenlandicButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.GL_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);
             dmsApplication.restartApp();

@@ -11,7 +11,7 @@
    <left>
       <HBox>
          <children>
-             <ToggleButton styleClass="menuButton" fx:id="administrateDocuments" text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
+             <ToggleButton styleClass="menuButton" fx:id="administrateDocumentsButton" text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
                  <graphic>
                      <ImageView fitWidth="19" fitHeight="25">
                          <Image url="/icons/menu/adminDocuments.png" />
@@ -19,7 +19,7 @@
                  </graphic>
          </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="viewDocuments" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
+             <ToggleButton styleClass="menuButton" fx:id="viewDocumentsButton" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
                  <graphic>
                      <ImageView fitWidth="20" fitHeight="24">
                          <Image url="/icons/menu/viewDocuments.png" />
@@ -27,7 +27,7 @@
                  </graphic>
              </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="administratePlants" text="%MainMenu.AdminPlant" onAction="#administratePlants">
+             <ToggleButton styleClass="menuButton" fx:id="administratePlantsButton" text="%MainMenu.AdminPlant" onAction="#administratePlants">
                  <graphic>
                      <ImageView fitWidth="25" fitHeight="24">
                          <Image url="/icons/menu/adminPlants.png" />
@@ -35,7 +35,7 @@
                  </graphic>
              </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="deletedFiles" text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
+             <ToggleButton styleClass="menuButton" fx:id="deletedFilesButton" text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/deletedFiles.png" />
@@ -43,7 +43,7 @@
                  </graphic>
              </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="log" text="%MainMenu.History" onAction="#log">
+             <ToggleButton styleClass="menuButton" fx:id="logButton" text="%MainMenu.History" onAction="#log">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
                          <Image url="/icons/menu/history.png"/>
@@ -52,7 +52,7 @@
              </ToggleButton>
 
 
-             <ToggleButton styleClass="menuButton" fx:id="settings" text="%MainMenu.Settings" onAction="#settings">
+             <ToggleButton styleClass="menuButton" fx:id="settingsButton" text="%MainMenu.Settings" onAction="#settings">
                  <graphic>
                      <ImageView fitWidth="23" fitHeight="25">
                          <Image url="/icons/menu/settings.png"/>
@@ -67,7 +67,7 @@
    <right>
       <HBox>
          <children>
-            <ToggleButton styleClass="menuButton" fx:id="changeToDanish" onAction="#changeToDanish">
+            <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#changeToDanish">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/danish.png"  />
@@ -75,7 +75,7 @@
                 </graphic>
             </ToggleButton>
 
-            <ToggleButton styleClass="menuButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
+            <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#changeToGreenlandic">
                 <graphic >
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/greenlandic.png"/>
