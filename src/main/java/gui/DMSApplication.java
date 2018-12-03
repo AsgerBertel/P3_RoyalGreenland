@@ -46,7 +46,6 @@ public class DMSApplication extends Application {
 
     private Settings settings;
 
-
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication(){}
 
@@ -109,7 +108,7 @@ public class DMSApplication extends Application {
         Pane newPane = null;
 
         try {
-            newPane = programPart.getPane(this);
+            newPane = programPart.getPane(this, getLanguage());
 
             // Make sure the new pane scales to the rest of the window
             newPane.prefHeightProperty().bind(root.heightProperty());

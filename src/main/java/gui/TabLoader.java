@@ -26,8 +26,9 @@ public enum TabLoader {
         lang = DMSApplication.getLanguage();
     }
 
-    public Pane getPane(DMSApplication dmsApplication) throws IOException {
-        if(node == null || lang != DMSApplication.getLanguage()){
+    public Pane getPane(DMSApplication dmsApplication, Locale lang) throws IOException {
+        if(node == null || this.lang != lang){
+            this.lang = lang;
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName), bundle);
             node = fxmlLoader.load();
