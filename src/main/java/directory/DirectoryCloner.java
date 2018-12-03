@@ -4,6 +4,7 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.DMSApplication;
 import json.AppFilesManager;
 
 import java.io.File;
@@ -77,6 +78,11 @@ public class DirectoryCloner {
         for (AbstractFile fileToDelete : filesToDelete) {
             Path fileToDeletePath = oldFilesRoot.resolve(fileToDelete.getOSPath());
             boolean success;
+
+            // Fail safe to make sure only files inside the application folder are deleted
+            if(!fileToDeletePath.toString().contains(DMSApplication.APP_TITLE))
+                throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : ");
+
             // Remove file from disk
             if(fileToDelete instanceof Folder){
                 success = deleteFolder(fileToDeletePath.toFile());
@@ -147,6 +153,11 @@ public class DirectoryCloner {
         // Add the new files
         for (AbstractFile addedFile : filesToAdd) {
             Path publishPath = (oldFilesRoot.resolve(addedFile.getOSPath()));
+
+            // Fail safe
+            if(!publishPath.toString().contains(DMSApplication.APP_TITLE))
+                throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : " + publishPath);
+
             if (Files.exists(publishPath)) {
                 if (addedFile instanceof Folder) {
                     deleteFolder(publishPath.toFile());
@@ -222,6 +233,10 @@ public class DirectoryCloner {
         if(fileToCopy == null) return;
         for(File originalFile : fileToCopy){
             Path newFilePath = dst.resolve(originalFile.getName());
+
+            if(!newFilePath.toString().contains(DMSApplication.APP_TITLE))
+                throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : ");
+
             if(originalFile.isDirectory()){
                 if(Files.exists(newFilePath)){
                     mergeFolders(originalFile.toPath(), newFilePath, replace);
@@ -265,6 +280,9 @@ public class DirectoryCloner {
     private static void replaceIfExists(Path src, Path dst) throws IOException {
         if (!Files.exists(src))
             throw new IllegalArgumentException("Given src file does not exist");
+
+        if(!dst.toString().contains(DMSApplication.APP_TITLE))
+            throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : ");
 
         if (Files.exists(dst))
             Files.delete(dst);

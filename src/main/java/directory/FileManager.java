@@ -502,7 +502,13 @@ public class FileManager {
             }
         }
         findParent(src, mainFilesRoot).get().getContents().remove(src);
-        Files.delete(Paths.get(Settings.getServerDocumentsPath() + src.getOSPath()));
+
+        Path fileToDelete = Paths.get(Settings.getServerDocumentsPath() + src.getOSPath());
+        // Fail-safe
+        if(!fileToDelete.toString().contains(DMSApplication.APP_TITLE))
+            throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : " + fileToDelete);
+
+        Files.delete(fileToDelete);
     }
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
