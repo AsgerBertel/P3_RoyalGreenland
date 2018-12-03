@@ -4,9 +4,11 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.DMSApplication;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingTools;
+import javafx.scene.control.Alert;
 import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
