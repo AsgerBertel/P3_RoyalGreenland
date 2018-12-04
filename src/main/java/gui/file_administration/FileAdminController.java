@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import com.sun.javafx.binding.Logging;
 import directory.DirectoryCloner;
 import directory.FileManager;
 import directory.Settings;
@@ -12,6 +13,7 @@ import gui.*;
 
 import gui.log.LogEvent;
 import gui.log.LogEventType;
+import gui.log.LoggingErrorTools;
 import gui.log.LoggingTools;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -299,49 +301,56 @@ public class FileAdminController implements TabController {
                 String name = folderName.get();
                 try {
                     FileManager.getInstance().createFolder(name);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
                     AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
                     e.printStackTrace();
                     AlertBuilder.IOExceptionPopUp();
+                    LoggingErrorTools.log(e);
                 }
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 try {
                     FileManager.getInstance().createFolder(name, (Folder) selectedFile);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
                     AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
                     e.printStackTrace();
                     AlertBuilder.IOExceptionPopUp();
+                    LoggingErrorTools.log(e);
                 }
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
 
-
                 if (parent.isPresent())
-                    try { // todo add exception handling
+                    try {
                         fileManager.createFolder(name, parent.get());
-                    } catch (InvalidNameException e) {
+                    } catch (FileAlreadyExistsException e) {
                         e.printStackTrace();
+                        AlertBuilder.fileAlreadyExistsPopUp();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        AlertBuilder.IOExceptionPopUp();
+                        LoggingErrorTools.log(e);
                     }
 
                 else {
-                    try { // todo add exception handling
+                    try {
                         fileManager.createFolder(name);
+
+                    } catch (FileAlreadyExistsException e) {
+                        e.printStackTrace();
+                        AlertBuilder.fileAlreadyExistsPopUp();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (InvalidNameException e) {
-                        e.printStackTrace();
+                        AlertBuilder.IOExceptionPopUp();
+                        LoggingErrorTools.log(e);
                     }
                 }
-
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             }
         }
@@ -520,6 +529,7 @@ public class FileAdminController implements TabController {
         try {
             observer.initialize();
         } catch (Exception e) {
+            LoggingErrorTools.log(e);
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
@@ -528,6 +538,7 @@ public class FileAdminController implements TabController {
                     observer.checkAndNotify();
                     Thread.sleep(200);
                 } catch (InterruptedException e) { // todo error handling 10hif9s -kristian
+                    LoggingErrorTools.log(e);
                     e.printStackTrace();
                 }
             }
