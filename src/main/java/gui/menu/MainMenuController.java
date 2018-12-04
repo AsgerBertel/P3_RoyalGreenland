@@ -59,7 +59,7 @@ public class MainMenuController {
         changeToGreenlandic.setToggleGroup(languageTG);
 
         this.dmsApplication = dmsApplication;
-        //todo set selected language
+
         if (Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
             changeToDanish.setSelected(true);
 

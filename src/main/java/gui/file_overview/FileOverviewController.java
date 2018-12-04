@@ -155,7 +155,7 @@ public class FileOverviewController implements TabController {
     }
 
     // Opens the folder that is double clicked and displays its content
-    public void open(FileButton fileButton) { // todo Duplicate code. Deduplicate that shit - Magnus
+    public void open(FileButton fileButton) {
         if (fileButton.getFile() instanceof Folder) {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
@@ -169,7 +169,6 @@ public class FileOverviewController implements TabController {
             }
         }
     }
-
 
     @FXML
     public void openPreviousFolder() {

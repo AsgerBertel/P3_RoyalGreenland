@@ -56,7 +56,7 @@
     <!-- Factory list -->
     <VBox id="plantSection" stylesheets="@/styles/factoryList.css">
         <HBox minHeight="30" maxHeight="30" styleClass="filler">
-            <Text text="%AdminFiles.Plants" fx:id="plantListTitle" styleClass="darkGreyTitle"/> <!-- todo sprog -->
+            <Text text="%AdminFiles.Plants" fx:id="plantListTitle" styleClass="darkGreyTitle"/>
             <Text text=" (0)" fx:id="plantCountText" styleClass="greyTitle"/>
         </HBox>
         <ScrollPane id="plantScrollPane" translateY="10">

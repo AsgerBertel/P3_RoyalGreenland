@@ -12,7 +12,7 @@
 
     <!-- Server path setting -->
     <VBox styleClass="settingsVBox">
-        <Text styleClass="standardTitle" text="%Settings.ServerPath"/> <!-- todo sprog -->
+        <Text styleClass="standardTitle" text="%Settings.ServerPath"/>
         <HBox styleClass="settingsHBox">
             <TextField fx:id="serverPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
             <Button text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowseServerPath"/>

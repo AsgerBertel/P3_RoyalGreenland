@@ -22,6 +22,14 @@ public class AlertBuilder
                 null);
         alert.showAndWait();
     }
+    public static void fileNotFound() {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.fileNotFound.Title"),
+                DMSApplication.getMessage("Exception.fileNotFound.Header"),
+                null);
+        alert.showAndWait();
+    }
 
     /**
      * Displays an ERROR popup informing the user of an IOException. Ressource context tells of plausible causes.

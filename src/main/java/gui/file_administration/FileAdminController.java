@@ -92,9 +92,9 @@ public class FileAdminController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-
         fileTreeView.setOnKeyPressed(event -> {
-            if (event.getCode().getCode() == 13) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            if (event.getCode() == KeyCode.ENTER)
+                openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -218,16 +218,16 @@ public class FileAdminController implements TabController {
 
         Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
 
-        if (Files.exists(path)){
+        if (Files.exists(path)) {
             int i = OverwriteFilePopUP();
-            if(i == 1){
+            if (i == 1) {
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
                 FileManager.getInstance().deleteFile(oldFile.get());
-            } else if (i == 0){
+            } else if (i == 0) {
 
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
                 Optional<String> newName = renameFilePopUP();
-                String newNameExt = newName.get() + "." + ((Document)oldFile.get()).getFileExtension();
+                String newNameExt = newName.get() + "." + ((Document) oldFile.get()).getFileExtension();
 
                 try {
                     FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
@@ -410,7 +410,7 @@ public class FileAdminController implements TabController {
             if (selectedFile instanceof Folder) {
                 Folder fol = (Folder) selectedFile;
                 try {
-                    FileManager.getInstance().renameFile(fol,name);
+                    FileManager.getInstance().renameFile(fol, name);
                 } catch (FileAlreadyExistsException e) {
                     AlertBuilder.fileAlreadyExistsPopUp();
                     e.printStackTrace();
@@ -437,7 +437,7 @@ public class FileAdminController implements TabController {
         if (fileTreeView.getSelectionModel().getSelectedItem() != null) {
             AbstractFile file = newValue.getValue();
             if (file instanceof Document) {
-                    openFile();
+                openFile();
             }
         }
     }
@@ -533,7 +533,7 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
-            while(true) {
+            while (true) {
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
