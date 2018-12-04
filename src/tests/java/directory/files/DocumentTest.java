@@ -43,7 +43,7 @@ class DocumentTest {
         assertEquals("pdf", docWrong.getFileExtension());
     }
 
-    @Test
+   /* @Test
     void moveFile() {
         Path orgPath = docMove.getPath();
         Path pathMoveTo = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/MoveFileTest/");
@@ -60,7 +60,7 @@ class DocumentTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Test
     void openDocument() {
