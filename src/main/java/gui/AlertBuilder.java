@@ -46,13 +46,6 @@ public class AlertBuilder
         );
         alert.showAndWait();
     }
-    public static void readWriteIOPopup (String fileName) {
-        buildAlert(Alert.AlertType.ERROR,
-                DMSApplication.getMessage("Exception.IO.ReadWrite.Title"),
-                DMSApplication.getMessage("Exception.IO.ReadWrite.Header"),
-                fileName+DMSApplication.getMessage("Exception.IO.ReadWrite.Context")
-        );
-    }
 
     /**
      * Displays an ERROR popup telling the user incase of InvalidNameException. Primarily in context of Files.move()

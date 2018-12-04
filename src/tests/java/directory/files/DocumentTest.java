@@ -71,7 +71,7 @@ class DocumentTest {
 
     }
 /*
-    @Test todo
+    @Test
     void createPlant() {
         // Store original name and new name
         String originalName = doc.getName();
@@ -105,6 +105,5 @@ class DocumentTest {
 
     @Test
     void deleteFile() {
-        // todo Implement when the function is implemented.
     }
 }

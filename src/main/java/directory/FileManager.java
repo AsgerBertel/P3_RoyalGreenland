@@ -71,9 +71,6 @@ public class FileManager {
         if (!Files.isDirectory(root)) {
             throw new IllegalArgumentException("Root file must be a directory");
         }
-
-        // TODO --------- Important ---------- The root folder is initiated with an empty path. If the path is not create folder, upload file etc. will not create files with correct relative path - Magnus
-        // TODO This doesn't seem clean but i dunno - Magnus
         return new Folder("", loadChildren(root, root));
     }
 
@@ -82,7 +79,7 @@ public class FileManager {
     private static ArrayList<AbstractFile> loadChildren(Path rootPath, Path basePath) {
         ArrayList<AbstractFile> children = new ArrayList<>();
 
-        try { // todo should be rewritten for readability. Use listFiles() instead - Magnus
+        try {
             // Iterate through all files within the rootFolder and add them to the files list
             Files.walk(rootPath, 1)
                     .filter(path -> !path.equals(rootPath))

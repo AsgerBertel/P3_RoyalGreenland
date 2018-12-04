@@ -43,14 +43,14 @@ public class DocumentBuilder {
      *
      * @return a new ID for the new file.
      */
-    public int readAndUpdateCurrentID() { 
+    public int readAndUpdateCurrentID() {
         int currentID = -1;
 
         try (BufferedReader reader = Files.newBufferedReader(currentIDPath)) {
             String str = reader.readLine();
             currentID = Integer.parseInt(str);
         } catch (IOException e) {
-            AlertBuilder.readWriteIOPopup(currentIDPath.getFileName().toString());
+            AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class DocumentBuilder {
             String ID = "" + (currentID + 1);
             writer.write(ID);
         } catch (IOException e) {
-            AlertBuilder.readWriteIOPopup(currentIDPath.getFileName().toString());
+            AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
