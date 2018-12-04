@@ -28,7 +28,7 @@ public class Document extends AbstractFile {
      * @param path path to the file.
      * @param ID ID of the file. Given through the DocumentBuilder.
      */
-    Document(String path, int ID) {
+    protected Document(String path, int ID) {
         super(path);
         this.ID = ID;
         this.lastModified = DATE_TIME_FORMATTER.format(LocalDateTime.now());
@@ -51,22 +51,10 @@ public class Document extends AbstractFile {
         return "";
     }
 
-    public void moveFile(Path targetPath) throws IOException{
-        // To make sure, that the name is also included in the path.
-        Path tempTargetPath = Paths.get(targetPath + File.separator + this.getName());
-        Path temp = Files.move(getPath(), tempTargetPath);
-        setPath(tempTargetPath);
-
-        if(temp == null) // todo temp always null? Implement differently
-            throw new IOException("Failed to move file");
-    }
-
     // Opens the document in a window
     public void openDocument() throws IOException {
-        File file = new File(getOSPath().toString()); // todo is this correctly implemented??
-        Desktop.getDesktop().open(file); // Todo Implementation seems alright on mac, but it uses IO instead of NIO?
-
-        Path dirPath = getParentPath();
+        File file = new File(getOSPath().toString());
+        Desktop.getDesktop().open(file);
     }
 
     public void setLastModified(LocalDateTime localDateTime){

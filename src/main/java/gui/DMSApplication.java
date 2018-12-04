@@ -21,6 +21,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import static gui.TabLoader.FILE_ADMINISTRATION;
+
 public class DMSApplication extends Application {
 
     private static Stage primaryStage;
@@ -66,7 +68,7 @@ public class DMSApplication extends Application {
         primaryStage.show();
 
         if(applicationMode.equals(ApplicationMode.ADMIN)){
-            switchWindow(TabLoader.FILE_ADMINISTRATION);
+            switchWindow(FILE_ADMINISTRATION);
         } else{
             switchWindow(TabLoader.FILE_OVERVIEW);
         }

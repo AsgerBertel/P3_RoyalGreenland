@@ -7,9 +7,11 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
+import gui.log.LoggingErrorTools;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -225,6 +227,8 @@ public class FileOverviewController implements TabController {
                 ((Document) file).openDocument();
             } catch (IOException e) {
                 e.printStackTrace();
+                AlertBuilder.IOExceptionPopUp();
+                LoggingErrorTools.log(e);
             }
         }
     }

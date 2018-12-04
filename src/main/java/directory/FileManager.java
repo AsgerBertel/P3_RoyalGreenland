@@ -4,15 +4,19 @@ import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import gui.AlertBuilder;
+import gui.DMSApplication;
 import gui.DMSApplication;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
+import gui.log.LoggingErrorTools;
 import gui.log.LoggingTools;
 import javafx.scene.control.Alert;
 import json.AppFilesManager;
 
 import javax.naming.InvalidNameException;
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +51,6 @@ public class FileManager {
         Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
         mainFilesRoot = findFiles(mainFilesRootPath);
 
-        // Initialize list of archived documents // todo should these automatic file detection features be enabled? - Magnus
         Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
         archiveRoot = findFiles(archiveFilesRootPath);
     }
@@ -94,7 +97,9 @@ public class FileManager {
                         }
                     });
         } catch (IOException e) {
-            e.printStackTrace(); // todo handle properly
+            e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
         }
         return children;
     }
@@ -114,12 +119,7 @@ public class FileManager {
 
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
-
         Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + src.getFileName());
-
-        if (Files.exists(dest)) {
-            // todo should show prompt - Magnus
-        }
 
         try {
             Files.copy(src, dest);
@@ -132,15 +132,11 @@ public class FileManager {
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
         } catch (IOException e) {
-            System.out.println("Could not copy/upload file");
             e.printStackTrace();
-            // todo Should probably throw new exception.
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
         }
 
-        // todo add document to files list - Magnus
-
-        //todo if file already exists, the old one is deleted but this can only happen once.
-        //todo make some kind of counter to file name
         return null;
     }
 
@@ -148,7 +144,8 @@ public class FileManager {
     public Folder createFolder(String name) throws IOException, InvalidNameException {
         Folder folder = new Folder(name);
         Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
-        if (Files.exists(fullPath)) throw new InvalidNameException();
+        if (Files.exists(fullPath))
+            throw new InvalidNameException();
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
@@ -210,8 +207,9 @@ public class FileManager {
 
             AppFilesManager.save(this);
         } catch (IOException e) {
-            System.out.println("Could not delete file");
             e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
         }
     }
 
@@ -254,7 +252,6 @@ public class FileManager {
         return extension;
     }
 
-    //todo restore to original path not root folder
     public void restoreFile(AbstractFile file) throws IOException {
         // Move the file on the file system
         Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
@@ -381,11 +378,15 @@ public class FileManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
+
         }
     }
 
     public static Optional<Folder> findParent(AbstractFile child, Folder root) {
         Optional<Folder> parent = Optional.empty();
+        String str = root.getPath().toString() + " og " + child.getParentPath();
 
         if (root.getPath().equals(child.getParentPath()))
             return Optional.of(root);
@@ -439,8 +440,11 @@ public class FileManager {
 
         // Don't move if the target is the same as the destination
         Optional<Folder> parent = findParent(srcFile, getMainFilesRoot());
-        if (parent.isPresent() && parent.get().equals(dstParent))
-            return; // todo probably throw exception? - Magnus
+        if(parent.isPresent() && parent.get().equals(dstParent)) {
+            // Alerts user if file already exists
+            AlertBuilder.fileAlreadyExistsPopUp();
+            return;
+        }
 
         if (srcFile instanceof Folder && Files.exists(dstPath) && Files.isDirectory(dstPath)) {
             Folder existingFolder = (Folder) findInMainFiles(dstPath).get();
@@ -469,8 +473,9 @@ public class FileManager {
         dstPath = generateUniqueFileName(dstPath);
         try {
             renameFile(src, dstPath.getFileName().toString());
-        } catch (InvalidNameException e) {
+        } catch (FileAlreadyExistsException e) {
             e.printStackTrace();
+            AlertBuilder.fileAlreadyExistsPopUp();
             throw new RuntimeException("The generated name : " + dstPath.getFileName() + " could not be applied to " + src.getOSPath());
         }
 
@@ -507,14 +512,13 @@ public class FileManager {
         Files.delete(fileToDelete);
     }
 
-    public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
+    public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
         if (file.getName().equals(newName)) return true;
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
-        if (Files.exists(newPath)) {
-            fileNameAlreadyExistsPopUp();
-            throw new InvalidNameException("Name is already in use");
+        if (Files.exists(newPath)){
+            throw new FileAlreadyExistsException("Name is already in use");
         }
 
         if (oldPath.toFile().renameTo(newPath.toFile())) {
@@ -531,18 +535,6 @@ public class FileManager {
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
             }
-            return true;
         }
-        return false;
     }
-
-
-    public void fileNameAlreadyExistsPopUp() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Title"));
-        alert.setHeaderText(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Header"));
-        alert.showAndWait();
-    }
-
-
 }

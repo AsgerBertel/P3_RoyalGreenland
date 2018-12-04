@@ -58,6 +58,7 @@ public class FileAdminController implements TabController {
     public ScrollPane changesScrollPane;
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
+    private FileTreeDragAndDrop fileTreeDragAndDrop;
 
     private DMSApplication dmsApplication;
 
@@ -117,6 +118,7 @@ public class FileAdminController implements TabController {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
 
+        // Error here
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);
@@ -209,7 +211,7 @@ public class FileAdminController implements TabController {
         if (chosenFile == null) {
             return;
         } else if (chosenFile.isDirectory()) {
-            // todo Show prompt telling user that they cannot upload directories
+            AlertBuilder.uploadDocumentPopUp();
             return;
         }
 
@@ -228,8 +230,9 @@ public class FileAdminController implements TabController {
 
                 try {
                     FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 }
             } else {
                 return;
@@ -294,24 +297,25 @@ public class FileAdminController implements TabController {
         if (folderName.isPresent()) {
             if (selectedFile == null) {
                 String name = folderName.get();
-                Folder fol = null;
                 try {
-                    fol = FileManager.getInstance().createFolder(name);
+                    FileManager.getInstance().createFolder(name);
                 } catch (InvalidNameException e) {
-                    e.printStackTrace(); // todo add exception handling
+                    e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
-                    LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                    AlertBuilder.IOExceptionPopUp();
                 }
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 try {
-                    Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                    FileManager.getInstance().createFolder(name, (Folder) selectedFile);
                 } catch (InvalidNameException e) {
-                    e.printStackTrace(); // todo Show alert that folder already exists
+                    e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
-                    e.printStackTrace(); // todo add exception handling
+                    e.printStackTrace();
+                    AlertBuilder.IOExceptionPopUp();
                 }
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
@@ -388,10 +392,9 @@ public class FileAdminController implements TabController {
                 name = name + "." + doc.getFileExtension();
                 try {
                     FileManager.getInstance().renameFile(doc, name);
-                } catch (InvalidNameException e) {
-                    System.out.println("Could not rename file");
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
-                    // todo show alert
+                    AlertBuilder.fileAlreadyExistsPopUp();
                     return;
                 }
             }
@@ -399,11 +402,11 @@ public class FileAdminController implements TabController {
                 Folder fol = (Folder) selectedFile;
                 try {
                     FileManager.getInstance().renameFile(fol,name);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
+                    AlertBuilder.fileAlreadyExistsPopUp();
                     e.printStackTrace();
                 }
             }
-
             update();
         }
         FileManager.getInstance().save();
