@@ -23,6 +23,7 @@ import jdk.jfr.EventType;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
     private static final String DROP_HINT_STYLE = "-fx-background-color: #6fd59b; ";
     Image folderImg = new Image("icons/smallFolder.png");
     Image docImg = new Image("icons/smallBlueDoc.png");
+    Image pdfImg = new Image("icons/smallRedDoc.png");
     private FileAdminController fileAdminController;
 
     public FileTreeDragAndDrop(FileAdminController fileAdminController) {
@@ -61,22 +63,45 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 if (item instanceof Folder) {
                     iv1.setImage(folderImg);
                 } else {
-                    iv1.setImage(docImg);
+                    String fileExtension = ((Document) item).getFileExtension();
+                    if (fileExtension.contains("docx") || fileExtension.contains("doc")) {
+                        iv1.setImage(docImg);
+                    } else {
+                        iv1.setImage(pdfImg);
+                    }
                 }
                 setGraphic(iv1);
                 setText(item.getName());
             }
         };
+        cell.setOnDragDetected((
+                MouseEvent event) ->
 
-        cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
-        cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
-        cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
+                dragDetected(event, cell, treeView));
+        cell.setOnDragOver((
+                DragEvent event) ->
 
-        cell.setOnDragDone((DragEvent event) -> clearDropLocation());
+                dragOver(event, cell, treeView));
+        cell.setOnDragDropped((
+                DragEvent event) ->
+
+        {
+            try {
+                drop(event, cell, treeView);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        cell.setOnDragDone((
+                DragEvent event) ->
+
+                clearDropLocation());
         return cell;
     }
 
-    private void dragDetected(MouseEvent event, TreeCell<AbstractFile> treeCell, TreeView<AbstractFile> treeView) {
+    private void dragDetected(MouseEvent
+                                      event, TreeCell<AbstractFile> treeCell, TreeView<AbstractFile> treeView) {
         draggedItem = treeCell.getTreeItem();
 
         // Root can't be dragged and can't drag nothing
@@ -111,13 +136,14 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
     }
 
     //
-    private void drop(DragEvent event, TreeCell<AbstractFile> destinationTreeCell, TreeView<AbstractFile> treeView) {
+    private void drop(DragEvent
+                              event, TreeCell<AbstractFile> destinationTreeCell, TreeView<AbstractFile> treeView) throws FileNotFoundException {
         // Do nothing if no item was dragged
-        if(!event.getDragboard().hasContent(JAVA_FORMAT))
+        if (!event.getDragboard().hasContent(JAVA_FORMAT))
             return;
 
         // Do nothing if dragged into the folder that it's already in
-        if(destinationTreeCell.getTreeItem().equals(draggedItem.getParent()))
+        if (destinationTreeCell.getTreeItem().equals(draggedItem.getParent()))
             return;
 
         TreeItem<AbstractFile> newParent = destinationTreeCell.getTreeItem();
@@ -136,7 +162,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             if (destinationParent.isPresent())
                 destinationFolder = destinationParent.get();
             else
-                throw new RuntimeException("The document that the file was dropped on does not have a parent"); // todo more specific exception type - Magnus
+                throw new FileNotFoundException("The document that the file was dropped on does not have a parent");
         }
 
         // Don't allow folder to be drag into on of its' subfolders
