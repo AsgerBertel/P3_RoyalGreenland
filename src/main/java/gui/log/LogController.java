@@ -76,7 +76,7 @@ public class LogController implements TabController {
     private void search(String search) {
         List<LogEvent> foundEvents = new ArrayList<>();
         for( LogEvent e : listOfEvents){
-            if(e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search)){
+            if(e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search) || e.getSuffixString().toLowerCase().contains(search)){
                 foundEvents.add(e);
             }
         }
