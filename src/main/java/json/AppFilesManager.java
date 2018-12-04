@@ -126,7 +126,7 @@ public class AppFilesManager {
         if(!Files.exists(localAppFilesPath))
             succes &= localAppFilesPath.toFile().mkdirs();
 
-        if(!succes){ // todo Look into whyt mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
+        if(!succes){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
             throw new IOException("Could not create application directories");
         }
 
