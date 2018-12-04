@@ -58,6 +58,7 @@ public class FileAdminController implements TabController {
     public ScrollPane changesScrollPane;
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
+    private FileTreeDragAndDrop fileTreeDragAndDrop;
 
     private DMSApplication dmsApplication;
 
@@ -117,6 +118,7 @@ public class FileAdminController implements TabController {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
 
+        // Error here
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
         fileTreeView.setRoot(rootItem);

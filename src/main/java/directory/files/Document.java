@@ -28,7 +28,7 @@ public class Document extends AbstractFile {
      * @param path path to the file.
      * @param ID ID of the file. Given through the DocumentBuilder.
      */
-    Document(String path, int ID) {
+    protected Document(String path, int ID) {
         super(path);
         this.ID = ID;
         this.lastModified = DATE_TIME_FORMATTER.format(LocalDateTime.now());
