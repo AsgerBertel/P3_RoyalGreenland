@@ -13,8 +13,8 @@ class PlantManagerTest {
     @BeforeEach
     void initEach(){
         /* todo These tests are temporarily removed as they violate the singleton principle
-           todo either change the PlantManager/FilesManager to not use singleton patterns or change the path inside settings class when running tests
-           todo ie. Settings.setPath() (don't forget to change back afterwards) - Magnus
+           either change the PlantManager/FilesManager to not use singleton patterns or change the path inside settings class when running tests
+            ie. Settings.setPath() (don't forget to change back afterwards) - Magnus
          */
 
         //PlantManager.getInstance().readFromJsonFile(pathToJsonTest.toString());

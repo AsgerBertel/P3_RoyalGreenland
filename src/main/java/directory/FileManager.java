@@ -70,8 +70,6 @@ public class FileManager {
         if (!Files.isDirectory(root)) {
             throw new IllegalArgumentException("Root file must be a directory");
         }
-
-
         return new Folder("", loadChildren(root, root));
     }
 

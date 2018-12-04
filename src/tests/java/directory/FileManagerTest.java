@@ -38,7 +38,7 @@ class FileManagerTest {
         System.out.println(Settings.toString2());
     }
 
-    // Todo use FileManager.deleteFile() to delete file.
+    //
    /* @Test
     void uploadFile() throws IOException {
         FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
