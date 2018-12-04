@@ -513,7 +513,7 @@ public class FileManager {
     }
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
-        if (file.getName().equals(newName)) return true;
+        if (file.getName().equals(newName)) return;
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
