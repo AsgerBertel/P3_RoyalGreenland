@@ -48,15 +48,24 @@ public class FileManager {
     private FileManager() {
         // Create a list of AbstractFiles based on the files inside the server document path
         Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
-        mainFilesRoot = findFiles(mainFilesRootPath);
+        try {
+            mainFilesRoot = findFiles(mainFilesRootPath);
+        } catch (FileNotFoundException e) {
+        AlertBuilder.fileNotFound();
+        }
 
         Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
-        archiveRoot = findFiles(archiveFilesRootPath);
+        try {
+            archiveRoot = findFiles(archiveFilesRootPath);
+        } catch (FileNotFoundException e) {
+            AlertBuilder.fileNotFound();
+        }
     }
 
-    private static Folder findFiles(Path root) {
+    private static Folder findFiles(Path root) throws FileNotFoundException {
         if (!Files.exists(root)) {
-            // todo Check if server connection failure or just non-existing file throw exception maybe
+
+            throw new FileNotFoundException();
         }
 
         if (!Files.isDirectory(root)) {

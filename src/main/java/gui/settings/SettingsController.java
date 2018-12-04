@@ -95,12 +95,10 @@ public class SettingsController implements TabController {
     }
 
     private void onServerPathChanged() {
-        // todo What constitutes a valid path? Is it only that it's not empty?? - Magnus
         verifyNotEmpty(serverPathTextField);
     }
 
     private void onLocalPathChange() {
-        // todo What constitutes a valid path? - Magnus
         verifyNotEmpty(localPathTextField);
     }
 
@@ -137,7 +135,6 @@ public class SettingsController implements TabController {
     public void onSaveChanges(ActionEvent actionEvent) {
         boolean allChangesSaved = true;
 
-        // todo - Is this readable? - Magnus
         // Save all changes and set allChangeSaved to false if a save failed
         allChangesSaved &= saveChange(usernameTextField, () -> Settings.setUsername(usernameTextField.getText()));
         allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(serverPathTextField.getText()));
