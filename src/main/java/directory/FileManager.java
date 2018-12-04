@@ -51,7 +51,7 @@ public class FileManager {
         try {
             mainFilesRoot = findFiles(mainFilesRootPath);
         } catch (FileNotFoundException e) {
-        AlertBuilder.fileNotFound();
+            AlertBuilder.fileNotFound();
         }
 
         Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
@@ -72,8 +72,7 @@ public class FileManager {
             throw new IllegalArgumentException("Root file must be a directory");
         }
 
-        // TODO --------- Important ---------- The root folder is initiated with an empty path. If the path is not create folder, upload file etc. will not create files with correct relative path - Magnus
-        // TODO This doesn't seem clean but i dunno - Magnus
+
         return new Folder("", loadChildren(root, root));
     }
 
@@ -82,7 +81,7 @@ public class FileManager {
     private static ArrayList<AbstractFile> loadChildren(Path rootPath, Path basePath) {
         ArrayList<AbstractFile> children = new ArrayList<>();
 
-        try { // todo should be rewritten for readability. Use listFiles() instead - Magnus
+        try {
             // Iterate through all files within the rootFolder and add them to the files list
             Files.walk(rootPath, 1)
                     .filter(path -> !path.equals(rootPath))
@@ -153,7 +152,7 @@ public class FileManager {
         Folder folder = new Folder(name);
         Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
         if (Files.exists(fullPath))
-            throw new FileAlreadyExistsException("File "+fullPath.toString()+" already exists.");
+            throw new FileAlreadyExistsException("File " + fullPath.toString() + " already exists.");
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
@@ -251,7 +250,7 @@ public class FileManager {
     private static String getExtension(Path filePath) {
         String pathString = filePath.toString();
         int indexOfSeperator = pathString.lastIndexOf('.');
-        if(indexOfSeperator == -1) return "";
+        if (indexOfSeperator == -1) return "";
 
         String extension = pathString.substring(indexOfSeperator, pathString.length());
         if (extension.contains("/") || extension.contains(File.separator))
@@ -444,7 +443,7 @@ public class FileManager {
 
         // Don't move if the target is the same as the destination
         Optional<Folder> parent = findParent(srcFile, getMainFilesRoot());
-        if(parent.isPresent() && parent.get().equals(dstParent)) {
+        if (parent.isPresent() && parent.get().equals(dstParent)) {
             // Alerts user if file already exists
             AlertBuilder.fileAlreadyExistsPopUp();
             return;
@@ -511,12 +510,12 @@ public class FileManager {
     }
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
-        if(file.getName().equals(newName)) return;
+        if (file.getName().equals(newName)) return;
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
 
-        if (Files.exists(newPath)){
+        if (Files.exists(newPath)) {
             throw new FileAlreadyExistsException("Name is already in use");
         }
 
@@ -527,7 +526,7 @@ public class FileManager {
 
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
-            }else if (file instanceof Document) {
+            } else if (file instanceof Document) {
                 Document doc = (Document) file;
                 doc.setName(newName);
 
