@@ -59,10 +59,6 @@ public class AppFilesManager {
         }
     }
 
-
-
-
-
     public static void save(FileManager fileManager){
         saveObjectToJson(fileManager, Settings.getServerAppFilesPath() + FILES_LIST_FILE_NAME);
     }
@@ -114,7 +110,7 @@ public class AppFilesManager {
         }
     }
 
-    public static void createLocalDirectories() throws FileNotFoundException, IOException{
+    public static void createLocalDirectories() throws IOException{
         Path localRoot = Paths.get(Settings.getLocalPath());
 
         // Throw exception if application installation path is invalid

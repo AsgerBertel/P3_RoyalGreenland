@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class LoggingTools {
 
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
@@ -97,11 +97,6 @@ public class LoggingTools {
                 return allEvents.get(i).getTime();
             }
         }
-
         return "--";
     }
-
-
-
-
 }
