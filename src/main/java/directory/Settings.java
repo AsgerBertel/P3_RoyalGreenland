@@ -32,6 +32,7 @@ public class Settings {
     private static final String ARCHIVE_PATH = "Archive/";
     private static final String DOCUMENTS_PATH = "Documents/";
     private static final String APP_FILES_PATH = "App Files/";
+    private static final String ERROR_LOGS_PATH = "Error Logs/";
 
     private static final String WORKING_DIRECTORY_PATH = "Working Directory/";
     private static final String PUBLISHED_FILES_PATH = "Published Files/";
@@ -124,6 +125,8 @@ public class Settings {
     public static String getLocalAppFilesPath() {
         return localPath + APP_FILES_PATH;
     }
+
+    public static String getServerErrorLogsPath() { return serverPath + ERROR_LOGS_PATH; }
 
     public static String getUsername() {
         return username;

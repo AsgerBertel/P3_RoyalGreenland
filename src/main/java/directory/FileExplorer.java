@@ -57,8 +57,8 @@ public class FileExplorer {
     }
 
     public void navigateTo(Folder newFolder) {
-
-        currentFolder = newFolder; // todo error check
+        if(newFolder != null)
+            currentFolder = newFolder; // todo error check
     }
 
     // Navigates to the parent directory

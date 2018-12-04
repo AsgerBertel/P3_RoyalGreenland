@@ -52,6 +52,7 @@ public class Plant {
     }
 
     public String toString() {
+        if(id == -1){ return name; }
         return id +" - "+ name;
 
     }

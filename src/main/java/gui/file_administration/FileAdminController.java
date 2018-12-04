@@ -1,5 +1,6 @@
 package gui.file_administration;
 
+import com.sun.javafx.binding.Logging;
 import directory.DirectoryCloner;
 import directory.FileManager;
 import directory.Settings;
@@ -12,6 +13,7 @@ import gui.*;
 
 import gui.log.LogEvent;
 import gui.log.LogEventType;
+import gui.log.LoggingErrorTools;
 import gui.log.LoggingTools;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -211,7 +213,7 @@ public class FileAdminController implements TabController {
         if (chosenFile == null) {
             return;
         } else if (chosenFile.isDirectory()) {
-            // todo Show prompt telling user that they cannot upload directories
+            AlertBuilder.uploadDocumentPopUp();
             return;
         }
 
@@ -230,8 +232,9 @@ public class FileAdminController implements TabController {
 
                 try {
                     FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 }
             } else {
                 return;
@@ -296,50 +299,58 @@ public class FileAdminController implements TabController {
         if (folderName.isPresent()) {
             if (selectedFile == null) {
                 String name = folderName.get();
-                Folder fol = null;
                 try {
-                    fol = FileManager.getInstance().createFolder(name);
-                } catch (InvalidNameException e) {
-                    e.printStackTrace(); // todo add exception handling
+                    FileManager.getInstance().createFolder(name);
+                } catch (FileAlreadyExistsException e) {
+                    e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    fileTreeView.getRoot().getChildren().add(FileTreeUtil.generateTree(fol));
-                    LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                    AlertBuilder.IOExceptionPopUp();
+                    LoggingErrorTools.log(e);
                 }
             } else if (selectedFile instanceof Folder) {
                 String name = folderName.get();
                 try {
-                    Folder fol = FileManager.getInstance().createFolder(name, (Folder) selectedFile);
-                } catch (InvalidNameException e) {
-                    e.printStackTrace(); // todo Show alert that folder already exists
+                    FileManager.getInstance().createFolder(name, (Folder) selectedFile);
+                } catch (FileAlreadyExistsException e) {
+                    e.printStackTrace();
+                    AlertBuilder.fileAlreadyExistsPopUp();
                 } catch (IOException e) {
-                    e.printStackTrace(); // todo add exception handling
+                    e.printStackTrace();
+                    AlertBuilder.IOExceptionPopUp();
+                    LoggingErrorTools.log(e);
                 }
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
 
-
                 if (parent.isPresent())
-                    try { // todo add exception handling
+                    try {
                         fileManager.createFolder(name, parent.get());
-                    } catch (InvalidNameException e) {
+                    } catch (FileAlreadyExistsException e) {
                         e.printStackTrace();
+                        AlertBuilder.fileAlreadyExistsPopUp();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        AlertBuilder.IOExceptionPopUp();
+                        LoggingErrorTools.log(e);
                     }
 
                 else {
-                    try { // todo add exception handling
+                    try {
                         fileManager.createFolder(name);
+
+                    } catch (FileAlreadyExistsException e) {
+                        e.printStackTrace();
+                        AlertBuilder.fileAlreadyExistsPopUp();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (InvalidNameException e) {
-                        e.printStackTrace();
+                        AlertBuilder.IOExceptionPopUp();
+                        LoggingErrorTools.log(e);
                     }
                 }
-
                 LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
             }
         }
@@ -390,10 +401,9 @@ public class FileAdminController implements TabController {
                 name = name + "." + doc.getFileExtension();
                 try {
                     FileManager.getInstance().renameFile(doc, name);
-                } catch (InvalidNameException e) {
-                    System.out.println("Could not rename file");
+                } catch (FileAlreadyExistsException e) {
                     e.printStackTrace();
-                    // todo show alert
+                    AlertBuilder.fileAlreadyExistsPopUp();
                     return;
                 }
             }
@@ -401,11 +411,11 @@ public class FileAdminController implements TabController {
                 Folder fol = (Folder) selectedFile;
                 try {
                     FileManager.getInstance().renameFile(fol,name);
-                } catch (InvalidNameException e) {
+                } catch (FileAlreadyExistsException e) {
+                    AlertBuilder.fileAlreadyExistsPopUp();
                     e.printStackTrace();
                 }
             }
-
             update();
         }
         FileManager.getInstance().save();
@@ -519,6 +529,7 @@ public class FileAdminController implements TabController {
         try {
             observer.initialize();
         } catch (Exception e) {
+            LoggingErrorTools.log(e);
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
@@ -527,6 +538,7 @@ public class FileAdminController implements TabController {
                     observer.checkAndNotify();
                     Thread.sleep(200);
                 } catch (InterruptedException e) { // todo error handling 10hif9s -kristian
+                    LoggingErrorTools.log(e);
                     e.printStackTrace();
                 }
             }

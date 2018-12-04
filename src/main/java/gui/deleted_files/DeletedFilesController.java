@@ -6,11 +6,9 @@ import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
-import gui.DMSApplication;
-import gui.FileTreeUtil;
-import gui.TabController;
-import gui.TreeState;
+import gui.*;
 import gui.file_overview.FileButton;
+import gui.log.LoggingErrorTools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -157,16 +155,16 @@ public class DeletedFilesController implements TabController {
         else
             return "MacOS";
     }
-
     public void restoreDocument(ActionEvent event) {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         AbstractFile selectedFile = selectedItem.getValue();
         try {
             FileManager.getInstance().restoreFile(selectedFile);
         } catch (IOException e) {
-            e.printStackTrace(); // todo error handling
+            e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
         }
-
         update();
     }
 
