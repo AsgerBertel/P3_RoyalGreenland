@@ -57,7 +57,7 @@ public class DMSApplication extends Application {
 
         initializeApplication();
 
-        this.primaryStage = stage;
+        primaryStage = stage;
 
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
@@ -105,7 +105,7 @@ public class DMSApplication extends Application {
         while(root.getChildren().size() > 1)
             root.getChildren().remove(1);
 
-        Pane newPane = null;
+        Pane newPane;
 
         try {
             newPane = programPart.getPane(this, getLanguage());

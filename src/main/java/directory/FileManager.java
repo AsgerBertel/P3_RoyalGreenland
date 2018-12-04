@@ -245,7 +245,7 @@ public class FileManager {
     private static String getExtension(Path filePath) {
         String pathString = filePath.toString();
         int indexOfSeperator = pathString.lastIndexOf('.');
-        if(indexOfSeperator == -1) return "";
+        if (indexOfSeperator == -1) return "";
 
         String extension = pathString.substring(indexOfSeperator, pathString.length());
         if (extension.contains("/") || extension.contains(File.separator))
@@ -362,14 +362,12 @@ public class FileManager {
 
     private void deleteEmptyDirectories(Folder src) {
         boolean allDeleted = false;
-        boolean hasDeleted;
         List<Path> pathsToDelete = new ArrayList<>();
         System.out.println("hej");
         System.out.println(Settings.getServerArchivePath() + src.getOSPath());
 
         try {
             while (!allDeleted) {
-                hasDeleted = false;
                 pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
                         .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
                         .filter(path -> Files.isDirectory(path))
@@ -383,13 +381,11 @@ public class FileManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
     public static Optional<Folder> findParent(AbstractFile child, Folder root) {
         Optional<Folder> parent = Optional.empty();
-        String str = root.getPath().toString() + " og " + child.getParentPath();
 
         if (root.getPath().equals(child.getParentPath()))
             return Optional.of(root);
@@ -428,11 +424,11 @@ public class FileManager {
         for (AbstractFile abstractFile : searchArea) {
             Path filePath = abstractFile.getOSPath();
             if (fileRelativePath.startsWith(filePath)) {
-                if (fileRelativePath.equals(filePath)) {
+                if (fileRelativePath.equals(filePath))
                     return Optional.of(abstractFile);
-                } else if (abstractFile instanceof Folder) {
+                else if (abstractFile instanceof Folder)
                     return findFile(fileRelativePath, ((Folder) abstractFile).getContents());
-                }
+
             }
         }
         return Optional.empty();
@@ -443,7 +439,7 @@ public class FileManager {
 
         // Don't move if the target is the same as the destination
         Optional<Folder> parent = findParent(srcFile, getMainFilesRoot());
-        if(parent.isPresent() && parent.get().equals(dstParent))
+        if (parent.isPresent() && parent.get().equals(dstParent))
             return; // todo probably throw exception? - Magnus
 
         if (srcFile instanceof Folder && Files.exists(dstPath) && Files.isDirectory(dstPath)) {
@@ -512,15 +508,14 @@ public class FileManager {
     }
 
     public boolean renameFile(AbstractFile file, String newName) throws InvalidNameException {
-        if(file.getName().equals(newName)) return true;
+        if (file.getName().equals(newName)) return true;
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
-        if (Files.exists(newPath)){
+        if (Files.exists(newPath)) {
             fileNameAlreadyExistsPopUp();
             throw new InvalidNameException("Name is already in use");
         }
-
 
         if (oldPath.toFile().renameTo(newPath.toFile())) {
             if (file instanceof Folder) {
@@ -529,23 +524,25 @@ public class FileManager {
 
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
-            }else if (file instanceof Document) {
+            } else if (file instanceof Document) {
                 Document doc = (Document) file;
                 doc.setName(newName);
 
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
             }
-
             return true;
         }
         return false;
     }
 
-    public void fileNameAlreadyExistsPopUp(){
+
+    public void fileNameAlreadyExistsPopUp() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Title"));
         alert.setHeaderText(DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Header"));
         alert.showAndWait();
     }
+
+
 }

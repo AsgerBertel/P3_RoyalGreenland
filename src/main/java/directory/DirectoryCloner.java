@@ -2,7 +2,6 @@ package directory;
 
 import directory.files.AbstractFile;
 import directory.files.Document;
-import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import gui.DMSApplication;
 import json.AppFilesManager;
@@ -10,7 +9,6 @@ import json.AppFilesManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -39,44 +37,31 @@ public class DirectoryCloner {
         replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
-    // for testing. Recursively prints tree
-    public static void printTree(ArrayList<AbstractFile> files, int offset) {
-        for (AbstractFile file : files) {
-            printOffset(offset);
-            System.out.println(file.getName());
-            if (file instanceof Folder) {
-                printTree(((Folder) file).getContents(), offset + 1);
-            }
-        }
-    }
-
-    private static void printOffset(int i) {
-        for (int j = 0; j < i; j++) {
-            System.out.print("    ");
-        }
-    }
-
-    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws Exception {
-        ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
-        modifiedOldFiles.addAll(oldFiles);
-
+    /**
+     * Compares oldFiles to updatedFiles. Finds all files in oldFiles that are changed or deleted.
+     * @return a list of files from oldFiles that are changed or no longer exists in new files.
+     */
+    private static ArrayList<AbstractFile> findOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> updatedFiles){
         ArrayList<AbstractFile> filesToDelete = new ArrayList<>();
         for (AbstractFile file : oldFiles) {
             if (file instanceof Document) {
                 // Documents can be compared with equals therefore we can use .contains()
-                if (!newFiles.contains(file))
+                if (!updatedFiles.contains(file))
                     filesToDelete.add(file);
             } else if (file instanceof Folder) {
                 // Folder's .equals() implementation also compares children which is not relevant here.
                 // Therefore a custom contains() is used.
-                if (!containsFolderWithPath(newFiles, file.getOSPath()))
+                if (!containsFolderWithPath(updatedFiles, file.getOSPath()))
                     filesToDelete.add(file);
             }
         }
+        return filesToDelete;
+    }
 
-        // Remove files from both the list and the disk
+    private static ArrayList<AbstractFile> deleteFilesFrom(ArrayList<AbstractFile> allFiles, ArrayList<AbstractFile> filesToDelete, Path rootPath) throws IOException {
+        ArrayList<AbstractFile> newFilesList = new ArrayList<>(allFiles);
         for (AbstractFile fileToDelete : filesToDelete) {
-            Path fileToDeletePath = oldFilesRoot.resolve(fileToDelete.getOSPath());
+            Path fileToDeletePath = rootPath.resolve(fileToDelete.getOSPath());
             boolean success;
 
             // Fail safe to make sure only files inside the application folder are deleted
@@ -91,10 +76,23 @@ public class DirectoryCloner {
             }
 
             if (!success)
-                throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + oldFilesRoot.toString());
+                throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + rootPath.toString());
             // A custom .remove() is used as the folders .equals() does not fit this use case
-            removeFileWithPath(modifiedOldFiles, fileToDelete.getOSPath());
+            removeFileWithPath(newFilesList, fileToDelete.getOSPath());
         }
+        return newFilesList;
+    }
+
+    /**
+     * Compares oldFiles to newFiles and removes files from oldFiles that have been updated or deleted.
+     * @return the intersection of oldFiles and newFiles
+     */
+    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws Exception {
+        ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>(oldFiles);
+
+        ArrayList<AbstractFile> filesToDelete = findOutdatedFiles(oldFiles, newFiles);
+        modifiedOldFiles = deleteFilesFrom(modifiedOldFiles, filesToDelete, oldFilesRoot);
+        // ModifiedOldFiles should now be the intersection between oldFiles and newFiles
 
         // Recursively repeat procedure on any sub folders that are common between new and old
         for (AbstractFile oldFile : modifiedOldFiles) {
@@ -116,22 +114,12 @@ public class DirectoryCloner {
     }
 
 
+
     public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot, Path newFileRoot) throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
 
-        ArrayList<AbstractFile> filesToAdd = new ArrayList<>();
-        // Find files that should be added
-        for (AbstractFile file : newFiles) {
-            if (file instanceof Document) {
-                // If the old files doesn't have this file or if the lastUpdateDate does not match
-                if (!modifiedOldFiles.contains(file))
-                    filesToAdd.add(file);
-            } else {
-                if (!containsFolderWithPath(modifiedOldFiles, file.getOSPath()))
-                    filesToAdd.add(file);
-            }
-        }
+        ArrayList<AbstractFile> filesToAdd = findMissingFiles(oldFiles, newFiles);
 
         // Run procedure for any subfolder
         for (AbstractFile oldFile : oldFiles) {
@@ -179,6 +167,23 @@ public class DirectoryCloner {
         return modifiedOldFiles;
     }
 
+
+    public static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles, ArrayList<AbstractFile> updatedFiles){
+        ArrayList<AbstractFile> missingFiles = new ArrayList<>();
+        // Find files that should be added
+        for (AbstractFile file : updatedFiles) {
+            if (file instanceof Document) {
+                // If the old files doesn't have this file or if the lastUpdateDate does not match
+                if (!originalFiles.contains(file))
+                    missingFiles.add(file);
+            } else {
+                if (!containsFolderWithPath(originalFiles, file.getOSPath()))
+                    missingFiles.add(file);
+            }
+        }
+        return missingFiles;
+    }
+
     private static boolean containsFolderWithPath(ArrayList<AbstractFile> files, Path path) {
         for (AbstractFile file : files) {
             if (file.getOSPath().equals(path))
@@ -193,7 +198,6 @@ public class DirectoryCloner {
                 return Optional.of(file);
         }
         return Optional.empty();
-
     }
 
     private static boolean removeFileWithPath(ArrayList<AbstractFile> files, Path path) {

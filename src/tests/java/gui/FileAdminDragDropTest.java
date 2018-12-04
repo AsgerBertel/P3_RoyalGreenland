@@ -27,9 +27,7 @@ public class FileAdminDragDropTest extends GUITest {
     void dropTest() throws InterruptedException {
         TreeView<AbstractFile> treeView = findNode("#fileTreeView");
 
-        moveTo(getTreeCell(treeView, treeView.getRoot().getChildren().get(0)));
-        press(MouseButton.PRIMARY);
-        moveTo(getTreeCell(treeView, treeView.getRoot().getChildren().get(1)));
+        drag(getTreeCell(treeView, treeView.getRoot().getChildren().get(0))).dropTo(getTreeCell(treeView, treeView.getRoot().getChildren().get(1)));
 
         Thread.sleep(1500);
     }
