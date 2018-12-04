@@ -22,9 +22,11 @@ import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.TextAlignment;
 
+import javax.print.Doc;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class FileOverviewController implements TabController {
 
     private TreeItem<AbstractFile> rootItem;
 
+    private Plant allPlant = new Plant(-1, "All plants", new AccessModifier());
     List<AbstractFile> filesToShow;
 
     @FXML
@@ -59,8 +62,7 @@ public class FileOverviewController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
-        drdPlant.setItems(plantList);
+
         fileTreeView.setShowRoot(false);
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
         updateDisplayedFiles();
@@ -73,10 +75,12 @@ public class FileOverviewController implements TabController {
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
+        // Refresh file tree if the files have changed
         reloadFileTree();
-
-        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        ArrayList<Plant> allPlants = new ArrayList<>();
+        allPlants.add(allPlant);
+        allPlants.addAll(PlantManager.getInstance().getAllPlants());
+        plantList = FXCollections.observableList(allPlants);
         drdPlant.setItems(plantList);
     }
 
@@ -90,6 +94,13 @@ public class FileOverviewController implements TabController {
         Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
         // Create fileExplorer that matches the accessModifier of the selected plant
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
+        if(selectedPlant.equals(allPlant)){
+            fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
+            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+            fileTreeView.setRoot(rootItem);
+            updateDisplayedFiles();
+            return;
+        }
 
         if (selectedPlant != null) {
             AccessModifier accessModifier = selectedPlant.getAccessModifier();
@@ -149,10 +160,11 @@ public class FileOverviewController implements TabController {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
-
             try {
                 Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
+                LoggingErrorTools.log(e);
+                AlertBuilder.IOExceptionPopUp();
                 e.printStackTrace();
             }
         }

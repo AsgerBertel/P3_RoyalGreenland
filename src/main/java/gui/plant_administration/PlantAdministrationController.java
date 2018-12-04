@@ -91,8 +91,6 @@ public class PlantAdministrationController implements TabController {
     public void update() {
         plantElements.clear();
         plantVBox.getChildren().clear();
-
-        // plantManager.updateFromServer(); todo necessary? This method didn't work before so it's now removed - Magnus
         for (Plant plant : PlantManager.getInstance().getAllPlants()) {
             PlantElement plantElement = new PlantElement(plant);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));

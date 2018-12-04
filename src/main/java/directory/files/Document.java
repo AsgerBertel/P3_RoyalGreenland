@@ -55,6 +55,7 @@ public class Document extends AbstractFile {
     public void openDocument() throws IOException {
         File file = new File(getOSPath().toString());
         Desktop.getDesktop().open(file);
+
     }
 
     public void setLastModified(LocalDateTime localDateTime){

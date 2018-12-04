@@ -49,10 +49,11 @@ public class DMSApplication extends Application {
     private Settings settings;
 
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
-    public DMSApplication(){}
+    public DMSApplication() {
+    }
 
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage) throws Exception {
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
@@ -67,14 +68,14 @@ public class DMSApplication extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        if(applicationMode.equals(ApplicationMode.ADMIN)){
+        if (applicationMode.equals(ApplicationMode.ADMIN)) {
             switchWindow(FILE_ADMINISTRATION);
-        } else{
+        } else {
             switchWindow(TabLoader.FILE_OVERVIEW);
         }
     }
 
-    private void loadRootElement() throws IOException{
+    private void loadRootElement() throws IOException {
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
@@ -85,9 +86,9 @@ public class DMSApplication extends Application {
         // Load the language properties into the FXML loader
         ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);
 
-        if(applicationMode.equals(ApplicationMode.ADMIN)){
+        if (applicationMode.equals(ApplicationMode.ADMIN)) {
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "AdminMainMenu.fxml"), bundle);
-        }else{
+        } else {
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath + "ViewerMainMenu.fxml"), bundle);
         }
 
@@ -104,7 +105,7 @@ public class DMSApplication extends Application {
     // Shows the given part of the program
     public void switchWindow(TabLoader programPart) {
         // Remove all currently added elements except the main menu
-        while(root.getChildren().size() > 1)
+        while (root.getChildren().size() > 1)
             root.getChildren().remove(1);
 
         Pane newPane;
@@ -122,11 +123,11 @@ public class DMSApplication extends Application {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
-            alert.setContentText("Kontakt Udvikleren"); // todo lol.
+            alert.setContentText("Kontakt Udvikleren Mail: ds323@student.aau.dk");
         }
     }
 
-    public void restartApp() throws Exception{
+    public void restartApp() throws Exception {
         start(primaryStage);
     }
 
@@ -136,39 +137,46 @@ public class DMSApplication extends Application {
         messages = ResourceBundle.getBundle("Messages", newLocale);
     }
 
-    public static Locale getLanguage(){
+    public static Locale getLanguage() {
         return locale;
     }
 
-    public static String getMessage(String key){
+    public static String getMessage(String key) {
         return messages.getString(key);
     }
 
-    public static ApplicationMode getApplicationMode(){
+    public static ApplicationMode getApplicationMode() {
         return applicationMode;
     }
 
-    private void initializeApplication(){
+    private void initializeApplication() {
         // Load settings and initialize paths if non are saved
         Settings.loadSettings(applicationMode);
         this.locale = Settings.getLanguage();
         this.messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
-        if(applicationMode.equals(ApplicationMode.VIEWER)){
+        if (applicationMode.equals(ApplicationMode.VIEWER)) {
             try {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
             } catch (IOException e) {
                 e.printStackTrace();
-                // todo Ask user to choose local path again probably
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Fejl");
+                alert.setHeaderText(null);
+                alert.setContentText("Vælg din lokale sti igen");
             }
-        }else if(applicationMode.equals(ApplicationMode.ADMIN)){
+        } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
             try {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
             } catch (IOException e) {
                 e.printStackTrace();
-                // todo Ask user to check connection to the server or choose server path again
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Fejl");
+                alert.setHeaderText(null);
+                alert.setContentText("Chek om du har forbindelse til serveren");
+
             }
         }
     }
