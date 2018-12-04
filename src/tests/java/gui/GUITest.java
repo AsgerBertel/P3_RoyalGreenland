@@ -1,6 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
+import directory.DocumentsTest;
 import directory.Settings;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -14,36 +15,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
-
-import java.nio.file.Path;
 import java.util.concurrent.TimeoutException;
 
 public abstract class GUITest extends ApplicationTest {
-    private static String originalPath;
-
-    @BeforeAll
-    static final void setupApplication() throws Exception {
-        Settings.loadSettings(ApplicationMode.ADMIN);
-        originalPath = Settings.getServerDocumentsPath();
-        Settings.setServerPath(TestUtil.getTestDocuments().toString());
-
-        TestUtil.resetTestFiles();
-        ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
-
-    }
-
-    @AfterEach
-    final void tearDown() throws TimeoutException {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    @AfterAll
-    static void onTestEnd(){
-        // Reset path in settings
-        Settings.setServerPath(originalPath);
-    }
 
     public void start(Stage stage) throws Exception {
         super.start(stage);

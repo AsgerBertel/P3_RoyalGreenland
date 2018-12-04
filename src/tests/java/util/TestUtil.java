@@ -28,9 +28,5 @@ public class TestUtil {
         return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
 
-    public static void main(String[] args) throws IOException {
-        resetTestFiles();
-    }
-
 
 }
