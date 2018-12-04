@@ -537,12 +537,15 @@ public class FileAdminController implements TabController {
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
-                } catch (InterruptedException e) { // todo error handling 10hif9s -kristian
-                    LoggingErrorTools.log(e);
+                } catch (InterruptedException e) {
+                    AlertBuilder.interruptedExceptionPopup("FileMonitorThread");
+                    LoggingErrorTools.log(e, 2);
                     e.printStackTrace();
+                    System.exit(2);
                 }
             }
         });
+        monitorThread.setName("FileMonitorThread");
         monitorThread.setDaemon(true);
         monitorThread.start();
     }

@@ -57,6 +57,14 @@ public class AlertBuilder
     /**
      *
      */
+    public static void interruptedExceptionPopup(String threadName) {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("FileManager.InterruptedException.Title"),
+                DMSApplication.getMessage("FileManager.InterruptedException.Header"),
+                threadName+ ": "+DMSApplication.getMessage("FileManager.InterruptedException.Context"));
+        alert.showAndWait();
+    }
     public static void uploadDocumentPopUp() {
         buildAlert(
                 Alert.AlertType.INFORMATION,

@@ -22,6 +22,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.TextAlignment;
 
+import javax.print.Doc;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -74,14 +75,13 @@ public class FileOverviewController implements TabController {
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
+        // Refresh file tree if the files have changed
         reloadFileTree();
         ArrayList<Plant> allPlants = new ArrayList<>();
         allPlants.add(allPlant);
         allPlants.addAll(PlantManager.getInstance().getAllPlants());
         plantList = FXCollections.observableList(allPlants);
         drdPlant.setItems(plantList);
-
     }
 
     private void reloadFileTree() {
@@ -160,10 +160,11 @@ public class FileOverviewController implements TabController {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
-
             try {
                 Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
+                LoggingErrorTools.log(e);
+                AlertBuilder.IOExceptionPopUp();
                 e.printStackTrace();
             }
         }
