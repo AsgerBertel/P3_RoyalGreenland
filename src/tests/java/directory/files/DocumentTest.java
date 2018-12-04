@@ -32,25 +32,6 @@ class DocumentTest {
     }
 
     @Test
-    void moveFile() {
-        Path orgPath = doc.getPath();
-        Path pathMoveTo = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/MoveFileTest/");
-        try {
-            doc.moveFile(pathMoveTo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(doc.getPath().toString(), pathMoveTo.toString() + File.separator + doc.getName());
-
-        try {
-            doc.moveFile(orgPath.getParent());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     void openDocument() {
     }
 /*
