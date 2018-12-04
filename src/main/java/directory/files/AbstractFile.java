@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, TreeCell<AbstractFile>> , Serializable {
+public abstract class AbstractFile implements Serializable {
 
     private String path;
 
@@ -74,10 +74,5 @@ public abstract class AbstractFile implements Callback<TreeView<AbstractFile>, T
     @Override
     public int hashCode() {
         return Objects.hash(path);
-    }
-
-    @Override
-    public TreeCell<AbstractFile> call(TreeView<AbstractFile> param) {
-        return null;
     }
 }

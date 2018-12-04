@@ -85,7 +85,6 @@ public class Document extends AbstractFile {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), ID, lastModified);
     }
 }

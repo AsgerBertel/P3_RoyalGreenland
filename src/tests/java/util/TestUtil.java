@@ -1,9 +1,7 @@
 package util;
 
-import app.ApplicationMode;
-import directory.DirectoryCloner;
-import directory.Settings;
 import gui.DMSApplication;
+import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,16 +10,26 @@ import java.nio.file.Paths;
 
 public class TestUtil {
 
-    private final static String REPLACEMENT_FOLDER_NAME = "Server Original";
+    private static final Path TEST_SERVER_PATH = Paths.get("TestingFiles/Server/");
+    private static final String APPLICATION_FOLDER_NAME = "RG DMS";
+    private static final String REPLACEMENT_FOLDER_NAME = APPLICATION_FOLDER_NAME + " Original";
 
     public static void resetTestFiles() throws IOException { // Todo actually make test files that are independent of actual files
-        /*Settings.loadSettings(ApplicationMode.ADMIN);
-        Path replacementFolder = Paths.get(Settings.getServerPath()).getParent().getParent().resolve(REPLACEMENT_FOLDER_NAME);
-        Path alteredFolder = Paths.get(Settings.getServerPath()).getParent();
+        Path oldFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+        Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
-        DirectoryCloner.deleteFolder(alteredFolder.toFile());
-        DirectoryCloner.copyFolder(replacementFolder, alteredFolder);
-        System.out.println("is it run?");*/
+        if(Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME))
+            FileUtils.deleteDirectory(oldFolder.toFile());
+
+        FileUtils.copyDirectory(replacementFolder.toFile(), oldFolder.toFile());
+    }
+
+    public static final Path getTestDocuments(){
+        return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+    }
+
+    public static void main(String[] args) throws IOException {
+        resetTestFiles();
     }
 
 
