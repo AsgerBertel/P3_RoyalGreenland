@@ -1,8 +1,10 @@
 package directory.files;
 
+import app.ApplicationMode;
+import directory.Settings;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,27 +14,61 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DocumentTest {
     private File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFile.pdf");
-    private Document doc = DocumentBuilder.getInstance().createDocument(pathToTestFile);
-    private Path pathToWrongFile = Paths.get(resourcesDirectory.getAbsolutePath() + "Main Files Test/FL 01 GR_01 Flowdiagram Produktion af salt");
-    private Document wrongDoc = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
+    private Path pathToTestFileExt = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFileExt.pdf");
+    private Path pathToTestFileMove = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFileMove.pdf");
+    private Document docExt;
+    private Document docMove;
+    private Path pathToWrongFile = Paths.get(resourcesDirectory.getAbsolutePath() + "Main Files Test/testFileWrong.pdf");
+    private Document docWrong;
+
+    @BeforeEach
+    void setSettings(){
+        Settings.loadSettings(ApplicationMode.ADMIN);
+        docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
+        docMove = DocumentBuilder.getInstance().createDocument(pathToTestFileMove);
+        docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
+    }
 
     @Test
     void getID() {
-        assertEquals(doc.getID(), doc.getID());
+        assertEquals(docExt.getID(), docExt.getID());
     }
 
     @Test
     void getFileExtension() {
 
         //Gets right extension
-        assertEquals("pdf" ,doc.getFileExtension());
+        assertEquals("pdf" ,docExt.getFileExtension());
         //No extension, sends nothing back
-        assertEquals("", wrongDoc.getFileExtension());
+        assertEquals("pdf", docWrong.getFileExtension());
     }
+
+   /* @Test
+    void moveFile() {
+        Path orgPath = docMove.getPath();
+        Path pathMoveTo = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/MoveFileTest/");
+        try {
+            docMove.moveFile(pathMoveTo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(docMove.getPath().toString(), pathMoveTo.toString() + File.separator + docMove.getName());
+
+        try {
+            docMove.moveFile(orgPath.getParent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
     @Test
     void openDocument() {
+    }
+
+    @Test
+    void setLastModified() {
+
     }
 /*
     @Test todo
@@ -64,7 +100,7 @@ class DocumentTest {
         //Try changing one document name to the same as the other
         String originalName = doc.getName();
         assertThrows(InvalidNameException.class, () ->
-                wrongDoc.createPlant(originalName));
+                docWrong.createPlant(originalName));
     }*/
 
     @Test
