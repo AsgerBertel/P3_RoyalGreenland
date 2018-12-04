@@ -140,11 +140,11 @@ public class FileManager {
     }
 
     // Creates a folder in the root directory of main files
-    public Folder createFolder(String name) throws IOException, InvalidNameException {
+    public Folder createFolder(String name) throws IOException {
         Folder folder = new Folder(name);
         Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
         if (Files.exists(fullPath))
-            throw new InvalidNameException();
+            throw new FileAlreadyExistsException("File "+fullPath.toString()+" already exists.");
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
 
@@ -154,10 +154,10 @@ public class FileManager {
     }
 
     // Creates a new folder inside the given parent folder
-    public Folder createFolder(String name, Folder parentFolder) throws InvalidNameException, IOException {
+    public Folder createFolder(String name, Folder parentFolder) throws IOException {
         Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
         if (Files.exists(fullFolderPath))
-            throw new InvalidNameException("Folder with name " + name + " Already exists");
+            throw new FileAlreadyExistsException("Folder with name" + fullFolderPath + " already exists.");
         Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
 
         createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
@@ -357,15 +357,11 @@ public class FileManager {
     }
 
     private void deleteEmptyDirectories(Folder src) {
+        List<Path> pathsToDelete;
         boolean allDeleted = false;
-        boolean hasDeleted;
-        List<Path> pathsToDelete = new ArrayList<>();
-        System.out.println("hej");
-        System.out.println(Settings.getServerArchivePath() + src.getOSPath());
 
         try {
             while (!allDeleted) {
-                hasDeleted = false;
                 pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
                         .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
                         .filter(path -> Files.isDirectory(path))
@@ -381,13 +377,11 @@ public class FileManager {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
-
         }
     }
 
     public static Optional<Folder> findParent(AbstractFile child, Folder root) {
         Optional<Folder> parent = Optional.empty();
-        String str = root.getPath().toString() + " og " + child.getParentPath();
 
         if (root.getPath().equals(child.getParentPath()))
             return Optional.of(root);
@@ -508,8 +502,10 @@ public class FileManager {
     }
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
+        if(file.getName().equals(newName)) return;
         Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
+
 
         if (Files.exists(newPath)){
             throw new FileAlreadyExistsException("Name is already in use");

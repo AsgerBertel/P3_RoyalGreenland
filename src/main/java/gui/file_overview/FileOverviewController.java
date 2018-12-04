@@ -25,6 +25,7 @@ import javafx.scene.text.TextAlignment;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class FileOverviewController implements TabController {
 
     private TreeItem<AbstractFile> rootItem;
 
+    private Plant allPlant = new Plant(-1, "All plants", new AccessModifier());
     List<AbstractFile> filesToShow;
 
     @FXML
@@ -59,8 +61,7 @@ public class FileOverviewController implements TabController {
         fileTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
-        drdPlant.setItems(plantList);
+
         fileTreeView.setShowRoot(false);
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
         updateDisplayedFiles();
@@ -75,9 +76,12 @@ public class FileOverviewController implements TabController {
     public void update() {
         // Refresh file tree if the files have changed // todo removed after path changes - reimplement - Magnus
         reloadFileTree();
-
-        plantList = FXCollections.observableList(PlantManager.getInstance().getAllPlants());
+        ArrayList<Plant> allPlants = new ArrayList<>();
+        allPlants.add(allPlant);
+        allPlants.addAll(PlantManager.getInstance().getAllPlants());
+        plantList = FXCollections.observableList(allPlants);
         drdPlant.setItems(plantList);
+
     }
 
     private void reloadFileTree() {
@@ -90,6 +94,13 @@ public class FileOverviewController implements TabController {
         Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
         // Create fileExplorer that matches the accessModifier of the selected plant
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
+        if(selectedPlant.equals(allPlant)){
+            fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
+            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+            fileTreeView.setRoot(rootItem);
+            updateDisplayedFiles();
+            return;
+        }
 
         if (selectedPlant != null) {
             AccessModifier accessModifier = selectedPlant.getAccessModifier();

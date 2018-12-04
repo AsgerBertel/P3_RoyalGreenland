@@ -39,8 +39,8 @@
                     </HBox>
                 <TableView fx:id="tableView" VBox.vgrow="SOMETIMES">
                     <columns>
-                        <TableColumn reorderable="false" resizable="false" fx:id="event" sortable="false" prefWidth="${tableView.width*0.6}" text="%Log.Change" />
-                        <TableColumn reorderable="false" resizable="false" fx:id="user"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.User" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="event" sortable="false" prefWidth="${tableView.width*0.4}" text="%Log.Change" />
+                        <TableColumn reorderable="false" resizable="false" fx:id="user"  sortable="false" prefWidth="${tableView.width*0.4}" text="%Log.User" />
                         <TableColumn reorderable="false" resizable="false" fx:id="time"  sortable="false" prefWidth="${tableView.width*0.2}" text="%Log.Time" />
                     </columns>
                     <padding>
