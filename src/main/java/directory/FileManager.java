@@ -27,7 +27,6 @@ public class FileManager {
 
     private Folder mainFilesRoot;
     private Folder archiveRoot;
-
     private static FileManager fileManager;
 
     public static synchronized FileManager getInstance() {
@@ -143,7 +142,6 @@ public class FileManager {
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
         }
-
         return null;
     }
 
