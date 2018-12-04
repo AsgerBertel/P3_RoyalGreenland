@@ -17,8 +17,8 @@ public class AlertBuilder
     public static void fileAlreadyExistsPopUp() {
         buildAlert(
                 Alert.AlertType.WARNING,
-                DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Title"),
-                DMSApplication.getMessage("FileManager.fileNameExistsPopUp.Header"),
+                DMSApplication.getMessage("Exception.FileNameExists.Title"),
+                DMSApplication.getMessage("Exception.FileNameExists.Header"),
                 null);
         alert.showAndWait();
     }
@@ -31,11 +31,19 @@ public class AlertBuilder
     public static void IOExceptionPopUp() {
         buildAlert(
                 Alert.AlertType.ERROR,
-                DMSApplication.getMessage("FileManager.IOException.Title"),
-                DMSApplication.getMessage("FileManager.IOException.Header"),
-                DMSApplication.getMessage("FileManager.IOException.Context")+"\n"
-                        +Settings.getServerErrorLogsPath()+LocalDateTime.now().format(formatter));
+                DMSApplication.getMessage("Exception.IO.Title"),
+                DMSApplication.getMessage("Exception.IO.Header"),
+                DMSApplication.getMessage("Exception.IO.Context")+"\n"
+                        +Settings.getServerErrorLogsPath()+LocalDateTime.now().format(formatter)
+        );
         alert.showAndWait();
+    }
+    public static void readWriteIOPopup (String fileName) {
+        buildAlert(Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.IO.ReadWrite.Title"),
+                DMSApplication.getMessage("Exception.IO.ReadWrite.Header"),
+                fileName+DMSApplication.getMessage("Exception.IO.ReadWrite.Context")
+        );
     }
 
     /**
@@ -48,9 +56,9 @@ public class AlertBuilder
     @Deprecated
     public static void invalidNameExceptionPopUp (String src, String target) {
         alert.setAlertType(Alert.AlertType.ERROR);
-        alert.setTitle(DMSApplication.getMessage("FileManager.InvalidNameException.Title"));
-        alert.setHeaderText(DMSApplication.getMessage("FileManager.InvalidNameException.Header"));
-        alert.setContentText(DMSApplication.getMessage("FileManager.InvalidNameException.Context")+"\n"+src+"\n"+target);
+        alert.setTitle(DMSApplication.getMessage("Exception.InvalidName.Title"));
+        alert.setHeaderText(DMSApplication.getMessage("Exception.InvalidName.Header"));
+        alert.setContentText(DMSApplication.getMessage("Exception.InvalidName.Context")+"\n"+src+"\n"+target);
         alert.showAndWait();
     }
 
@@ -60,9 +68,10 @@ public class AlertBuilder
     public static void interruptedExceptionPopup(String threadName) {
         buildAlert(
                 Alert.AlertType.ERROR,
-                DMSApplication.getMessage("FileManager.InterruptedException.Title"),
-                DMSApplication.getMessage("FileManager.InterruptedException.Header"),
-                threadName+ ": "+DMSApplication.getMessage("FileManager.InterruptedException.Context"));
+                DMSApplication.getMessage("Exception.Interrupted.Title"),
+                DMSApplication.getMessage("Exception.Interrupted.Header"),
+                threadName+ ": "+DMSApplication.getMessage("Exception.Interrupted.Context")
+        );
         alert.showAndWait();
     }
     public static void uploadDocumentPopUp() {
@@ -70,7 +79,8 @@ public class AlertBuilder
                 Alert.AlertType.INFORMATION,
                 DMSApplication.getMessage("FileManager.UploadError.Title"),
                 null,
-                DMSApplication.getMessage("FileManager.UploadError.Context"));
+                DMSApplication.getMessage("FileManager.UploadError.Context")
+        );
         alert.showAndWait();
     }
     private static void buildAlert (Alert.AlertType type, String title, String header, String context) {

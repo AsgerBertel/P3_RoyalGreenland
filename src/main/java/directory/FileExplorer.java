@@ -31,7 +31,6 @@ public class FileExplorer {
 
     // Returns the files currently shown in the explorer
     public List<AbstractFile> getShownFiles() {
-        // todo use viewingPlant.getAccessModifier().contains(file) in an algorithm for finding all shown folder/documents
         ArrayList<AbstractFile> allFiles;
 
         if (currentFolder == null)
@@ -58,7 +57,7 @@ public class FileExplorer {
 
     public void navigateTo(Folder newFolder) {
         if(newFolder != null)
-            currentFolder = newFolder; // todo error check
+            currentFolder = newFolder;
     }
 
     // Navigates to the parent directory

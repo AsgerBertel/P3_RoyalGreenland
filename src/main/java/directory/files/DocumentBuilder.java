@@ -1,6 +1,9 @@
 package directory.files;
 
+import com.sun.javafx.binding.Logging;
 import directory.Settings;
+import gui.AlertBuilder;
+import gui.log.LoggingErrorTools;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,7 +16,6 @@ import java.nio.file.Paths;
  */
 
 public class DocumentBuilder {
-    // Todo on setup set currentIDPath
     private Path currentIDPath = Paths.get(Settings.getServerAppFilesPath()+File.separator+"currentFileID");
     public static DocumentBuilder documentBuilder;
 
@@ -41,20 +43,24 @@ public class DocumentBuilder {
      *
      * @return a new ID for the new file.
      */
-    public int readAndUpdateCurrentID() {
+    public int readAndUpdateCurrentID() { 
         int currentID = -1;
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
+        try (BufferedReader reader = Files.newBufferedReader(currentIDPath)) {
             String str = reader.readLine();
             currentID = Integer.parseInt(str);
         } catch (IOException e) {
-            System.out.println("Could not read file" + e.getMessage());
+            AlertBuilder.readWriteIOPopup(currentIDPath.getFileName().toString());
+            LoggingErrorTools.log(e);
+            e.printStackTrace();
         }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(currentIDPath)) {
             String ID = "" + (currentID + 1);
             writer.write(ID);
         } catch (IOException e) {
+            AlertBuilder.readWriteIOPopup(currentIDPath.getFileName().toString());
+            LoggingErrorTools.log(e);
             e.printStackTrace();
         }
 

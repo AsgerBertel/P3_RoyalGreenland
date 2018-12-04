@@ -93,7 +93,6 @@ public class FileAdminController implements TabController {
             if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
 
-        //todo make enter button open work
         fileTreeView.setOnKeyPressed(event -> {
             if (event.getCode().getCode() == 13) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
@@ -386,7 +385,8 @@ public class FileAdminController implements TabController {
             try {
                 Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
             } catch (IOException e) {
-                System.out.println("Could not open file");
+                LoggingErrorTools.log(e);
+                AlertBuilder.IOExceptionPopUp();
                 e.printStackTrace();
             }
         }
