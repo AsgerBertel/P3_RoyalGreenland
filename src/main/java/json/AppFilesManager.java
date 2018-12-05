@@ -5,6 +5,9 @@ import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
 import directory.plant.PlantManager;
+import gui.AlertBuilder;
+import gui.log.LoggingErrorTools;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -39,10 +42,10 @@ public class AppFilesManager {
 
     public static ArrayList<AbstractFile> loadPublishedFileList(){
         String path = Settings.getPublishedAppFilesPath() + FILES_LIST_FILE_NAME;
-        // todo Violates the singleton pattern. Do we care?
         FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
-        if(publishedFileManager != null)
+        if(publishedFileManager != null) {
             return publishedFileManager.getMainFiles();
+        }
         return new ArrayList<>();
     }
 
@@ -52,9 +55,10 @@ public class AppFilesManager {
 
         try (Reader reader = new FileReader(path)) {
             return JsonParser.getJsonParser().fromJson(reader, classOfT);
-            // todo change read and write json to convert to unix file system.
         } catch (IOException e) {
-            e.printStackTrace(); // todo handle exception. Method Throws maybe? - Magnus
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -87,27 +91,31 @@ public class AppFilesManager {
         Path serverAppFilesPath = Paths.get(Settings.getServerAppFilesPath());
         Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
         Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
+        Path serverErrorLogsPath = Paths.get(Settings.getServerErrorLogsPath());
 
-        boolean success = true;
         if(!Files.exists(serverDocumentsPath))
-            success = serverDocumentsPath.toFile().mkdirs();
+            if(!serverDocumentsPath.toFile().mkdirs())
+                throw new IOException("Could not create server Working Documents folder");
 
         if(!Files.exists(serverArchivePath))
-            success &= serverArchivePath.toFile().mkdirs();
+            if(!serverArchivePath.toFile().mkdirs())
+                throw new IOException("Could not create server Archive folder");
 
         if(!Files.exists(serverAppFilesPath))
-            success &= serverAppFilesPath.toFile().mkdirs();
+            if(!serverAppFilesPath.toFile().mkdirs())
+                throw new IOException("Could not create server Working AppFiles folder");
 
         if(!Files.exists(publishedAppFilesPath))
-            success &= publishedAppFilesPath.toFile().mkdirs();
+            if(!publishedAppFilesPath.toFile().mkdirs())
+                throw new IOException("Could not create server Published AppFiles folder");
 
         if(!Files.exists(publishedDocumentsPath))
-            success &= publishedDocumentsPath.toFile().mkdirs();
+            if(!publishedDocumentsPath.toFile().mkdirs())
+                throw new IOException("Could not create server Published Documents folder");
 
-        if(!success){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
-            // todo Also in the case of the server directories connection might be a factor
-            throw new IOException("Could not create application directories");
-        }
+        if(!Files.exists(serverErrorLogsPath))
+            if(!serverErrorLogsPath.toFile().mkdirs())
+                throw new IOException("Could not create server Error Logs folder");
     }
 
     public static void createLocalDirectories() throws IOException{
@@ -119,16 +127,12 @@ public class AppFilesManager {
         Path localDocumentsPath = Paths.get(Settings.getLocalFilesPath());
         Path localAppFilesPath = Paths.get(Settings.getLocalAppFilesPath());
 
-        boolean succes = true;
         if(!Files.exists(localDocumentsPath))
-            succes = localDocumentsPath.toFile().mkdirs();
+            if(!localDocumentsPath.toFile().mkdirs())
+                throw new IOException("Could not create local Documents folder");
 
         if(!Files.exists(localAppFilesPath))
-            succes &= localAppFilesPath.toFile().mkdirs();
-
-        if(!succes){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
-            throw new IOException("Could not create application directories");
-        }
-
+            if(!localAppFilesPath.toFile().mkdirs())
+                throw new IOException("Could not create local App Files folder");
     }
 }

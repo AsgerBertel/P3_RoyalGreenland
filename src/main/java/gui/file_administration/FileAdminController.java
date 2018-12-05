@@ -215,6 +215,8 @@ public class FileAdminController implements TabController {
             AlertBuilder.uploadDocumentPopUp();
             return;
         }
+        if(selectedFile == null)
+            selectedFile = fileManager.getMainFilesRoot();
 
         Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
 
@@ -239,7 +241,6 @@ public class FileAdminController implements TabController {
                 return;
             }
         }
-
         if (selectedFile instanceof Folder) {
             // Upload inside selected folder
             Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
@@ -253,10 +254,6 @@ public class FileAdminController implements TabController {
                 // Upload to root
                 Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
             }
-
-        } else if (selectedFile == null) {
-            // Upload to root
-            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), fileManager.getMainFilesRoot());
         }
 
         fileManager.save();

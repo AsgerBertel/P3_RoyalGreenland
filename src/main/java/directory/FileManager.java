@@ -5,15 +5,12 @@ import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import gui.AlertBuilder;
-import gui.DMSApplication;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
 import gui.log.LoggingTools;
-import javafx.scene.control.Alert;
 import json.AppFilesManager;
 
-import javax.naming.InvalidNameException;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -51,14 +48,14 @@ public class FileManager {
         try {
             mainFilesRoot = findFiles(mainFilesRootPath);
         } catch (FileNotFoundException e) {
-            AlertBuilder.fileNotFound();
+            AlertBuilder.fileNotFoundPopup();
         }
 
         Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
         try {
             archiveRoot = findFiles(archiveFilesRootPath);
         } catch (FileNotFoundException e) {
-            AlertBuilder.fileNotFound();
+            AlertBuilder.fileNotFoundPopup();
         }
     }
 
@@ -136,12 +133,11 @@ public class FileManager {
             AppFilesManager.save(this);
             LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
-        } catch (IOException e) {
+        } catch (IOException e) { // todo catch properly
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
         }
-
         return null;
     }
 

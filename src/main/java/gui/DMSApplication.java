@@ -2,6 +2,7 @@ package gui;
 
 import app.ApplicationMode;
 import directory.Settings;
+import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -61,7 +62,7 @@ public class DMSApplication extends Application {
 
         initializeApplication();
 
-        this.primaryStage = stage;
+        primaryStage = stage;
 
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
@@ -153,8 +154,8 @@ public class DMSApplication extends Application {
     private void initializeApplication() {
         // Load settings and initialize paths if non are saved
         Settings.loadSettings(applicationMode);
-        this.locale = Settings.getLanguage();
-        this.messages = ResourceBundle.getBundle("Messages", locale);
+        locale = Settings.getLanguage();
+        messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
         if (applicationMode.equals(ApplicationMode.VIEWER)) {
             try {

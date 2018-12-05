@@ -22,7 +22,7 @@ public class AlertBuilder
                 null);
         alert.showAndWait();
     }
-    public static void fileNotFound() {
+    public static void fileNotFoundPopup () {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.fileNotFound.Title"),

@@ -20,7 +20,7 @@ public class DirectoryCloner {
         mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
     }
 
-    public static void publishFiles() throws Exception {
+    public static void publishFiles() throws Exception { // todo fix exception
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
             return;
