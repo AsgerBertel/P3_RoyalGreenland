@@ -28,8 +28,8 @@ class FileManagerTest {
 
     @BeforeEach
     void initEach() throws IOException {
-        Settings.setServerPath(mainTestDir.toString()+File.separator+"Server");
-        Settings.setLocalPath(mainTestDir.toString()+File.separator+"Local");
+        Settings.setServerPath(mainTestDir.resolve("Server"));
+        Settings.setLocalPath(mainTestDir.resolve("Local"));
         if(Files.exists(Paths.get(Settings.getServerAppFilesPath()+"allFiles.JSON"))
                 && Files.exists(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
             Files.delete(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"));

@@ -38,7 +38,7 @@ public class DMSApplication extends Application {
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
-    public static final String APP_TITLE = "RG - Document Management System";
+    public static final String APP_TITLE = "RG DMS";
 
     private FXMLLoader fxmlLoader;
     public static final String fxmlPath = "/fxml/";

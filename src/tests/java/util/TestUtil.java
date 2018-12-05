@@ -22,6 +22,10 @@ public class TestUtil {
     private TestUtil() {
     }
 
+    public static void main(String[] args) throws IOException {
+        resetTestFiles();
+    }
+
     public static void resetTestFiles() throws IOException { // Todo actually make test files that are independent of actual files
         Path oldFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);

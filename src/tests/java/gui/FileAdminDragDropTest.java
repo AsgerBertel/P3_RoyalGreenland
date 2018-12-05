@@ -25,7 +25,7 @@ public class FileAdminDragDropTest extends GUITest {
     void simpleDragDropTest() throws InterruptedException {
         TreeView<AbstractFile> treeView = findNode("#fileTreeView");
 
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Paths.get(Settings.getServerDocumentsPath())));
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Settings.getServerDocumentsPath()));
         assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),treeView.getRoot()));
 
         // Drag folder 1 into folder 0
@@ -38,7 +38,7 @@ public class FileAdminDragDropTest extends GUITest {
         assertTrue(containsItemWithFile(treeView.getRoot().getChildren().get(0), itemToMove.getValue()));
         assertTrue(((Folder) targetItem.getValue()).getContents().contains(itemToMove.getValue()));
 
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Paths.get(Settings.getServerDocumentsPath())));
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Settings.getServerDocumentsPath()));
         assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),treeView.getRoot()));
     }
 
@@ -57,7 +57,7 @@ public class FileAdminDragDropTest extends GUITest {
     void dragIntoSubfolderTest(){
         TreeView<AbstractFile> treeView = findNode("#fileTreeView");
 
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Paths.get(Settings.getServerDocumentsPath())));
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Settings.getServerDocumentsPath()));
         assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),treeView.getRoot()));
 
         // Drag itemToMove folder into its' first subfolder
@@ -72,7 +72,7 @@ public class FileAdminDragDropTest extends GUITest {
         assertTrue(containsItemWithFile(treeView.getRoot().getChildren().get(0), itemToMove.getValue()));
         assertTrue(((Folder) targetItem.getValue()).getContents().contains(itemToMove.getValue()));
 
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Paths.get(Settings.getServerDocumentsPath())));
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), Settings.getServerDocumentsPath()));
         assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),treeView.getRoot()));
     }
 

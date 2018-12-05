@@ -5,6 +5,7 @@ import directory.files.Document;
 import directory.files.Folder;
 import gui.DMSApplication;
 import json.AppFilesManager;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,15 +27,55 @@ public class DirectoryCloner {
 
         ArrayList<AbstractFile> newFiles = fileManager.getMainFiles();
         ArrayList<AbstractFile> oldFiles = AppFilesManager.loadPublishedFileList();
-
-        // Remove files that are no longer up to date
-        oldFiles = removeOutdatedFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()));
-        // Add any files that have been deleted
-        oldFiles = addNewFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()), Paths.get(Settings.getServerDocumentsPath()));
+        applyUpdate(oldFiles, newFiles, Settings.getPublishedDocumentsPath(), Settings.getServerDocumentsPath());
 
         // Replace app files
         replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
         replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
+    }
+
+    public static void updateLocalFiles() throws Exception {
+        if(!isUpdateAvailable())
+            return;
+
+        ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
+        ArrayList<AbstractFile> oldFiles = AppFilesManager.loadLocalFileList();
+        applyUpdate(oldFiles, newFiles, Settings.getLocalFilesPath(), Settings.getServerDocumentsPath());
+
+        // Replace app files
+        replaceIfExists(Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME), Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
+    }
+
+    private static boolean isUpdateAvailable() throws IOException {
+        if(!Files.exists(Settings.getServerDocumentsPath()))
+            throw new ServerUnavailableException();
+
+        File localFilesList = Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File localFactoryList = Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+        File serverFilesList = Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File serverFactoryList = Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+
+        if(!localFactoryList.exists() || !localFilesList.exists())
+            return true;
+
+        try {
+            if(!FileUtils.contentEquals(localFilesList, serverFilesList) || !FileUtils.contentEquals(localFactoryList, serverFactoryList))
+                return true;
+            else
+                return false;
+        } catch (IOException e) {
+            throw new IOException("Unable to compare local files to server files", e);
+        }
+    }
+
+    /** Updates the oldFiles list to match the updatedFiles list and updates the corresponding files on the file system */
+    private static void applyUpdate(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> updatedFiles,
+                                    Path oldFilesPath, Path updatedFilesPath) throws Exception {
+        // Remove files that are no longer up to date
+        oldFiles = removeOutdatedFiles(oldFiles, updatedFiles, oldFilesPath);
+        // Add any files that have been deleted
+        addNewFiles(oldFiles, updatedFiles, oldFilesPath, updatedFilesPath);
     }
 
     /**

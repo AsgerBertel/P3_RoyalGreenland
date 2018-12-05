@@ -49,6 +49,15 @@ public class AppFilesManager {
         return new ArrayList<>();
     }
 
+    public static ArrayList<AbstractFile> loadLocalFileList(){
+        String path = Settings.getLocalAppFilesPath() + FILES_LIST_FILE_NAME;
+        FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
+        if(publishedFileManager != null) {
+            return publishedFileManager.getMainFiles();
+        }
+        return new ArrayList<>();
+    }
+
     private static <T> T loadInstanceFromJsonFile(String path, java.lang.Class<T> classOfT){
         if(!Files.exists(Paths.get(path)))
             return null;
@@ -81,51 +90,39 @@ public class AppFilesManager {
     }
 
     public static void createServerDirectories() throws IOException {
-        Path serverRoot = Paths.get(Settings.getServerPath());
+        Path serverRoot = Settings.getServerPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(serverRoot.getParent())) throw new FileNotFoundException("The chosen server directory could not be found");
 
-        Path serverDocumentsPath = Paths.get(Settings.getServerDocumentsPath());
-        Path serverArchivePath = Paths.get(Settings.getServerArchivePath());
-        Path serverAppFilesPath = Paths.get(Settings.getServerAppFilesPath());
-        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
-        Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
-        Path serverErrorLogsPath = Paths.get(Settings.getServerErrorLogsPath());
+        ArrayList<Path> applicationPaths = new ArrayList<>();
+        applicationPaths.add(Settings.getServerDocumentsPath());
+        applicationPaths.add(Settings.getServerArchivePath());
+        applicationPaths.add(Settings.getServerAppFilesPath());
+        applicationPaths.add(Settings.getPublishedAppFilesPath());
+        applicationPaths.add(Settings.getPublishedDocumentsPath());
+        applicationPaths.add(Settings.getServerErrorLogsPath());
+        applicationPaths.add(Settings.getLocalFilesPath());
+        applicationPaths.add(Settings.getLocalAppFilesPath());
 
-        if(!Files.exists(serverDocumentsPath))
-            if(!serverDocumentsPath.toFile().mkdirs())
-                throw new IOException("Could not create server Working Documents folder");
-
-        if(!Files.exists(serverArchivePath))
-            if(!serverArchivePath.toFile().mkdirs())
-                throw new IOException("Could not create server Archive folder");
-
-        if(!Files.exists(serverAppFilesPath))
-            if(!serverAppFilesPath.toFile().mkdirs())
-                throw new IOException("Could not create server Working AppFiles folder");
-
-        if(!Files.exists(publishedAppFilesPath))
-            if(!publishedAppFilesPath.toFile().mkdirs())
-                throw new IOException("Could not create server Published AppFiles folder");
-
-        if(!Files.exists(publishedDocumentsPath))
-            if(!publishedDocumentsPath.toFile().mkdirs())
-                throw new IOException("Could not create server Published Documents folder");
-
-        if(!Files.exists(serverErrorLogsPath))
-            if(!serverErrorLogsPath.toFile().mkdirs())
-                throw new IOException("Could not create server Error Logs folder");
+        for(Path appPath : applicationPaths){
+            try{
+                if(!Files.exists(appPath))
+                    Files.createDirectories(appPath);
+            }catch (IOException e){
+                throw new IOException("Failed to create an application folder : " + appPath.toString(), e);
+            }
+        }
     }
 
     public static void createLocalDirectories() throws IOException{
-        Path localRoot = Paths.get(Settings.getLocalPath());
+        Path localRoot = Settings.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent())) throw new FileNotFoundException("Local Application folder could not be found");
 
-        Path localDocumentsPath = Paths.get(Settings.getLocalFilesPath());
-        Path localAppFilesPath = Paths.get(Settings.getLocalAppFilesPath());
+        Path localDocumentsPath = Settings.getLocalFilesPath();
+        Path localAppFilesPath = Settings.getLocalAppFilesPath();
 
         if(!Files.exists(localDocumentsPath))
             if(!localDocumentsPath.toFile().mkdirs())

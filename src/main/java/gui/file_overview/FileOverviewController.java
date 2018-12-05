@@ -162,7 +162,7 @@ public class FileOverviewController implements TabController {
             updateDisplayedFiles();
         } else {
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();
@@ -238,7 +238,7 @@ public class FileOverviewController implements TabController {
         if (file instanceof Document) {
             Document doc = (Document) file;
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 System.out.println("Could not open file");
                 e.printStackTrace();

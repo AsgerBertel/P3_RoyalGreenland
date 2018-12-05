@@ -99,7 +99,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
+        watchRootFiles(Settings.getServerDocumentsPath());
     }
 
     @Override
@@ -218,7 +218,7 @@ public class FileAdminController implements TabController {
         if(selectedFile == null)
             selectedFile = fileManager.getMainFilesRoot();
 
-        Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
+        Path path = Settings.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
 
         if (Files.exists(path)) {
             int i = OverwriteFilePopUP();
@@ -380,7 +380,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();

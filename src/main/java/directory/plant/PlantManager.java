@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 public class PlantManager {
     private ArrayList<Plant> allPlants = new ArrayList<>();
-    private static String pathToJson = "Sample files/allPlants.JSON";
-    private static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
     private static PlantManager plantManager;
 
     /**
