@@ -11,6 +11,7 @@ import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
+import gui.file_administration.FileAdminController;
 import gui.log.LoggingErrorTools;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -233,15 +234,18 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
+
         AbstractFile file = newValue.getValue();
         if (file instanceof Document) {
+            Document doc = (Document) file;
             try {
-                ((Document) file).openDocument();
+                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
             } catch (IOException e) {
+                System.out.println("Could not open file");
                 e.printStackTrace();
-                AlertBuilder.IOExceptionPopUp();
-                LoggingErrorTools.log(e);
             }
         }
     }
+
+    //todo dUpLiCaTe CoDe
 }

@@ -1,31 +1,34 @@
 package directory.files;
 
 import app.ApplicationMode;
+import directory.DocumentsTest;
 import directory.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import util.TestUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DocumentTest {
-    private File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestFileExt = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFileExt.pdf");
-    private Path pathToTestFileMove = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFileMove.pdf");
+class DocumentTest extends DocumentsTest {
+    //private File resourcesDirectory = new File(TestUtil.getTestDocuments().toString());
+    private Path pathToTestFileExt = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     private Document docExt;
-    private Document docMove;
-    private Path pathToWrongFile = Paths.get(resourcesDirectory.getAbsolutePath() + "Main Files Test/testFileWrong.pdf");
+    private Path pathToWrongFile = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.doc");
     private Document docWrong;
+    private transient final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+
 
     @BeforeEach
     void setSettings(){
         Settings.loadSettings(ApplicationMode.ADMIN);
         docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
-        docMove = DocumentBuilder.getInstance().createDocument(pathToTestFileMove);
         docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
     }
 
@@ -40,71 +43,17 @@ class DocumentTest {
         //Gets right extension
         assertEquals("pdf" ,docExt.getFileExtension());
         //No extension, sends nothing back
-        assertEquals("pdf", docWrong.getFileExtension());
-    }
-
-   /* @Test
-    void moveFile() {
-        Path orgPath = docMove.getPath();
-        Path pathMoveTo = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/MoveFileTest/");
-        try {
-            docMove.moveFile(pathMoveTo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(docMove.getPath().toString(), pathMoveTo.toString() + File.separator + docMove.getName());
-
-        try {
-            docMove.moveFile(orgPath.getParent());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    @Test
-    void openDocument() {
+        assertEquals("doc", docWrong.getFileExtension());
     }
 
     @Test
     void setLastModified() {
+        LocalDateTime ldt = LocalDateTime.now();
 
+        docExt.setLastModified(ldt);
+
+        assertEquals(ldt.format(DATE_TIME_FORMATTER), docExt.getLastModified());
     }
-/*
-    @Test todo
-    void createPlant() {
-        // Store original name and new name
-        String originalName = doc.getName();
-        String newName = "name.pdf";
-        try {
-            doc.createPlant(newName);
-        } catch (InvalidNameException e) {
-            e.printStackTrace();
-        }
 
-        // Assert that the document has changed name to the new one correctly.
-        assertEquals(newName, doc.getName());
 
-        // Change name back to original.
-        try {
-            doc.createPlant(originalName);
-        } catch (InvalidNameException e) {
-            e.printStackTrace();
-        }
-
-    }*/
-/*
-    @Test
-    void renameWrongName(){
-
-        //Try changing one document name to the same as the other
-        String originalName = doc.getName();
-        assertThrows(InvalidNameException.class, () ->
-                docWrong.createPlant(originalName));
-    }*/
-
-    @Test
-    void deleteFile() {
-        // todo Implement when the function is implemented.
-    }
 }
