@@ -174,7 +174,7 @@ public class DeletedFilesController implements TabController {
                 AbstractFile file = newValue.getValue();
                 if (file instanceof Document) {
                     try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + file.getPath()).toFile());
+                        Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + file.getOSPath()).toFile());
                     } catch (IOException e) {
                         LoggingErrorTools.log(e);
                         AlertBuilder.IOExceptionPopUp();
