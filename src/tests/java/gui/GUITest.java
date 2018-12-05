@@ -6,8 +6,11 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
+
+import java.io.IOException;
 
 public abstract class GUITest extends ApplicationTest {
 
@@ -26,15 +29,20 @@ public abstract class GUITest extends ApplicationTest {
     @BeforeAll @SuppressWarnings("Duplicates")
     static final void setupApplication() throws Exception {
         Settings.loadSettings(ApplicationMode.ADMIN);
+
         originalPath = Settings.getServerDocumentsPath();
         Settings.setServerPath(TestUtil.getTestDocuments().toString());
 
-        TestUtil.resetTestFiles();
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }
 
+    @BeforeEach
+    static void setupTest() throws IOException {
+        TestUtil.resetTestFiles();
+    }
+
     @AfterAll
-    static void onTestEnd(){
+    static void cleanUp(){
         // Reset path in settings
         Settings.setServerPath(originalPath);
     }
