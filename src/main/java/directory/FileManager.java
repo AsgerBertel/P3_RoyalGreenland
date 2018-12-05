@@ -244,7 +244,7 @@ public class FileManager {
     private static String getExtension(Path filePath) {
         String pathString = filePath.toString();
         int indexOfSeperator = pathString.lastIndexOf('.');
-        if (indexOfSeperator == -1) return "";
+        if(indexOfSeperator == -1) return "";
 
         String extension = pathString.substring(indexOfSeperator, pathString.length());
         if (extension.contains("/") || extension.contains(File.separator))
@@ -422,11 +422,11 @@ public class FileManager {
         for (AbstractFile abstractFile : searchArea) {
             Path filePath = abstractFile.getOSPath();
             if (fileRelativePath.startsWith(filePath)) {
-                if (fileRelativePath.equals(filePath)) {
+                if (fileRelativePath.equals(filePath))
                     return Optional.of(abstractFile);
-                } else if (abstractFile instanceof Folder) {
+                else if (abstractFile instanceof Folder)
                     return findFile(fileRelativePath, ((Folder) abstractFile).getContents());
-                }
+
             }
         }
         return Optional.empty();
@@ -500,7 +500,13 @@ public class FileManager {
             }
         }
         findParent(src, mainFilesRoot).get().getContents().remove(src);
-        Files.delete(Paths.get(Settings.getServerDocumentsPath() + src.getOSPath()));
+
+        Path fileToDelete = Paths.get(Settings.getServerDocumentsPath() + src.getOSPath());
+        // Fail-safe
+        if(!fileToDelete.toString().contains(DMSApplication.APP_TITLE))
+            throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : " + fileToDelete);
+
+        Files.delete(fileToDelete);
     }
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {

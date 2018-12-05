@@ -75,20 +75,6 @@ public class Folder extends AbstractFile {
         return false;
     }
 
-    public Folder findParent(Folder child){
-        for(AbstractFile file : getContents()){
-            if(file instanceof Folder){
-                if(((Folder) file).getContents().contains(child)){
-                    return (Folder)file;
-                }
-                else{
-                    return ((Folder) file).findParent(child);
-                }
-            }
-        }
-        return child;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
