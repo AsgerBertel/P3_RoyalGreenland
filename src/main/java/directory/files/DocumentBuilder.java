@@ -1,6 +1,5 @@
 package directory.files;
 
-import com.sun.javafx.binding.Logging;
 import directory.Settings;
 import gui.AlertBuilder;
 import gui.log.LoggingErrorTools;

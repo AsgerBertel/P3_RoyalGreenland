@@ -52,7 +52,7 @@ public class LoggingTools {
 
         LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], FORMATTER);
 
-        return new LogEvent(substrings[1], substrings[3], substrings[4], localDateTime, LogEventType.valueOf(substrings[2]));
+         return new LogEvent(substrings[1], substrings[3], substrings[4], localDateTime, LogEventType.valueOf(substrings[2]));
     }
 
 

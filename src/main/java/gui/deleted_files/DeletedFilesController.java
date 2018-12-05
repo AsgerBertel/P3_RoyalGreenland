@@ -155,7 +155,7 @@ public class DeletedFilesController implements TabController {
         else
             return "MacOS";
     }
-    public void restoreDocument(ActionEvent event) {
+    public void restoreFile(ActionEvent event) {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         AbstractFile selectedFile = selectedItem.getValue();
         try {
