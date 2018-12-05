@@ -24,13 +24,13 @@ class FileManagerTest {
     private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
     private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTestUnix.JSON");
     private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "deleteTest");
-    private Path mainTestDir = Paths.get(resourcesDirectory + File.separator+ "Main Files Test" +File.separator+"RLFiles");
+    private Path mainTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "RLFiles");
 
     @BeforeEach
     void initEach() throws IOException {
         Settings.setServerPath(mainTestDir.resolve("Server"));
         Settings.setLocalPath(mainTestDir.resolve("Local"));
-        if(Files.exists(Paths.get(Settings.getServerAppFilesPath()+"allFiles.JSON"))
+        if (Files.exists(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"))
                 && Files.exists(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
             Files.delete(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"));
             Files.delete(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"));
@@ -68,9 +68,9 @@ class FileManagerTest {
     }*/
 
     private void deleteDocument() {
-        Folder folder1 = (Folder)FileManager.getInstance().getMainFiles().get(1);
-        Folder folder2 = (Folder)folder1.getContents().get(0);
-        Document document = (Document)folder2.getContents().get(0);
+        Folder folder1 = (Folder) FileManager.getInstance().getMainFiles().get(1);
+        Folder folder2 = (Folder) folder1.getContents().get(0);
+        Document document = (Document) folder2.getContents().get(0);
 
         FileManager.getInstance().deleteFile(document);
 
@@ -78,9 +78,9 @@ class FileManagerTest {
     }
 
     private void restoreDocument() throws IOException {
-        Folder folder1 = (Folder)FileManager.getInstance().getArchiveFiles().get(0);
-        Folder folder2 = (Folder)folder1.getContents().get(0);
-        Document doc = (Document)folder2.getContents().get(0);
+        Folder folder1 = (Folder) FileManager.getInstance().getArchiveFiles().get(0);
+        Folder folder2 = (Folder) folder1.getContents().get(0);
+        Document doc = (Document) folder2.getContents().get(0);
 
         FileManager.getInstance().restoreFile(doc);
 

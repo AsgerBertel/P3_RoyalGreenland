@@ -145,11 +145,11 @@ public class FileManager {
     // Creates a folder in the root directory of main files
     public Folder createFolder(String name) throws IOException {
         Folder folder = new Folder(name);
-        Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
+        Path fullPath = Settings.getServerDocumentsPath().resolve(name);
         if (Files.exists(fullPath))
             throw new FileAlreadyExistsException("File " + fullPath.toString() + " already exists.");
 
-        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
+        createFolderFile(Settings.getServerDocumentsPath().resolve(name));
 
         mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
@@ -161,7 +161,7 @@ public class FileManager {
         Path fullFolderPath = Settings.getServerDocumentsPath().resolve(parentFolder.getOSPath()).resolve(name);
         if (Files.exists(fullFolderPath))
             throw new FileAlreadyExistsException("Folder with name" + fullFolderPath + " already exists.");
-        Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
+        Folder folder = new Folder(parentFolder.getPath().resolve(name).toString());
 
         createFolderFile(Settings.getServerDocumentsPath().resolve(folder.getOSPath()));
 
@@ -256,8 +256,8 @@ public class FileManager {
 
     public void restoreFile(AbstractFile file) throws IOException {
         // Move the file on the file system
-        Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
-        Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
+        Path newPath = Settings.getServerDocumentsPath().resolve(file.getOSPath());
+        Path oldPath = Settings.getServerArchivePath().resolve(file.getOSPath());
 
         // Create parent folders if they don't exist
         if (!Files.exists(newPath.getParent()))
@@ -477,7 +477,7 @@ public class FileManager {
             throw new RuntimeException("The generated name : " + dstPath.getFileName() + " could not be applied to " + src.getOSPath());
         }
 
-        src.setPath(Paths.get(newParentFolder.getPath() + File.separator + src.getName()));
+        src.setPath(newParentFolder.getPath().resolve(src.getName()));
         Files.move(srcPath, dstPath);
     }
 
@@ -512,7 +512,7 @@ public class FileManager {
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
         if (file.getName().equals(newName)) return;
-        Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        Path oldPath = Settings.getServerDocumentsPath().resolve(file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
 

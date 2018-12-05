@@ -15,11 +15,6 @@ import java.util.Optional;
 
 public class DirectoryCloner {
 
-
-    public static void main(String[] args) throws Exception {
-        mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
-    }
-
     public static void publishFiles() throws Exception { // todo fix exception
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
@@ -30,8 +25,8 @@ public class DirectoryCloner {
         applyUpdate(oldFiles, newFiles, Settings.getPublishedDocumentsPath(), Settings.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     public static void updateLocalFiles() throws Exception {
@@ -43,8 +38,8 @@ public class DirectoryCloner {
         applyUpdate(oldFiles, newFiles, Settings.getLocalFilesPath(), Settings.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME), Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     private static boolean isUpdateAvailable() throws IOException {

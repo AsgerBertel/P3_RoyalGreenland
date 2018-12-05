@@ -1,5 +1,6 @@
 package gui.file_overview;
 
+import app.ApplicationMode;
 import directory.*;
 import directory.files.AbstractFile;
 import directory.files.Document;
@@ -11,48 +12,43 @@ import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.FileTreeUtil;
 import gui.TabController;
-import gui.file_administration.FileAdminController;
 import gui.log.LoggingErrorTools;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.TextAlignment;
+import json.AppFilesManager;
 
-import javax.print.Doc;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileOverviewController implements TabController {
 
-    //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
 
-    private ObservableList<Plant> plantList;
+    private ArrayList<Plant> plantList;
+    private Plant selectedPlant;
+    private Plant universalPlant = new Plant(-1, "All plants", new AccessModifier()); // todo sprog "All plants"
 
+    @FXML
+    private TreeView<AbstractFile> fileTreeView;
     private TreeItem<AbstractFile> rootItem;
+    private ArrayList<AbstractFile> filesList;
 
-    private Plant allPlant = new Plant(-1, "All plants", new AccessModifier());
     List<AbstractFile> filesToShow;
 
     @FXML
     private FlowPane flpFileView;
-
     @FXML
     private Label lblVisualPath;
-    @FXML
-    private TreeView<AbstractFile> fileTreeView;
     @FXML
     private ComboBox<Plant> drdPlant;
 
@@ -76,17 +72,40 @@ public class FileOverviewController implements TabController {
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed
+        if (DMSApplication.getApplicationMode() == ApplicationMode.ADMIN) {
+            plantList = AppFilesManager.loadPublishedFactoryList();
+            filesList = AppFilesManager.loadPublishedFileList();
+        } else {
+            plantList = AppFilesManager.loadLocalFactoryList();
+            filesList = AppFilesManager.loadLocalFileList();
+        }
+
+        reloadPlantDropDown();
         reloadFileTree();
-        ArrayList<Plant> allPlants = new ArrayList<>();
-        allPlants.add(allPlant);
-        allPlants.addAll(PlantManager.getInstance().getAllPlants());
-        plantList = FXCollections.observableList(allPlants);
-        drdPlant.setItems(plantList);
+        reloadFileExplorer();
+    }
+
+    private void reloadPlantDropDown(){
+        ArrayList<Plant> selectablePlants = new ArrayList<>();
+        selectablePlants.add(universalPlant);
+        selectablePlants.addAll(PlantManager.getInstance().getAllPlants());
+        drdPlant.setItems(FXCollections.observableList(selectablePlants));
+
+        if(selectedPlant == null){
+            drdPlant.getSelectionModel().select(universalPlant);
+            selectedPlant = universalPlant;
+        }else{
+            drdPlant.getSelectionModel().select(selectedPlant);
+        }
+    }
+
+    private void reloadFileExplorer() {
+        fileExplorer = new FileExplorer(filesList, selectedPlant);
+        updateDisplayedFiles();
     }
 
     private void reloadFileTree() {
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        rootItem = FileTreeUtil.generateTree(filesList, selectedPlant.getAccessModifier());
         fileTreeView.setRoot(rootItem);
     }
 
@@ -95,7 +114,7 @@ public class FileOverviewController implements TabController {
         Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
         // Create fileExplorer that matches the accessModifier of the selected plant
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
-        if(selectedPlant.equals(allPlant)){
+        if (selectedPlant.equals(universalPlant)) {
             fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
             rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
             fileTreeView.setRoot(rootItem);
@@ -190,16 +209,16 @@ public class FileOverviewController implements TabController {
         }
 
         String tempString = "";
-        for(int i = 0; i < path.length(); ++i){
-            if(path.charAt(i) != '/'){
+        for (int i = 0; i < path.length(); ++i) {
+            if (path.charAt(i) != '/') {
                 tempString = tempString + path.charAt(i);
-            } else{
+            } else {
                 pathSteps.add(tempString);
                 tempString = "";
             }
-            if(i == path.length() - 1 && pathSteps.size() == 0){
+            if (i == path.length() - 1 && pathSteps.size() == 0) {
                 pathSteps.add(tempString);
-            }else if (i == path.length() - 1){
+            } else if (i == path.length() - 1) {
                 pathSteps.add(tempString);
             }
         }
@@ -208,15 +227,15 @@ public class FileOverviewController implements TabController {
 
         String tmpString = "";
 
-        if(bracketCount > 3){
-            for(int i = pathSteps.size() - 3; i < pathSteps.size(); ++i){
-                if(i == pathSteps.size() - 3){
+        if (bracketCount > 3) {
+            for (int i = pathSteps.size() - 3; i < pathSteps.size(); ++i) {
+                if (i == pathSteps.size() - 3) {
                     newString = newString + "...";
                 }
                 newString = newString + " / " + pathSteps.get(i);
             }
         } else {
-            for (int i = 0; i < pathSteps.size(); ++i){
+            for (int i = 0; i < pathSteps.size(); ++i) {
                 newString = newString + " / " + pathSteps.get(i);
             }
         }
