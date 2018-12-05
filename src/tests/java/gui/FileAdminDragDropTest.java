@@ -9,6 +9,7 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobot;
 import util.TestUtil;
 
 import java.io.IOException;
@@ -18,17 +19,13 @@ import java.util.Set;
 
 public class FileAdminDragDropTest extends GUITest {
 
-    @BeforeAll
-    static void setUp() throws IOException {
-        TestUtil.resetTestFiles();
-    }
-
     @Test
-    void dropTest() throws InterruptedException {
+    void simpleDragDropTest() throws InterruptedException {
         TreeView<AbstractFile> treeView = findNode("#fileTreeView");
-        drag(getTreeCell(treeView, treeView.getRoot().getChildren().get(0))).dropTo(getTreeCell(treeView, treeView.getRoot().getChildren().get(1)));
 
-        Thread.sleep(1500);
+        FxRobot fxRobot = drag(getTreeCell(treeView, treeView.getRoot().getChildren().get(0)));
+        fxRobot.dropTo(getTreeCell(treeView, treeView.getRoot().getChildren().get(1)));
+
     }
 
     private static TreeCell getTreeCell(TreeView tree, TreeItem<AbstractFile> treeItem){
@@ -36,10 +33,5 @@ public class FileAdminDragDropTest extends GUITest {
         List<Node> cells = new ArrayList<>(treeCells);
         int row = tree.getRow(((TreeItem) treeItem));
         return ((TreeCell) cells.get(row));
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-
     }
 }

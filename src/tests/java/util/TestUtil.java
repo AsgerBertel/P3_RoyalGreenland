@@ -1,6 +1,5 @@
 package util;
 
-import gui.DMSApplication;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
