@@ -46,10 +46,10 @@ public class DirectoryCloner {
         if(!Files.exists(Settings.getServerDocumentsPath()))
             throw new ServerUnavailableException();
 
-        File localFilesList = Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME).toFile();
-        File localFactoryList = Paths.get(Settings.getLocalAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
-        File serverFilesList = Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME).toFile();
-        File serverFactoryList = Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+        File localFilesList = Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File localFactoryList = Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+        File serverFilesList = Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File serverFactoryList = Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
 
         if(!localFactoryList.exists() || !localFilesList.exists())
             return true;
