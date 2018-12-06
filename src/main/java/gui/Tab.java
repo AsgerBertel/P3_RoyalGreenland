@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public enum TabLoader {
+public enum Tab {
 
     FILE_OVERVIEW("FileOverview.fxml"),
     FILE_ADMINISTRATION("FileAdministration.fxml"),
@@ -21,7 +21,7 @@ public enum TabLoader {
     private TabController tabController;
     private Locale lang;
 
-    TabLoader(String fxmlFileName){
+    Tab(String fxmlFileName){
         this.fxmlFileName = fxmlFileName;
         lang = DMSApplication.getLanguage();
     }
@@ -39,4 +39,6 @@ public enum TabLoader {
         tabController.update();
         return node;
     }
+
+    public void update(){tabController.update();}
 }

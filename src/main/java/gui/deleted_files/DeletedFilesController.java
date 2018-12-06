@@ -119,7 +119,7 @@ public class DeletedFilesController implements TabController {
         } else {
 
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + fileButton.getFile().getPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerArchivePath().resolve(fileButton.getFile().getPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,7 +174,7 @@ public class DeletedFilesController implements TabController {
                 AbstractFile file = newValue.getValue();
                 if (file instanceof Document) {
                     try {
-                        Desktop.getDesktop().open(Paths.get(Settings.getServerArchivePath() + file.getOSPath()).toFile());
+                        Desktop.getDesktop().open(Settings.getServerArchivePath().resolve(file.getOSPath()).toFile());
                     } catch (IOException e) {
                         LoggingErrorTools.log(e);
                         AlertBuilder.IOExceptionPopUp();

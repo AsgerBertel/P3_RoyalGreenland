@@ -50,13 +50,12 @@ public class FileTreeUtil {
         for (AbstractFile file : files) {
             if (file instanceof Folder) {
                 if (accessModifier == null || ((Folder) file).containsFromAccessModifier(accessModifier))
-                    root.getChildren().add(generateTree((Folder) file));
+                    root.getChildren().add(generateTree((Folder) file, accessModifier));
             } else {
                 if (accessModifier == null || accessModifier.contains(((Document) file).getID()))
                     root.getChildren().add(createTreeItem((Document) file));
             }
         }
-
         return root;
     }
 

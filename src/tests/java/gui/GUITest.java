@@ -11,10 +11,11 @@ import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public abstract class GUITest extends ApplicationTest {
 
-    private static String originalPath;
+    private static Path originalPath;
 
     public void start(Stage stage) throws Exception {
         super.start(stage);
@@ -31,7 +32,7 @@ public abstract class GUITest extends ApplicationTest {
         Settings.loadSettings(ApplicationMode.ADMIN);
 
         originalPath = Settings.getServerDocumentsPath();
-        Settings.setServerPath(TestUtil.getTestDocuments().toString());
+        Settings.setServerPath(TestUtil.getTestDocuments());
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }

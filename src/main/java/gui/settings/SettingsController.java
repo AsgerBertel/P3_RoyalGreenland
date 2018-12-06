@@ -1,5 +1,6 @@
 package gui.settings;
 
+import app.ApplicationMode;
 import directory.Settings;
 import gui.DMSApplication;
 import gui.TabController;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class SettingsController implements TabController {
@@ -33,9 +35,6 @@ public class SettingsController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        usernameTextField.setText(Settings.getUsername());
-        serverPathTextField.setText(Settings.getServerPath());
-        localPathTextField.setText(Settings.getLocalFilesPath());
         saveChangesButton.setDisable(true);
 
         // Check validity of changes when
@@ -59,11 +58,13 @@ public class SettingsController implements TabController {
 
     @Override
     public void update() {
-
+        usernameTextField.setText(Settings.getUsername());
+        serverPathTextField.setText(Settings.getServerPath().toString());
+        localPathTextField.setText(Settings.getLocalPath().toString());
     }
 
     public void onBrowseServerPath() {
-        File serverFolder = chooseDirectoryPrompt(DMSApplication.getMessage("Settings.PopUp.ChooseServerPath"));
+        File serverFolder = chooseDirectoryPrompt(DMSApplication.getMessage("Settings.PopUp.ChooseServerPath"), Paths.get(serverPathTextField.getText()).toFile());
         if (serverFolder != null) {
             serverPathTextField.setText(serverFolder.getPath());
             onServerPathChanged();
@@ -71,15 +72,17 @@ public class SettingsController implements TabController {
     }
 
     public void onBrowseLocalPath() {
-        File serverFolder = chooseDirectoryPrompt(DMSApplication.getMessage("Settings.PopUp.ChooseLocalPath"));
+        File serverFolder = chooseDirectoryPrompt(DMSApplication.getMessage("Settings.PopUp.ChooseLocalPath"), Paths.get(localPathTextField.getText()).toFile());
         if (serverFolder != null) {
             serverPathTextField.setText(serverFolder.getPath());
             onLocalPathChange();
         }
     }
 
-    static File chooseDirectoryPrompt(String message) {
+    static File chooseDirectoryPrompt(String message, File initialDirectory) {
         DirectoryChooser fileChooser = new DirectoryChooser();
+        if(initialDirectory.exists())
+            fileChooser.setInitialDirectory(initialDirectory);
         fileChooser.setTitle(message);
         File chosenFile = fileChooser.showDialog(new Stage());
         if (chosenFile == null) return null;
@@ -137,11 +140,13 @@ public class SettingsController implements TabController {
 
         // Save all changes and set allChangeSaved to false if a save failed
         allChangesSaved &= saveChange(usernameTextField, () -> Settings.setUsername(usernameTextField.getText()));
-        allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(serverPathTextField.getText()));
-        allChangesSaved &= saveChange(localPathTextField, () -> Settings.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(Paths.get(serverPathTextField.getText())));
+        allChangesSaved &= saveChange(localPathTextField, () -> Settings.setLocalPath(Paths.get(localPathTextField.getText())));
 
         // Only disable save button if all changes are saved correctly
         saveChangesButton.setDisable(allChangesSaved);
+
+        update();
 
         // Save language if different from the current language
         Locale language = changeToDanish.isSelected() ? DMSApplication.DK_LOCALE : DMSApplication.GL_LOCALE;

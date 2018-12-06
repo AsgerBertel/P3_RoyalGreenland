@@ -43,10 +43,10 @@ public class FileExplorer {
         // Add files if they are contained in the plant's access modifier
         for (AbstractFile file : allFiles) {
             if (file instanceof Folder) {
-                if (viewingPlant == null || ((Folder) file).containsFromAccessModifier(viewingPlant.getAccessModifier()))
+                if (viewingPlant.getAccessModifier() == null || ((Folder) file).containsFromAccessModifier(viewingPlant.getAccessModifier()))
                     shownFiles.add(file);
             } else if (file instanceof Document) {
-                if (viewingPlant == null || viewingPlant.getAccessModifier().contains(((Document) file).getID()))
+                if (viewingPlant.getAccessModifier() == null || viewingPlant.getAccessModifier().contains(((Document) file).getID()))
                     shownFiles.add(file);
             }
         }
@@ -79,9 +79,5 @@ public class FileExplorer {
         } else {
             return currentFolder.getOSPath().toString();
         }
-    }
-
-    public Plant getViewingPlant() {
-        return viewingPlant;
     }
 }

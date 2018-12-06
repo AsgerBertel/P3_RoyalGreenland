@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class InitializationController implements Initializable {
@@ -37,9 +38,9 @@ public class InitializationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if(DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN)){
+        if (DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN)) {
             setState(State.SERVER_PATH);
-        }else{
+        } else {
             setState(State.LOCAL_PATH);
         }
 
@@ -64,7 +65,7 @@ public class InitializationController implements Initializable {
 
                 // Only show "previousButton" if the application is running in viewer mod (as the local path setting
                 // is irrelevant when running in admin mode)
-                if(DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN))
+                if (DMSApplication.getApplicationMode().equals(ApplicationMode.ADMIN))
                     previousButton.setVisible(false);
                 else
                     previousButton.setVisible(true);
@@ -79,29 +80,31 @@ public class InitializationController implements Initializable {
         }
     }
 
-    private void removeError(){
+    private void removeError() {
         errorText.setText("");
         inputTextField.getStyleClass().removeAll(SettingsController.ERROR_STYLE_CLASS);
     }
 
-    private void showError(String message){
+    private void showError(String message) {
         inputTextField.getStyleClass().add(SettingsController.ERROR_STYLE_CLASS);
         errorText.setText(message);
     }
 
     public void onBrowsePath(ActionEvent actionEvent) {
         String message;
-        if(currentState == State.SERVER_PATH)
+        if (currentState == State.SERVER_PATH) {
             message = DMSApplication.getMessage("Initialization.EnterServerPath");
-        else
+        } else {
             message = DMSApplication.getMessage("Initialization.EnterLocalPath");
+        }
 
-        File chosenDirectory = SettingsController.chooseDirectoryPrompt(message);
 
-        if(chosenDirectory != null){
+        File chosenDirectory = SettingsController.chooseDirectoryPrompt(message, Paths.get(inputTextField.getText()).toFile());
+
+        if (chosenDirectory != null) {
             inputTextField.setText(chosenDirectory.getAbsolutePath());
             removeError();
-        }else{
+        } else {
             showError(DMSApplication.getMessage("Initialization.EmptyInput"));
         }
     }
@@ -110,16 +113,16 @@ public class InitializationController implements Initializable {
         boolean saveInput = !(inputTextField.getText() == null) && !(inputTextField.getText().isEmpty());
 
         if (currentState == State.SERVER_PATH) {
-            if(saveInput) serverPath = inputTextField.getText();
+            if (saveInput) serverPath = inputTextField.getText();
             setState(State.LOCAL_PATH);
         } else if (currentState == State.USERNAME) {
-            if(saveInput) userName = inputTextField.getText();
+            if (saveInput) userName = inputTextField.getText();
             setState(State.SERVER_PATH);
         }
     }
 
     public void onNext(ActionEvent actionEvent) {
-        if(inputTextField.getText() == null || inputTextField.getText().isEmpty()){
+        if (inputTextField.getText() == null || inputTextField.getText().isEmpty()) {
             showError(DMSApplication.getMessage("Initialization.EmptyInput"));
             return;
         }
@@ -137,13 +140,13 @@ public class InitializationController implements Initializable {
     }
 
     // Close the initialization window
-    private void close(){
-        Settings.setServerPath(serverPath);
+    private void close() {
+        Settings.setServerPath(Paths.get(serverPath));
         Settings.setUsername(userName);
 
         // Save local path if the application is running in viewer mode
-        if(DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER))
-            Settings.setLocalPath(localPath);
+        if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER))
+            Settings.setLocalPath(Paths.get(localPath));
 
         // Close initialization window
         ((Stage) nextButton.getScene().getWindow()).close();

@@ -5,6 +5,7 @@ import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import gui.AlertBuilder;
+import gui.DMSApplication;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
@@ -44,14 +45,14 @@ public class FileManager {
     // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager() {
         // Create a list of AbstractFiles based on the files inside the server document path
-        Path mainFilesRootPath = Paths.get(Settings.getServerDocumentsPath());
+        Path mainFilesRootPath = Settings.getServerDocumentsPath();
         try {
             mainFilesRoot = findFiles(mainFilesRootPath);
         } catch (FileNotFoundException e) {
             AlertBuilder.fileNotFoundPopup();
         }
 
-        Path archiveFilesRootPath = Paths.get(Settings.getServerArchivePath());
+        Path archiveFilesRootPath = Settings.getServerArchivePath();
         try {
             archiveRoot = findFiles(archiveFilesRootPath);
         } catch (FileNotFoundException e) {
@@ -121,12 +122,12 @@ public class FileManager {
 
     public Document uploadFile(Path src, Folder dstFolder) {
         File file = new File(src.toString());
-        Path dest = Paths.get(Settings.getServerDocumentsPath() + dstFolder.getOSPath() + File.separator + src.getFileName());
+        Path dest = Settings.getServerDocumentsPath().resolve(dstFolder.getOSPath().resolve(src.getFileName()));
 
         try {
             Files.copy(src, dest);
 
-            Path relativePath = Paths.get(Settings.getServerDocumentsPath()).relativize(dest);
+            Path relativePath = Settings.getServerDocumentsPath().relativize(dest);
             Document doc = DocumentBuilder.getInstance().createDocument(relativePath);
 
             dstFolder.getContents().add(doc);
@@ -144,11 +145,11 @@ public class FileManager {
     // Creates a folder in the root directory of main files
     public Folder createFolder(String name) throws IOException {
         Folder folder = new Folder(name);
-        Path fullPath = Paths.get(Settings.getServerDocumentsPath() + name);
+        Path fullPath = Settings.getServerDocumentsPath().resolve(name);
         if (Files.exists(fullPath))
             throw new FileAlreadyExistsException("File " + fullPath.toString() + " already exists.");
 
-        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + name));
+        createFolderFile(Settings.getServerDocumentsPath().resolve(name));
 
         mainFilesRoot.getContents().add(folder);
         AppFilesManager.save(this);
@@ -157,12 +158,12 @@ public class FileManager {
 
     // Creates a new folder inside the given parent folder
     public Folder createFolder(String name, Folder parentFolder) throws IOException {
-        Path fullFolderPath = Paths.get(Settings.getServerDocumentsPath() + parentFolder.getOSPath() + File.separator + name);
+        Path fullFolderPath = Settings.getServerDocumentsPath().resolve(parentFolder.getOSPath()).resolve(name);
         if (Files.exists(fullFolderPath))
             throw new FileAlreadyExistsException("Folder with name" + fullFolderPath + " already exists.");
-        Folder folder = new Folder(parentFolder.getPath() + File.separator + name);
+        Folder folder = new Folder(parentFolder.getPath().resolve(name).toString());
 
-        createFolderFile(Paths.get(Settings.getServerDocumentsPath() + folder.getOSPath()));
+        createFolderFile(Settings.getServerDocumentsPath().resolve(folder.getOSPath()));
 
         parentFolder.getContents().add(folder);
         AppFilesManager.save(this);
@@ -175,8 +176,8 @@ public class FileManager {
 
     // Removes a file from main files
     public void deleteFile(AbstractFile file) {
-        Path originalPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath());
-        Path archivePath = Paths.get(Settings.getServerArchivePath() + file.getOSPath());
+        Path originalPath = Settings.getServerDocumentsPath().resolve(file.getOSPath());
+        Path archivePath = Settings.getServerArchivePath().resolve(file.getOSPath());
 
         try {
             // Create parent folders if they don't exist
@@ -255,8 +256,8 @@ public class FileManager {
 
     public void restoreFile(AbstractFile file) throws IOException {
         // Move the file on the file system
-        Path newPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
-        Path oldPath = Paths.get(Settings.getServerArchivePath() + file.getOSPath().toString());
+        Path newPath = Settings.getServerDocumentsPath().resolve(file.getOSPath());
+        Path oldPath = Settings.getServerArchivePath().resolve(file.getOSPath());
 
         // Create parent folders if they don't exist
         if (!Files.exists(newPath.getParent()))
@@ -364,8 +365,8 @@ public class FileManager {
 
         try {
             while (!allDeleted) {
-                pathsToDelete = Files.walk(Paths.get(Settings.getServerArchivePath() + src.getOSPath()))
-                        .filter(path -> !path.equals(Paths.get(Settings.getServerArchivePath() + src.getOSPath())))
+                pathsToDelete = Files.walk(Settings.getServerArchivePath().resolve(src.getOSPath()))
+                        .filter(path -> !path.equals(Settings.getServerArchivePath().resolve(src.getOSPath())))
                         .filter(path -> Files.isDirectory(path))
                         .filter(path -> new File(path.toString()).list().length <= 0)
                         .collect(Collectors.toList());
@@ -413,7 +414,7 @@ public class FileManager {
 
     // Looks for a File with a path corresponding to the given path
     public Optional<AbstractFile> findInMainFiles(Path fullPath) {
-        Path basePath = Paths.get(Settings.getServerDocumentsPath());
+        Path basePath = Settings.getServerDocumentsPath();
         Path relativePath = basePath.relativize(fullPath);
         return findFile(relativePath, getMainFiles());
     }
@@ -433,7 +434,7 @@ public class FileManager {
     }
 
     public void moveFile(AbstractFile srcFile, Folder dstParent) throws IOException {
-        Path dstPath = Paths.get(Settings.getServerDocumentsPath() + dstParent.getOSPath() + File.separator + srcFile.getName());
+        Path dstPath = Settings.getServerDocumentsPath().resolve(dstParent.getOSPath()).resolve(srcFile.getName());
 
         // Don't move if the target is the same as the destination
         Optional<Folder> parent = findParent(srcFile, getMainFilesRoot());
@@ -454,8 +455,8 @@ public class FileManager {
 
     // Move a src and generates a new name for it if another src with the same name already exists in the dst src
     private void safeMove(AbstractFile src, Folder newParentFolder) throws IOException {
-        Path srcPath = Paths.get(Settings.getServerDocumentsPath() + src.getOSPath());
-        Path dstPath = Paths.get(Settings.getServerDocumentsPath() + newParentFolder.getOSPath() + File.separator + src.getName());
+        Path srcPath = Settings.getServerDocumentsPath().resolve(src.getOSPath());
+        Path dstPath = Settings.getServerDocumentsPath().resolve(newParentFolder.getOSPath()).resolve(File.separator + src.getName());
 
         // Move src in the main files list
         Optional<Folder> srcParent = findParent(src, getMainFilesRoot());
@@ -476,7 +477,7 @@ public class FileManager {
             throw new RuntimeException("The generated name : " + dstPath.getFileName() + " could not be applied to " + src.getOSPath());
         }
 
-        src.setPath(Paths.get(newParentFolder.getPath() + File.separator + src.getName()));
+        src.setPath(newParentFolder.getPath().resolve(src.getName()));
         Files.move(srcPath, dstPath);
     }
 
@@ -485,7 +486,7 @@ public class FileManager {
         ArrayList<AbstractFile> copyChildren = new ArrayList<>();
         copyChildren.addAll(children);
         for (AbstractFile child : copyChildren) {
-            Path childDst = Paths.get(Settings.getServerDocumentsPath() + dst.getOSPath() + File.separator + child.getName());
+            Path childDst = Settings.getServerDocumentsPath().resolve(dst.getOSPath()).resolve(child.getName());
 
             if (child instanceof Document || !Files.exists(childDst)) {
                 safeMove(child, dst);
@@ -501,9 +502,9 @@ public class FileManager {
         }
         findParent(src, mainFilesRoot).get().getContents().remove(src);
 
-        Path fileToDelete = Paths.get(Settings.getServerDocumentsPath() + src.getOSPath());
+        Path fileToDelete = Settings.getServerDocumentsPath().resolve(src.getOSPath());
         // Fail-safe
-        if(!fileToDelete.toString().contains(DMSApplication.APP_TITLE))
+        if(!fileToDelete.toString().contains(Settings.APPLICATION_FOLDER_NAME))
             throw new IOException("Attempted to delete file that is not inside the DMS Application folder. File : " + fileToDelete);
 
         Files.delete(fileToDelete);
@@ -511,7 +512,7 @@ public class FileManager {
 
     public void renameFile(AbstractFile file, String newName) throws FileAlreadyExistsException {
         if (file.getName().equals(newName)) return;
-        Path oldPath = Paths.get(Settings.getServerDocumentsPath() + file.getOSPath().toString());
+        Path oldPath = Settings.getServerDocumentsPath().resolve(file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
 
