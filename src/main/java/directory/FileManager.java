@@ -456,7 +456,7 @@ public class FileManager {
     // Move a src and generates a new name for it if another src with the same name already exists in the dst src
     private void safeMove(AbstractFile src, Folder newParentFolder) throws IOException {
         Path srcPath = Settings.getServerDocumentsPath().resolve(src.getOSPath());
-        Path dstPath = Settings.getServerDocumentsPath().resolve(newParentFolder.getOSPath()).resolve(File.separator + src.getName());
+        Path dstPath = Settings.getServerDocumentsPath().resolve(newParentFolder.getOSPath()).resolve(src.getName());
 
         // Move src in the main files list
         Optional<Folder> srcParent = findParent(src, getMainFilesRoot());
