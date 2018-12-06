@@ -1,5 +1,7 @@
 package directory.plant;
 
+import javafx.scene.control.SingleSelectionModel;
+
 import java.util.Objects;
 
 public class Plant {
