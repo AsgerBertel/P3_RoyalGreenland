@@ -80,8 +80,4 @@ public class FileExplorer {
             return currentFolder.getOSPath().toString();
         }
     }
-
-    public Plant getViewingPlant() {
-        return viewingPlant;
-    }
 }
