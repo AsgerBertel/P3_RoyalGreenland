@@ -71,6 +71,7 @@ public class Settings {
 
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             fxmlLoader.setResources(bundle);
+            System.out.println(preferences.absolutePath());
 
             fxmlLoader.setLocation(Settings.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
 

@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -125,7 +126,7 @@ public class DMSApplication extends Application {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
-            alert.setContentText("Kontakt Udvikleren Mail: ds323@student.aau.dk");
+            alert.setContentText("Kontakt udvikleren\n Mail: ds323@student.aau.dk");
         }
     }
 
@@ -172,6 +173,8 @@ public class DMSApplication extends Application {
             try {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
+            } catch (FileNotFoundException e) {
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

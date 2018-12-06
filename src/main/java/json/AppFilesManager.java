@@ -7,7 +7,6 @@ import directory.files.AbstractFile;
 import directory.plant.PlantManager;
 import gui.AlertBuilder;
 import gui.log.LoggingErrorTools;
-import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -80,6 +79,10 @@ public class AppFilesManager {
         }
     }
 
+    /**
+     * Creates the server directories.
+     * @throws IOException if .mkdirs() fails.
+     */
     public static void createServerDirectories() throws IOException {
         Path serverRoot = Paths.get(Settings.getServerPath());
 
@@ -116,8 +119,14 @@ public class AppFilesManager {
         if(!Files.exists(serverErrorLogsPath))
             if(!serverErrorLogsPath.toFile().mkdirs())
                 throw new IOException("Could not create server Error Logs folder");
+
+        createServerAppFiles();
     }
 
+    /**
+     * Creates the local directories, throws IOException if .mkdirs fails
+     * @throws IOException if .mkdirs() fails.
+     */
     public static void createLocalDirectories() throws IOException{
         Path localRoot = Paths.get(Settings.getLocalPath());
 
@@ -134,5 +143,32 @@ public class AppFilesManager {
         if(!Files.exists(localAppFilesPath))
             if(!localAppFilesPath.toFile().mkdirs())
                 throw new IOException("Could not create local App Files folder");
+    }
+
+    /**
+     * Creates the server side AppFiles besides JSON files.
+     * @throws FileNotFoundException if working or published AppFiles folder is missing.
+     * @throws IOException if BufferedWriter fails to read from currentFileID.
+     */
+    private static void createServerAppFiles() throws IOException {
+        Path appFilesPath = Paths.get(Settings.getServerAppFilesPath());
+        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
+
+        if(!Files.exists(appFilesPath.getParent()))
+            throw new FileNotFoundException("Server Working Files folder could not be found");
+        if(!Files.exists(publishedAppFilesPath.getParent()))
+            throw new FileNotFoundException("Server Published Files folder could not be found");
+
+        Path currentFileIDPath = Paths.get(appFilesPath + File.separator + "currentFileID");
+
+        if(!Files.exists(currentFileIDPath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(currentFileIDPath)) {
+                writer.write("0");
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Could not write to currentFileID file");
+            }
+        }
+
     }
 }

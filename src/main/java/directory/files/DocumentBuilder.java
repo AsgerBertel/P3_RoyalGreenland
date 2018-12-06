@@ -62,7 +62,6 @@ public class DocumentBuilder {
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
-
         return currentID;
     }
 }

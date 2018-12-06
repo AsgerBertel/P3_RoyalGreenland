@@ -20,7 +20,7 @@ public class DirectoryCloner {
         mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
     }
 
-    public static void publishFiles() throws Exception { // todo fix exception
+    public static void publishFiles() throws IOException {
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
             return;
@@ -31,11 +31,19 @@ public class DirectoryCloner {
         // Remove files that are no longer up to date
         oldFiles = removeOutdatedFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()));
         // Add any files that have been deleted
-        oldFiles = addNewFiles(oldFiles, newFiles, Paths.get(Settings.getPublishedDocumentsPath()), Paths.get(Settings.getServerDocumentsPath()));
+        oldFiles = addNewFiles(
+                oldFiles,
+                newFiles,
+                Paths.get(Settings.getPublishedDocumentsPath()),
+                Paths.get(Settings.getServerDocumentsPath()));
 
         // Replace app files
-        replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME), Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(
+                Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME),
+                Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(
+                Paths.get(Settings.getServerAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME),
+                Paths.get(Settings.getPublishedAppFilesPath() + AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     // for testing. Recursively prints tree
@@ -55,7 +63,10 @@ public class DirectoryCloner {
         }
     }
 
-    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws Exception {
+    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles,
+                                                              ArrayList<AbstractFile> newFiles,
+                                                              Path oldFilesRoot)
+            throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
 
@@ -98,11 +109,12 @@ public class DirectoryCloner {
 
                 if (newFolder.isPresent() && newFolder.get() instanceof Folder) {
                     Folder oldFolder = ((Folder) oldFile);
-                    ArrayList<AbstractFile> newContents = removeOutdatedFiles(((Folder) oldFile).getContents(), ((Folder) newFolder.get()).getContents(), oldFilesRoot);
+                    ArrayList<AbstractFile> newContents = removeOutdatedFiles(
+                            ((Folder) oldFile).getContents(),
+                            ((Folder) newFolder.get()).getContents(),
+                            oldFilesRoot);
                     oldFolder.getContents().clear();
                     oldFolder.getContents().addAll(newContents);
-                } else {
-                    throw new Exception("Could not find matching folder in newFiles");
                 }
             }
         }
@@ -110,7 +122,11 @@ public class DirectoryCloner {
     }
 
 
-    public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot, Path newFileRoot) throws IOException {
+    public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles,
+                                                      ArrayList<AbstractFile> newFiles,
+                                                      Path oldFilesRoot,
+                                                      Path newFileRoot)
+            throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
 
@@ -132,14 +148,16 @@ public class DirectoryCloner {
             if (oldFile instanceof Folder) {
                 Folder oldFolder = (Folder) oldFile;
 
-                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFolder.getOSPath()); // todo would this cause exception if they renamed a file to the name a folder had before? - Magnus
+                Optional<AbstractFile> newFolder = getFileByPath(newFiles, oldFolder.getOSPath());
 
                 if (newFolder.isPresent() && newFolder.get() instanceof Folder) {
-                    ArrayList<AbstractFile> newChildren = addNewFiles(oldFolder.getContents(), ((Folder) newFolder.get()).getContents(), oldFilesRoot, newFileRoot);
+                    ArrayList<AbstractFile> newChildren = addNewFiles(
+                            oldFolder.getContents(),
+                            ((Folder) newFolder.get()).getContents(),
+                            oldFilesRoot,
+                            newFileRoot);
                     oldFolder.getContents().clear();
                     oldFolder.getContents().addAll(newChildren);
-                } else {
-                    // todo throw exception
                 }
             }
         }
@@ -154,7 +172,6 @@ public class DirectoryCloner {
                     Files.delete(publishPath);
                 }
             }
-
 
             if (addedFile instanceof Folder) {
                 copyFolder(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
