@@ -1,12 +1,11 @@
 package gui;
 
 import app.ApplicationMode;
+import directory.DirectoryCloner;
+import directory.FileUpdater;
 import directory.Settings;
-import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,15 +13,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import static gui.TabLoader.FILE_ADMINISTRATION;
+import static gui.Tab.FILE_ADMINISTRATION;
 
 public class DMSApplication extends Application {
 
@@ -48,6 +45,7 @@ public class DMSApplication extends Application {
     private static ApplicationMode applicationMode;
 
     private Settings settings;
+    private Tab currentTab;
 
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication() {
@@ -70,9 +68,9 @@ public class DMSApplication extends Application {
         primaryStage.show();
 
         if (applicationMode.equals(ApplicationMode.ADMIN)) {
-            switchWindow(FILE_ADMINISTRATION);
+            switchTab(FILE_ADMINISTRATION);
         } else {
-            switchWindow(TabLoader.FILE_OVERVIEW);
+            switchTab(Tab.FILE_OVERVIEW);
         }
     }
 
@@ -104,7 +102,7 @@ public class DMSApplication extends Application {
     }
 
     // Shows the given part of the program
-    public void switchWindow(TabLoader programPart) {
+    public void switchTab(Tab newTab) {
         // Remove all currently added elements except the main menu
         while (root.getChildren().size() > 1)
             root.getChildren().remove(1);
@@ -112,13 +110,13 @@ public class DMSApplication extends Application {
         Pane newPane;
 
         try {
-            newPane = programPart.getPane(this, getLanguage());
-
+            newPane = newTab.getPane(this, getLanguage());
             // Make sure the new pane scales to the rest of the window
             newPane.prefHeightProperty().bind(root.heightProperty());
             newPane.prefWidthProperty().bind(root.widthProperty());
 
             root.getChildren().add(newPane);
+            currentTab = newTab;
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -126,6 +124,10 @@ public class DMSApplication extends Application {
             alert.setTitle("Fejl");
             alert.setContentText("Kontakt Udvikleren Mail: ds323@student.aau.dk");
         }
+    }
+
+    public Tab getCurrentTab(){
+        return currentTab;
     }
 
     public void restartApp() throws Exception {
@@ -160,12 +162,14 @@ public class DMSApplication extends Application {
             try {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
+                DirectoryCloner.updateLocalFiles();
+                new FileUpdater(this).start();
             } catch (IOException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Fejl");
                 alert.setHeaderText(null);
-                alert.setContentText("Vælg din lokale sti igen");
+                alert.setContentText("Vælg din lokale sti igen"); // todo sprog
             }
         } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
             try {
@@ -176,8 +180,7 @@ public class DMSApplication extends Application {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Fejl");
                 alert.setHeaderText(null);
-                alert.setContentText("Chek om du har forbindelse til serveren");
-
+                alert.setContentText("Chek om du har forbindelse til serveren"); // todo sprog
             }
         }
     }

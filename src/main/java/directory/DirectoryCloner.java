@@ -29,7 +29,7 @@ public class DirectoryCloner {
         replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
-    public static void updateLocalFiles() throws Exception {
+    public static void updateLocalFiles() throws IOException {
         if(!isUpdateAvailable())
             return;
 
@@ -66,7 +66,7 @@ public class DirectoryCloner {
 
     /** Updates the oldFiles list to match the updatedFiles list and updates the corresponding files on the file system */
     private static void applyUpdate(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> updatedFiles,
-                                    Path oldFilesPath, Path updatedFilesPath) throws Exception {
+                                    Path oldFilesPath, Path updatedFilesPath) throws IOException {
         // Remove files that are no longer up to date
         oldFiles = removeOutdatedFiles(oldFiles, updatedFiles, oldFilesPath);
         // Add any files that have been deleted
@@ -121,9 +121,9 @@ public class DirectoryCloner {
 
     /**
      * Compares oldFiles to newFiles and removes files from oldFiles that have been updated or deleted.
-     * @return the intersection of oldFiles and newFiles
+     * @return the files that does not need to be updated (the intersection of oldFiles and newFiles)
      */
-    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws Exception {
+    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>(oldFiles);
 
         ArrayList<AbstractFile> filesToDelete = findOutdatedFiles(oldFiles, newFiles);
@@ -142,14 +142,12 @@ public class DirectoryCloner {
                     oldFolder.getContents().clear();
                     oldFolder.getContents().addAll(newContents);
                 } else {
-                    throw new Exception("Could not find matching folder in newFiles");
+                    throw new IOException("Could not find matching folder in newFiles");
                 }
             }
         }
         return modifiedOldFiles;
     }
-
-
 
     public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot, Path newFileRoot) throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();

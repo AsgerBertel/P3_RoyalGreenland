@@ -2,7 +2,7 @@ package gui.menu;
 
 import directory.Settings;
 import gui.DMSApplication;
-import gui.TabLoader;
+import gui.Tab;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -67,32 +67,32 @@ public class MainMenuController {
     }
 
     public void administrateDocuments(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.FILE_ADMINISTRATION);
+        dmsApplication.switchTab(Tab.FILE_ADMINISTRATION);
         administrateDocumentsButton.setSelected(true);
     }
 
     public void viewDocuments(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.FILE_OVERVIEW);
+        dmsApplication.switchTab(Tab.FILE_OVERVIEW);
         viewDocumentsButton.setSelected(true);
     }
 
     public void administratePlants(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.PLANT_ADMINISTRATION);
+        dmsApplication.switchTab(Tab.PLANT_ADMINISTRATION);
         administratePlantsButton.setSelected(true);
     }
 
     public void deletedFiles(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.DELETED_FILES);
+        dmsApplication.switchTab(Tab.DELETED_FILES);
         deletedFilesButton.setSelected(true);
     }
 
     public void log(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.LOG);
+        dmsApplication.switchTab(Tab.LOG);
         logButton.setSelected(true);
     }
 
     public void settings(ActionEvent actionEvent) {
-        dmsApplication.switchWindow(TabLoader.SETTINGS);
+        dmsApplication.switchTab(Tab.SETTINGS);
         settingsButton.setSelected(true);
     }
 
