@@ -82,6 +82,7 @@ public class FileOverviewController implements TabController {
         allPlants.addAll(PlantManager.getInstance().getAllPlants());
         plantList = FXCollections.observableList(allPlants);
         drdPlant.setItems(plantList);
+
     }
 
     private void reloadFileTree() {
@@ -93,8 +94,9 @@ public class FileOverviewController implements TabController {
     void onPlantSelected(ActionEvent event) {
         Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
         // Create fileExplorer that matches the accessModifier of the selected plant
+
         fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
-        if(selectedPlant.equals(allPlant)){
+        if(selectedPlant != null && selectedPlant.equals(allPlant)){
             fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
             rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
             fileTreeView.setRoot(rootItem);
