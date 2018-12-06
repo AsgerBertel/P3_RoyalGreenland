@@ -24,4 +24,9 @@ class FileExplorerTest {
     void navigateBack() {
         
     }
+
+    @Test
+    void getCurrentPath() {
+
+    }
 }
