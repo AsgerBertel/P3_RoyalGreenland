@@ -99,6 +99,7 @@ public class PlantAdministrationController implements TabController {
         plantVBox.getChildren().addAll(plantElements);
 
         plantCountText.setText("(" + plantElements.size() + ")");
+
     }
 
     //Select plant function

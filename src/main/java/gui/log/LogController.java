@@ -59,7 +59,7 @@ public class LogController implements TabController {
         event.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("EventString")); // Calls getEventString() in the LogEvent
         user.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("User")); // Calls getUser() in the LogEvent
         time.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("Time")); // Calls getEventString() in the LogEvent
-        
+
         listOfEvents = lt.getAllEvents();
         tableView.getItems().setAll(listOfEvents);
         sortedByTime = false;

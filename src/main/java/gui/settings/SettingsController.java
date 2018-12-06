@@ -74,7 +74,7 @@ public class SettingsController implements TabController {
     public void onBrowseLocalPath() {
         File serverFolder = chooseDirectoryPrompt(DMSApplication.getMessage("Settings.PopUp.ChooseLocalPath"), Paths.get(localPathTextField.getText()).toFile());
         if (serverFolder != null) {
-            serverPathTextField.setText(serverFolder.getPath());
+            localPathTextField.setText(serverFolder.getPath());
             onLocalPathChange();
         }
     }

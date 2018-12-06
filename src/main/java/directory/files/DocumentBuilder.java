@@ -43,7 +43,7 @@ public class DocumentBuilder {
      * @return a new ID for the new file.
      */
     public int readAndUpdateCurrentID() {
-        int currentID = -1;
+        int currentID = 0;
 
         if(!Files.exists(currentIDPath)){
             saveCurrentID(0);

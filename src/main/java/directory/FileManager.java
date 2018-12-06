@@ -5,7 +5,6 @@ import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import gui.AlertBuilder;
-import gui.DMSApplication;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,6 +67,7 @@ public class FileManager {
         if (!Files.isDirectory(root)) {
             throw new IllegalArgumentException("Root file must be a directory");
         }
+
         return new Folder("", loadChildren(root, root));
     }
 
@@ -104,6 +103,7 @@ public class FileManager {
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
         }
+
         return children;
     }
 
