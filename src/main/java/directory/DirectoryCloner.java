@@ -15,7 +15,12 @@ import java.util.Optional;
 
 public class DirectoryCloner {
 
-    public static void publishFiles() throws Exception { // todo fix exception
+    public static void main(String[] args) throws Exception {
+        mergeFolders(Paths.get("C:\\Users\\Magnus\\Desktop\\Test\\MergeFolder"),Paths.get("C:\\Users\\Magnus\\Desktop\\MergeFolder"), true);
+    }
+
+    public static void publishFiles() throws Exception {
+
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
             return;

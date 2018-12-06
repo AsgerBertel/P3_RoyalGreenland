@@ -12,6 +12,7 @@ import gui.log.LoggingErrorTools;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class AppFilesManager {
@@ -161,15 +162,15 @@ public class AppFilesManager {
      * @throws IOException if BufferedWriter fails to read from currentFileID.
      */
     private static void createServerAppFiles() throws IOException {
-        Path appFilesPath = Paths.get(Settings.getServerAppFilesPath());
-        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
+        Path appFilesPath = Settings.getServerAppFilesPath();
+        Path publishedAppFilesPath = Settings.getPublishedAppFilesPath();
 
         if(!Files.exists(appFilesPath.getParent()))
             throw new FileNotFoundException("Server Working Files folder could not be found");
         if(!Files.exists(publishedAppFilesPath.getParent()))
             throw new FileNotFoundException("Server Published Files folder could not be found");
 
-        Path currentFileIDPath = Paths.get(appFilesPath + File.separator + "currentFileID");
+        Path currentFileIDPath = appFilesPath.resolve("currentFileID");
 
         if(!Files.exists(currentFileIDPath)) {
             try (BufferedWriter writer = Files.newBufferedWriter(currentFileIDPath)) {

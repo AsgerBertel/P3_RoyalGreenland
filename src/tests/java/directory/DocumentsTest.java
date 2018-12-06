@@ -2,6 +2,7 @@ package directory;
 
 import app.ApplicationMode;
 import gui.DMSApplication;
+import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -15,12 +16,15 @@ public class DocumentsTest {
 
     @BeforeAll @SuppressWarnings("Duplicates")
     static final void setupApplication() throws Exception {
+        TestUtil.resetTestFiles();
+
         Settings.loadSettings(ApplicationMode.ADMIN);
         originalPath = Settings.getServerDocumentsPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
 
-        TestUtil.resetTestFiles();
-        ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
+
+        AppFilesManager.createServerDirectories();
+        AppFilesManager.createLocalDirectories();
     }
 
     @AfterAll

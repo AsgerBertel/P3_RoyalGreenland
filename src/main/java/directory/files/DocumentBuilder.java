@@ -65,6 +65,15 @@ public class DocumentBuilder {
     }
 
     private void saveCurrentID(int currentID){
+
+        if(!Files.exists(currentIDPath)) {
+            try {
+                currentIDPath.toFile().createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try (BufferedWriter writer = Files.newBufferedWriter(currentIDPath)) {
             String ID = "" + (currentID + 1);
             writer.write(ID);
@@ -73,6 +82,5 @@ public class DocumentBuilder {
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
-        return currentID;
     }
 }

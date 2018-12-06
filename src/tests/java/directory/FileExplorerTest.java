@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FileExplorerTest {
+class FileExplorerTest extends DocumentsTest{
 
     FileExplorer fe;
     Document docInAM;
@@ -50,8 +50,9 @@ class FileExplorerTest {
 
         assertTrue(shownFiles.contains(docInAM));
 
-        System.out.println(shownFiles.get(0).toString() + " and " + shownFiles.get(1).toString());
+        System.out.println(shownFiles.get(0).toString()); // + " and " + shownFiles.get(1).toString()); Du har kun tilføjet 1 fil til accessmodifieren (så get(1) findes ikke)
 
+        System.out.println(docInAM.getID());
         System.out.println(docFalse.getID());
 
         assertEquals(1, shownFiles.size());
