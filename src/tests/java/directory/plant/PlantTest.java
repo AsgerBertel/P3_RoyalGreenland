@@ -1,12 +1,25 @@
 package directory.plant;
 
+import app.ApplicationMode;
+import directory.Settings;
+import directory.files.DocumentBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlantTest {
-    private Plant plant = new Plant(1007, "Nuuk", new AccessModifier());
-    private Plant plant2 = plant;
+    private Plant plant;
+    private Plant plant2;
+
+    //todo does sum weird shit with exceptions, but they pass
+
+    @BeforeEach
+    void setSettings(){
+        Settings.loadSettings(ApplicationMode.ADMIN);
+        plant = new Plant(1007, "Nuuk", new AccessModifier());
+        plant2 = plant;
+    }
 
     @Test
     void getAccessModifier() {
@@ -35,5 +48,12 @@ class PlantTest {
     void setName() {
         plant.setName("Sisimiut");
         assertEquals("Sisimiut", plant.getName());
+    }
+
+    @Test
+    void toStringTest() {
+        String str = "1007 - Nuuk";
+
+        assertEquals(str, plant.toString());
     }
 }
