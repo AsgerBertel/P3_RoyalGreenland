@@ -1,7 +1,6 @@
 package directory;
 
 import directory.files.Document;
-import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FileManagerTest extends DocumentsTest{
+class FileManagerTest extends FileTester {
     private File resourcesDirectory = new File("src/tests/resTest");
     private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
     private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");

@@ -1,20 +1,19 @@
 package directory.files;
 
 import app.ApplicationMode;
-import directory.DocumentsTest;
+import directory.FileTester;
 import directory.Settings;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FolderTest extends DocumentsTest {
+class FolderTest extends FileTester {
     //private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
     //private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
     private Path pathToTestFolder = Paths.get("03_URENSET STENBIDERROGN");

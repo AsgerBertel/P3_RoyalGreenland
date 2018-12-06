@@ -1,14 +1,11 @@
 package directory.files;
 
 import app.ApplicationMode;
-import directory.DocumentsTest;
+import directory.FileTester;
 import directory.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.TestUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -16,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DocumentTest extends DocumentsTest {
+class DocumentTest extends FileTester {
     //private File resourcesDirectory = new File(TestUtil.getTestDocuments().toString());
     private Path pathToTestFileExt = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     private Document docExt;

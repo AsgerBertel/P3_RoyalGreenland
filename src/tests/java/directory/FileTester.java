@@ -10,7 +10,7 @@ import util.TestUtil;
 
 import java.nio.file.Path;
 
-public class DocumentsTest {
+public class FileTester {
 
     private static Path originalPath;
 
