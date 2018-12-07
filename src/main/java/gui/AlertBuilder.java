@@ -2,9 +2,12 @@ package gui;
 
 import directory.Settings;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class AlertBuilder
 {
@@ -89,6 +92,16 @@ public class AlertBuilder
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(context);
+    }
+    public static Alert deletePlantPopup(){
+        buildAlert(
+                Alert.AlertType.CONFIRMATION,
+                DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"),
+                DMSApplication.getMessage("PlantAdmin.Popup.Info"),
+                DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
+        return alert;
     }
 
 }
