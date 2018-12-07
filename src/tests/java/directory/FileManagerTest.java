@@ -1,6 +1,7 @@
 package directory;
 
-import directory.files.Document;
+import app.ApplicationMode;
+import directory.files.AbstractFile;
 import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,10 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest extends FileTester {
+
     private File resourcesDirectory = new File("src/tests/resTest");
     private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
     private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
@@ -25,95 +28,107 @@ class FileManagerTest extends FileTester {
     private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "deleteTest");
     private Path mainTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "RLFiles");
 
+    Path folderPath = Paths.get("02_VINTERTØRRET FISK");
+    Folder folder1;
+
     @BeforeEach
-    void initEach() throws IOException {
-        Settings.setServerPath(mainTestDir.resolve("Server"));
+    void setSettings(){
+
+        Settings.loadSettings(ApplicationMode.ADMIN);
+        folder1 = new Folder(folderPath.toString());
+
+        /*Settings.setServerPath(mainTestDir.resolve("Server"));
         Settings.setLocalPath(mainTestDir.resolve("Local"));
         if (Files.exists(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"))
                 && Files.exists(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
             Files.delete(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"));
             Files.delete(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"));
         }
-        System.out.println(Settings.toString2());
+        System.out.println(Settings.toString2());*/
     }
-
-    //
-   /* @Test
-    void uploadFile() throws IOException {
-        FileManager.getTestInstance().setPathToJson(pathToJsonTest.toString());
-        FileManager.getTestInstance().uploadFile(toTestFile, pathToOnlineFileTestFolder);
-
-        assertTrue(Files.exists( Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
-
-        FileManager.getTestInstance().deleteFile(DocumentBuilder.getInstance().createDocument(Paths.get(pathToOnlineFileTestFolder.toString() + File.separator + "testFile1.pdf")));
-
-        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
-
-        Files.delete(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf"));
-
-        assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "testFile1.pdf")));
-    }*/
-
-/*    @Test
-    void deletePlant() {
-        Folder folder = FileManager.getTestInstance().deletePlant(pathToTestDir, "TestFolder");
-        assertEquals("TestFolder", folder.getName());
-
-        try {
-            Files.delete(Paths.get(pathToTestDir + File.separator + "TestFolder"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    private void deleteDocument() {
-        Folder folder1 = (Folder) FileManager.getInstance().getMainFiles().get(1);
-        Folder folder2 = (Folder) folder1.getContents().get(0);
-        Document document = (Document) folder2.getContents().get(0);
-
-        FileManager.getInstance().deleteFile(document);
-
-        //assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
-    }
-
-    private void restoreDocument() throws IOException {
-        Folder folder1 = (Folder) FileManager.getInstance().getArchiveFiles().get(0);
-        Folder folder2 = (Folder) folder1.getContents().get(0);
-        Document doc = (Document) folder2.getContents().get(0);
-
-        FileManager.getInstance().restoreFile(doc);
-
-        //assertTrue(Files.exists(toTestFile2));
-    }
-/*
-    private void deleteDocument2() throws IOException {
-        Document doc = DocumentBuilder.getInstance().createDocument(toTestFile2);
-
-        FileManager.getTestInstance().deleteFile(doc);
-
-        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + doc.getName())));
-    }*/
 
     @Test
-    void inOrder() throws IOException {
-        deleteDocument();
-        restoreDocument();
+    void getMainFiles() {
+        ArrayList<AbstractFile> al;
+
+        al = FileManager.getInstance().getMainFiles();
+
+        assertEquals(folder1.getOSPath(), al.get(0).getOSPath());
+
     }
 
-  /*  @Test
-    void restoreFolder () throws IOException {
-        Folder folder = FileManager.getTestInstance().deletePlant(Paths.get(pathToTestDir.toString() + File.separator + "restoreFolderTest"), "");
+    @Test
+    void getArchiveFiles() {
 
-        FileManager.getTestInstance().deleteFile(folder);
+        try {
+            Files.move(Paths.get(Settings.getServerDocumentsPath().toString() + File.separator + folder1.getOSPath().toString()),
+                    Paths.get(Settings.getServerArchivePath().toString() + File.separator + folder1.getOSPath().toString()));
+        } catch (IOException e) {
+            System.out.println("could not move");
+            e.printStackTrace();
+        }
 
-        assertFalse(Files.exists(folder.getPath()));
-        assertTrue(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+        ArrayList<AbstractFile> al;
 
-        FileManager.getTestInstance().restoreFile(folder);
+        al = FileManager.getInstance().getArchiveFiles();
 
-        assertTrue(Files.exists(folder.getPath()));
-        assertFalse(Files.exists(Paths.get(archivePath.toString() + File.separator + "restoreFolderTest")));
+        assertEquals(al.get(0).getOSPath(), folder1.getOSPath());
 
-    }*/
+    }
 
+    @Test
+    void uploadFile() {
+    }
+
+    @Test
+    void uploadFile1() {
+    }
+
+    @Test
+    void createFolder() {
+    }
+
+    @Test
+    void createFolder1() {
+    }
+
+    @Test
+    void deleteFile() {
+    }
+
+    @Test
+    void generateUniqueFileName() {
+    }
+
+    @Test
+    void restoreFile() {
+    }
+
+    @Test
+    void findParent() {
+    }
+
+    @Test
+    void save() {
+    }
+
+    @Test
+    void getMainFilesRoot() {
+    }
+
+    @Test
+    void getArchiveRoot() {
+    }
+
+    @Test
+    void findInMainFiles() {
+    }
+
+    @Test
+    void moveFile() {
+    }
+
+    @Test
+    void renameFile() {
+    }
 }

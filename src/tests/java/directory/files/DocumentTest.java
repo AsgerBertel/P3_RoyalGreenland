@@ -52,5 +52,4 @@ class DocumentTest extends FileTester {
         assertEquals(ldt.format(DATE_TIME_FORMATTER), docExt.getLastModified());
     }
 
-
 }

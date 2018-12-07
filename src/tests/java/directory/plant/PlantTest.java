@@ -1,6 +1,7 @@
 package directory.plant;
 
 import app.ApplicationMode;
+import directory.FileTester;
 import directory.Settings;
 import directory.files.DocumentBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,11 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlantTest {
+class PlantTest extends FileTester {
     private Plant plant;
     private Plant plant2;
-
-    //todo does sum weird shit with exceptions, but they pass
 
     @BeforeEach
     void setSettings(){

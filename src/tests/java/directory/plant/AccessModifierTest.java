@@ -1,11 +1,12 @@
 package directory.plant;
 
+import directory.FileTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AccessModifierTest {
+class AccessModifierTest extends FileTester {
     private AccessModifier am;
     private Plant plant;
 
@@ -13,7 +14,7 @@ class AccessModifierTest {
     @BeforeEach
     void initEach(){
         am = new AccessModifier();
-        plant = new Plant(1000,"Fabrik", am);;
+        plant = new Plant(1000,"Fabrik", am);
         plant.getAccessModifier().addDocument(100);
         plant.getAccessModifier().addDocument(105);
     }

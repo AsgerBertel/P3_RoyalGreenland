@@ -38,7 +38,7 @@ public abstract class GUITest extends ApplicationTest {
     }
 
     @BeforeEach
-    static void setupTest() throws IOException {
+    void setupTest() throws IOException {
         TestUtil.resetTestFiles();
     }
 

@@ -1,18 +1,5 @@
 package directory.files;
 
-import com.sun.nio.file.SensitivityWatchEventModifier;
-import directory.FileManager;
-import gui.log.LogEvent;
-import gui.log.LogEventType;
-import gui.log.LoggingTools;
-import json.AppFilesManager;
-
-import javax.naming.InvalidNameException;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-
-import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
