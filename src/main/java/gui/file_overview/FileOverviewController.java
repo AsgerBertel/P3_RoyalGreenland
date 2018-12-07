@@ -229,7 +229,6 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-
         AbstractFile file = newValue.getValue();
         if (file instanceof Document) {
             Document doc = (Document) file;

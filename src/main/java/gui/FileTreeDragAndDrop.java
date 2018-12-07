@@ -94,6 +94,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             }
         });
 
+
         cell.setOnDragDone((
                 DragEvent event) ->
 

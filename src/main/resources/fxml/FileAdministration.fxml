@@ -48,6 +48,7 @@
         </HBox>
         <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
                   prefHeight="${leftSideVbox.height}"/>
+
     </VBox>
 
     <!-- Splitter -->
