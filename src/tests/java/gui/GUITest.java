@@ -16,9 +16,11 @@ import java.nio.file.Path;
 public abstract class GUITest extends ApplicationTest {
 
     private static Path originalPath;
+    protected DMSApplication dmsApplication;
 
     public void start(Stage stage) throws Exception {
         super.start(stage);
+        this.dmsApplication = DMSApplication.getDMSApplication();
     }
 
     // Find a node by its' fx:id

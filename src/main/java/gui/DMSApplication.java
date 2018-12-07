@@ -48,12 +48,14 @@ public class DMSApplication extends Application {
     private Settings settings;
     private Tab currentTab;
 
+    private static DMSApplication dmsApplication;
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication() {
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
@@ -186,6 +188,11 @@ public class DMSApplication extends Application {
                 alert.setContentText("Chek om du har forbindelse til serveren"); // todo sprog
             }
         }
+    }
+
+
+    public static DMSApplication getDMSApplication(){
+        return dmsApplication;
     }
 
 }
