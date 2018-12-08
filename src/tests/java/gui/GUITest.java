@@ -37,11 +37,12 @@ public abstract class GUITest extends ApplicationTest {
         Settings.setServerPath(TestUtil.getTestDocuments());
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
+        TestUtil.resetTestFiles();
     }
 
     @BeforeEach
     void setupTest() throws IOException {
-        TestUtil.resetTestFiles();
+
     }
 
     @AfterAll
