@@ -3,6 +3,7 @@ package gui.plant_administration;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
@@ -21,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import javax.xml.transform.Source;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -296,22 +298,17 @@ public class PlantAdministrationController implements TabController {
 
     //Making Alert deletePopUp for delete plant function.
     public void deletePopUp() {
-        Alert popup = new Alert(Alert.AlertType.CONFIRMATION, DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
-        btnDeletePressedPopup(popup);
+        btnDeletePressedPopup();
     }
 
     //Popup function to determine action when pressed "OK" or "Cancel".
     //Pressing yes, deletes the plant from the PlantManager and the Arraylist. Pressing no closes the Alert.
-    public PlantElement btnDeletePressedPopup(Alert popup) {
+    public PlantElement btnDeletePressedPopup() {
         if (selectedPlantElement != null) {
-            popup.setTitle(DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"));
-            popup.setHeaderText(DMSApplication.getMessage("PlantAdmin.Popup.Info"));
-            popup.setContentText(DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
-            ((Button) popup.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
-            ((Button) popup.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
-            Optional<ButtonType> result = popup.showAndWait();
+            Alert deletePopup = AlertBuilder.deletePlantPopup();
+            Optional<ButtonType> result = deletePopup.showAndWait();
             if (!result.isPresent())
-                popup.close();
+                deletePopup.close();
             if (result.get() == ButtonType.OK) {
                 plantElements.remove(selectedPlantElement);
                 PlantManager.getInstance().deletePlant(selectedPlantElement.getPlant().getId());
@@ -324,8 +321,7 @@ public class PlantAdministrationController implements TabController {
                 return selectedPlantElement;
             }
             if (result.get() == ButtonType.CANCEL)
-                popup.close();
-
+                deletePopup.close();
         }
         return null;
     }
