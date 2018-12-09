@@ -33,7 +33,7 @@ public abstract class GUITest extends ApplicationTest {
     static final void setupApplication() throws Exception {
         Settings.loadSettings(ApplicationMode.ADMIN);
 
-        originalPath = Settings.getServerDocumentsPath();
+        originalPath = Settings.getServerPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
