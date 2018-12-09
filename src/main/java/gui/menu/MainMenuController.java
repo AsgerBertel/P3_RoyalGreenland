@@ -96,7 +96,7 @@ public class MainMenuController {
         settingsButton.setSelected(true);
     }
 
-    public void changeToDanish(Event actionEvent) throws Exception{
+    public void danishButton(Event actionEvent) throws Exception{
         danishButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.DK_LOCALE);
@@ -105,7 +105,7 @@ public class MainMenuController {
 
     }
 
-    public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
+    public void greenlandicButton(ActionEvent actionEvent) throws Exception{
         greenlandicButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.GL_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);

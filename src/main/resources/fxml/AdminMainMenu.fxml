@@ -6,9 +6,10 @@
 <?import javafx.scene.layout.HBox?>
 
 <?import javafx.scene.control.ToggleButton?>
-<BorderPane styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
+<?import javafx.scene.layout.FlowPane?>
+<BorderPane minHeight="${mainMenuFlowPane.height}" fx:id="menuBorderPane" styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
    <left>
-      <HBox>
+      <FlowPane fx:id="mainMenuFlowPane" prefWidth="${menuBorderPane.width - 85}" maxHeight="44">
          <children>
              <ToggleButton styleClass="menuButton" fx:id="administrateDocumentsButton" text="%MainMenu.AdminDoc" onAction="#administrateDocuments">
                  <graphic>
@@ -60,13 +61,13 @@
              </ToggleButton>
 
          </children>
-      </HBox>
+      </FlowPane>
    </left>
 
    <right>
-      <HBox>
+      <HBox minWidth="60">
          <children>
-            <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#changeToDanish">
+            <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#danishButton">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/danish.png"  />
@@ -74,7 +75,7 @@
                 </graphic>
             </ToggleButton>
 
-            <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#changeToGreenlandic">
+            <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#greenlandicButton">
                 <graphic >
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/greenlandic.png"/>
