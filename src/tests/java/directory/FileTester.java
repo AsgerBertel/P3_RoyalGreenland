@@ -19,9 +19,8 @@ public class FileTester {
         TestUtil.resetTestFiles();
 
         Settings.loadSettings(ApplicationMode.ADMIN);
-        originalPath = Settings.getServerDocumentsPath();
+        originalPath = Settings.getServerPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
-
 
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();

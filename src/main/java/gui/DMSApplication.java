@@ -141,6 +141,14 @@ public class DMSApplication extends Application {
         locale = newLocale;
         Settings.setLanguage(newLocale);
         messages = ResourceBundle.getBundle("Messages", newLocale);
+        try {
+            restartApp();
+        } catch (Exception e) {
+            e.printStackTrace();
+            String msgKey = "Exception.FailedRestart.";
+            AlertBuilder.customErrorPopUp(getMessage(msgKey + "Title"),
+                    getMessage(msgKey + "Header"), getMessage(msgKey + "Context"));
+        }
     }
 
     public static Locale getLanguage() {

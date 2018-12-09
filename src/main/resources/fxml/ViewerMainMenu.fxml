@@ -33,7 +33,7 @@
     <right>
         <HBox>
             <children>
-                <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#changeToDanish">
+                <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#danishButton">
                     <graphic>
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/danish.png"  />
@@ -41,7 +41,7 @@
                     </graphic>
                 </ToggleButton>
 
-                <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#changeToGreenlandic">
+                <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#greenlandicButton">
                     <graphic >
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/greenlandic.png"/>

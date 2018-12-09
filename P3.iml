@@ -12,7 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/tests/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/tests/resTest" type="java-test-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="10" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
@@ -105,5 +105,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="bin" level="project" />
   </component>
 </module>
