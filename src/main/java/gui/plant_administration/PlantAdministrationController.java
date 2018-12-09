@@ -22,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import javax.xml.transform.Source;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -67,6 +66,9 @@ public class PlantAdministrationController implements TabController {
     private Button btnDeletePlant;
 
     @FXML
+    private Button btnEditPlantSidebar;
+
+    @FXML
     private Text plantCountText;
 
     private DMSApplication dmsApplication;
@@ -80,7 +82,6 @@ public class PlantAdministrationController implements TabController {
         //Setting standard
         createPane.toFront();
         createPane.setVisible(true);
-        btnDeletePlant.setDisable(true);
     }
 
 
@@ -100,6 +101,9 @@ public class PlantAdministrationController implements TabController {
         }
         plantVBox.getChildren().addAll(plantElements);
 
+        btnDeletePlant.setDisable(true);
+        btnEditPlantSidebar.setDisable(true);
+
         plantCountText.setText("(" + plantElements.size() + ")");
 
     }
@@ -111,7 +115,7 @@ public class PlantAdministrationController implements TabController {
         }
         plantElement.setSelected(true);
         btnDeletePlant.setDisable(false);
-        btnDeletePlant.setStyle("-fx-opacity: 1");
+        btnEditPlantSidebar.setDisable(false);
 
         selectedPlantElement = plantElement;
     }
@@ -154,12 +158,12 @@ public class PlantAdministrationController implements TabController {
     }
 
     @FXML
-    void btnCreatePlant(ActionEvent event) {
+    void onCreatePlant(ActionEvent event) {
         createPlant();
     }
 
     @FXML
-    void btnEditPlant(ActionEvent event) {
+    void onEditSave(ActionEvent event) {
         savePlantEdit();
     }
 
@@ -314,7 +318,6 @@ public class PlantAdministrationController implements TabController {
                 PlantManager.getInstance().deletePlant(selectedPlantElement.getPlant().getId());
                 plantVBox.getChildren().remove(selectedPlantElement);
                 btnDeletePlant.setDisable(true);
-                btnDeletePlant.setStyle("-fx-opacity: 0.5");
                 plantCountText.setText("(" + plantElements.size() + ")");
 
                 LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
