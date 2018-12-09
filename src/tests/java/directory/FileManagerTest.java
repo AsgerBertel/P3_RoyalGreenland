@@ -3,12 +3,14 @@ package directory;
 import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.files.Document;
+import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +35,8 @@ class FileManagerTest extends FileTester {
     Folder folder1;
     Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     Document doc;
+    Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
+    Document doc2;
 
     @BeforeEach
     void setSettings(){
@@ -40,15 +44,7 @@ class FileManagerTest extends FileTester {
         Settings.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
-
-        /*Settings.setServerPath(mainTestDir.resolve("Server"));
-        Settings.setLocalPath(mainTestDir.resolve("Local"));
-        if (Files.exists(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"))
-                && Files.exists(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"))) {
-            Files.delete(Paths.get(Settings.getServerAppFilesPath() + "allFiles.JSON"));
-            Files.delete(Paths.get(Settings.getServerAppFilesPath() + "currentFileID"));
-        }
-        System.out.println(Settings.toString2());*/
+        doc2 = (Document) findInMainFiles(doc2Path);
     }
 
     @Test
@@ -103,13 +99,38 @@ class FileManagerTest extends FileTester {
 
     @Test
     void deleteFile() {
-    }
 
-    /*@Test
-    void generateUniqueFileName() {
+        Document movedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()));
+
+        assertTrue(FileManager.getInstance().getMainFiles().contains(movedDoc));
+        assertTrue(FileManager.getInstance().getMainFiles().contains(folder1));
+
+        FileManager.getInstance().deleteFile(movedDoc);
+        FileManager.getInstance().deleteFile(folder1);
+
+        assertFalse(FileManager.getInstance().getMainFiles().contains(movedDoc));
+        assertFalse(FileManager.getInstance().getMainFiles().contains(folder1));
+
     }
 
     @Test
+    void generateUniqueFileName(){
+
+        //todo how to test this????? two files with the same name can exist at the same time.
+        //todo this shit tho
+
+        //Document uploadDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()), folder1);
+
+        //FileManager.getInstance().renameFile(uploadDoc, "newFile.pdf");
+
+        Path path = FileManager.generateUniqueFileName(doc2.getPath());
+
+        //Path path = FileManager.generateUniqueFileName(doc.getPath());
+
+        System.out.println(path.toString());
+    }
+
+    /*@Test
     void restoreFile() {
     }
 
