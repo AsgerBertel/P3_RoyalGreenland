@@ -8,6 +8,7 @@ import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.print.Doc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -40,7 +41,6 @@ class FileManagerTest extends FileTester {
 
     @BeforeEach
     void setSettings(){
-
         Settings.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
@@ -110,24 +110,21 @@ class FileManagerTest extends FileTester {
 
         assertFalse(FileManager.getInstance().getMainFiles().contains(movedDoc));
         assertFalse(FileManager.getInstance().getMainFiles().contains(folder1));
-
     }
 
     @Test
     void generateUniqueFileName(){
+        // Upload the same file multiple times
+        Document originalFile = (Document) findInMainFiles(Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.pdf"));
+        Folder parentFolder = (Folder) findInMainFiles(Paths.get("02_VINTERTØRRET FISK"));
 
-        //todo how to test this????? two files with the same name can exist at the same time.
-        //todo this shit tho
+        Path originalFilePath = Settings.getServerDocumentsPath().resolve(originalFile.getOSPath());
+        Document duplicateFile1 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
+        Document duplicateFile2 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
 
-        //Document uploadDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()), folder1);
+        System.out.println(duplicateFile1.getName());
+        System.out.println(duplicateFile2.getName());
 
-        //FileManager.getInstance().renameFile(uploadDoc, "newFile.pdf");
-
-        Path path = FileManager.generateUniqueFileName(doc2.getPath());
-
-        //Path path = FileManager.generateUniqueFileName(doc.getPath());
-
-        System.out.println(path.toString());
     }
 
     /*@Test
