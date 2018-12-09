@@ -2,6 +2,7 @@ package gui;
 
 import app.ApplicationMode;
 import directory.Settings;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -14,7 +15,6 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.TimeoutException;
 
@@ -30,14 +30,16 @@ public abstract class GUITest extends ApplicationTest {
     }
 
     @AfterEach
-    void tearDown() throws TimeoutException {
+    void tearDown() throws TimeoutException, InterruptedException {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        Platform.runLater(() -> switchLanguageSetting());
+        Thread.sleep(200);
     }
 
     @BeforeAll @SuppressWarnings("Duplicates")
-    static final void setupApplication() throws Exception {
+    static void setupApplication() throws Exception {
         Settings.loadSettings(ApplicationMode.ADMIN);
 
         originalPath = Settings.getServerPath();
@@ -47,10 +49,25 @@ public abstract class GUITest extends ApplicationTest {
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }
 
+    @BeforeEach
+    final void setup() throws InterruptedException {
+
+    }
+
+
+
     @AfterAll
     static void cleanUp(){
         // Reset path in settings
-        Settings.setServerPath(originalPath);
+        //Settings.setServerPath(originalPath);
+    }
+
+    void switchLanguageSetting()  {
+        if(DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE)){
+            dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);
+        }else{
+            dmsApplication.changeLanguage(DMSApplication.DK_LOCALE);
+        }
     }
 
 

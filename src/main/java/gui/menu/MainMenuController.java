@@ -100,7 +100,6 @@ public class MainMenuController {
         danishButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.DK_LOCALE);
-            dmsApplication.restartApp();
         }
 
     }
@@ -109,7 +108,6 @@ public class MainMenuController {
         greenlandicButton.setSelected(true);
         if (!Settings.getLanguage().equals(DMSApplication.GL_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);
-            dmsApplication.restartApp();
         }
 
 
