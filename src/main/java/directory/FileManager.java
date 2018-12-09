@@ -419,7 +419,7 @@ public class FileManager {
         return findFile(relativePath, getMainFiles());
     }
 
-    private Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
+    public Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
         for (AbstractFile abstractFile : searchArea) {
             Path filePath = abstractFile.getOSPath();
             if (fileRelativePath.startsWith(filePath)) {

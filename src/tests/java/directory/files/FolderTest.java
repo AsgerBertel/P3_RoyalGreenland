@@ -27,8 +27,6 @@ class FolderTest extends FileTester {
     @BeforeEach
     void setSettings(){
         Settings.loadSettings(ApplicationMode.ADMIN);
-        //docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
-        //docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
         folderTest = new Folder(pathToTestFolder.toString());
         doc = DocumentBuilder.getInstance().createDocument(pathToDoc);
         folderTest.getContents().add(doc);
@@ -89,13 +87,12 @@ class FolderTest extends FileTester {
     @Test
     public void isSubFolderOf(){
 
-        //todo isSubFolderOf sends true back when you add itself? is this ok?
-        System.out.println(folderTest.isSubFolderOf(folderTest));
-
         Folder parentFolder = new Folder(folderTest.getParentPath().toString());
 
         parentFolder.getContents().add(folderTest);
 
         assertTrue(folderTest.isSubFolderOf(parentFolder));
+        assertFalse(parentFolder.isSubFolderOf(folderTest));
+        assertFalse(folderTest.isSubFolderOf(folderTest));
     }
 }
