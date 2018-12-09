@@ -25,7 +25,6 @@ public class FileTester {
         originalPath = Settings.getServerPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
 
-
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
     }

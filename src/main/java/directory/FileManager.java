@@ -515,7 +515,6 @@ public class FileManager {
         Path oldPath = Settings.getServerDocumentsPath().resolve(file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
-
         if (Files.exists(newPath)) {
             throw new FileAlreadyExistsException("Name is already in use");
         }
@@ -524,6 +523,7 @@ public class FileManager {
             if (file instanceof Folder) {
                 Folder fol = (Folder) file;
                 fol.setName(newName);
+
 
                 AppFilesManager.save(FileManager.getInstance());
                 LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));

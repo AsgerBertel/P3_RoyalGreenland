@@ -21,10 +21,9 @@ public class PlantElement extends BorderPane {
     private Plant plant;
     private Text text;
     protected Runnable onSelected;
-    private PlantAdministrationController plantAdministrationController;
 
     public PlantElement(Plant plant, PlantAdministrationController plantAdministrationController){
-        this.plantAdministrationController = plantAdministrationController;
+        PlantAdministrationController plantAdministrationController1 = plantAdministrationController;
         this.plant = plant;
         getStyleClass().add("plantElement");
         text = new Text();

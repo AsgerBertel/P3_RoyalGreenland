@@ -94,7 +94,7 @@ public class PlantAdministrationController implements TabController {
         plantElements.clear();
         plantVBox.getChildren().clear();
         for (Plant plant : PlantManager.getInstance().getAllPlants()) {
-            PlantElement plantElement = new PlantElement(plant);
+            PlantElement plantElement = new PlantElement(plant, this);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
         }
