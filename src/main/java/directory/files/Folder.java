@@ -91,8 +91,8 @@ public class Folder extends AbstractFile {
 
 
     public boolean isSubFolderOf(Folder parent) {
-        return getOSPath().toString().contains(parent.getOSPath().toString());
-
+        if(parent.getPath().equals(getPath())) return false;
+        return getPath().toString().contains(parent.getPath().toString());
     }
 
 }

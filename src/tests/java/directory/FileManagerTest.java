@@ -2,6 +2,7 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,12 +31,15 @@ class FileManagerTest extends FileTester {
 
     Path folderPath = Paths.get("02_VINTERTØRRET FISK");
     Folder folder1;
+    Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
+    Document doc;
 
     @BeforeEach
     void setSettings(){
 
         Settings.loadSettings(ApplicationMode.ADMIN);
-        folder1 = new Folder(folderPath.toString());
+        folder1 = (Folder) findInMainFiles(folderPath);
+        doc = (Document) findInMainFiles(docPath);
 
         /*Settings.setServerPath(mainTestDir.resolve("Server"));
         Settings.setLocalPath(mainTestDir.resolve("Local"));
@@ -60,43 +64,48 @@ class FileManagerTest extends FileTester {
     @Test
     void getArchiveFiles() {
 
-        try {
-            Files.move(Paths.get(Settings.getServerDocumentsPath().toString() + File.separator + folder1.getOSPath().toString()),
-                    Paths.get(Settings.getServerArchivePath().toString() + File.separator + folder1.getOSPath().toString()));
-        } catch (IOException e) {
-            System.out.println("could not move");
-            e.printStackTrace();
-        }
+        FileManager.getInstance().deleteFile(folder1);
 
         ArrayList<AbstractFile> al;
 
         al = FileManager.getInstance().getArchiveFiles();
 
         assertEquals(al.get(0).getOSPath(), folder1.getOSPath());
-
     }
 
     @Test
     void uploadFile() {
+        Document uploadedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()));
+
+        assertTrue(FileManager.getInstance().getMainFilesRoot().getContents().contains(uploadedDoc));
     }
 
     @Test
     void uploadFile1() {
+        Document uploadedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()), folder1);
+
+        assertTrue(folder1.getContents().contains(uploadedDoc));
     }
 
     @Test
-    void createFolder() {
+    void createFolder() throws IOException {
+        Folder createdFolder = FileManager.getInstance().createFolder("new folder");
+
+        assertTrue(FileManager.getInstance().getMainFilesRoot().getContents().contains(createdFolder));
     }
 
     @Test
-    void createFolder1() {
+    void createFolder1() throws IOException {
+        Folder createdFolder = FileManager.getInstance().createFolder("new folder", folder1);
+
+        assertTrue(folder1.getContents().contains(createdFolder));
     }
 
     @Test
     void deleteFile() {
     }
 
-    @Test
+    /*@Test
     void generateUniqueFileName() {
     }
 
@@ -130,5 +139,5 @@ class FileManagerTest extends FileTester {
 
     @Test
     void renameFile() {
-    }
+    }*/
 }
