@@ -135,7 +135,6 @@ public class PlantAdministrationController implements TabController {
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
     void editPlantSidebar() {
-        lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.LblEditPlant"));
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
 
