@@ -2,8 +2,7 @@ package directory.plant;
 
 import app.ApplicationMode;
 import directory.FileTester;
-import directory.Settings;
-import directory.files.DocumentBuilder;
+import directory.SettingsManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ class PlantTest extends FileTester {
 
     @BeforeEach
     void setSettings(){
-        Settings.loadSettings(ApplicationMode.ADMIN);
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         plant = new Plant(1007, "Nuuk", new AccessModifier());
         plant2 = plant;
     }

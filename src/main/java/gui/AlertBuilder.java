@@ -1,13 +1,12 @@
 package gui;
 
-import directory.Settings;
+import directory.SettingsManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 public class AlertBuilder {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
@@ -45,7 +44,7 @@ public class AlertBuilder {
                 DMSApplication.getMessage("Exception.IO.Title"),
                 DMSApplication.getMessage("Exception.IO.Header"),
                 DMSApplication.getMessage("Exception.IO.Context") + "\n"
-                        + Settings.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
+                        + SettingsManager.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
         );
         alert.showAndWait();
     }
@@ -53,7 +52,7 @@ public class AlertBuilder {
     public static void customErrorPopUp(String customTitle, String customHeader, String customContext) {
         buildAlert(
                 Alert.AlertType.ERROR, customTitle, customHeader,customContext + "\n"
-                        + Settings.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
+                        + SettingsManager.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
         );
         alert.showAndWait();
     }

@@ -8,7 +8,7 @@ import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
 import gui.log.LogEvent;
-import gui.log.LoggingTools;
+import gui.log.LogManager;
 import gui.settings.SettingsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -118,6 +118,10 @@ public class PlantAdministrationController implements TabController {
         btnEditPlantSidebar.setDisable(false);
 
         selectedPlantElement = plantElement;
+
+        fieldEditPlantName.setText(selectedPlantElement.getPlant().getName());
+        fieldEditPlantId.setText(Integer.toString(selectedPlantElement.getPlant().getId()));
+        lblPlantEdited.setText("");
     }
 
     //Button function when "create plant" button in sidebar is pressed.
@@ -131,7 +135,6 @@ public class PlantAdministrationController implements TabController {
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
     void editPlantSidebar() {
-        lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.LblEditPlant"));
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
 
@@ -202,7 +205,7 @@ public class PlantAdministrationController implements TabController {
             fieldCreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
 
-            LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
+            LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
             addErrorClass(fieldEditPlantId);
@@ -268,7 +271,7 @@ public class PlantAdministrationController implements TabController {
 
                 lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 String logmsg = "(" + DMSApplication.getMessage("Log.Plant") + ": " + oldName + ", " + oldID + " )" + " -> " + " (" + DMSApplication.getMessage("Log.Plant") + ", " + newName + ", " + newID + " )";
-                LoggingTools.log(new LogEvent(logmsg, PLANT_EDITED));
+                LogManager.log(new LogEvent(logmsg, PLANT_EDITED));
             } else {
                 lblPlantEdited.setText("PlantAdmin.SelectPlant");
             }
@@ -324,7 +327,7 @@ public class PlantAdministrationController implements TabController {
                 btnDeletePlant.setDisable(true);
                 plantCountText.setText("(" + plantElements.size() + ")");
 
-                LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
+                LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
                 return selectedPlantElement;
             }
             if (result.get() == ButtonType.CANCEL)

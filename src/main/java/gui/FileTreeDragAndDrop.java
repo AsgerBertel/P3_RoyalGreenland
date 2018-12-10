@@ -1,8 +1,6 @@
 package gui;
 
-import directory.DirectoryCloner;
 import directory.FileManager;
-import directory.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -10,8 +8,7 @@ import gui.file_administration.FileAdminController;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
-import gui.log.LoggingTools;
-import javafx.scene.control.Alert;
+import gui.log.LogManager;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -20,17 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.util.Callback;
-import jdk.jfr.EventType;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -180,7 +169,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             LoggingErrorTools.log(e);
         }
 
-        LoggingTools.log(new LogEvent(fileToMove.getName(), destinationFolder.getName(), LogEventType.FILE_MOVED));
+        LogManager.log(new LogEvent(fileToMove.getName(), destinationFolder.getName(), LogEventType.FILE_MOVED));
         fileManager.save();
         fileAdminController.update();
         treeView.getSelectionModel().select(draggedItem);

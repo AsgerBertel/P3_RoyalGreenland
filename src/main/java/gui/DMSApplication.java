@@ -3,7 +3,7 @@ package gui;
 import app.ApplicationMode;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
-import directory.Settings;
+import directory.SettingsManager;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +45,7 @@ public class DMSApplication extends Application {
 
     private static ApplicationMode applicationMode;
 
-    private Settings settings;
+    private SettingsManager settings;
     private Tab currentTab;
 
     private static DMSApplication dmsApplication;
@@ -139,7 +139,7 @@ public class DMSApplication extends Application {
 
     public void changeLanguage(Locale newLocale) {
         locale = newLocale;
-        Settings.setLanguage(newLocale);
+        SettingsManager.setLanguage(newLocale);
         messages = ResourceBundle.getBundle("Messages", newLocale);
         try {
             restartApp();
@@ -165,8 +165,8 @@ public class DMSApplication extends Application {
 
     private void initializeApplication() {
         // Load settings and initialize paths if non are saved
-        Settings.loadSettings(applicationMode);
-        locale = Settings.getLanguage();
+        SettingsManager.loadSettings(applicationMode);
+        locale = SettingsManager.getLanguage();
         messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
         if (applicationMode.equals(ApplicationMode.VIEWER)) {

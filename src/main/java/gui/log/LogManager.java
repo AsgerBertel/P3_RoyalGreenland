@@ -1,25 +1,24 @@
 package gui.log;
 
-import directory.Settings;
+import directory.SettingsManager;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LoggingTools {
+public class LogManager {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 
     public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath().resolve("logs.log").toString(), true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerAppFilesPath().resolve("logs.log").toString(), true)))) {
             pw.println(listOfEvents.get(0) + "|" + listOfEvents.get(1) + "|" + listOfEvents.get(2));
 
         } catch (IOException e) {
@@ -59,7 +58,7 @@ public class LoggingTools {
     public static List<LogEvent> getAllEvents() {
         List<LogEvent> listOfEvents = new ArrayList<>();
 
-        Path logFile = Settings.getServerAppFilesPath().resolve("logs.log");
+        Path logFile = SettingsManager.getServerAppFilesPath().resolve("logs.log");
 
         // Return empty list if no log can be loaded from the server
         if (!Files.exists(logFile))

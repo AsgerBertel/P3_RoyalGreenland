@@ -2,7 +2,7 @@ package json;
 
 
 import directory.FileManager;
-import directory.Settings;
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
@@ -12,7 +12,6 @@ import gui.log.LoggingErrorTools;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class AppFilesManager {
@@ -26,7 +25,7 @@ public class AppFilesManager {
      * @return the instance of FileManager stored in the path. Returns null if no FileManager exists in the path.
      */
     public static FileManager loadFileManager(){
-        Path path = Settings.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME);
+        Path path = SettingsManager.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME);
         return loadInstanceFromJsonFile(path, FileManager.class);
     }
 
@@ -36,12 +35,12 @@ public class AppFilesManager {
      * @return the instance of FileManager stored in the path. Returns null if no FileManager exists in the path.
      */
     public static PlantManager loadPlantManager(){
-        Path path = Settings.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
+        Path path = SettingsManager.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
         return loadInstanceFromJsonFile(path, PlantManager.class);
     }
 
     public static ArrayList<Plant> loadLocalFactoryList(){
-        Path path = Settings.getLocalAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
+        Path path = SettingsManager.getLocalAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
         PlantManager plantManager = loadInstanceFromJsonFile(path, PlantManager.class);
         if(plantManager != null)
             return plantManager.getAllPlants();
@@ -50,7 +49,7 @@ public class AppFilesManager {
     }
 
     public static ArrayList<Plant> loadPublishedFactoryList(){
-        Path path = Settings.getPublishedAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
+        Path path = SettingsManager.getPublishedAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
         PlantManager plantManager = loadInstanceFromJsonFile(path, PlantManager.class);
         if(plantManager != null)
             return plantManager.getAllPlants();
@@ -59,7 +58,7 @@ public class AppFilesManager {
     }
 
     public static ArrayList<AbstractFile> loadPublishedFileList(){
-        Path path = Settings.getPublishedAppFilesPath().resolve(FILES_LIST_FILE_NAME);
+        Path path = SettingsManager.getPublishedAppFilesPath().resolve(FILES_LIST_FILE_NAME);
         FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
         if(publishedFileManager != null) {
             return publishedFileManager.getMainFiles();
@@ -68,7 +67,7 @@ public class AppFilesManager {
     }
 
     public static ArrayList<AbstractFile> loadLocalFileList(){
-        Path path = Settings.getLocalAppFilesPath().resolve(FILES_LIST_FILE_NAME);
+        Path path = SettingsManager.getLocalAppFilesPath().resolve(FILES_LIST_FILE_NAME);
         FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
         if(publishedFileManager != null) {
             return publishedFileManager.getMainFiles();
@@ -91,11 +90,11 @@ public class AppFilesManager {
     }
 
     public static void save(FileManager fileManager){
-        saveObjectToJson(fileManager, Settings.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME));
+        saveObjectToJson(fileManager, SettingsManager.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME));
     }
 
     public static void save(PlantManager plantManager){
-        saveObjectToJson(plantManager, Settings.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME));
+        saveObjectToJson(plantManager, SettingsManager.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME));
     }
 
     private static void saveObjectToJson(Object object, Path path){
@@ -112,18 +111,18 @@ public class AppFilesManager {
      * @throws IOException if .mkdirs() fails.
      */
     public static void createServerDirectories() throws IOException {
-        Path serverRoot = Settings.getServerPath();
+        Path serverRoot = SettingsManager.getServerPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(serverRoot.getParent())) throw new FileNotFoundException("The chosen server directory could not be found");
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
-        applicationPaths.add(Settings.getServerDocumentsPath());
-        applicationPaths.add(Settings.getServerArchivePath());
-        applicationPaths.add(Settings.getServerAppFilesPath());
-        applicationPaths.add(Settings.getPublishedAppFilesPath());
-        applicationPaths.add(Settings.getPublishedDocumentsPath());
-        applicationPaths.add(Settings.getServerErrorLogsPath());
+        applicationPaths.add(SettingsManager.getServerDocumentsPath());
+        applicationPaths.add(SettingsManager.getServerArchivePath());
+        applicationPaths.add(SettingsManager.getServerAppFilesPath());
+        applicationPaths.add(SettingsManager.getPublishedAppFilesPath());
+        applicationPaths.add(SettingsManager.getPublishedDocumentsPath());
+        applicationPaths.add(SettingsManager.getServerErrorLogsPath());
 
         createAppFolders(applicationPaths);
     }
@@ -133,14 +132,14 @@ public class AppFilesManager {
      * @throws IOException if .mkdirs() fails.
      */
     public static void createLocalDirectories() throws IOException{
-        Path localRoot = Settings.getLocalPath();
+        Path localRoot = SettingsManager.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent())) throw new FileNotFoundException("Local Application folder could not be found");
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
-        applicationPaths.add(Settings.getLocalFilesPath());
-        applicationPaths.add(Settings.getLocalAppFilesPath());
+        applicationPaths.add(SettingsManager.getLocalFilesPath());
+        applicationPaths.add(SettingsManager.getLocalAppFilesPath());
 
         createAppFolders(applicationPaths);
     }
@@ -162,8 +161,8 @@ public class AppFilesManager {
      * @throws IOException if BufferedWriter fails to read from currentFileID.
      */
     private static void createServerAppFiles() throws IOException {
-        Path appFilesPath = Settings.getServerAppFilesPath();
-        Path publishedAppFilesPath = Settings.getPublishedAppFilesPath();
+        Path appFilesPath = SettingsManager.getServerAppFilesPath();
+        Path publishedAppFilesPath = SettingsManager.getPublishedAppFilesPath();
 
         if(!Files.exists(appFilesPath.getParent()))
             throw new FileNotFoundException("Server Working Files folder could not be found");

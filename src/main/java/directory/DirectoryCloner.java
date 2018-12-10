@@ -27,11 +27,11 @@ public class DirectoryCloner {
 
         ArrayList<AbstractFile> newFiles = fileManager.getMainFiles();
         ArrayList<AbstractFile> oldFiles = AppFilesManager.loadPublishedFileList();
-        applyUpdate(oldFiles, newFiles, Settings.getPublishedDocumentsPath(), Settings.getServerDocumentsPath());
+        applyUpdate(oldFiles, newFiles, SettingsManager.getPublishedDocumentsPath(), SettingsManager.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     public static void updateLocalFiles() throws IOException {
@@ -40,21 +40,21 @@ public class DirectoryCloner {
 
         ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
         ArrayList<AbstractFile> oldFiles = AppFilesManager.loadLocalFileList();
-        applyUpdate(oldFiles, newFiles, Settings.getLocalFilesPath(), Settings.getServerDocumentsPath());
+        applyUpdate(oldFiles, newFiles, SettingsManager.getLocalFilesPath(), SettingsManager.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     private static boolean isUpdateAvailable() throws IOException {
-        if(!Files.exists(Settings.getServerDocumentsPath()))
+        if(!Files.exists(SettingsManager.getServerDocumentsPath()))
             throw new ServerUnavailableException();
 
-        File localFilesList = Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
-        File localFactoryList = Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
-        File serverFilesList = Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
-        File serverFactoryList = Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+        File localFilesList = SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File localFactoryList = SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
+        File serverFilesList = SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
+        File serverFactoryList = SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
 
         if(!localFactoryList.exists() || !localFilesList.exists())
             return true;

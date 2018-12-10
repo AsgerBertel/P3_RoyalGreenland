@@ -25,7 +25,7 @@ class FileExplorerTest extends FileTester {
     Path pathToDoc1 = Paths.get("04_MASKINTØRRET FISK/FL 04 GR_02   Flowdiagram for produktion af maskintørret fisk.pdf");
     Path pathToDoc2 = Paths.get("04_MASKINTØRRET FISK/PB 04 GR_02   Procesbeskrivelse for produktion af maskintørret fisk.pdf");
     Path pathToFolder = Paths.get("04_MASKINTØRRET FISK");
-    Path pathToParentFolder = Paths.get(Settings.getServerDocumentsPath().toString());
+    Path pathToParentFolder = Paths.get(SettingsManager.getServerDocumentsPath().toString());
     Folder folder;
     Folder parentFolder;
     Plant plant;
@@ -33,7 +33,7 @@ class FileExplorerTest extends FileTester {
 
     @BeforeEach
     void setSettings(){
-        Settings.loadSettings(ApplicationMode.ADMIN);
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docInAM = DocumentBuilder.getInstance().createDocument(pathToDoc1);
         docFalse = DocumentBuilder.getInstance().createDocument(pathToDoc2);
         ArrayList<AbstractFile> al = new ArrayList<>();

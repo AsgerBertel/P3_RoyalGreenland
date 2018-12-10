@@ -1,10 +1,7 @@
 package directory.plant;
 
-import directory.Settings;
 import json.AppFilesManager;
-import json.JsonParser;
 
-import java.io.*;
 import java.util.ArrayList;
 
 /**

@@ -1,16 +1,8 @@
 package directory.files;
 
-import directory.FileManager;
-import directory.Settings;
 import directory.plant.AccessModifier;
-import gui.log.LogEvent;
-import gui.log.LogEventType;
-import gui.log.LoggingTools;
-import json.AppFilesManager;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
