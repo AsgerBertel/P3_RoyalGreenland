@@ -252,10 +252,10 @@ public class FileManager {
      */
     private static String getExtension(Path filePath) {
         String pathString = filePath.toString();
-        int indexOfSeperator = pathString.lastIndexOf('.');
-        if(indexOfSeperator == -1) return "";
+        int indexOfSeparator = pathString.lastIndexOf('.');
+        if(indexOfSeparator == -1) return "";
 
-        String extension = pathString.substring(indexOfSeperator, pathString.length());
+        String extension = pathString.substring(indexOfSeparator, pathString.length());
         if (extension.contains("/") || extension.contains(File.separator))
             return "";
 

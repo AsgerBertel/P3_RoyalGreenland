@@ -38,6 +38,8 @@ class FileManagerTest extends FileTester {
     Document doc;
     Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
     Document doc2;
+    Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
+    Folder parentFolder;
 
     @BeforeEach
     void setSettings(){
@@ -45,6 +47,7 @@ class FileManagerTest extends FileTester {
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
         doc2 = (Document) findInMainFiles(doc2Path);
+        parentFolder = (Folder) findInMainFiles(parentFolderPath);
     }
 
     @Test
@@ -110,6 +113,8 @@ class FileManagerTest extends FileTester {
 
         assertFalse(FileManager.getInstance().getMainFiles().contains(movedDoc));
         assertFalse(FileManager.getInstance().getMainFiles().contains(folder1));
+        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(movedDoc));
+
     }
 
     @Test
@@ -128,35 +133,89 @@ class FileManagerTest extends FileTester {
         assertTrue(duplicateFile2.getName().endsWith("(2)." + duplicateFile1.getFileExtension()));
     }
 
-    /*@Test
-    void restoreFile() {
+    @Test
+    void restoreFile() throws IOException {
+
+        FileManager.getInstance().deleteFile(doc);
+
+        //todo getArchiveFiles doesnt work
+
+        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(doc));
+        assertFalse(FileManager.getInstance().getMainFiles().contains(doc));
+
+        FileManager.getInstance().restoreFile(doc);
+
+        //todo restore doesnt restore file back into mainfiles
+        //assertTrue(FileManager.getInstance().getMainFiles().contains(doc));
+
+        //todo doesnt work with folders either
+        FileManager.getInstance().deleteFile(folder1);
+
+        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(folder1));
+        assertFalse(FileManager.getInstance().getMainFiles().contains(folder1));
+
+
     }
 
     @Test
     void findParent() {
+        Folder folder = FileManager.findParent(doc, FileManager.getInstance().getMainFilesRoot()).get();
+
+        assertEquals(parentFolder, folder);
     }
 
     @Test
     void save() {
+        //todo do we need tests for this?
     }
 
     @Test
     void getMainFilesRoot() {
+        Folder folder = FileManager.getInstance().getMainFilesRoot();
+
+        Folder parentFolder = FileManager.findParent(folder1, FileManager.getInstance().getMainFilesRoot()).get();
+
+        assertEquals(folder, parentFolder);
     }
 
     @Test
     void getArchiveRoot() {
+        Folder folder = FileManager.getInstance().getArchiveRoot();
+
+        FileManager.getInstance().deleteFile(folder1);
+
+        Folder parentFolder = FileManager.findParent(folder1, FileManager.getInstance().getArchiveRoot()).get();
+
+        assertEquals(folder, parentFolder);
     }
 
     @Test
     void findInMainFiles() {
+        Folder folder = (Folder) FileManager.getInstance().findFile(folder1.getOSPath(), FileManager.getInstance().getMainFiles()).get();
+
+        assertEquals(folder, folder1);
     }
 
     @Test
-    void moveFile() {
+    void moveFile() throws IOException {
+
+        assertTrue(parentFolder.getContents().contains(doc));
+        assertFalse(folder1.getContents().contains(doc));
+
+        FileManager.getInstance().moveFile(doc, folder1);
+
+        assertTrue(folder1.getContents().contains(doc));
+        assertFalse(parentFolder.getContents().contains(doc));
     }
 
     @Test
-    void renameFile() {
-    }*/
+    void renameFile() throws FileAlreadyExistsException {
+        assertNotEquals("new file", doc.getName());
+        assertFalse(doc.getOSPath().toString().contains("new file"));
+
+        FileManager.getInstance().renameFile(doc, "new file");
+
+        assertEquals("new file", doc.getName());
+        assertTrue(doc.getOSPath().toString().contains("new file"));
+    }
 }
