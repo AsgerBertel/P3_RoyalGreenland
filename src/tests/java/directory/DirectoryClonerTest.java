@@ -4,6 +4,7 @@ import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,7 @@ class DirectoryClonerTest extends FileTester {
     @Test
     void publishFiles() throws Exception {
         //asserting that both are equal when publishFiles() is used
+        PlantManager.getInstance();
         DirectoryCloner.publishFiles();
         assertEquals(AppFilesManager.loadPublishedFileList(), FileManager.getInstance().getMainFiles());
 
@@ -45,7 +47,15 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void updateLocalFiles() {
+    void updateLocalFiles() throws Exception {
+        PlantManager.getInstance();
+        DirectoryCloner.publishFiles();
+
+        al = AppFilesManager.loadPublishedFileList();
+
+        DirectoryCloner.updateLocalFiles();
+
+        assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
     @Test
