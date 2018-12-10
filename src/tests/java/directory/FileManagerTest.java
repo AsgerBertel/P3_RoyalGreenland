@@ -3,16 +3,12 @@ package directory;
 import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.files.Document;
-import directory.files.DocumentBuilder;
 import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.print.Doc;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -20,17 +16,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest extends FileTester {
-
-    private File resourcesDirectory = new File("src/tests/resTest");
-    private Path pathToTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test");
-    private Path pathToOnlineFileTestFolder = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "onlineFileTest");
-    private Path toTestFile = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile1.pdf");
-    private Path toTestFile2 = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "testFile.pdf");
-    private Path archivePath = Paths.get("Sample files" + File.separator + "Archive");
-    private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
-    private Path pathToJsonTestUnix = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "allFilesTestUnix.JSON");
-    private Path pathToTestFolder = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test" + File.separator + "deleteTest");
-    private Path mainTestDir = Paths.get(resourcesDirectory + File.separator + "Main Files Test" + File.separator + "RLFiles");
 
     Path folderPath = Paths.get("02_VINTERTØRRET FISK");
     Folder folder1;
@@ -42,7 +27,7 @@ class FileManagerTest extends FileTester {
     Folder parentFolder;
 
     @BeforeEach
-    void setSettings(){
+    void setSettings() {
         Settings.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
@@ -118,7 +103,7 @@ class FileManagerTest extends FileTester {
     }
 
     @Test
-    void generateUniqueFileName(){
+    void generateUniqueFileName() {
         // Upload the same file multiple times
         Document originalFile = (Document) findInMainFiles(Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.pdf"));
         Folder parentFolder = (Folder) findInMainFiles(Paths.get("02_VINTERTØRRET FISK"));
