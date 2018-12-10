@@ -30,8 +30,10 @@ public class DirectoryCloner {
         applyUpdate(oldFiles, newFiles, Settings.getPublishedDocumentsPath(), Settings.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME),
+                Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(Settings.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
+                Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     public static void updateLocalFiles() throws IOException {
@@ -43,8 +45,10 @@ public class DirectoryCloner {
         applyUpdate(oldFiles, newFiles, Settings.getLocalFilesPath(), Settings.getServerDocumentsPath());
 
         // Replace app files
-        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME),
+                Settings.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
+        replaceIfExists(Settings.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
+                Settings.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     private static boolean isUpdateAvailable() throws IOException {
@@ -60,18 +64,18 @@ public class DirectoryCloner {
             return true;
 
         try {
-            if(!FileUtils.contentEquals(localFilesList, serverFilesList) || !FileUtils.contentEquals(localFactoryList, serverFactoryList))
-                return true;
-            else
-                return false;
+            return !FileUtils.contentEquals(localFilesList, serverFilesList) || !FileUtils.contentEquals(localFactoryList, serverFactoryList);
         } catch (IOException e) {
             throw new IOException("Unable to compare local files to server files", e);
         }
     }
 
     /** Updates the oldFiles list to match the updatedFiles list and updates the corresponding files on the file system */
-    private static void applyUpdate(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> updatedFiles,
-                                    Path oldFilesPath, Path updatedFilesPath) throws IOException {
+    private static void applyUpdate(ArrayList<AbstractFile> oldFiles,
+                                    ArrayList<AbstractFile> updatedFiles,
+                                    Path oldFilesPath,
+                                    Path updatedFilesPath)
+            throws IOException {
         // Remove files that are no longer up to date
         oldFiles = removeOutdatedFiles(oldFiles, updatedFiles, oldFilesPath);
         // Add any files that have been deleted
@@ -82,7 +86,8 @@ public class DirectoryCloner {
      * Compares oldFiles to updatedFiles. Finds all files in oldFiles that are changed or deleted.
      * @return a list of files from oldFiles that are changed or no longer exists in new files.
      */
-    private static ArrayList<AbstractFile> findOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> updatedFiles){
+    private static ArrayList<AbstractFile> findOutdatedFiles(ArrayList<AbstractFile> oldFiles,
+                                                             ArrayList<AbstractFile> updatedFiles){
         ArrayList<AbstractFile> filesToDelete = new ArrayList<>();
         for (AbstractFile file : oldFiles) {
             if (file instanceof Document) {
@@ -99,7 +104,10 @@ public class DirectoryCloner {
         return filesToDelete;
     }
 
-    private static ArrayList<AbstractFile> deleteFilesFrom(ArrayList<AbstractFile> allFiles, ArrayList<AbstractFile> filesToDelete, Path rootPath) throws IOException {
+    private static ArrayList<AbstractFile> deleteFilesFrom(ArrayList<AbstractFile> allFiles,
+                                                           ArrayList<AbstractFile> filesToDelete,
+                                                           Path rootPath)
+            throws IOException {
         ArrayList<AbstractFile> newFilesList = new ArrayList<>(allFiles);
         for (AbstractFile fileToDelete : filesToDelete) {
             Path fileToDeletePath = rootPath.resolve(fileToDelete.getOSPath());
@@ -115,6 +123,7 @@ public class DirectoryCloner {
             }else{
                 success = Files.deleteIfExists(fileToDeletePath);
             }
+            FileUtils.deleteDirectory(fileToDeletePath.toFile());
 
             if (!success)
                 throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + rootPath.toString());
@@ -128,7 +137,10 @@ public class DirectoryCloner {
      * Compares oldFiles to newFiles and removes files from oldFiles that have been updated or deleted.
      * @return the files that does not need to be updated (the intersection of oldFiles and newFiles)
      */
-    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot) throws IOException {
+    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles,
+                                                              ArrayList<AbstractFile> newFiles,
+                                                              Path oldFilesRoot)
+            throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>(oldFiles);
 
         ArrayList<AbstractFile> filesToDelete = findOutdatedFiles(oldFiles, newFiles);
@@ -155,7 +167,11 @@ public class DirectoryCloner {
         return modifiedOldFiles;
     }
 
-    public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles, ArrayList<AbstractFile> newFiles, Path oldFilesRoot, Path newFileRoot) throws IOException {
+    public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles,
+                                                      ArrayList<AbstractFile> newFiles,
+                                                      Path oldFilesRoot,
+                                                      Path newFileRoot)
+            throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
 
@@ -209,7 +225,8 @@ public class DirectoryCloner {
     }
 
 
-    public static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles, ArrayList<AbstractFile> updatedFiles){
+    public static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
+                                                           ArrayList<AbstractFile> updatedFiles){
         ArrayList<AbstractFile> missingFiles = new ArrayList<>();
         // Find files that should be added
         for (AbstractFile file : updatedFiles) {

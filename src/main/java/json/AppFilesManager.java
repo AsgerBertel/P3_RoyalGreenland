@@ -11,6 +11,7 @@ import gui.log.LoggingErrorTools;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -83,9 +84,9 @@ public class AppFilesManager {
         try (Reader reader = new FileReader(path.toString())) {
             return JsonParser.getJsonParser().fromJson(reader, classOfT);
         } catch (IOException e) {
-            AlertBuilder.IOExceptionPopUp();
-            LoggingErrorTools.log(e);
             e.printStackTrace();
+            AlertBuilder.IOExceptionPopupWithString(path.toString());
+            LoggingErrorTools.log(e);
             return null;
         }
     }
@@ -104,18 +105,23 @@ public class AppFilesManager {
             JsonParser.getJsonParser().toJson(object, writer);
         } catch (IOException e) {
             e.printStackTrace();
+            AlertBuilder.IOExceptionPopupWithString(path.toString());
+            LoggingErrorTools.log(e);
         }
     }
 
     /**
      * Creates the server directories.
      * @throws IOException if .mkdirs() fails.
+     * @throws InvalidPathException if serverRoot is initialized incorrectly due to error in Settings.
+     * @throws FileNotFoundException if serverRoot directory does not exist.
      */
-    public static void createServerDirectories() throws IOException {
+    public static void createServerDirectories() throws IOException, InvalidPathException {
         Path serverRoot = Settings.getServerPath();
 
         // Throw exception if application installation path is invalid
-        if(!Files.exists(serverRoot.getParent())) throw new FileNotFoundException("The chosen server directory could not be found");
+        if(!Files.exists(serverRoot.getParent()))
+            throw new FileNotFoundException("The chosen server directory could not be found");
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
         applicationPaths.add(Settings.getServerDocumentsPath());
@@ -124,54 +130,10 @@ public class AppFilesManager {
         applicationPaths.add(Settings.getPublishedAppFilesPath());
         applicationPaths.add(Settings.getPublishedDocumentsPath());
         applicationPaths.add(Settings.getServerErrorLogsPath());
-
+        System.out.println(Settings.getServerErrorLogsPath());
         createAppFolders(applicationPaths);
-    }
 
-    /**
-     * Creates the local directories, throws IOException if .mkdirs fails
-     * @throws IOException if .mkdirs() fails.
-     */
-    public static void createLocalDirectories() throws IOException{
-        Path localRoot = Settings.getLocalPath();
-
-        // Throw exception if application installation path is invalid
-        if(!Files.exists(localRoot.getParent())) throw new FileNotFoundException("Local Application folder could not be found");
-
-        ArrayList<Path> applicationPaths = new ArrayList<>();
-        applicationPaths.add(Settings.getLocalFilesPath());
-        applicationPaths.add(Settings.getLocalAppFilesPath());
-
-        createAppFolders(applicationPaths);
-    }
-
-    private static void createAppFolders(ArrayList<Path> paths) throws IOException{
-        for(Path appPath : paths){
-            try{
-                if(!Files.exists(appPath))
-                    Files.createDirectories(appPath);
-            }catch (IOException e){
-                throw new IOException("Failed to create an application folder : " + appPath.toString(), e);
-            }
-        }
-    }
-
-    /**
-     * Creates the server side AppFiles besides JSON files.
-     * @throws FileNotFoundException if working or published AppFiles folder is missing.
-     * @throws IOException if BufferedWriter fails to read from currentFileID.
-     */
-    private static void createServerAppFiles() throws IOException {
-        Path appFilesPath = Settings.getServerAppFilesPath();
-        Path publishedAppFilesPath = Settings.getPublishedAppFilesPath();
-
-        if(!Files.exists(appFilesPath.getParent()))
-            throw new FileNotFoundException("Server Working Files folder could not be found");
-        if(!Files.exists(publishedAppFilesPath.getParent()))
-            throw new FileNotFoundException("Server Published Files folder could not be found");
-
-        Path currentFileIDPath = appFilesPath.resolve("currentFileID");
-
+        Path currentFileIDPath = Settings.getServerAppFilesPath().resolve("currentFileID");
         if(!Files.exists(currentFileIDPath)) {
             try (BufferedWriter writer = Files.newBufferedWriter(currentFileIDPath)) {
                 writer.write("0");
@@ -180,6 +142,40 @@ public class AppFilesManager {
                 throw new IOException("Could not write to currentFileID file");
             }
         }
+    }
+    /**
+     * Creates the local directories, throws IOException if .mkdirs fails.
+     * @throws FileNotFoundException if parent folder to Local Path does not exist.
+     * @throws IOException if .mkdirs() fails.
+     * @throws InvalidPathException if localRoot is initialized incorrectly due to error in Settings.
+     */
+    public static void createLocalDirectories() throws IOException, InvalidPathException{
+        Path localRoot = Settings.getLocalPath();
 
+        // Throw exception if application installation path is invalid
+        if(!Files.exists(localRoot.getParent()))
+            throw new FileNotFoundException("Local Application folder could not be found");
+
+        ArrayList<Path> applicationPaths = new ArrayList<>();
+        applicationPaths.add(Settings.getLocalFilesPath());
+        applicationPaths.add(Settings.getLocalAppFilesPath());
+
+        createAppFolders(applicationPaths);
+    }
+
+    /**
+     * Creates the arraylist consisting of paths.
+     * @param paths ArrayList consisting of all the directories to create.
+     * @throws IOException if Files.createDirectories() fails.
+     */
+    private static void createAppFolders(ArrayList<Path> paths) throws IOException{
+        for(Path appPath : paths){
+            try{
+                if(!Files.exists(appPath))
+                    Files.createDirectories(appPath);
+            }catch (IOException e){
+                throw new IOException("Failed to create an application folder: " + appPath.toString(), e);
+            }
+        }
     }
 }

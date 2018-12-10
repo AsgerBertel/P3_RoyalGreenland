@@ -4,8 +4,11 @@ import app.ApplicationMode;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.Settings;
+import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -13,12 +16,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static gui.Tab.FILE_ADMINISTRATION;
 
@@ -158,34 +164,31 @@ public class DMSApplication extends Application {
         Settings.loadSettings(applicationMode);
         locale = Settings.getLanguage();
         messages = ResourceBundle.getBundle("Messages", locale);
+
         // Create application folder if they are missing
-        if (applicationMode.equals(ApplicationMode.VIEWER)) {
-            try {
+        try {
+            if(applicationMode.equals(ApplicationMode.VIEWER)) {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
                 DirectoryCloner.updateLocalFiles();
                 new FileUpdater(this).start();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Fejl");
-                alert.setHeaderText(null);
-                alert.setContentText("Vælg din lokale sti igen"); // todo sprog
-            }
-        } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
-            try {
+            } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
-            } catch (FileNotFoundException e) {
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Fejl");
-                alert.setHeaderText(null);
-                alert.setContentText("Chek om du har forbindelse til serveren"); // todo sprog
             }
+        } catch (InvalidPathException | FileNotFoundException e) {
+            e.printStackTrace();
+            AlertBuilder.fileNotFoundPopup();
+            Settings.initializeSettingsPrompt();
+        } catch(IOException e) {
+            e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e, 4);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Critical error");
+            alert.setHeaderText("Program shutting down");
+            alert.showAndWait();
+            System.exit(4);
         }
     }
-
 }

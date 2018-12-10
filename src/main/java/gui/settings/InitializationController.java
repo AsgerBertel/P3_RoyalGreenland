@@ -43,8 +43,6 @@ public class InitializationController implements Initializable {
         } else {
             setState(State.LOCAL_PATH);
         }
-
-
     }
 
     private void setState(State state) {

@@ -3,6 +3,7 @@ package gui;
 import directory.Settings;
 import javafx.scene.control.Alert;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -25,8 +26,8 @@ public class AlertBuilder
     public static void fileNotFoundPopup () {
         buildAlert(
                 Alert.AlertType.ERROR,
-                DMSApplication.getMessage("Exception.fileNotFound.Title"),
-                DMSApplication.getMessage("Exception.fileNotFound.Header"),
+                DMSApplication.getMessage("Exception.FileNotFound.Title"),
+                DMSApplication.getMessage("Exception.FileNotFound.Header"),
                 null);
         alert.showAndWait();
     }
@@ -42,7 +43,26 @@ public class AlertBuilder
                 DMSApplication.getMessage("Exception.IO.Title"),
                 DMSApplication.getMessage("Exception.IO.Header"),
                 DMSApplication.getMessage("Exception.IO.Context")+"\n"
-                        +Settings.getServerErrorLogsPath()+LocalDateTime.now().format(formatter)
+                        +Settings.getServerErrorLogsPath()
+                        +File.separator
+                        +LocalDateTime.now().format(formatter)
+        );
+        alert.showAndWait();
+    }
+
+    /**
+     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occured.
+     * @param targetPath
+     */
+    public static void IOExceptionPopupWithString(String targetPath) {
+        buildAlert(Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.IO.Title"),
+                DMSApplication.getMessage("Exception.IO.Header"),
+                DMSApplication.getMessage("Exception.IO.Target.Context1")+targetPath+"\n"
+                        + DMSApplication.getMessage("Exception.IO.Target.Context2")
+                        + Settings.getServerErrorLogsPath()
+                        + File.separator
+                        + LocalDateTime.now().format(formatter)
         );
         alert.showAndWait();
     }

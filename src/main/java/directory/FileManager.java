@@ -1,5 +1,6 @@
 package directory;
 
+import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
@@ -60,7 +61,6 @@ public class FileManager {
 
     private static Folder findFiles(Path root) throws FileNotFoundException {
         if (!Files.exists(root)) {
-
             throw new FileNotFoundException();
         }
 
@@ -183,8 +183,8 @@ public class FileManager {
             // Create parent folders if they don't exist
             new File(archivePath.getParent().toString()).mkdirs();
 
-            if (Files.exists(archivePath)) {
-                if (!Files.isDirectory(originalPath)) {
+            if(Files.exists(archivePath)) {
+                if(!Files.isDirectory(originalPath)) {
                     // Give the document a new name if it already exists
                     archivePath = generateUniqueFileName(archivePath);
                     file.setName(archivePath.getFileName().toString());
@@ -194,7 +194,7 @@ public class FileManager {
                     DirectoryCloner.deleteFolder(originalPath.toFile());
                 }
             } else {
-                if (Files.isDirectory(originalPath)) {
+                if(Files.isDirectory(originalPath)) {
                     DirectoryCloner.copyFolder(originalPath, archivePath);
                     DirectoryCloner.deleteFolder(originalPath.toFile());
                 } else {
@@ -208,6 +208,10 @@ public class FileManager {
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
             AppFilesManager.save(this);
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+            AlertBuilder.fileNotFoundPopup();
+            LoggingErrorTools.log(e);
         } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();

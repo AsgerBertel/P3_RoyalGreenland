@@ -2,10 +2,7 @@ package gui.log;
 
 import directory.Settings;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,6 +15,7 @@ public class LoggingErrorTools
         LocalDateTime localDateTime = LocalDateTime.now();
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
+                + File.separator
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
             pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
@@ -32,6 +30,7 @@ public class LoggingErrorTools
         LocalDateTime localDateTime = LocalDateTime.now();
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
+                + File.separator
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
             pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);

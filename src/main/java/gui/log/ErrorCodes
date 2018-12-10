@@ -1,2 +1,3 @@
 0: succesful
 2: shutdown due to interrupted exception in thread
+4: failed to create main directory (server or local)

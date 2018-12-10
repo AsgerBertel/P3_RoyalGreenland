@@ -44,6 +44,8 @@ public class Settings {
     private static String username = getComputerName();
     private static String serverPath;
     private static String localPath;
+    private static Path pathServer;
+    private static Path pathLocal;
 
     public static void loadSettings(ApplicationMode applicationMode) {
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
@@ -65,14 +67,13 @@ public class Settings {
     }
 
     // Prompt the user for the path to both server and local storage
-    private static void initializeSettingsPrompt() {
+    public static void initializeSettingsPrompt() {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
 
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             fxmlLoader.setResources(bundle);
-            System.out.println(preferences.absolutePath());
 
             fxmlLoader.setLocation(Settings.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
 
@@ -176,7 +177,7 @@ public class Settings {
     }
 
     public static String toString2() {
-        return "server path:           " + getServerPath() + System.getProperty("line.separator") +
+        return  "server path:           " + getServerPath() + System.getProperty("line.separator") +
                 "server documents path: " + getServerDocumentsPath() + System.getProperty("line.separator") +
                 "server app files path  " + getServerAppFilesPath() + System.getProperty("line.separator") +
                 "server archive path    " + getServerArchivePath() + System.getProperty("line.separator") +
