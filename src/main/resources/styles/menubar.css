@@ -20,6 +20,11 @@
     -fx-text-fill: #ffffff;
     -fx-text-alignment: center;
     -fx-background-insets: 0, 0, 0, 0, 0, 0, 0;
+    -fx-opacity: 1;
+}
+
+.menuButton:disabled {
+    -fx-opacity: 0.5;
 }
 
 

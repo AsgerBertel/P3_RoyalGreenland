@@ -76,6 +76,13 @@ public abstract class GUITest extends ApplicationTest {
         return (T) lookup(fxID).queryAll().iterator().next();
     }
 
+    protected void selectAllAndDelete(){
+        press(KeyCode.CONTROL);
+        press(KeyCode.A);
+        release(new KeyCode[]{});
+        push(KeyCode.DELETE);
+    }
+
 
 
 

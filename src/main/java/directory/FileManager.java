@@ -124,6 +124,9 @@ public class FileManager {
         File file = new File(src.toString());
         Path dest = Settings.getServerDocumentsPath().resolve(dstFolder.getOSPath().resolve(src.getFileName()));
 
+        if(Files.exists(dest))
+            dest = generateUniqueFileName(dest);
+
         try {
             Files.copy(src, dest);
 
@@ -140,6 +143,11 @@ public class FileManager {
             LoggingErrorTools.log(e);
         }
         return null;
+    }
+
+
+    public boolean fileExists(Path fullPath){
+        return findInMainFiles(fullPath).isPresent();
     }
 
     // Creates a folder in the root directory of main files
@@ -419,7 +427,7 @@ public class FileManager {
         return findFile(relativePath, getMainFiles());
     }
 
-    private Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
+    public Optional<AbstractFile> findFile(Path fileRelativePath, ArrayList<AbstractFile> searchArea) {
         for (AbstractFile abstractFile : searchArea) {
             Path filePath = abstractFile.getOSPath();
             if (fileRelativePath.startsWith(filePath)) {
