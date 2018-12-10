@@ -20,6 +20,8 @@ public class FileTreeUtil {
     private static Image pdfImage = new Image("/icons/smallRedDoc.png");
     private static final Image folderImage = new Image("/icons/smallFolder.png");
     private static final Image documentImage = new Image("/icons/smallBlueDoc.png");
+    private static final Image genericIcon = new Image("/icons/genericIcon.png");
+    private static final Image imageIcon = new Image("/icons/imageIcon.png");
 
 
     /**
@@ -113,23 +115,23 @@ public class FileTreeUtil {
         if (file instanceof Folder) {
             imageView = new ImageView(folderImage);
 
-            // Set scaling of image
-            imageView.setFitWidth(16);
-            imageView.setFitHeight(16);
         } else {
             String fileExtension = ((Document) file).getFileExtension();
             if (fileExtension.contains("docx") || fileExtension.contains("doc")) {
                 imageView = new ImageView(documentImage);
-                //Set scaling of image
-                imageView.setFitWidth(14);
-                imageView.setFitHeight(16);
-            } else {
+            } else if (fileExtension.contains("pdf")){
                 imageView = new ImageView(pdfImage);
-                //Set scaling of image
-                imageView.setFitWidth(14);
-                imageView.setFitHeight(16);
+            } else if (fileExtension.contains("jpg") || fileExtension.contains("png") || fileExtension.contains("jpeg")){
+                imageView = new ImageView(imageIcon);
             }
+            else {
+                imageView = new ImageView(genericIcon);
+            }
+
         }
+
+        imageView.setFitWidth(16);
+        imageView.setFitHeight(16);
 
         return imageView;
     }
