@@ -14,40 +14,29 @@ import gui.*;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
-import gui.log.LoggingTools;
+import gui.log.LogManager;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.awt.*;
 import java.io.IOException;
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.*;
 import java.util.List;
 
@@ -309,7 +298,7 @@ public class FileAdminController implements TabController {
                     AlertBuilder.IOExceptionPopUp();
                     LoggingErrorTools.log(e);
                 }
-                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                LogManager.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
@@ -339,7 +328,7 @@ public class FileAdminController implements TabController {
                         LoggingErrorTools.log(e);
                     }
                 }
-                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                LogManager.log(new LogEvent(name, LogEventType.CREATED));
             }
         }
         FileManager.getInstance().save();
@@ -435,7 +424,7 @@ public class FileAdminController implements TabController {
     /* ---- Changelist ---- */
     private synchronized void reloadChangesList() {
         changesVBox.getChildren().clear();
-        List<LogEvent> unpublishedChanges = LoggingTools.getAllUnpublishedEvents();
+        List<LogEvent> unpublishedChanges = LogManager.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
             saveChangesButton.setDisable(true);
             return;
@@ -446,13 +435,13 @@ public class FileAdminController implements TabController {
         for (LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
 
-        lastUpdatedText.setText(LoggingTools.getLastPublished());
+        lastUpdatedText.setText(LogManager.getLastPublished());
     }
 
     public void onPublishChanges() {
         try {
             DirectoryCloner.publishFiles();
-            LoggingTools.log(new LogEvent(LoggingTools.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
+            LogManager.log(new LogEvent(LogManager.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
             update();
         } catch (Exception e) {
             e.printStackTrace();
@@ -515,7 +504,7 @@ public class FileAdminController implements TabController {
                     if (changedFile.isPresent() && changedFile.get() instanceof Document) {
                         ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
-                            LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
+                            LogManager.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
                             update();
                         });
                     }

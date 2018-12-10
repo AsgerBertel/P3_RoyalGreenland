@@ -8,7 +8,7 @@ import gui.AlertBuilder;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
-import gui.log.LoggingTools;
+import gui.log.LogManager;
 import json.AppFilesManager;
 
 import java.io.*;
@@ -135,7 +135,7 @@ public class FileManager {
 
             dstFolder.getContents().add(doc);
             AppFilesManager.save(this);
-            LoggingTools.log(new LogEvent(file.getName(), LogEventType.CREATED));
+            LogManager.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
         } catch (IOException e) { // todo catch properly
             e.printStackTrace();
@@ -211,7 +211,7 @@ public class FileManager {
             }
 
             insertFile(file, mainFilesRoot, archiveRoot);
-            LoggingTools.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
+            LogManager.log(new LogEvent(file.getName(), LogEventType.ARCHIVED));
             Optional<Folder> parent = findParent(file, mainFilesRoot);
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
@@ -287,7 +287,7 @@ public class FileManager {
 
         // Insert the file into the main files list
         insertFile(file, archiveRoot, mainFilesRoot);
-        LoggingTools.log(new LogEvent(file.getName(), LogEventType.RESTORED));
+        LogManager.log(new LogEvent(file.getName(), LogEventType.RESTORED));
 
         // Remove the folder from the archive files list
         Optional<Folder> parent = findParent(file, archiveRoot);
@@ -534,13 +534,13 @@ public class FileManager {
 
 
                 AppFilesManager.save(FileManager.getInstance());
-                LoggingTools.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
+                LogManager.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));
             } else if (file instanceof Document) {
                 Document doc = (Document) file;
                 doc.setName(newName);
 
                 AppFilesManager.save(FileManager.getInstance());
-                LoggingTools.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
+                LogManager.log(new LogEvent(doc.getName(), LogEventType.RENAMED));
             }
         }
     }

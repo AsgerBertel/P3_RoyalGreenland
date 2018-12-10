@@ -4,7 +4,6 @@ import directory.Settings;
 import gui.DMSApplication;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class LogEvent {
    private String prefixString,user;
@@ -52,7 +51,7 @@ public class LogEvent {
     // Used in cell factory inside LogController (despite being marked as unused by intellij)
     @SuppressWarnings("unused")
     public String getEventString(){
-        LoggingTools lt = new LoggingTools();
+        LogManager lt = new LogManager();
         return prefixString + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString() + " " + suffixString;
     }
 
