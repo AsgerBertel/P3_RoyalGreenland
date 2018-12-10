@@ -1,6 +1,6 @@
 package gui.settings;
 
-import directory.Settings;
+import directory.SettingsManager;
 import gui.DMSApplication;
 import gui.TabController;
 import javafx.event.ActionEvent;
@@ -52,9 +52,9 @@ public class SettingsController implements TabController {
 
     @Override
     public void update() {
-        usernameTextField.setText(Settings.getUsername());
-        serverPathTextField.setText(Settings.getServerPath().toString());
-        localPathTextField.setText(Settings.getLocalPath().toString());
+        usernameTextField.setText(SettingsManager.getUsername());
+        serverPathTextField.setText(SettingsManager.getServerPath().toString());
+        localPathTextField.setText(SettingsManager.getLocalPath().toString());
         if (DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE))
             languageGroup.selectToggle(danishSettingsButton);
         else
@@ -138,9 +138,9 @@ public class SettingsController implements TabController {
         boolean allChangesSaved = true;
 
         // Save all changes and set allChangeSaved to false if a save failed
-        allChangesSaved &= saveChange(usernameTextField, () -> Settings.setUsername(usernameTextField.getText()));
-        allChangesSaved &= saveChange(serverPathTextField, () -> Settings.setServerPath(Paths.get(serverPathTextField.getText())));
-        allChangesSaved &= saveChange(localPathTextField, () -> Settings.setLocalPath(Paths.get(localPathTextField.getText())));
+        allChangesSaved &= saveChange(usernameTextField, () -> SettingsManager.setUsername(usernameTextField.getText()));
+        allChangesSaved &= saveChange(serverPathTextField, () -> SettingsManager.setServerPath(Paths.get(serverPathTextField.getText())));
+        allChangesSaved &= saveChange(localPathTextField, () -> SettingsManager.setLocalPath(Paths.get(localPathTextField.getText())));
 
         // Only disable save button if all changes are saved correctly
         saveChangesButton.setDisable(allChangesSaved);

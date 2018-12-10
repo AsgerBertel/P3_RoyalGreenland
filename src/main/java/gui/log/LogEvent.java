@@ -1,6 +1,6 @@
 package gui.log;
 
-import directory.Settings;
+import directory.SettingsManager;
 import gui.DMSApplication;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class LogEvent {
     public LogEvent(String prefixString, String suffixString, LogEventType type){
         this.prefixString = prefixString;
         this.suffixString = suffixString;
-        this.user = Settings.getUsername();
+        this.user = SettingsManager.getUsername();
         this.localDateTime = LocalDateTime.now();
         this.eventType = type;
     }

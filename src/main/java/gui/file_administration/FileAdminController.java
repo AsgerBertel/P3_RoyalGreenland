@@ -3,7 +3,7 @@ package gui.file_administration;
 
 import directory.DirectoryCloner;
 import directory.FileManager;
-import directory.Settings;
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -88,7 +88,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        watchRootFiles(Settings.getServerDocumentsPath());
+        watchRootFiles(SettingsManager.getServerDocumentsPath());
     }
 
     @Override
@@ -213,14 +213,14 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document){
             Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
             if(parentOpt.isPresent()){
-                dstPath = Settings.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
+                dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
                 parent = parentOpt.get();
             }else{
-                dstPath = Settings.getServerDocumentsPath().resolve(chosenFile.getName());
+                dstPath = SettingsManager.getServerDocumentsPath().resolve(chosenFile.getName());
                 parent = FileManager.getInstance().getMainFilesRoot();
             }
         }else{
-            dstPath = Settings.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
+            dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
             parent = (Folder) selectedFile;
         }
 
@@ -361,7 +361,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();

@@ -1,13 +1,12 @@
 package directory.files;
 
-import directory.Settings;
+import directory.SettingsManager;
 import gui.AlertBuilder;
 import gui.log.LoggingErrorTools;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Use this class to create document objects representing files in the filesystem.
@@ -15,7 +14,7 @@ import java.nio.file.Paths;
  */
 
 public class DocumentBuilder {
-    private Path currentIDPath = Settings.getServerAppFilesPath().resolve("currentFileID");
+    private Path currentIDPath = SettingsManager.getServerAppFilesPath().resolve("currentFileID");
     public static DocumentBuilder documentBuilder;
 
     private DocumentBuilder() {
