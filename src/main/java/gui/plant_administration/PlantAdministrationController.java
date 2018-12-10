@@ -8,7 +8,7 @@ import gui.DMSApplication;
 import gui.PlantElement;
 import gui.TabController;
 import gui.log.LogEvent;
-import gui.log.LoggingTools;
+import gui.log.LogManager;
 import gui.settings.SettingsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -205,7 +205,7 @@ public class PlantAdministrationController implements TabController {
             fieldCreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
 
-            LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
+            LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
             addErrorClass(fieldEditPlantId);
@@ -267,13 +267,18 @@ public class PlantAdministrationController implements TabController {
                 // Save the change
                 selectedPlant.setName(newName);
                 selectedPlant.setId(newID);
+
                 update();
 
                 lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 String logmsg = "(" + DMSApplication.getMessage("Log.Plant") + ": " + oldName + ", " + oldID + " )" + " -> " + " (" + DMSApplication.getMessage("Log.Plant") + ", " + newName + ", " + newID + " )";
-                LoggingTools.log(new LogEvent(logmsg, PLANT_EDITED));
+                LogManager.log(new LogEvent(logmsg, PLANT_EDITED));
+
+
+
+                selectedPlantElement = null;
             } else {
-                lblPlantEdited.setText("PlantAdmin.SelectPlant");
+                lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.SelectPlant"));
             }
 
             fieldEditPlantName.clear();
@@ -327,11 +332,18 @@ public class PlantAdministrationController implements TabController {
                 btnDeletePlant.setDisable(true);
                 plantCountText.setText("(" + plantElements.size() + ")");
 
-                LoggingTools.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
+                LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
                 return selectedPlantElement;
             }
             if (result.get() == ButtonType.CANCEL)
                 deletePopup.close();
+        }
+        return null;
+    }
+    public PlantElement previousSelectedPlant() {
+        for (PlantElement element : plantElements) {
+            if (element.isSelected())
+                return element;
         }
         return null;
     }

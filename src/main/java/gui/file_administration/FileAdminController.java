@@ -3,7 +3,7 @@ package gui.file_administration;
 
 import directory.DirectoryCloner;
 import directory.FileManager;
-import directory.Settings;
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -14,40 +14,29 @@ import gui.*;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
-import gui.log.LoggingTools;
+import gui.log.LogManager;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.awt.*;
 import java.io.IOException;
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.*;
 import java.util.List;
 
@@ -88,18 +77,30 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(true);
 
-
+        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
+        fileTreeView.setContextMenu(adminFilesContextMenu);
         fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            fileTreeView.setContextMenu(adminFilesContextMenu);
+            if (selectedFile != null) {
+                if (selectedFile.getOSPath().toString().equals("")) {
+                    if (adminFilesContextMenu.getItems().size() == 5) {
+                        adminFilesContextMenu.getItems().remove(2);
+                        adminFilesContextMenu.getItems().remove(3);
+                    }
+                } else
+                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            }
         });
         fileTreeView.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER)
                 openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-        fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+
+
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        watchRootFiles(Settings.getServerDocumentsPath());
+        watchRootFiles(SettingsManager.getServerDocumentsPath());
     }
 
     @Override
@@ -221,17 +222,17 @@ public class FileAdminController implements TabController {
 
         Path dstPath;
         Folder parent;
-        if (selectedFile instanceof Document){
+        if (selectedFile instanceof Document) {
             Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
-            if(parentOpt.isPresent()){
-                dstPath = Settings.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
+            if (parentOpt.isPresent()) {
+                dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
                 parent = parentOpt.get();
-            }else{
-                dstPath = Settings.getServerDocumentsPath().resolve(chosenFile.getName());
+            } else {
+                dstPath = SettingsManager.getServerDocumentsPath().resolve(chosenFile.getName());
                 parent = FileManager.getInstance().getMainFilesRoot();
             }
-        }else{
-            dstPath = Settings.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
+        } else {
+            dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
             parent = (Folder) selectedFile;
         }
 
@@ -309,7 +310,7 @@ public class FileAdminController implements TabController {
                     AlertBuilder.IOExceptionPopUp();
                     LoggingErrorTools.log(e);
                 }
-                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                LogManager.log(new LogEvent(name, LogEventType.CREATED));
             } else if (selectedFile instanceof Document) {
                 String name = folderName.get();
                 Optional<Folder> parent = FileManager.findParent(selectedFile, fileManager.getMainFilesRoot());
@@ -339,7 +340,7 @@ public class FileAdminController implements TabController {
                         LoggingErrorTools.log(e);
                     }
                 }
-                LoggingTools.log(new LogEvent(name, LogEventType.CREATED));
+                LogManager.log(new LogEvent(name, LogEventType.CREATED));
             }
         }
         FileManager.getInstance().save();
@@ -372,7 +373,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();
@@ -435,7 +436,7 @@ public class FileAdminController implements TabController {
     /* ---- Changelist ---- */
     private synchronized void reloadChangesList() {
         changesVBox.getChildren().clear();
-        List<LogEvent> unpublishedChanges = LoggingTools.getAllUnpublishedEvents();
+        List<LogEvent> unpublishedChanges = LogManager.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
             saveChangesButton.setDisable(true);
             return;
@@ -446,13 +447,13 @@ public class FileAdminController implements TabController {
         for (LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
 
-        lastUpdatedText.setText(LoggingTools.getLastPublished());
+        lastUpdatedText.setText(LogManager.getLastPublished());
     }
 
     public void onPublishChanges() {
         try {
             DirectoryCloner.publishFiles();
-            LoggingTools.log(new LogEvent(LoggingTools.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
+            LogManager.log(new LogEvent(LogManager.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
             update();
         } catch (Exception e) {
             e.printStackTrace();
@@ -515,7 +516,7 @@ public class FileAdminController implements TabController {
                     if (changedFile.isPresent() && changedFile.get() instanceof Document) {
                         ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
                         Platform.runLater(() -> {
-                            LoggingTools.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
+                            LogManager.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
                             update();
                         });
                     }
@@ -553,5 +554,4 @@ public class FileAdminController implements TabController {
         monitorThread.setDaemon(true);
         monitorThread.start();
     }
-
 }

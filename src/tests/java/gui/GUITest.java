@@ -1,7 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
-import directory.Settings;
+import directory.SettingsManager;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -40,11 +40,11 @@ public abstract class GUITest extends ApplicationTest {
 
     @BeforeAll @SuppressWarnings("Duplicates")
     static void setupApplication() throws Exception {
-        Settings.loadSettings(ApplicationMode.ADMIN);
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
 
-        originalPath = Settings.getServerPath();
-        Settings.setServerPath(TestUtil.getTestDocuments());
-        Settings.setLanguage(DMSApplication.DK_LOCALE);
+        originalPath = SettingsManager.getServerPath();
+        SettingsManager.setServerPath(TestUtil.getTestDocuments());
+        SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }
@@ -59,7 +59,7 @@ public abstract class GUITest extends ApplicationTest {
     @AfterAll
     static void cleanUp(){
         // Reset path in settings
-        //Settings.setServerPath(originalPath);
+        //SettingsManager.setServerPath(originalPath);
     }
 
     void switchLanguageSetting()  {

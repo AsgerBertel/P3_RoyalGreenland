@@ -2,7 +2,7 @@ package gui.deleted_files;
 
 import directory.FileExplorer;
 import directory.FileManager;
-import directory.Settings;
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -21,10 +21,8 @@ import javafx.scene.layout.VBox;
 
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -119,7 +117,7 @@ public class DeletedFilesController implements TabController {
         } else {
 
             try {
-                Desktop.getDesktop().open(Settings.getServerArchivePath().resolve(fileButton.getFile().getPath()).toFile());
+                Desktop.getDesktop().open(SettingsManager.getServerArchivePath().resolve(fileButton.getFile().getPath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,7 +172,7 @@ public class DeletedFilesController implements TabController {
                 AbstractFile file = newValue.getValue();
                 if (file instanceof Document) {
                     try {
-                        Desktop.getDesktop().open(Settings.getServerArchivePath().resolve(file.getOSPath()).toFile());
+                        Desktop.getDesktop().open(SettingsManager.getServerArchivePath().resolve(file.getOSPath()).toFile());
                     } catch (IOException e) {
                         LoggingErrorTools.log(e);
                         AlertBuilder.IOExceptionPopUp();

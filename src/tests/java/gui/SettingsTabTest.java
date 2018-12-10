@@ -1,9 +1,6 @@
 package gui;
 
-import directory.FileManager;
-import directory.Settings;
-import directory.files.AbstractFile;
-import directory.files.Folder;
+import directory.SettingsManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
@@ -11,13 +8,9 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,10 +68,10 @@ public class SettingsTabTest extends GUITest{
         TextField userField = findNode("#usernameTextField");
 
         saveTextValueTest(serverField, Paths.get("TestFolder/server/" + DMSApplication.APP_TITLE).toString(),
-                () -> Settings.getServerPath().toString());
+                () -> SettingsManager.getServerPath().toString());
         saveTextValueTest(localField, Paths.get("TestFolder/local/" + DMSApplication.APP_TITLE).toString(),
-                () -> Settings.getLocalPath().toString());
-        saveTextValueTest(userField, "SorenSmoke", () -> Settings.getUsername());
+                () -> SettingsManager.getLocalPath().toString());
+        saveTextValueTest(userField, "SorenSmoke", () -> SettingsManager.getUsername());
     }
 
 
@@ -162,9 +155,9 @@ public class SettingsTabTest extends GUITest{
         ToggleButton greenlandicButton = findNode("#greenlandicSettingsButton");
         ToggleButton danishButton = findNode("#danishSettingsButton");
 
-        assertEquals(serverField.getText(), Settings.getServerPath().toString());
-        assertEquals(localField.getText(), Settings.getLocalPath().toString());
-        assertEquals(userField.getText(), Settings.getUsername());
+        assertEquals(serverField.getText(), SettingsManager.getServerPath().toString());
+        assertEquals(localField.getText(), SettingsManager.getLocalPath().toString());
+        assertEquals(userField.getText(), SettingsManager.getUsername());
 
         if(DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE)){
             assertTrue(danishButton.isSelected());

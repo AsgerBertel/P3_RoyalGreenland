@@ -22,7 +22,7 @@ public class FileTester {
     @BeforeAll @SuppressWarnings("Duplicates")
     static final void setupApplication() throws Exception {
         Settings.loadSettings(ApplicationMode.ADMIN);
-        originalPath = Settings.getServerPath();
+        originalPath = SettingsManager.getServerPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
     }
 
@@ -43,7 +43,7 @@ public class FileTester {
     @AfterAll
     static void onTestEnd(){
         // Reset path in settings
-        Settings.setServerPath(originalPath);
+        SettingsManager.setServerPath(originalPath);
     }
 
     protected static AbstractFile findInMainFiles(Path path){

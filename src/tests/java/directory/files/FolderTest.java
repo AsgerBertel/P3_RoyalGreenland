@@ -2,7 +2,7 @@ package directory.files;
 
 import app.ApplicationMode;
 import directory.FileTester;
-import directory.Settings;
+import directory.SettingsManager;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class FolderTest extends FileTester {
 
     @BeforeEach
     void setSettings(){
-        Settings.loadSettings(ApplicationMode.ADMIN);
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         folderTest = new Folder(pathToTestFolder.toString());
         doc = DocumentBuilder.getInstance().createDocument(pathToDoc);
         folderTest.getContents().add(doc);

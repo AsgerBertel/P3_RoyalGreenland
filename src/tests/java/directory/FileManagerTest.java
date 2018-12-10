@@ -17,17 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest extends FileTester {
 
-    final Path folderPath = Paths.get("02_VINTERTØRRET FISK");
+    Path folderPath = Paths.get("02_VINTERTØRRET FISK");
     Folder folder1;
-    final Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
+    Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     Document doc;
-    final Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
+    Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
     Document doc2;
-    final Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
+    Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
     Folder parentFolder;
 
     @Override
     void setSettings() {
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
         doc2 = (Document) findInMainFiles(doc2Path);
@@ -58,14 +59,14 @@ class FileManagerTest extends FileTester {
 
     @Test
     void uploadFile() {
-        Document uploadedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()));
+        Document uploadedDoc = FileManager.getInstance().uploadFile(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()));
 
         assertTrue(FileManager.getInstance().getMainFilesRoot().getContents().contains(uploadedDoc));
     }
 
     @Test
     void uploadFile1() {
-        Document uploadedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()), folder1);
+        Document uploadedDoc = FileManager.getInstance().uploadFile(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()), folder1);
 
         assertTrue(folder1.getContents().contains(uploadedDoc));
     }
@@ -87,7 +88,7 @@ class FileManagerTest extends FileTester {
     @Test
     void deleteFile() {
 
-        Document movedDoc = FileManager.getInstance().uploadFile(Settings.getServerDocumentsPath().resolve(doc.getOSPath()));
+        Document movedDoc = FileManager.getInstance().uploadFile(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()));
 
         assertTrue(FileManager.getInstance().getMainFiles().contains(movedDoc));
         assertTrue(FileManager.getInstance().getMainFiles().contains(folder1));
@@ -107,7 +108,7 @@ class FileManagerTest extends FileTester {
         Document originalFile = (Document) findInMainFiles(Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.pdf"));
         Folder parentFolder = (Folder) findInMainFiles(Paths.get("02_VINTERTØRRET FISK"));
 
-        Path originalFilePath = Settings.getServerDocumentsPath().resolve(originalFile.getOSPath());
+        Path originalFilePath = SettingsManager.getServerDocumentsPath().resolve(originalFile.getOSPath());
         Document duplicateFile1 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
         Document duplicateFile2 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
 

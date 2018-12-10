@@ -1,10 +1,9 @@
 package gui.log;
 
-import directory.Settings;
+import directory.SettingsManager;
 import gui.DMSApplication;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class LogEvent {
    private String prefixString,user;
@@ -19,7 +18,7 @@ public class LogEvent {
     public LogEvent(String prefixString, String suffixString, LogEventType type){
         this.prefixString = prefixString;
         this.suffixString = suffixString;
-        this.user = Settings.getUsername();
+        this.user = SettingsManager.getUsername();
         this.localDateTime = LocalDateTime.now();
         this.eventType = type;
     }
@@ -52,7 +51,7 @@ public class LogEvent {
     // Used in cell factory inside LogController (despite being marked as unused by intellij)
     @SuppressWarnings("unused")
     public String getEventString(){
-        LoggingTools lt = new LoggingTools();
+        LogManager lt = new LogManager();
         return prefixString + DMSApplication.getMessage("Log.Is") + eventType.getLocalizedString() + " " + suffixString;
     }
 
