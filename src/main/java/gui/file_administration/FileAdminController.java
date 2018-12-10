@@ -77,15 +77,27 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(true);
 
-
+        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
+        fileTreeView.setContextMenu(adminFilesContextMenu);
         fileTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            fileTreeView.setContextMenu(adminFilesContextMenu);
+            if (selectedFile != null) {
+                if (selectedFile.getOSPath().toString().equals("")) {
+                    if (adminFilesContextMenu.getItems().size() == 5) {
+                        adminFilesContextMenu.getItems().remove(2);
+                        adminFilesContextMenu.getItems().remove(3);
+                    }
+                } else
+                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            }
         });
         fileTreeView.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER)
                 openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-        fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+
+
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
         watchRootFiles(SettingsManager.getServerDocumentsPath());
@@ -210,16 +222,16 @@ public class FileAdminController implements TabController {
 
         Path dstPath;
         Folder parent;
-        if (selectedFile instanceof Document){
+        if (selectedFile instanceof Document) {
             Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
-            if(parentOpt.isPresent()){
+            if (parentOpt.isPresent()) {
                 dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
                 parent = parentOpt.get();
-            }else{
+            } else {
                 dstPath = SettingsManager.getServerDocumentsPath().resolve(chosenFile.getName());
                 parent = FileManager.getInstance().getMainFilesRoot();
             }
-        }else{
+        } else {
             dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
             parent = (Folder) selectedFile;
         }
@@ -542,5 +554,4 @@ public class FileAdminController implements TabController {
         monitorThread.setDaemon(true);
         monitorThread.start();
     }
-
 }
