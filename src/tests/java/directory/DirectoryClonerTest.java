@@ -8,6 +8,7 @@ import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -50,16 +51,22 @@ class DirectoryClonerTest extends FileTester {
     void updateLocalFiles() throws Exception {
         PlantManager.getInstance();
         DirectoryCloner.publishFiles();
-
         al = AppFilesManager.loadPublishedFileList();
 
-        DirectoryCloner.updateLocalFiles();
+        //assert that they are not equal before update
+        assertNotEquals(al, AppFilesManager.loadLocalFileList());
 
+        //assert that local files and published files are equal after update
+        DirectoryCloner.updateLocalFiles();
         assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
     @Test
-    void removeOutdatedFiles() {
+    void removeOutdatedFiles() throws IOException {
+
+        ArrayList<AbstractFile> oldFiles = FileManager.getInstance().getMainFiles();
+        ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
+        DirectoryCloner.removeOutdatedFiles(oldFiles, newFiles, FileManager.getInstance().getMainFilesRoot().getPath());
     }
 
     @Test
