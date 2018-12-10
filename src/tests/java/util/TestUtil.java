@@ -20,6 +20,7 @@ public class TestUtil {
     private static final String REPLACEMENT_FOLDER_NAME = APPLICATION_FOLDER_NAME + " Original";
 
     private TestUtil() {
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -30,8 +31,9 @@ public class TestUtil {
         Path oldFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
-        if (Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME))
+        if (Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME)){
             FileUtils.deleteDirectory(oldFolder.toFile());
+        }
 
         FileUtils.copyDirectory(replacementFolder.toFile(), oldFolder.toFile());
     }
@@ -39,7 +41,6 @@ public class TestUtil {
     public static final Path getTestDocuments() {
         return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
-
 
     /**
      * Checks if the given file (and its' children) match the treeItem (and its' children)
