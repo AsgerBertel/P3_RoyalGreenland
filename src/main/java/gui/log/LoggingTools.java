@@ -19,7 +19,7 @@ public class LoggingTools {
     public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath() + "logs.log", true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerAppFilesPath().resolve("logs.log").toString(), true)))) {
             pw.println(listOfEvents.get(0) + "|" + listOfEvents.get(1) + "|" + listOfEvents.get(2));
 
         } catch (IOException e) {
@@ -52,14 +52,14 @@ public class LoggingTools {
 
         LocalDateTime localDateTime = LocalDateTime.parse(substrings[0], FORMATTER);
 
-        return new LogEvent(substrings[1], substrings[3], substrings[4], localDateTime, LogEventType.valueOf(substrings[2]));
+         return new LogEvent(substrings[1], substrings[3], substrings[4], localDateTime, LogEventType.valueOf(substrings[2]));
     }
 
 
     public static List<LogEvent> getAllEvents() {
         List<LogEvent> listOfEvents = new ArrayList<>();
 
-        Path logFile = Paths.get(Settings.getServerAppFilesPath() + "logs.log");
+        Path logFile = Settings.getServerAppFilesPath().resolve("logs.log");
 
         // Return empty list if no log can be loaded from the server
         if (!Files.exists(logFile))

@@ -19,9 +19,9 @@ public class LoggingErrorTools
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
-            pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" STACKTRACE:");
+            pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
-            pw.println("---------------------------------------------------------------------------------------------------------------");
+            pw.println("------------------------------------------------------------------------------------------------------------------------");
             pw.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,9 +33,9 @@ public class LoggingErrorTools
 
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
-            pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" STACKTRACE:");
+            pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
-            pw.println("---------------------------------------------------------------------------------------------------------------");
+            pw.println("------------------------------------------------------------------------------------------------------------------------");
             pw.println("\n");
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,13 +2,15 @@ package directory;
 
 import app.ApplicationMode;
 import gui.DMSApplication;
-import gui.settings.InitializationController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -16,7 +18,6 @@ import java.util.prefs.Preferences;
 
 public class Settings {
     private static Preferences preferences = Preferences.userNodeForPackage(Settings.class);
-    private static Settings settings;
 
     private static final String DEFAULT_NULL_VALUE = "null";
 
@@ -26,16 +27,16 @@ public class Settings {
     private static final String USERNAME_PREF = "username";
     private static final String LANGUAGE_PREF = "language";
 
-    private static final String APPLICATION_FOLDER_NAME = "RG DMS/";
+    public static final String APPLICATION_FOLDER_NAME = DMSApplication.APP_TITLE;
 
     // Relative program paths
-    private static final String ARCHIVE_PATH = "Archive/";
-    private static final String DOCUMENTS_PATH = "Documents/";
-    private static final String APP_FILES_PATH = "App Files/";
-    private static final String ERROR_LOGS_PATH = "Error Logs/";
+    private static final String ARCHIVE_PATH = "Archive" + File.separator;
+    private static final String DOCUMENTS_PATH = "Documents" + File.separator;
+    private static final String APP_FILES_PATH = "App Files" + File.separator;
+    private static final String ERROR_LOGS_PATH = "Error Logs" + File.separator;
 
-    private static final String WORKING_DIRECTORY_PATH = "Working Directory/";
-    private static final String PUBLISHED_FILES_PATH = "Published Files/";
+    private static final String WORKING_DIRECTORY_PATH = "Working Directory" + File.separator;
+    private static final String PUBLISHED_FILES_PATH = "Published Files" + File.separator;
 
     // Default language is danish
     private static Locale language = DMSApplication.DK_LOCALE;
@@ -71,6 +72,7 @@ public class Settings {
 
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             fxmlLoader.setResources(bundle);
+            System.out.println(preferences.absolutePath());
 
             fxmlLoader.setLocation(Settings.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
 
@@ -93,74 +95,64 @@ public class Settings {
         preferences.put(LANGUAGE_PREF, newLanguage.toString());
     }
 
-    public static String getPublishedDocumentsPath(){
-        return serverPath + PUBLISHED_FILES_PATH + DOCUMENTS_PATH;
+    public static Path getPublishedDocumentsPath(){
+        return getServerPath().resolve(PUBLISHED_FILES_PATH).resolve(DOCUMENTS_PATH);
     }
 
-    public static String getPublishedAppFilesPath(){
-        return serverPath + PUBLISHED_FILES_PATH + APP_FILES_PATH;
+    public static Path getPublishedAppFilesPath(){
+        return getServerPath().resolve(PUBLISHED_FILES_PATH).resolve(APP_FILES_PATH);
     }
 
     // Returns the absolute path of the main files on the server
-    public static String getServerDocumentsPath() {
-        return serverPath + WORKING_DIRECTORY_PATH + DOCUMENTS_PATH;
+    public static Path getServerDocumentsPath() {
+        return getServerPath().resolve(WORKING_DIRECTORY_PATH).resolve(DOCUMENTS_PATH);
     }
 
     // Returns the absolute path of the archived files on the server
-    public static String getServerArchivePath() {
-        return serverPath + WORKING_DIRECTORY_PATH +ARCHIVE_PATH;
+    public static Path getServerArchivePath() {
+        return getServerPath().resolve(WORKING_DIRECTORY_PATH).resolve(ARCHIVE_PATH);
     }
 
     // Returns the absolute path of the application files on the server
-    public static String getServerAppFilesPath() {
-        return serverPath + WORKING_DIRECTORY_PATH + APP_FILES_PATH;
+    public static Path getServerAppFilesPath() {
+        return getServerPath().resolve(WORKING_DIRECTORY_PATH).resolve(APP_FILES_PATH);
     }
 
     // Returns the absolute path of the local file copies
-    public static String getLocalFilesPath() {
-        return localPath + DOCUMENTS_PATH;
+    public static Path getLocalFilesPath() {
+        return getLocalPath().resolve(DOCUMENTS_PATH);
     }
 
     // Returns the absolute path of the application files on the local drive
-    public static String getLocalAppFilesPath() {
-        return localPath + APP_FILES_PATH;
+    public static Path getLocalAppFilesPath() {
+        return getLocalPath().resolve(APP_FILES_PATH);
     }
 
-    public static String getServerErrorLogsPath() { return serverPath + ERROR_LOGS_PATH; }
+    public static Path getServerErrorLogsPath() { return getServerPath().resolve(ERROR_LOGS_PATH); }
 
     public static String getUsername() {
         return username;
     }
 
-    public static void setServerPath(String newPath) {
-        newPath = getUniversalPath(newPath);
-        serverPath = completeApplicationPath(newPath);
+    public static void setServerPath(Path newPath) {
+        serverPath = completeApplicationPath(newPath).toString();
         preferences.put(SERVER_PATH_PREF, serverPath);
     }
 
-    public static void setLocalPath(String newPath) {
-        newPath = getUniversalPath(newPath);
-        localPath = completeApplicationPath(newPath);
-        preferences.put(USERNAME_PREF, localPath);
-    }
-
-    // Replaces backslashes with forward slashes
-    public static String getUniversalPath(String path) {
-
-        return path.replace("\\", "/").replace("//", "/");
+    public static void setLocalPath(Path newPath) {
+        localPath = completeApplicationPath(newPath).toString();
+        preferences.put(LOCAL_PATH_PREF, localPath);
     }
 
     // Adds the application folder name to the path if it's not already in there
-    private static String completeApplicationPath(String path) {
-        String completedPath = path;
-        if (completedPath.charAt(path.length() - 1) != '/')
-            completedPath += '/';
+    private static Path completeApplicationPath(Path path) {
+        String completedPath = path.toString();
 
         // Append the application folder if it is not included in the given path
         if (!completedPath.contains(APPLICATION_FOLDER_NAME))
-            completedPath += APPLICATION_FOLDER_NAME;
+            completedPath += File.separator + APPLICATION_FOLDER_NAME;
 
-        return completedPath;
+        return Paths.get(completedPath);
     }
 
     public static void setUsername(String newName) {
@@ -175,12 +167,12 @@ public class Settings {
         else return env.getOrDefault("HOSTNAME", "Unknown Computer");
     }
 
-    public static String getServerPath() {
-        return serverPath;
+    public static Path getServerPath() {
+        return Paths.get(serverPath);
     }
 
-    public static String getLocalPath() {
-        return localPath;
+    public static Path getLocalPath() {
+        return Paths.get(localPath);
     }
 
     public static String toString2() {

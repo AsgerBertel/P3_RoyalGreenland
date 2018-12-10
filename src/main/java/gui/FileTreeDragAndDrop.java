@@ -9,6 +9,7 @@ import directory.files.Folder;
 import gui.file_administration.FileAdminController;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
+import gui.log.LoggingErrorTools;
 import gui.log.LoggingTools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeCell;
@@ -93,6 +94,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             }
         });
 
+
         cell.setOnDragDone((
                 DragEvent event) ->
 
@@ -174,6 +176,8 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             FileManager.getInstance().moveFile(fileToMove, destinationFolder);
         } catch (IOException e) {
             e.printStackTrace();
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
         }
 
         LoggingTools.log(new LogEvent(fileToMove.getName(), destinationFolder.getName(), LogEventType.FILE_MOVED));

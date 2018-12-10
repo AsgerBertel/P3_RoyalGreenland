@@ -1,6 +1,5 @@
 package directory.files;
 
-import com.sun.javafx.binding.Logging;
 import directory.Settings;
 import gui.AlertBuilder;
 import gui.log.LoggingErrorTools;
@@ -16,7 +15,7 @@ import java.nio.file.Paths;
  */
 
 public class DocumentBuilder {
-    private Path currentIDPath = Paths.get(Settings.getServerAppFilesPath()+File.separator+"currentFileID");
+    private Path currentIDPath = Settings.getServerAppFilesPath().resolve("currentFileID");
     public static DocumentBuilder documentBuilder;
 
     private DocumentBuilder() {
@@ -44,7 +43,12 @@ public class DocumentBuilder {
      * @return a new ID for the new file.
      */
     public int readAndUpdateCurrentID() {
-        int currentID = -1;
+        int currentID = 0;
+
+        if(!Files.exists(currentIDPath)){
+            saveCurrentID(0);
+            return 0;
+        }
 
         try (BufferedReader reader = Files.newBufferedReader(currentIDPath)) {
             String str = reader.readLine();
@@ -55,6 +59,21 @@ public class DocumentBuilder {
             e.printStackTrace();
         }
 
+        saveCurrentID(currentID);
+
+        return currentID;
+    }
+
+    private void saveCurrentID(int currentID){
+
+        if(!Files.exists(currentIDPath)) {
+            try {
+                currentIDPath.toFile().createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try (BufferedWriter writer = Files.newBufferedWriter(currentIDPath)) {
             String ID = "" + (currentID + 1);
             writer.write(ID);
@@ -63,7 +82,5 @@ public class DocumentBuilder {
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
-
-        return currentID;
     }
 }

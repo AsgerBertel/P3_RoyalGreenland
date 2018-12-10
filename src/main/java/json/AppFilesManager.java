@@ -4,7 +4,10 @@ package json;
 import directory.FileManager;
 import directory.Settings;
 import directory.files.AbstractFile;
+import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.AlertBuilder;
+import gui.log.LoggingErrorTools;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -23,7 +26,7 @@ public class AppFilesManager {
      * @return the instance of FileManager stored in the path. Returns null if no FileManager exists in the path.
      */
     public static FileManager loadFileManager(){
-        String path = Settings.getServerAppFilesPath() + FILES_LIST_FILE_NAME;
+        Path path = Settings.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME);
         return loadInstanceFromJsonFile(path, FileManager.class);
     }
 
@@ -33,42 +36,70 @@ public class AppFilesManager {
      * @return the instance of FileManager stored in the path. Returns null if no FileManager exists in the path.
      */
     public static PlantManager loadPlantManager(){
-        String path = Settings.getServerAppFilesPath() + FACTORY_LIST_FILE_NAME;
+        Path path = Settings.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
         return loadInstanceFromJsonFile(path, PlantManager.class);
     }
 
-    public static ArrayList<AbstractFile> loadPublishedFileList(){
-        String path = Settings.getPublishedAppFilesPath() + FILES_LIST_FILE_NAME;
-        // todo Violates the singleton pattern. Do we care?
-        FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
-        if(publishedFileManager != null)
-            return publishedFileManager.getMainFiles();
+    public static ArrayList<Plant> loadLocalFactoryList(){
+        Path path = Settings.getLocalAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
+        PlantManager plantManager = loadInstanceFromJsonFile(path, PlantManager.class);
+        if(plantManager != null)
+            return plantManager.getAllPlants();
+
         return new ArrayList<>();
     }
 
-    private static <T> T loadInstanceFromJsonFile(String path, java.lang.Class<T> classOfT){
-        if(!Files.exists(Paths.get(path)))
+    public static ArrayList<Plant> loadPublishedFactoryList(){
+        Path path = Settings.getPublishedAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
+        PlantManager plantManager = loadInstanceFromJsonFile(path, PlantManager.class);
+        if(plantManager != null)
+            return plantManager.getAllPlants();
+
+        return new ArrayList<>();
+    }
+
+    public static ArrayList<AbstractFile> loadPublishedFileList(){
+        Path path = Settings.getPublishedAppFilesPath().resolve(FILES_LIST_FILE_NAME);
+        FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
+        if(publishedFileManager != null) {
+            return publishedFileManager.getMainFiles();
+        }
+        return new ArrayList<>();
+    }
+
+    public static ArrayList<AbstractFile> loadLocalFileList(){
+        Path path = Settings.getLocalAppFilesPath().resolve(FILES_LIST_FILE_NAME);
+        FileManager publishedFileManager = loadInstanceFromJsonFile(path, FileManager.class);
+        if(publishedFileManager != null) {
+            return publishedFileManager.getMainFiles();
+        }
+        return new ArrayList<>();
+    }
+
+    private static <T> T loadInstanceFromJsonFile(Path path, java.lang.Class<T> classOfT){
+        if(!Files.exists(path))
             return null;
 
-        try (Reader reader = new FileReader(path)) {
+        try (Reader reader = new FileReader(path.toString())) {
             return JsonParser.getJsonParser().fromJson(reader, classOfT);
-            // todo change read and write json to convert to unix file system.
         } catch (IOException e) {
-            e.printStackTrace(); // todo handle exception. Method Throws maybe? - Magnus
+            AlertBuilder.IOExceptionPopUp();
+            LoggingErrorTools.log(e);
+            e.printStackTrace();
             return null;
         }
     }
 
     public static void save(FileManager fileManager){
-        saveObjectToJson(fileManager, Settings.getServerAppFilesPath() + FILES_LIST_FILE_NAME);
+        saveObjectToJson(fileManager, Settings.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME));
     }
 
     public static void save(PlantManager plantManager){
-        saveObjectToJson(plantManager, Settings.getServerAppFilesPath() + FACTORY_LIST_FILE_NAME);
+        saveObjectToJson(plantManager, Settings.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME));
     }
 
-    private static void saveObjectToJson(Object object, String path){
-        try (FileWriter writer = new FileWriter(path)) {
+    private static void saveObjectToJson(Object object, Path path){
+        try (FileWriter writer = new FileWriter(path.toString())) {
             // Converts the object to JSon
             JsonParser.getJsonParser().toJson(object, writer);
         } catch (IOException e) {
@@ -76,58 +107,78 @@ public class AppFilesManager {
         }
     }
 
+    /**
+     * Creates the server directories.
+     * @throws IOException if .mkdirs() fails.
+     */
     public static void createServerDirectories() throws IOException {
-        Path serverRoot = Paths.get(Settings.getServerPath());
+        Path serverRoot = Settings.getServerPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(serverRoot.getParent())) throw new FileNotFoundException("The chosen server directory could not be found");
 
-        Path serverDocumentsPath = Paths.get(Settings.getServerDocumentsPath());
-        Path serverArchivePath = Paths.get(Settings.getServerArchivePath());
-        Path serverAppFilesPath = Paths.get(Settings.getServerAppFilesPath());
-        Path publishedAppFilesPath = Paths.get(Settings.getPublishedAppFilesPath());
-        Path publishedDocumentsPath = Paths.get(Settings.getPublishedDocumentsPath());
+        ArrayList<Path> applicationPaths = new ArrayList<>();
+        applicationPaths.add(Settings.getServerDocumentsPath());
+        applicationPaths.add(Settings.getServerArchivePath());
+        applicationPaths.add(Settings.getServerAppFilesPath());
+        applicationPaths.add(Settings.getPublishedAppFilesPath());
+        applicationPaths.add(Settings.getPublishedDocumentsPath());
+        applicationPaths.add(Settings.getServerErrorLogsPath());
 
-        boolean success = true;
-        if(!Files.exists(serverDocumentsPath))
-            success = serverDocumentsPath.toFile().mkdirs();
-
-        if(!Files.exists(serverArchivePath))
-            success &= serverArchivePath.toFile().mkdirs();
-
-        if(!Files.exists(serverAppFilesPath))
-            success &= serverAppFilesPath.toFile().mkdirs();
-
-        if(!Files.exists(publishedAppFilesPath))
-            success &= publishedAppFilesPath.toFile().mkdirs();
-
-        if(!Files.exists(publishedDocumentsPath))
-            success &= publishedDocumentsPath.toFile().mkdirs();
-
-        if(!success){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
-            // todo Also in the case of the server directories connection might be a factor
-            throw new IOException("Could not create application directories");
-        }
+        createAppFolders(applicationPaths);
     }
 
+    /**
+     * Creates the local directories, throws IOException if .mkdirs fails
+     * @throws IOException if .mkdirs() fails.
+     */
     public static void createLocalDirectories() throws IOException{
-        Path localRoot = Paths.get(Settings.getLocalPath());
+        Path localRoot = Settings.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent())) throw new FileNotFoundException("Local Application folder could not be found");
 
-        Path localDocumentsPath = Paths.get(Settings.getLocalFilesPath());
-        Path localAppFilesPath = Paths.get(Settings.getLocalAppFilesPath());
+        ArrayList<Path> applicationPaths = new ArrayList<>();
+        applicationPaths.add(Settings.getLocalFilesPath());
+        applicationPaths.add(Settings.getLocalAppFilesPath());
 
-        boolean succes = true;
-        if(!Files.exists(localDocumentsPath))
-            succes = localDocumentsPath.toFile().mkdirs();
+        createAppFolders(applicationPaths);
+    }
 
-        if(!Files.exists(localAppFilesPath))
-            succes &= localAppFilesPath.toFile().mkdirs();
+    private static void createAppFolders(ArrayList<Path> paths) throws IOException{
+        for(Path appPath : paths){
+            try{
+                if(!Files.exists(appPath))
+                    Files.createDirectories(appPath);
+            }catch (IOException e){
+                throw new IOException("Failed to create an application folder : " + appPath.toString(), e);
+            }
+        }
+    }
 
-        if(!succes){ // todo Look into why mkdirs() might fail and throw appropriate exception (Probably something about write permissions)
-            throw new IOException("Could not create application directories");
+    /**
+     * Creates the server side AppFiles besides JSON files.
+     * @throws FileNotFoundException if working or published AppFiles folder is missing.
+     * @throws IOException if BufferedWriter fails to read from currentFileID.
+     */
+    private static void createServerAppFiles() throws IOException {
+        Path appFilesPath = Settings.getServerAppFilesPath();
+        Path publishedAppFilesPath = Settings.getPublishedAppFilesPath();
+
+        if(!Files.exists(appFilesPath.getParent()))
+            throw new FileNotFoundException("Server Working Files folder could not be found");
+        if(!Files.exists(publishedAppFilesPath.getParent()))
+            throw new FileNotFoundException("Server Published Files folder could not be found");
+
+        Path currentFileIDPath = appFilesPath.resolve("currentFileID");
+
+        if(!Files.exists(currentFileIDPath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(currentFileIDPath)) {
+                writer.write("0");
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Could not write to currentFileID file");
+            }
         }
 
     }

@@ -99,7 +99,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        watchRootFiles(Paths.get(Settings.getServerDocumentsPath()));
+        watchRootFiles(Settings.getServerDocumentsPath());
     }
 
     @Override
@@ -215,49 +215,38 @@ public class FileAdminController implements TabController {
             AlertBuilder.uploadDocumentPopUp();
             return;
         }
+        if (selectedFile == null)
+            selectedFile = fileManager.getMainFilesRoot();
 
-        Path path = Paths.get(Settings.getServerDocumentsPath() + selectedFile.getOSPath() + File.separator + chosenFile.getName());
 
-        if (Files.exists(path)) {
+        Path dstPath;
+        Folder parent;
+        if (selectedFile instanceof Document){
+            Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
+            if(parentOpt.isPresent()){
+                dstPath = Settings.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
+                parent = parentOpt.get();
+            }else{
+                dstPath = Settings.getServerDocumentsPath().resolve(chosenFile.getName());
+                parent = FileManager.getInstance().getMainFilesRoot();
+            }
+        }else{
+            dstPath = Settings.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
+            parent = (Folder) selectedFile;
+        }
+
+
+        if (FileManager.getInstance().fileExists(dstPath)) {
             int i = OverwriteFilePopUP();
             if (i == 1) {
-                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
+                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(dstPath);
                 FileManager.getInstance().deleteFile(oldFile.get());
-            } else if (i == 0) {
-
-                Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(path);
-                Optional<String> newName = renameFilePopUP();
-                String newNameExt = newName.get() + "." + ((Document) oldFile.get()).getFileExtension();
-
-                try {
-                    FileManager.getInstance().renameFile(oldFile.get(), newNameExt);
-                } catch (FileAlreadyExistsException e) {
-                    e.printStackTrace();
-                    AlertBuilder.fileAlreadyExistsPopUp();
-                }
-            } else {
+            } else if (i != 0) {
                 return;
             }
         }
 
-        if (selectedFile instanceof Folder) {
-            // Upload inside selected folder
-            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), (Folder) selectedFile);
-            fileManager.save();
-        } else if (selectedFile instanceof Document) {
-            // Upload as sibling to selected document
-            Optional<Folder> parent = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
-            if (parent.isPresent()) {
-                Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent.get());
-            } else {
-                // Upload to root
-                Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath());
-            }
-
-        } else if (selectedFile == null) {
-            // Upload to root
-            Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), fileManager.getMainFilesRoot());
-        }
+        Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent);
 
         fileManager.save();
         update();
@@ -383,7 +372,7 @@ public class FileAdminController implements TabController {
         if (selectedFile instanceof Document) {
             Document doc = (Document) selectedFile;
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();
@@ -488,6 +477,7 @@ public class FileAdminController implements TabController {
     /**
      * Watches directory for changes, Listener only reacts on changes and calls update() incase invoked.
      * Thread sleeps for 0,2 hereafter, for good measure.
+     *
      * @param root path to directory to watch
      */
     private void watchRootFiles(Path root) {
@@ -497,15 +487,25 @@ public class FileAdminController implements TabController {
         FileAlterationObserver observer = new FileAlterationObserver(directory);
         observer.addListener(new FileAlterationListener() {
             @Override
-            public void onStart(FileAlterationObserver fileAlterationObserver) { }
+            public void onStart(FileAlterationObserver fileAlterationObserver) {
+            }
+
             @Override
-            public void onDirectoryCreate(File file) { }
+            public void onDirectoryCreate(File file) {
+            }
+
             @Override
-            public void onDirectoryChange(File file) { }
+            public void onDirectoryChange(File file) {
+            }
+
             @Override
-            public void onDirectoryDelete(File file) { }
+            public void onDirectoryDelete(File file) {
+            }
+
             @Override
-            public void onFileCreate(File file) { }
+            public void onFileCreate(File file) {
+            }
+
             @Override
             public void onFileChange(File file) {
                 // Don't register changes to temporary word files
@@ -521,10 +521,14 @@ public class FileAdminController implements TabController {
                     }
                 }
             }
+
             @Override
-            public void onFileDelete(File file) { }
+            public void onFileDelete(File file) {
+            }
+
             @Override
-            public void onStop(FileAlterationObserver fileAlterationObserver) { }
+            public void onStop(FileAlterationObserver fileAlterationObserver) {
+            }
         });
         try {
             observer.initialize();

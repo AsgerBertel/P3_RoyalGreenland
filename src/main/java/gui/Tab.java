@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public enum TabLoader {
+public enum Tab {
 
     FILE_OVERVIEW("FileOverview.fxml"),
     FILE_ADMINISTRATION("FileAdministration.fxml"),
@@ -21,13 +21,14 @@ public enum TabLoader {
     private TabController tabController;
     private Locale lang;
 
-    TabLoader(String fxmlFileName){
+    Tab(String fxmlFileName){
         this.fxmlFileName = fxmlFileName;
         lang = DMSApplication.getLanguage();
     }
 
-    public Pane getPane(DMSApplication dmsApplication) throws IOException {
-        if(node == null || lang != DMSApplication.getLanguage()){
+    public Pane getPane(DMSApplication dmsApplication, Locale lang) throws IOException {
+        if(node == null || this.lang != lang){
+            this.lang = lang;
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DMSApplication.fxmlPath + fxmlFileName), bundle);
             node = fxmlLoader.load();
@@ -37,5 +38,11 @@ public enum TabLoader {
 
         tabController.update();
         return node;
+    }
+
+    public void update(){tabController.update();}
+
+    public TabController getTabController(){
+        return tabController;
     }
 }

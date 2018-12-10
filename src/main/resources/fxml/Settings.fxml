@@ -38,7 +38,8 @@
         <Text styleClass="standardTitle" text="%Settings.Sprog"/>
 
         <HBox translateY="10">
-            <ToggleButton  translateX="10" text="%Settings.Dansk" styleClass="darkButton" fx:id="changeToDanish" onAction="#changeToDanish">
+            <ToggleButton translateX="10" text="%Settings.Dansk" styleClass="darkButton" fx:id="danishSettingsButton"
+                          onAction="#changeToDanish">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/danish.png"  />
@@ -46,7 +47,8 @@
                 </graphic>
             </ToggleButton>
 
-            <ToggleButton translateX="25" text="%Settings.Grønlandsk" styleClass="darkButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
+            <ToggleButton translateX="25" text="%Settings.Grønlandsk" styleClass="darkButton" fx:id="greenlandicSettingsButton"
+                          onAction="#changeToGreenlandic">
                 <graphic >
                     <ImageView fitWidth="24" fitHeight="24">
                         <Image url="/icons/menu/greenlandic.png"/>

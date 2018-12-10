@@ -1,18 +1,5 @@
 package directory.files;
 
-import com.sun.nio.file.SensitivityWatchEventModifier;
-import directory.FileManager;
-import gui.log.LogEvent;
-import gui.log.LogEventType;
-import gui.log.LoggingTools;
-import json.AppFilesManager;
-
-import javax.naming.InvalidNameException;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-
-import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -51,11 +38,8 @@ public class Document extends AbstractFile {
         return "";
     }
 
-    // Opens the document in a window
-    public void openDocument() throws IOException {
-        File file = new File(getOSPath().toString());
-        Desktop.getDesktop().open(file);
-
+    public String getLastModified() {
+        return lastModified;
     }
 
     public void setLastModified(LocalDateTime localDateTime){
@@ -74,7 +58,6 @@ public class Document extends AbstractFile {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), ID, lastModified);
     }
 }

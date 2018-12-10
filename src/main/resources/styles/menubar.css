@@ -1,7 +1,5 @@
 .horizontalMenu {
     -fx-min-height: 44px;
-    -fx-max-height: 44px;
-    -fx-pref-height: 44px;
     -fx-background-color: #303841;
     -fx-padding: 0;
 }
@@ -22,6 +20,11 @@
     -fx-text-fill: #ffffff;
     -fx-text-alignment: center;
     -fx-background-insets: 0, 0, 0, 0, 0, 0, 0;
+    -fx-opacity: 1;
+}
+
+.menuButton:disabled {
+    -fx-opacity: 0.5;
 }
 
 

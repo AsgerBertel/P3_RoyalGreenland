@@ -1,11 +1,11 @@
 package gui;
 
 import app.ApplicationMode;
+import directory.DirectoryCloner;
+import directory.FileUpdater;
 import directory.Settings;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -13,15 +13,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import static gui.TabLoader.FILE_ADMINISTRATION;
+import static gui.Tab.FILE_ADMINISTRATION;
 
 public class DMSApplication extends Application {
 
@@ -37,7 +36,7 @@ public class DMSApplication extends Application {
 
     private static final int MIN_WIDTH = 1024;
     private static final int MIN_HEIGHT = 768;
-    public static final String APP_TITLE = "RG - Document Management System";
+    public static final String APP_TITLE = "RG DMS";
 
     private FXMLLoader fxmlLoader;
     public static final String fxmlPath = "/fxml/";
@@ -47,21 +46,23 @@ public class DMSApplication extends Application {
     private static ApplicationMode applicationMode;
 
     private Settings settings;
+    private Tab currentTab;
 
-
+    private static DMSApplication dmsApplication;
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication() {
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
         initializeApplication();
 
-        this.primaryStage = stage;
+        primaryStage = stage;
 
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
@@ -70,9 +71,9 @@ public class DMSApplication extends Application {
         primaryStage.show();
 
         if (applicationMode.equals(ApplicationMode.ADMIN)) {
-            switchWindow(FILE_ADMINISTRATION);
+            switchTab(FILE_ADMINISTRATION);
         } else {
-            switchWindow(TabLoader.FILE_OVERVIEW);
+            switchTab(Tab.FILE_OVERVIEW);
         }
     }
 
@@ -104,28 +105,32 @@ public class DMSApplication extends Application {
     }
 
     // Shows the given part of the program
-    public void switchWindow(TabLoader programPart) {
+    public void switchTab(Tab newTab) {
         // Remove all currently added elements except the main menu
         while (root.getChildren().size() > 1)
             root.getChildren().remove(1);
 
-        Pane newPane = null;
+        Pane newPane;
 
         try {
-            newPane = programPart.getPane(this);
-
+            newPane = newTab.getPane(this, getLanguage());
             // Make sure the new pane scales to the rest of the window
             newPane.prefHeightProperty().bind(root.heightProperty());
             newPane.prefWidthProperty().bind(root.widthProperty());
 
             root.getChildren().add(newPane);
+            currentTab = newTab;
         } catch (IOException e) {
 
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
-            alert.setContentText("Kontakt Udvikleren Mail: ds323@student.aau.dk");
+            alert.setContentText("Kontakt udvikleren\n Mail: ds323@student.aau.dk");
         }
+    }
+
+    public Tab getCurrentTab(){
+        return currentTab;
     }
 
     public void restartApp() throws Exception {
@@ -136,6 +141,14 @@ public class DMSApplication extends Application {
         locale = newLocale;
         Settings.setLanguage(newLocale);
         messages = ResourceBundle.getBundle("Messages", newLocale);
+        try {
+            restartApp();
+        } catch (Exception e) {
+            e.printStackTrace();
+            String msgKey = "Exception.FailedRestart.";
+            AlertBuilder.customErrorPopUp(getMessage(msgKey + "Title"),
+                    getMessage(msgKey + "Header"), getMessage(msgKey + "Context"));
+        }
     }
 
     public static Locale getLanguage() {
@@ -153,33 +166,41 @@ public class DMSApplication extends Application {
     private void initializeApplication() {
         // Load settings and initialize paths if non are saved
         Settings.loadSettings(applicationMode);
-        this.locale = Settings.getLanguage();
-        this.messages = ResourceBundle.getBundle("Messages", locale);
+        locale = Settings.getLanguage();
+        messages = ResourceBundle.getBundle("Messages", locale);
         // Create application folder if they are missing
         if (applicationMode.equals(ApplicationMode.VIEWER)) {
             try {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
+                DirectoryCloner.updateLocalFiles();
+                new FileUpdater(this).start();
             } catch (IOException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Fejl");
                 alert.setHeaderText(null);
-                alert.setContentText("Vælg din lokale sti igen");
+                alert.setContentText("Vælg din lokale sti igen"); // todo sprog
             }
         } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
             try {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
+            } catch (FileNotFoundException e) {
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Fejl");
                 alert.setHeaderText(null);
-                alert.setContentText("Chek om du har forbindelse til serveren");
-
+                alert.setContentText("Chek om du har forbindelse til serveren"); // todo sprog
             }
         }
+    }
+
+
+    public static DMSApplication getDMSApplication(){
+        return dmsApplication;
     }
 
 }

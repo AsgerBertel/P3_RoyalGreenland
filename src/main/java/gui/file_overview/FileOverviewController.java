@@ -1,5 +1,6 @@
 package gui.file_overview;
 
+import app.ApplicationMode;
 import directory.*;
 import directory.files.AbstractFile;
 import directory.files.Document;
@@ -13,49 +14,43 @@ import gui.FileTreeUtil;
 import gui.TabController;
 import gui.log.LoggingErrorTools;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.TextAlignment;
+import json.AppFilesManager;
 
-import javax.print.Doc;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileOverviewController implements TabController {
 
-    //private Path rootDirectory = Paths.get(System.getProperty("user.dir") + "/Sample Files/Main Files");
     private FileExplorer fileExplorer;
+    private List<AbstractFile> filesToShow;
 
-    private ObservableList<Plant> plantList;
+    private ArrayList<Plant> plantList;
+    private Plant selectedPlant;
+    private Plant universalPlant = new Plant(-1, "All plants", null); // todo language "All plants"
 
+    @FXML
+    private TreeView<AbstractFile> fileTreeView;
     private TreeItem<AbstractFile> rootItem;
-
-    private Plant allPlant = new Plant(-1, "All plants", new AccessModifier());
-    List<AbstractFile> filesToShow;
+    private ArrayList<AbstractFile> filesList;
 
     @FXML
     private FlowPane flpFileView;
-
     @FXML
     private Label lblVisualPath;
     @FXML
-    private TreeView<AbstractFile> fileTreeView;
-    @FXML
     private ComboBox<Plant> drdPlant;
-
-    private DMSApplication dmsApplication;
 
     @FXML // Called upon loading the fxml and constructing the gui
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,55 +59,58 @@ public class FileOverviewController implements TabController {
         });
 
         fileTreeView.setShowRoot(false);
-        fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
-        updateDisplayedFiles();
     }
 
     @Override
-    public void initReference(DMSApplication dmsApplication) {
-        this.dmsApplication = dmsApplication;
-    }
+    public void initReference(DMSApplication dmsApplication) {}
 
     @Override
     public void update() {
-        // Refresh file tree if the files have changed
+        if (DMSApplication.getApplicationMode() == ApplicationMode.ADMIN) {
+            plantList = AppFilesManager.loadPublishedFactoryList();
+            filesList = AppFilesManager.loadPublishedFileList();
+        } else {
+            plantList = AppFilesManager.loadLocalFactoryList();
+            filesList = AppFilesManager.loadLocalFileList();
+        }
+
+        reloadPlantDropDown();
         reloadFileTree();
-        ArrayList<Plant> allPlants = new ArrayList<>();
-        allPlants.add(allPlant);
-        allPlants.addAll(PlantManager.getInstance().getAllPlants());
-        plantList = FXCollections.observableList(allPlants);
-        drdPlant.setItems(plantList);
+        reloadFileExplorer();
+    }
+
+    private void reloadPlantDropDown(){
+        EventHandler<ActionEvent> eventHandler = drdPlant.getOnAction();
+        drdPlant.setOnAction(null);
+        ArrayList<Plant> selectablePlants = new ArrayList<>();
+        selectablePlants.add(universalPlant);
+        selectablePlants.addAll(plantList);
+        drdPlant.setItems(FXCollections.observableList(selectablePlants));
+
+
+        if(selectedPlant == null){
+            drdPlant.getSelectionModel().select(universalPlant);
+            selectedPlant = universalPlant;
+        }else{
+            drdPlant.getSelectionModel().select(selectedPlant);
+        }
+        drdPlant.setOnAction(eventHandler);
+    }
+
+    private void reloadFileExplorer() {
+        fileExplorer = new FileExplorer(filesList, selectedPlant);
+        updateDisplayedFiles();
     }
 
     private void reloadFileTree() {
-        rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
+        rootItem = FileTreeUtil.generateTree(filesList, selectedPlant.getAccessModifier());
         fileTreeView.setRoot(rootItem);
     }
 
     @FXML
     void onPlantSelected(ActionEvent event) {
-        Plant selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
-        // Create fileExplorer that matches the accessModifier of the selected plant
-        fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles(), selectedPlant);
-        if(selectedPlant.equals(allPlant)){
-            fileExplorer = new FileExplorer(FileManager.getInstance().getMainFiles());
-            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles());
-            fileTreeView.setRoot(rootItem);
-            updateDisplayedFiles();
-            return;
-        }
-
-        if (selectedPlant != null) {
-            AccessModifier accessModifier = selectedPlant.getAccessModifier();
-            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), accessModifier);
-
-        } else {
-            rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFiles(), new AccessModifier());
-        }
-
-        fileTreeView.setRoot(rootItem);
-
-        updateDisplayedFiles();
+        selectedPlant = drdPlant.getSelectionModel().getSelectedItem();
+        update();
     }
 
     // Updates the window to show the current files from the file explorer
@@ -125,6 +123,7 @@ public class FileOverviewController implements TabController {
             FileButton fileButton = createFileButton(file);
             flpFileView.getChildren().add(fileButton);
         }
+
         lblVisualPath.setText(PathDisplayCorrection());
         lblVisualPath.setMaxWidth(550);
         // Make sure, that the text is cut from the left.
@@ -154,14 +153,14 @@ public class FileOverviewController implements TabController {
             open(clickedButton);
     }
 
-    // Opens the folder that is double clicked and displays its content
+    // Called when a fileButton is double clicked
     public void open(FileButton fileButton) {
         if (fileButton.getFile() instanceof Folder) {
             fileExplorer.navigateTo((Folder) fileButton.getFile());
             updateDisplayedFiles();
         } else {
             try {
-                Desktop.getDesktop().open(Paths.get(Settings.getServerDocumentsPath() + fileButton.getFile().getOSPath()).toFile());
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();
@@ -180,7 +179,7 @@ public class FileOverviewController implements TabController {
         ArrayList<String> pathSteps = new ArrayList<>();
         String newString = "";
 
-        String path = fileExplorer.getCurrentPath();
+        String path;
 
         if (getOperatingSystem() == "Windows") {
             path = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, "/");
@@ -189,33 +188,31 @@ public class FileOverviewController implements TabController {
         }
 
         String tempString = "";
-        for(int i = 0; i < path.length(); ++i){
-            if(path.charAt(i) != '/'){
+        for (int i = 0; i < path.length(); ++i) {
+            if (path.charAt(i) != '/') {
                 tempString = tempString + path.charAt(i);
-            } else{
+            } else {
                 pathSteps.add(tempString);
                 tempString = "";
             }
-            if(i == path.length() - 1 && pathSteps.size() == 0){
+            if (i == path.length() - 1 && pathSteps.size() == 0) {
                 pathSteps.add(tempString);
-            }else if (i == path.length() - 1){
+            } else if (i == path.length() - 1) {
                 pathSteps.add(tempString);
             }
         }
 
         int bracketCount = pathSteps.size();
 
-        String tmpString = "";
-
-        if(bracketCount > 3){
-            for(int i = pathSteps.size() - 3; i < pathSteps.size(); ++i){
-                if(i == pathSteps.size() - 3){
+        if (bracketCount > 3) {
+            for (int i = pathSteps.size() - 3; i < pathSteps.size(); ++i) {
+                if (i == pathSteps.size() - 3) {
                     newString = newString + "...";
                 }
                 newString = newString + " / " + pathSteps.get(i);
             }
         } else {
-            for (int i = 0; i < pathSteps.size(); ++i){
+            for (int i = 0; i < pathSteps.size(); ++i) {
                 newString = newString + " / " + pathSteps.get(i);
             }
         }
@@ -234,13 +231,15 @@ public class FileOverviewController implements TabController {
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
         AbstractFile file = newValue.getValue();
         if (file instanceof Document) {
+            Document doc = (Document) file;
             try {
-                ((Document) file).openDocument();
+                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
+                System.out.println("Could not open file");
                 e.printStackTrace();
-                AlertBuilder.IOExceptionPopUp();
-                LoggingErrorTools.log(e);
             }
         }
     }
+
+    //todo dUpLiCaTe CoDe
 }

@@ -10,7 +10,7 @@
     <left>
         <HBox>
             <children>
-                <ToggleButton styleClass="menuButton" fx:id="viewDocuments" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
+                <ToggleButton styleClass="menuButton" fx:id="viewDocumentsButton" text="%MainMenu.SeeDoc" onAction="#viewDocuments">
                     <graphic>
                         <ImageView fitWidth="20" fitHeight="24">
                             <Image url="/icons/menu/viewDocuments.png" />
@@ -18,7 +18,7 @@
                     </graphic>
                 </ToggleButton>
 
-                <ToggleButton styleClass="menuButton" fx:id="settings" text="%MainMenu.Settings" onAction="#settings">
+                <ToggleButton styleClass="menuButton" fx:id="settingsButton" text="%MainMenu.Settings" onAction="#settings">
                     <graphic>
                         <ImageView fitWidth="23" fitHeight="25">
                             <Image url="/icons/menu/settings.png"/>
@@ -33,7 +33,7 @@
     <right>
         <HBox>
             <children>
-                <ToggleButton styleClass="menuButton" fx:id="changeToDanish" onAction="#changeToDanish">
+                <ToggleButton styleClass="menuButton" fx:id="danishButton" onAction="#danishButton">
                     <graphic>
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/danish.png"  />
@@ -41,7 +41,7 @@
                     </graphic>
                 </ToggleButton>
 
-                <ToggleButton styleClass="menuButton" fx:id="changeToGreenlandic" onAction="#changeToGreenlandic">
+                <ToggleButton styleClass="menuButton" fx:id="greenlandicButton" onAction="#greenlandicButton">
                     <graphic >
                         <ImageView fitWidth="24" fitHeight="24">
                             <Image url="/icons/menu/greenlandic.png"/>

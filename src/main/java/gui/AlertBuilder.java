@@ -2,12 +2,14 @@ package gui;
 
 import directory.Settings;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
-public class AlertBuilder
-{
+public class AlertBuilder {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -22,7 +24,8 @@ public class AlertBuilder
                 null);
         alert.showAndWait();
     }
-    public static void fileNotFound() {
+
+    public static void fileNotFoundPopup() {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.fileNotFound.Title"),
@@ -41,8 +44,16 @@ public class AlertBuilder
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.IO.Title"),
                 DMSApplication.getMessage("Exception.IO.Header"),
-                DMSApplication.getMessage("Exception.IO.Context")+"\n"
-                        +Settings.getServerErrorLogsPath()+LocalDateTime.now().format(formatter)
+                DMSApplication.getMessage("Exception.IO.Context") + "\n"
+                        + Settings.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
+        );
+        alert.showAndWait();
+    }
+
+    public static void customErrorPopUp(String customTitle, String customHeader, String customContext) {
+        buildAlert(
+                Alert.AlertType.ERROR, customTitle, customHeader,customContext + "\n"
+                        + Settings.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
         );
         alert.showAndWait();
     }
@@ -51,15 +62,16 @@ public class AlertBuilder
      * Displays an ERROR popup telling the user incase of InvalidNameException. Primarily in context of Files.move()
      * and Files.copy(), incase file already exists in the target path, or named an illegal name. Parameters consist of
      * the source path and target path.
+     *
      * @param src
      * @param target
      */
     @Deprecated
-    public static void invalidNameExceptionPopUp (String src, String target) {
+    public static void invalidNameExceptionPopUp(String src, String target) {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setTitle(DMSApplication.getMessage("Exception.InvalidName.Title"));
         alert.setHeaderText(DMSApplication.getMessage("Exception.InvalidName.Header"));
-        alert.setContentText(DMSApplication.getMessage("Exception.InvalidName.Context")+"\n"+src+"\n"+target);
+        alert.setContentText(DMSApplication.getMessage("Exception.InvalidName.Context") + "\n" + src + "\n" + target);
         alert.showAndWait();
     }
 
@@ -71,10 +83,11 @@ public class AlertBuilder
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.Interrupted.Title"),
                 DMSApplication.getMessage("Exception.Interrupted.Header"),
-                threadName+ ": "+DMSApplication.getMessage("Exception.Interrupted.Context")
+                threadName + ": " + DMSApplication.getMessage("Exception.Interrupted.Context")
         );
         alert.showAndWait();
     }
+
     public static void uploadDocumentPopUp() {
         buildAlert(
                 Alert.AlertType.INFORMATION,
@@ -84,11 +97,23 @@ public class AlertBuilder
         );
         alert.showAndWait();
     }
-    private static void buildAlert (Alert.AlertType type, String title, String header, String context) {
+
+    private static void buildAlert(Alert.AlertType type, String title, String header, String context) {
         alert.setAlertType(type);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(context);
+    }
+
+    public static Alert deletePlantPopup() {
+        buildAlert(
+                Alert.AlertType.CONFIRMATION,
+                DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"),
+                DMSApplication.getMessage("PlantAdmin.Popup.Info"),
+                DMSApplication.getMessage("PlantAdmin.Popup.YouSure"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
+        return alert;
     }
 
 }
