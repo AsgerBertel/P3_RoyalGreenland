@@ -29,6 +29,7 @@ public class FileExplorer {
     public FileExplorer(ArrayList<AbstractFile> files) {
         this.files = files;
         this.viewingPlant = null;
+        rootFolder = (Folder) files.get(0);
     }
 
     // Returns the files currently shown in the explorer
@@ -68,7 +69,7 @@ public class FileExplorer {
         if (currentFolder == null)
             return false;
 
-        // Find parent folder if it exists
+        // Find parent folder if it
         Optional<Folder> folder = FileManager.findParent(currentFolder, rootFolder);
         currentFolder = folder.orElse(null);
 
