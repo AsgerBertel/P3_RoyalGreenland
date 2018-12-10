@@ -54,6 +54,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                     iv1.setImage(folderImg);
                     iv1.setFitWidth(32);
                     iv1.setFitHeight(32);
+
                 } else {
                     String fileExtension = ((Document) item).getFileExtension();
                     if (fileExtension.contains("docx") || fileExtension.contains("doc")) {
