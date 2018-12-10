@@ -26,7 +26,7 @@ class FileManagerTest extends FileTester {
     Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
     Folder parentFolder;
 
-    @BeforeEach
+    @Override
     void setSettings() {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
