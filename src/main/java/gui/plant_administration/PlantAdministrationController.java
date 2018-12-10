@@ -267,13 +267,18 @@ public class PlantAdministrationController implements TabController {
                 // Save the change
                 selectedPlant.setName(newName);
                 selectedPlant.setId(newID);
+
                 update();
 
                 lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 String logmsg = "(" + DMSApplication.getMessage("Log.Plant") + ": " + oldName + ", " + oldID + " )" + " -> " + " (" + DMSApplication.getMessage("Log.Plant") + ", " + newName + ", " + newID + " )";
                 LogManager.log(new LogEvent(logmsg, PLANT_EDITED));
+
+
+
+                selectedPlantElement = null;
             } else {
-                lblPlantEdited.setText("PlantAdmin.SelectPlant");
+                lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.SelectPlant"));
             }
 
             fieldEditPlantName.clear();
@@ -332,6 +337,13 @@ public class PlantAdministrationController implements TabController {
             }
             if (result.get() == ButtonType.CANCEL)
                 deletePopup.close();
+        }
+        return null;
+    }
+    public PlantElement previousSelectedPlant() {
+        for (PlantElement element : plantElements) {
+            if (element.isSelected())
+                return element;
         }
         return null;
     }
