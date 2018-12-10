@@ -4,7 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectoryClonerTest {
+class DirectoryClonerTest extends FileTester {
+
+    @Override
+    void setSettings(){
+
+    }
 
     @Test
     void publishFiles() {

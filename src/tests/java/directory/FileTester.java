@@ -20,14 +20,14 @@ public class FileTester {
     private static Path originalPath;
 
     @BeforeAll @SuppressWarnings("Duplicates")
-    static final void setupApplication() throws Exception {
-        Settings.loadSettings(ApplicationMode.ADMIN);
+    static final void setupApplication() {
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         originalPath = SettingsManager.getServerPath();
-        Settings.setServerPath(TestUtil.getTestDocuments());
+        SettingsManager.setServerPath(TestUtil.getTestDocuments());
     }
 
     @BeforeEach
-    void resetBeforeEachMethod() throws IOException, InterruptedException {
+    void resetBeforeEachMethod() throws IOException {
         TestUtil.resetTestFiles();
         FileManager.resetInstance();
 
