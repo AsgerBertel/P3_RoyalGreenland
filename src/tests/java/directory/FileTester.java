@@ -10,8 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileTester {
 
@@ -19,22 +21,23 @@ public class FileTester {
 
     @BeforeAll @SuppressWarnings("Duplicates")
     static final void setupApplication() throws Exception {
-        TestUtil.resetTestFiles();
-
         Settings.loadSettings(ApplicationMode.ADMIN);
         originalPath = Settings.getServerPath();
         Settings.setServerPath(TestUtil.getTestDocuments());
-
-        AppFilesManager.createServerDirectories();
-        AppFilesManager.createLocalDirectories();
     }
 
     @BeforeEach
-    void resetBeforeEachMethod() throws IOException {
+    void resetBeforeEachMethod() throws IOException, InterruptedException {
         TestUtil.resetTestFiles();
+        FileManager.resetInstance();
 
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
+        setSettings();
+    }
+
+    void setSettings(){
+
     }
 
     @AfterAll
@@ -43,7 +46,10 @@ public class FileTester {
         Settings.setServerPath(originalPath);
     }
 
-    protected AbstractFile findInMainFiles(Path path){
+    protected static AbstractFile findInMainFiles(Path path){
+        if (path.toString().startsWith(File.separator)){
+            path = Paths.get(path.toString().substring(1));
+        }
         return FileManager.getInstance().findFile(path, FileManager.getInstance().getMainFiles()).get();
     }
 }

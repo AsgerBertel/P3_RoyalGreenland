@@ -17,18 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest extends FileTester {
 
-    Path folderPath = Paths.get("02_VINTERTØRRET FISK");
+    final Path folderPath = Paths.get("02_VINTERTØRRET FISK");
     Folder folder1;
-    Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
+    final Path docPath = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     Document doc;
-    Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
+    final Path doc2Path = Paths.get("02_VINTERTØRRET FISK/HA 02 GR_02  HACCP plan for indfrysning af fisk.doc");
     Document doc2;
-    Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
+    final Path parentFolderPath = Paths.get("03_URENSET STENBIDERROGN");
     Folder parentFolder;
 
-    @BeforeEach
+    @Override
     void setSettings() {
-        Settings.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);
         doc2 = (Document) findInMainFiles(doc2Path);
