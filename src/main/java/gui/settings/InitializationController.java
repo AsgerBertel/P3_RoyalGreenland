@@ -1,7 +1,7 @@
 package gui.settings;
 
 import app.ApplicationMode;
-import directory.Settings;
+import directory.SettingsManager;
 import gui.DMSApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,7 +28,7 @@ public class InitializationController implements Initializable {
 
     private State currentState;
 
-    String serverPath = "", localPath = "", userName = Settings.getUsername();
+    String serverPath = "", localPath = "", userName = SettingsManager.getUsername();
 
     private enum State {
         LOCAL_PATH,
@@ -139,12 +139,12 @@ public class InitializationController implements Initializable {
 
     // Close the initialization window
     private void close() {
-        Settings.setServerPath(Paths.get(serverPath));
-        Settings.setUsername(userName);
+        SettingsManager.setServerPath(Paths.get(serverPath));
+        SettingsManager.setUsername(userName);
 
         // Save local path if the application is running in viewer mode
         if (DMSApplication.getApplicationMode().equals(ApplicationMode.VIEWER))
-            Settings.setLocalPath(Paths.get(localPath));
+            SettingsManager.setLocalPath(Paths.get(localPath));
 
         // Close initialization window
         ((Stage) nextButton.getScene().getWindow()).close();

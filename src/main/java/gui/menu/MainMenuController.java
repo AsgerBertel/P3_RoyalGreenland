@@ -1,6 +1,6 @@
 package gui.menu;
 
-import directory.Settings;
+import directory.SettingsManager;
 import gui.DMSApplication;
 import gui.Tab;
 import javafx.event.ActionEvent;
@@ -58,7 +58,7 @@ public class MainMenuController {
 
         this.dmsApplication = dmsApplication;
 
-        if (Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
+        if (SettingsManager.getLanguage().equals(DMSApplication.DK_LOCALE)){
             danishButton.setSelected(true);
 
         } else {
@@ -96,20 +96,18 @@ public class MainMenuController {
         settingsButton.setSelected(true);
     }
 
-    public void changeToDanish(Event actionEvent) throws Exception{
+    public void danishButton(Event actionEvent) throws Exception{
         danishButton.setSelected(true);
-        if (!Settings.getLanguage().equals(DMSApplication.DK_LOCALE)){
+        if (!SettingsManager.getLanguage().equals(DMSApplication.DK_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.DK_LOCALE);
-            dmsApplication.restartApp();
         }
 
     }
 
-    public void changeToGreenlandic(ActionEvent actionEvent) throws Exception{
+    public void greenlandicButton(ActionEvent actionEvent) throws Exception{
         greenlandicButton.setSelected(true);
-        if (!Settings.getLanguage().equals(DMSApplication.GL_LOCALE)){
+        if (!SettingsManager.getLanguage().equals(DMSApplication.GL_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);
-            dmsApplication.restartApp();
         }
 
 

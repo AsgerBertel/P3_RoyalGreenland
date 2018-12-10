@@ -41,4 +41,8 @@ public enum Tab {
     }
 
     public void update(){tabController.update();}
+
+    public TabController getTabController(){
+        return tabController;
+    }
 }

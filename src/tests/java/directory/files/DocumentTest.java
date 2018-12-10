@@ -2,7 +2,7 @@ package directory.files;
 
 import app.ApplicationMode;
 import directory.FileTester;
-import directory.Settings;
+import directory.SettingsManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class DocumentTest extends FileTester {
 
     @BeforeEach
     void setSettings(){
-        Settings.loadSettings(ApplicationMode.ADMIN);
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
         docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
     }
@@ -51,6 +51,5 @@ class DocumentTest extends FileTester {
 
         assertEquals(ldt.format(DATE_TIME_FORMATTER), docExt.getLastModified());
     }
-
 
 }

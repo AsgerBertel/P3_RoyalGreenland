@@ -3,7 +3,7 @@ package gui;
 import app.ApplicationMode;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
-import directory.Settings;
+import directory.SettingsManager;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
@@ -51,15 +51,17 @@ public class DMSApplication extends Application {
 
     private static ApplicationMode applicationMode;
 
-    private Settings settings;
+    private SettingsManager settings;
     private Tab currentTab;
 
+    private static DMSApplication dmsApplication;
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication() {
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
         applicationMode = ApplicationMode.valueOf(appModeParameter);
@@ -143,8 +145,16 @@ public class DMSApplication extends Application {
 
     public void changeLanguage(Locale newLocale) {
         locale = newLocale;
-        Settings.setLanguage(newLocale);
+        SettingsManager.setLanguage(newLocale);
         messages = ResourceBundle.getBundle("Messages", newLocale);
+        try {
+            restartApp();
+        } catch (Exception e) {
+            e.printStackTrace();
+            String msgKey = "Exception.FailedRestart.";
+            AlertBuilder.customErrorPopUp(getMessage(msgKey + "Title"),
+                    getMessage(msgKey + "Header"), getMessage(msgKey + "Context"));
+        }
     }
 
     public static Locale getLanguage() {
@@ -161,8 +171,8 @@ public class DMSApplication extends Application {
 
     private void initializeApplication() {
         // Load settings and initialize paths if non are saved
-        Settings.loadSettings(applicationMode);
-        locale = Settings.getLanguage();
+        SettingsManager.loadSettings(applicationMode);
+        locale = SettingsManager.getLanguage();
         messages = ResourceBundle.getBundle("Messages", locale);
 
         // Create application folder if they are missing
@@ -179,7 +189,7 @@ public class DMSApplication extends Application {
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
             AlertBuilder.fileNotFoundPopup();
-            Settings.initializeSettingsPrompt();
+            SettingsManager.initializeSettingsPrompt();
         } catch(IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
@@ -191,4 +201,10 @@ public class DMSApplication extends Application {
             System.exit(4);
         }
     }
+
+
+    public static DMSApplication getDMSApplication(){
+        return dmsApplication;
+    }
+
 }

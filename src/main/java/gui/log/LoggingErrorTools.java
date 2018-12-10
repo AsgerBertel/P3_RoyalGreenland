@@ -1,6 +1,6 @@
 package gui.log;
 
-import directory.Settings;
+import directory.SettingsManager;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -14,10 +14,10 @@ public class LoggingErrorTools
     public static void log(Throwable throwable) {
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerErrorLogsPath()
                 + File.separator
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
-            pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
+            pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ SettingsManager.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
             pw.println("------------------------------------------------------------------------------------------------------------------------");
             pw.println("\n");
@@ -29,10 +29,10 @@ public class LoggingErrorTools
     public static void log(Throwable throwable, int exitCode) {
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(Settings.getServerErrorLogsPath()
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerErrorLogsPath()
                 + File.separator
                 + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
-            pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ Settings.getUsername()+" | STACKTRACE:");
+            pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ SettingsManager.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
             pw.println("------------------------------------------------------------------------------------------------------------------------");
             pw.println("\n");

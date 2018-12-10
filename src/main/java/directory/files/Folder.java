@@ -1,16 +1,8 @@
 package directory.files;
 
-import directory.FileManager;
-import directory.Settings;
 import directory.plant.AccessModifier;
-import gui.log.LogEvent;
-import gui.log.LogEventType;
-import gui.log.LoggingTools;
-import json.AppFilesManager;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -91,8 +83,8 @@ public class Folder extends AbstractFile {
 
 
     public boolean isSubFolderOf(Folder parent) {
-        return getOSPath().toString().contains(parent.getOSPath().toString());
-
+        if(parent.getPath().equals(getPath())) return false;
+        return getPath().toString().contains(parent.getPath().toString());
     }
 
 }

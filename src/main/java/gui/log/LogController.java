@@ -34,7 +34,7 @@ public class LogController implements TabController {
 
     private DMSApplication dmsApplication;
 
-    LoggingTools lt = new LoggingTools();
+    LogManager lt = new LogManager();
     private List<LogEvent> listOfEvents;
     private boolean sortedByTime = false;
     private boolean sortedByUser = false;

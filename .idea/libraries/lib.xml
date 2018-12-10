@@ -1,12 +1,9 @@
 <component name="libraryTable">
-  <library name="javafx-sdk-11.0">
+  <library name="lib">
     <CLASSES>
       <root url="file://C:/Program Files/javafx-sdk-11.0.1/lib" />
     </CLASSES>
     <JAVADOC />
-    <NATIVE>
-      <root url="file://C:/Program Files/javafx-sdk-11.0.1/bin" />
-    </NATIVE>
     <SOURCES>
       <root url="file://C:/Program Files/javafx-sdk-11.0.1/lib" />
     </SOURCES>

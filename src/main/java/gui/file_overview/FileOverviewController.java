@@ -5,9 +5,7 @@ import directory.*;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
-import directory.plant.AccessModifier;
 import directory.plant.Plant;
-import directory.plant.PlantManager;
 import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.FileTreeUtil;
@@ -160,7 +158,7 @@ public class FileOverviewController implements TabController {
             updateDisplayedFiles();
         } else {
             try {
-                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(fileButton.getFile().getOSPath()).toFile());
+                Desktop.getDesktop().open(SettingsManager.getServerDocumentsPath().resolve(fileButton.getFile().getOSPath()).toFile());
             } catch (IOException e) {
                 LoggingErrorTools.log(e);
                 AlertBuilder.IOExceptionPopUp();
@@ -229,12 +227,11 @@ public class FileOverviewController implements TabController {
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {
-
         AbstractFile file = newValue.getValue();
         if (file instanceof Document) {
             Document doc = (Document) file;
             try {
-                Desktop.getDesktop().open(Settings.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
+                Desktop.getDesktop().open(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath()).toFile());
             } catch (IOException e) {
                 System.out.println("Could not open file");
                 e.printStackTrace();

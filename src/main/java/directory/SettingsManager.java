@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-public class Settings {
-    private static Preferences preferences = Preferences.userNodeForPackage(Settings.class);
+public class SettingsManager {
+    private static Preferences preferences = Preferences.userNodeForPackage(SettingsManager.class);
 
     private static final String DEFAULT_NULL_VALUE = "null";
 
@@ -75,7 +75,7 @@ public class Settings {
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             fxmlLoader.setResources(bundle);
 
-            fxmlLoader.setLocation(Settings.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
+            fxmlLoader.setLocation(SettingsManager.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             stage.setTitle(DMSApplication.APP_TITLE);
