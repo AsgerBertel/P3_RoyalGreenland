@@ -75,12 +75,12 @@
                   <Button fx:id="btnSavePlantEdit" layoutX="31.0" layoutY="188.0" mnemonicParsing="false" onAction="#onEditSave" prefHeight="25.0" prefWidth="125.0" text="Rediger fabrik" />
                   <TextField onKeyPressed="#keyPressedEdit" fx:id="fieldEditPlantName" layoutX="31.0" layoutY="114.0" promptText="%PlantAdmin.NewPlantName" styleClass="standardText" />
                   <TextField onKeyPressed="#keyPressedEdit" fx:id="fieldEditPlantId" layoutX="31.0" layoutY="150.0" promptText="%PlantAdmin.NewPlantID" styleClass="standardText" />
-                  <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="333.0" styleClass="bigTitle" text="%PlantAdmin.EditPlant">
+                  <Label layoutX="31.0" layoutY="67.0" prefHeight="31.0" prefWidth="450.0" styleClass="bigTitle" text="%PlantAdmin.EditPlant">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="222.0" styleClass="standardText" text="%PlantAdmin.PlantUpdated" visible="false" />
+                  <Label fx:id="lblPlantEdited" disable="true" layoutX="31.0" layoutY="221.0" prefHeight="17.0" prefWidth="300.0" styleClass="standardText" text="%PlantAdmin.PlantUpdated" visible="false" />
                </children>
             </AnchorPane>
 

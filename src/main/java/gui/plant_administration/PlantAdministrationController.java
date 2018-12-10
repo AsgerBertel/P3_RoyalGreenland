@@ -118,6 +118,10 @@ public class PlantAdministrationController implements TabController {
         btnEditPlantSidebar.setDisable(false);
 
         selectedPlantElement = plantElement;
+
+        fieldEditPlantName.setText(selectedPlantElement.getPlant().getName());
+        fieldEditPlantId.setText(Integer.toString(selectedPlantElement.getPlant().getId()));
+        lblPlantEdited.setText("");
     }
 
     //Button function when "create plant" button in sidebar is pressed.
@@ -131,7 +135,6 @@ public class PlantAdministrationController implements TabController {
     //Button function when "edit plant" button in sidebar is pressed.
     @FXML
     void editPlantSidebar() {
-        lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.LblEditPlant"));
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
 
