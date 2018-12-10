@@ -114,6 +114,10 @@ public class PlantAdministrationController implements TabController {
         btnDeletePlant.setStyle("-fx-opacity: 1");
 
         selectedPlantElement = plantElement;
+
+        field_EditPlantName.setText(selectedPlantElement.getPlant().getName());
+        field_EditPlantId.setText(Integer.toString(selectedPlantElement.getPlant().getId()));
+        lblPlantEdited.setText("");
     }
 
     //Button function when "create plant" button in sidebar is pressed.
@@ -131,8 +135,6 @@ public class PlantAdministrationController implements TabController {
         lblPlantEdited.setVisible(true);
         activatePane(editPane, createPane);
 
-        field_EditPlantName.setText(selectedPlantElement.getPlant().getName());
-        field_EditPlantId.setText("" + selectedPlantElement.getPlant().getId());
     }
 
 
