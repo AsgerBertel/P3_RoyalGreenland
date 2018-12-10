@@ -30,8 +30,9 @@ public class TestUtil {
         Path oldFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
-        if (Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME))
+        if (Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME)){
             FileUtils.deleteDirectory(oldFolder.toFile());
+        }
 
         FileUtils.copyDirectory(replacementFolder.toFile(), oldFolder.toFile());
     }

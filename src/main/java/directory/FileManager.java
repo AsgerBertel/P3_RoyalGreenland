@@ -39,6 +39,10 @@ public class FileManager {
         return fileManager;
     }
 
+    public static void resetInstance(){
+        fileManager = null;
+    }
+
     // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager() {
         // Create a list of AbstractFiles based on the files inside the server document path

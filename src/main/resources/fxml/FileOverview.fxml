@@ -17,7 +17,7 @@
         <VBox fx:id="leftSideVbox">
             <ComboBox fx:id="drdPlant" onAction="#onPlantSelected" promptText="%FileOverview.PromptChoosePlant"
                       stylesheets="@/styles/masterSheet.css"/>
-            <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}"
+            <TreeView fx:id="fileTreeView" id="fovFiletree" minWidth="300" prefHeight="${leftSideVbox.height}"
                       stylesheets="@/styles/fileTree.css"/>
         </VBox>
 
