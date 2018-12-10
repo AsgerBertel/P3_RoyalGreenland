@@ -31,7 +31,8 @@ public class DirectoryCloner {
 
         // Replace app files
         replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        //todo remove //
+        //replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     public static void updateLocalFiles() throws IOException {
@@ -44,7 +45,8 @@ public class DirectoryCloner {
 
         // Replace app files
         replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME), SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
-        replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
+        //Todo remove //
+        //replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME), SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
     }
 
     private static boolean isUpdateAvailable() throws IOException {

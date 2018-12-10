@@ -31,17 +31,16 @@ class DirectoryClonerTest extends FileTester {
 
     @Test
     void publishFiles() throws Exception {
-
+        //asserting that both are equal when publishFiles() is used
         DirectoryCloner.publishFiles();
-
         assertEquals(AppFilesManager.loadPublishedFileList(), FileManager.getInstance().getMainFiles());
 
+        //asserting not equals when FileManager does something without publishing
         FileManager.getInstance().deleteFile(doc);
-
         assertNotEquals(AppFilesManager.loadPublishedFileList(), FileManager.getInstance().getMainFiles());
 
+        //asserting equal again when files are published
         DirectoryCloner.publishFiles();
-
         assertEquals(AppFilesManager.loadPublishedFileList(), FileManager.getInstance().getMainFiles());
     }
 
