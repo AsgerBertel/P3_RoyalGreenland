@@ -17,24 +17,42 @@
     -fx-padding: 0;
 }
 
-/*.tree-cell > .tree-disclosure-node > .arrow {
-    -fx-background-color: black;
-
-}*/
 .tree-cell .tree-disclosure-node .arrow {
 
-    -fx-background-color:null;
+    -fx-background-color: null;
     -fx-background-image: url("/icons/arrow.png");
     -fx-background-position: left top, center;
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover, auto;
+    -fx-translate-y: 8;
 }
+
 .tree-cell:expanded .tree-disclosure-node .arrow {
-    -fx-background-color:null;
+    -fx-background-color: null;
     -fx-background-image: url("/icons/arrow.png");
     -fx-background-position: left top, center;
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover, auto;
+    -fx-translate-y: 8;
+}
+
+#fovFiletree .tree-cell .tree-disclosure-node .arrow {
+
+    -fx-background-color: null;
+    -fx-background-image: url("/icons/arrow.png");
+    -fx-background-position: left top, center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
+    -fx-translate-y: 1;
+}
+
+#fovFiletree .tree-cell:expanded .tree-disclosure-node .arrow {
+    -fx-background-color: null;
+    -fx-background-image: url("/icons/arrow.png");
+    -fx-background-position: left top, center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
+    -fx-translate-y: 1;
 }
 
 .tree-cell:selected > .tree-disclosure-node {
