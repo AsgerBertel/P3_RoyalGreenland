@@ -12,8 +12,8 @@ public class FileButton extends Button {
     private AbstractFile file;
     private Image icon;
 
-    private static Image wordFileIcon = new Image("/icons/bigWordDoc.png");
-    private static Image pdfFileIcon = new Image("/icons/bigPdfDoc.png");
+    private static Image wordFileIcon = new Image("/icons/wordIcon.png");
+    private static Image pdfFileIcon = new Image("/icons/pdfIcon.png");
     private static Image folderIcon = new Image("/icons/bigFolder.png");
     private static Image genericIcon = new Image("/icons/genericIcon.png");
     private static Image imageIcon = new Image("/icons/imageIcon.png");

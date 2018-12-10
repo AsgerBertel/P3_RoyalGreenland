@@ -29,9 +29,9 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
 
     private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
     private static final String DROP_HINT_STYLE = "-fx-background-color: #6fd59b; ";
-    Image folderImg = new Image("icons/smallFolder.png");
-    Image docImg = new Image("icons/smallBlueDoc.png");
-    Image pdfImg = new Image("icons/smallRedDoc.png");
+    Image folderImg = new Image("icons/bigFolder.png");
+    Image docImg = new Image("icons/wordIcon.png");
+    Image pdfImg = new Image("icons/pdfIcon.png");
     Image genericImg = new Image("icons/genericIcon.png");
     Image imageIcon = new Image("icons/imageIcon.png");
     private FileAdminController fileAdminController;
@@ -66,6 +66,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 }
                 iv1.setFitWidth(32);
                 iv1.setFitHeight(32);
+
                 setGraphic(iv1);
                 setText(item.getName());
             }
