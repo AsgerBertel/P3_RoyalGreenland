@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 public class DirectoryCloner {
 
@@ -35,6 +36,9 @@ public class DirectoryCloner {
     }
 
     public static void updateLocalFiles() throws IOException {
+        if(!Files.exists(SettingsManager.getLocalAppFilesPath()) || !Files.exists(SettingsManager.getLocalFilesPath()))
+            AppFilesManager.createLocalDirectories();
+
         if(!isUpdateAvailable())
             return;
 
@@ -48,8 +52,14 @@ public class DirectoryCloner {
     }
 
     private static boolean isUpdateAvailable() throws IOException {
-        if(!Files.exists(SettingsManager.getServerDocumentsPath()))
+        Path publishedFilesList = SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME);
+        Path publishedPlantList = SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME);
+
+        if(!Files.exists(SettingsManager.getServerPath()))
             throw new ServerUnavailableException();
+
+        if(!Files.exists(publishedFilesList) || !Files.exists(publishedPlantList))
+            return false;
 
         File localFilesList = SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
         File localFactoryList = SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
