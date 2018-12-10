@@ -20,6 +20,7 @@ public class TestUtil {
     private static final String REPLACEMENT_FOLDER_NAME = APPLICATION_FOLDER_NAME + " Original";
 
     private TestUtil() {
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -40,7 +41,6 @@ public class TestUtil {
     public static final Path getTestDocuments() {
         return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
-
 
     /**
      * Checks if the given file (and its' children) match the treeItem (and its' children)
