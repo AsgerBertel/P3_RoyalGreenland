@@ -1,5 +1,6 @@
 package directory.files;
 
+import directory.FileTester;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -8,7 +9,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DocumentBuilderTest {
+class DocumentBuilderTest extends FileTester {
     File resourcesDirectory = new File("src/tests/resTest");
     private Path pathToTestFile = Paths.get(resourcesDirectory.getAbsolutePath() + "/Main Files Test/testFile.pdf");
     private Path pathToCurrentID = Paths.get( resourcesDirectory.getAbsolutePath() + "/currentFileID");
