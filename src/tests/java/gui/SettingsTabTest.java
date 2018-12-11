@@ -41,7 +41,11 @@ public class SettingsTabTest extends GUITest{
 
     private void enterText(Control clickAbleElement, String text){
         clickOn(clickAbleElement);
-        press(KeyCode.CONTROL);
+        if(System.getProperty("os.name").contains("Mac")){
+            press(KeyCode.COMMAND);
+        } else{
+            press(KeyCode.CONTROL);
+        }
         press(KeyCode.A);
         release(new KeyCode[]{});
         push(KeyCode.DELETE);

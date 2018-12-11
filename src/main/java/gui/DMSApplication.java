@@ -1,7 +1,6 @@
 package gui;
 
 import app.ApplicationMode;
-import com.sun.javafx.binding.Logging;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.SettingsManager;

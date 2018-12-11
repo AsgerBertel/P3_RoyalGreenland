@@ -3,7 +3,6 @@ package gui;
 import directory.FileManager;
 import directory.SettingsManager;
 import directory.files.AbstractFile;
-
 import directory.files.Folder;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
@@ -16,7 +15,8 @@ import util.TestUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileAdminDragDropTest extends GUITest {
 
