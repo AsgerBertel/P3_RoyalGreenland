@@ -333,6 +333,7 @@ public class PlantAdministrationController implements TabController {
                 plantCountText.setText("(" + plantElements.size() + ")");
 
                 LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
+                activatePane(createPane, editPane);
                 return selectedPlantElement;
             }
             if (result.get() == ButtonType.CANCEL)

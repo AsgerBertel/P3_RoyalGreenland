@@ -16,17 +16,20 @@ import java.util.Optional;
 public class FileExplorer {
     private Folder currentFolder;
     private Plant viewingPlant;
+    private Folder rootFolder;
 
     private ArrayList<AbstractFile> files;
 
     public FileExplorer(ArrayList<AbstractFile> files, Plant viewingPlant) {
         this.files = files;
         this.viewingPlant = viewingPlant;
+        rootFolder = (Folder) files.get(0);
     }
 
     public FileExplorer(ArrayList<AbstractFile> files) {
         this.files = files;
         this.viewingPlant = null;
+        rootFolder = (Folder) files.get(0);
     }
 
     // Returns the files currently shown in the explorer
@@ -66,8 +69,8 @@ public class FileExplorer {
         if (currentFolder == null)
             return false;
 
-        // Find parent folder if it exists
-        Optional<Folder> folder = FileManager.findParent(currentFolder, FileManager.getInstance().getMainFilesRoot());
+        // Find parent folder if it
+        Optional<Folder> folder = FileManager.findParent(currentFolder, rootFolder);
         currentFolder = folder.orElse(null);
 
         return true;
