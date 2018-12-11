@@ -169,8 +169,9 @@ public class FileOverviewController implements TabController {
 
     @FXML
     public void openPreviousFolder() {
-        fileExplorer.navigateBack();
-        updateDisplayedFiles();
+        if(fileExplorer.navigateBack()){
+            updateDisplayedFiles();
+        }
     }
 
     public String PathDisplayCorrection() {
