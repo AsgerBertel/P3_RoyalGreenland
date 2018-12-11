@@ -70,6 +70,7 @@ class DirectoryClonerTest extends FileTester {
         assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
+    /*
     @Test
     void removeOutdatedFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
@@ -93,7 +94,9 @@ class DirectoryClonerTest extends FileTester {
         //asserts that file is now deletes in published.
         assertFalse(modifiedOldFiles.contains(folder));
     }
+    */
 
+    /*
     @Test
     void addNewFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
@@ -114,8 +117,9 @@ class DirectoryClonerTest extends FileTester {
 
         //asserts that file is now in published.
         assertTrue(modifiedOldFiles.contains(newFolder));
-    }
+    } */
 
+    /*
     @Test
     void findMissingFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
@@ -134,7 +138,7 @@ class DirectoryClonerTest extends FileTester {
              ) {
             System.out.println(af.toString());
         }
-    }
+    } */
 
     @Test
     void copyFolder() {

@@ -143,15 +143,11 @@ public class SettingsManager {
     public static void setServerPath(Path newPath) {
         serverPath = completeApplicationPath(newPath).toString();
         preferences.put(SERVER_PATH_PREF, serverPath);
-        AlertBuilder.programRestartPopup();
-        DMSApplication.getDMSApplication().restartApp();
     }
 
     public static void setLocalPath(Path newPath) {
         localPath = completeApplicationPath(newPath).toString();
         preferences.put(LOCAL_PATH_PREF, localPath);
-        AlertBuilder.programRestartPopup();
-        DMSApplication.getDMSApplication().restartApp();
     }
 
     // Adds the application folder name to the path if it's not already in there
