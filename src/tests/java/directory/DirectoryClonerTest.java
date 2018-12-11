@@ -141,7 +141,25 @@ class DirectoryClonerTest extends FileTester {
     }*/
 
     @Test
-    void mergeFolders() {
+    void mergeFolders() throws IOException {
+        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
+        DirectoryCloner.publishFiles();
+
+        for (AbstractFile af: parentFolder.getContents()
+        ) {
+            System.out.println(af.toString());
+        }
+
+        System.out.println("-------------------------------------------------");
+
+        DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),
+                SettingsManager.getServerDocumentsPath().resolve(parentFolder.getOSPath()), false);
+
+        for (AbstractFile af: parentFolder.getContents()
+             ) {
+            System.out.println(af.toString());
+        }
+
     }
 
     @Test
