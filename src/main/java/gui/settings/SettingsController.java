@@ -148,15 +148,10 @@ public class SettingsController implements TabController {
         // Save language if different from the current language
         Locale language = danishSettingsButton.isSelected() ? DMSApplication.DK_LOCALE : DMSApplication.GL_LOCALE;
         if (!language.equals(DMSApplication.getLanguage())) {
-            try {
-                dmsApplication.changeLanguage(language);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dmsApplication.changeLanguage(language);
         }else{
             update();
         }
-
     }
 
     /* Executes the saveAction if the textField contains changes

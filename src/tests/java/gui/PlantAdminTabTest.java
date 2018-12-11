@@ -10,27 +10,35 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlantAdminTabTest extends GUITest {
 
-    private Plant standardPlant = new Plant(1548,"Testing factory", new AccessModifier());
-    private PlantElement standardPlantElement;
+    private Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
+    private Plant plant2 = new Plant(1234, "Testing Factory 2", new AccessModifier());
+    private PlantElement plant1Element, plant2Element;
     private PlantAdministrationController plantController;
     private Button menuCreatePlantButton, menuEditPlantButton, deletePlantButton;
 
     @BeforeEach
-    void setTab() throws InterruptedException {
+    void setTab() {
         PlantManager.getInstance().getAllPlants().clear();
-        PlantManager.getInstance().getAllPlants().add(standardPlant);
+        PlantManager.getInstance().getAllPlants().add(plant1);
+        PlantManager.getInstance().getAllPlants().add(plant2);
         clickOn((ToggleButton)findNode("#administratePlantsButton"));
         plantController = (PlantAdministrationController) dmsApplication.getCurrentTab().getTabController();
-        standardPlantElement = (PlantElement) plantController.getPlantVBox().getChildren().get(0);
+        plant1Element = (PlantElement) plantController.getPlantVBox().getChildren().get(0);
+        plant2Element = (PlantElement) plantController.getPlantVBox().getChildren().get(1);
 
-        menuCreatePlantButton = (Button) findNode("#sidebarBtnCreatePlant");
-        menuEditPlantButton = (Button) findNode("#btnEditPlantSidebar");
-        deletePlantButton = (Button) findNode("#btnDeletePlant");
+        menuCreatePlantButton = findNode("#sidebarBtnCreatePlant");
+        menuEditPlantButton = findNode("#btnEditPlantSidebar");
+        deletePlantButton = findNode("#btnDeletePlant");
+    }
+
+    private void writeInTextField(TextField textField, String text){
+        clickOn(textField);
+        selectAllAndDelete();
+        write(text);
     }
 
     @RepeatedTest(value = 2)
@@ -39,8 +47,7 @@ public class PlantAdminTabTest extends GUITest {
         assertTrue(menuEditPlantButton.isDisabled());
         assertTrue(deletePlantButton.isDisabled());
 
-        clickOn(standardPlantElement);
-
+        clickOn(plant1Element);
         assertFalse(menuCreatePlantButton.isDisabled());
         assertFalse(menuEditPlantButton.isDisabled());
         assertFalse(deletePlantButton.isDisabled());
@@ -48,7 +55,7 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void createPlantMenuButtonTest() {
-        clickOn(standardPlantElement);
+        clickOn(plant1Element);
         clickOn(menuEditPlantButton);
         clickOn(menuCreatePlantButton);
         assertTrue(findNode("#createPane").isVisible());
@@ -57,39 +64,35 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void editPlantMenuButtonTest() {
-        clickOn(standardPlantElement);
+        clickOn(plant1Element);
         clickOn(menuEditPlantButton);
         assertTrue(findNode("#editPane").isVisible());
-        assertEquals(((TextField) findNode("#fieldEditPlantName")).getText(), standardPlant.getName());
-        assertEquals(((TextField) findNode("#fieldEditPlantId")).getText(), Integer.toString(standardPlant.getId()));
+        assertFalse(findNode("#createPane").isVisible());
+        assertEquals(((TextField) findNode("#fieldEditPlantName")).getText(), plant1.getName());
+        assertEquals(((TextField) findNode("#fieldEditPlantId")).getText(), Integer.toString(plant1.getId()));
     }
 
     @RepeatedTest(value = 2)
     void editPlantTest() {
-        String originalPlantName = standardPlant.getName();
+        String originalPlantName = plant1.getName();
         String newPlantName = "*/(€$£{!? Test name";
-        int originalPlantID = standardPlant.getId();
+        int originalPlantID = plant1.getId();
         int newPlantID = 7643;
 
-        clickOn(standardPlantElement);
+        clickOn(plant1Element);
         clickOn(menuEditPlantButton);
 
-        clickOn((TextField) findNode("#fieldEditPlantName"));
-        selectAllAndDelete();
-        write(newPlantName);
-
-        clickOn((TextField) findNode("#fieldEditPlantId"));
-        selectAllAndDelete();
-        write(Integer.toString(newPlantID));
+        writeInTextField((TextField) findNode("#fieldEditPlantName"), newPlantName);
+        writeInTextField((TextField) findNode("#fieldEditPlantId"), Integer.toString(newPlantID));
 
         // Assert the values have not yet changed
-        assertEquals(originalPlantName, standardPlant.getName());
-        assertEquals(originalPlantID, standardPlant.getId());
+        assertEquals(originalPlantName, plant1.getName());
+        assertEquals(originalPlantID, plant1.getId());
 
         // Save changes and assert that the changes have now been applied
         clickOn((Button) findNode("#btnSavePlantEdit"));
-        assertEquals(newPlantName, standardPlant.getName());
-        assertEquals(newPlantID, standardPlant.getId());
+        assertEquals(newPlantName, plant1.getName());
+        assertEquals(newPlantID, plant1.getId());
     }
 
     @RepeatedTest(value = 2)
@@ -102,10 +105,8 @@ public class PlantAdminTabTest extends GUITest {
         TextField idTextField = findNode("#fieldCreatePlantId");
         Button saveEditButton = findNode("#btnCreatePlant");
 
-        clickOn(nameTextField);
-        write(newPlantName);
-        clickOn(idTextField);
-        write(Integer.toString(newPlantID));
+        writeInTextField(nameTextField, newPlantName);
+        writeInTextField(idTextField, Integer.toString(newPlantID));
 
         clickOn(saveEditButton);
 
@@ -115,23 +116,18 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
     void createDuplicatePlantTest() throws InterruptedException {
-        String newPlantName = standardPlant.getName();
-        int newPlantID = standardPlant.getId();
+        String newPlantName = plant1.getName();
+        int newPlantID = plant1.getId();
 
         TextField nameTextField = findNode("#fieldCreatePlantName");
         TextField idTextField = findNode("#fieldCreatePlantId");
         Button saveEditButton = findNode("#btnCreatePlant");
 
-        clickOn(standardPlantElement);
+        clickOn(plant1Element);
         clickOn(menuCreatePlantButton);
 
-        clickOn(nameTextField);
-        selectAllAndDelete();
-        write(newPlantName);
-
-        clickOn(idTextField);
-        selectAllAndDelete();
-        write(Integer.toString(newPlantID));
+        writeInTextField(nameTextField, newPlantName);
+        writeInTextField(idTextField, Integer.toString(newPlantID));
 
         clickOn(saveEditButton);
 
@@ -143,6 +139,28 @@ public class PlantAdminTabTest extends GUITest {
 
 
 
+
+    @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
+    void editDuplicatePlantTest() throws InterruptedException {
+        TextField nameTextField = findNode("#fieldEditPlantName");
+        TextField idTextField = findNode("#fieldEditPlantId");
+        Button showEditButton = findNode("#btnEditPlantSidebar");
+        Button saveEditButton = findNode("#btnCreatePlant");
+
+        clickOn(plant1Element);
+        clickOn(showEditButton);
+
+        writeInTextField(nameTextField, plant2.getName());
+        writeInTextField(nameTextField, Integer.toString(plant2.getId()));
+
+        clickOn(saveEditButton);
+
+        assertTrue(nameTextField.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS));
+        assertTrue(nameTextField.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS));
+
+        assertNotEquals(plant2.getId(), plant1.getId());
+        assertNotEquals(plant2.getName(), plant1.getName());
+    }
 
 
 

@@ -123,6 +123,8 @@ class FileManagerTest extends FileTester {
 
         FileManager.getInstance().deleteFile(doc);
 
+        //todo maybe i fucked up, should be doing contain on folder doc is in.
+        //todo tried with parentFolder, still didnt work
         //todo getArchiveFiles doesnt work
 
         //assertTrue(FileManager.getInstance().getArchiveFiles().contains(doc));
