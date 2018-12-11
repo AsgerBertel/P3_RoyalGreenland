@@ -77,7 +77,11 @@ public abstract class GUITest extends ApplicationTest {
     }
 
     protected void selectAllAndDelete(){
-        press(KeyCode.CONTROL);
+        if(System.getProperty("os.name").contains("Mac")){
+            press(KeyCode.COMMAND);
+        } else{
+            press(KeyCode.CONTROL);
+        }
         press(KeyCode.A);
         release(new KeyCode[]{});
         push(KeyCode.DELETE);

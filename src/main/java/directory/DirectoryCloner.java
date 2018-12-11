@@ -1,6 +1,5 @@
 package directory;
 
-import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -148,7 +147,7 @@ public class DirectoryCloner {
      * Compares oldFiles to newFiles and removes files from oldFiles that have been updated or deleted.
      * @return the files that does not need to be updated (the intersection of oldFiles and newFiles)
      */
-    private static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles,
+    public static ArrayList<AbstractFile> removeOutdatedFiles(ArrayList<AbstractFile> oldFiles,
                                                               ArrayList<AbstractFile> newFiles,
                                                               Path oldFilesRoot)
             throws IOException {
@@ -178,7 +177,7 @@ public class DirectoryCloner {
         return modifiedOldFiles;
     }
 
-    private static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles,
+    public static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles,
                                                       ArrayList<AbstractFile> newFiles,
                                                       Path oldFilesRoot,
                                                       Path newFileRoot)
@@ -236,7 +235,7 @@ public class DirectoryCloner {
     }
 
 
-    private static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
+    public static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
                                                            ArrayList<AbstractFile> updatedFiles){
         ArrayList<AbstractFile> missingFiles = new ArrayList<>();
         // Find files that should be added
