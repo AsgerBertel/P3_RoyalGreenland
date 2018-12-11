@@ -33,6 +33,14 @@ public class AlertBuilder {
                 null);
         alert.showAndWait();
     }
+    public static void programRestartPopup() {
+        buildAlert(Alert.AlertType.INFORMATION,
+                DMSApplication.getMessage("DMSApplication.restart.Title"),
+                null,
+                DMSApplication.getMessage("DMSApplication.restart.Context")
+        );
+        alert.showAndWait();
+    }
 
     /**
      * Displays an ERROR popup informing the user of an IOException. Ressource context tells of plausible causes.

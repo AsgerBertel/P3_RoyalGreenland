@@ -1,6 +1,7 @@
 package directory;
 
 import app.ApplicationMode;
+import gui.AlertBuilder;
 import gui.DMSApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -128,8 +129,12 @@ public class SettingsManager {
     public static Path getLocalAppFilesPath() {
         return getLocalPath().resolve(APP_FILES_PATH);
     }
-
-    public static Path getServerErrorLogsPath() { return getServerPath().resolve(ERROR_LOGS_PATH); }
+    public static Path getLocalErrorLogsPath() {
+        return getLocalPath().resolve(ERROR_LOGS_PATH);
+    }
+    public static Path getServerErrorLogsPath() {
+        return getServerPath().resolve(ERROR_LOGS_PATH);
+    }
 
     public static String getUsername() {
         return username;
@@ -138,11 +143,15 @@ public class SettingsManager {
     public static void setServerPath(Path newPath) {
         serverPath = completeApplicationPath(newPath).toString();
         preferences.put(SERVER_PATH_PREF, serverPath);
+        AlertBuilder.programRestartPopup();
+        DMSApplication.getDMSApplication().restartApp();
     }
 
     public static void setLocalPath(Path newPath) {
         localPath = completeApplicationPath(newPath).toString();
         preferences.put(LOCAL_PATH_PREF, localPath);
+        AlertBuilder.programRestartPopup();
+        DMSApplication.getDMSApplication().restartApp();
     }
 
     // Adds the application folder name to the path if it's not already in there

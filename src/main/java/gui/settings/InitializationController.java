@@ -102,6 +102,8 @@ public class InitializationController implements Initializable {
         if (chosenDirectory != null) {
             inputTextField.setText(chosenDirectory.getAbsolutePath());
             removeError();
+        } else if (!isLegalDirectory(chosenDirectory)) {
+            showError(DMSApplication.getMessage("Initialization.IllegalChoosenFile"));
         } else {
             showError(DMSApplication.getMessage("Initialization.EmptyInput"));
         }
@@ -148,5 +150,9 @@ public class InitializationController implements Initializable {
 
         // Close initialization window
         ((Stage) nextButton.getScene().getWindow()).close();
+    }
+    private boolean isLegalDirectory(File file) {
+        boolean isNull = file != null;
+        return file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && file.canWrite() && !isNull;
     }
 }

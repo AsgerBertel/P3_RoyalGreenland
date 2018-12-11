@@ -1,6 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
+import com.sun.javafx.binding.Logging;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.SettingsManager;
@@ -60,7 +61,7 @@ public class DMSApplication extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage)  {
         dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
@@ -83,7 +84,7 @@ public class DMSApplication extends Application {
         }
     }
 
-    private void loadRootElement() throws IOException {
+    private void loadRootElement()  {
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
         root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
@@ -104,7 +105,14 @@ public class DMSApplication extends Application {
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("prism.text", "t2k");
 
-        mainMenu = fxmlLoader.load();
+        try {
+            mainMenu = fxmlLoader.load();
+        } catch(IOException e) {
+            e.printStackTrace();
+            AlertBuilder.IOExceptionPopupWithString(fxmlLoader.getLocation().getPath());
+            LoggingErrorTools.log(e, 6);
+            System.exit(6);
+        }
         ((MainMenuController) fxmlLoader.getController()).init(this);
 
         root.getChildren().add(mainMenu);
@@ -127,7 +135,6 @@ public class DMSApplication extends Application {
             root.getChildren().add(newPane);
             currentTab = newTab;
         } catch (IOException e) {
-
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Fejl");
@@ -139,7 +146,7 @@ public class DMSApplication extends Application {
         return currentTab;
     }
 
-    public void restartApp() throws Exception {
+    public void restartApp()  {
         start(primaryStage);
     }
 

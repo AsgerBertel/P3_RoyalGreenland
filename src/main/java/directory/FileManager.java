@@ -1,6 +1,5 @@
 package directory;
 
-import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
@@ -147,7 +146,6 @@ public class FileManager {
         }
         return null;
     }
-
 
     public boolean fileExists(Path fullPath){
         return findInMainFiles(fullPath).isPresent();
@@ -538,7 +536,6 @@ public class FileManager {
             if (file instanceof Folder) {
                 Folder fol = (Folder) file;
                 fol.setName(newName);
-
 
                 AppFilesManager.save(FileManager.getInstance());
                 LogManager.log(new LogEvent(fol.getName(), LogEventType.FOLDER_RENAMED));

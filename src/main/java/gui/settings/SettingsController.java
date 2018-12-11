@@ -67,11 +67,6 @@ public class SettingsController implements TabController {
         if (serverFolder != null) {
             serverPathTextField.setText(serverFolder.getPath());
             onServerPathChanged();
-            try {
-                dmsApplication.restartApp();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -80,11 +75,6 @@ public class SettingsController implements TabController {
         if (serverFolder != null) {
             localPathTextField.setText(serverFolder.getPath());
             onLocalPathChange();
-            try {
-                dmsApplication.restartApp();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

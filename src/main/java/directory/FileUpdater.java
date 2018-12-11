@@ -45,7 +45,7 @@ public class FileUpdater extends Thread {
                 DirectoryCloner.updateLocalFiles();
                 Platform.runLater(() -> dmsApplication.getCurrentTab().update());
             } catch (InterruptedException e) {
-                AlertBuilder.interruptedExceptionPopup("Download Thread");
+                AlertBuilder.interruptedExceptionPopup("Updater Thread");
                 LoggingErrorTools.log(e);
                 e.printStackTrace();
             } catch (IOException e) {

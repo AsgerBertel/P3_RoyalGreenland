@@ -177,31 +177,4 @@ public class AppFilesManager {
             }
         }
     }
-
-    /**
-     * Creates the server side AppFiles besides JSON files.
-     * @throws FileNotFoundException if working or published AppFiles folder is missing.
-     * @throws IOException if BufferedWriter fails to read from currentFileID.
-     */
-    private static void createServerAppFiles() throws IOException {
-        Path appFilesPath = SettingsManager.getServerAppFilesPath();
-        Path publishedAppFilesPath = SettingsManager.getPublishedAppFilesPath();
-
-        if(!Files.exists(appFilesPath.getParent()))
-            throw new FileNotFoundException("Server Working Files folder could not be found");
-        if(!Files.exists(publishedAppFilesPath.getParent()))
-            throw new FileNotFoundException("Server Published Files folder could not be found");
-
-        Path currentFileIDPath = appFilesPath.resolve("currentFileID");
-
-        if(!Files.exists(currentFileIDPath)) {
-            try (BufferedWriter writer = Files.newBufferedWriter(currentFileIDPath)) {
-                writer.write("0");
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Could not write to currentFileID file");
-            }
-        }
-
-    }
 }

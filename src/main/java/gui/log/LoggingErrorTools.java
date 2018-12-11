@@ -1,6 +1,7 @@
 package gui.log;
 
 import directory.SettingsManager;
+import gui.DMSApplication;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -14,9 +15,8 @@ public class LoggingErrorTools
     public static void log(Throwable throwable) {
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerErrorLogsPath()
-                + File.separator
-                + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
+                generateWritePath(localDateTime), true)))) {
             pw.println("EXITCODE: 0\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ SettingsManager.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
             pw.println("------------------------------------------------------------------------------------------------------------------------");
@@ -29,9 +29,8 @@ public class LoggingErrorTools
     public static void log(Throwable throwable, int exitCode) {
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerErrorLogsPath()
-                + File.separator
-                + localDateTime.format(FILENAME_FORMATTER)+".log", true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
+                generateWritePath(localDateTime), true)))) {
             pw.println("EXITCODE: +"+exitCode+"\nERROR REPORT AT: "+localDateTime.format(DESCRIPTION_FORMATTER) +" BY USER: "+ SettingsManager.getUsername()+" | STACKTRACE:");
             throwable.printStackTrace(pw);
             pw.println("------------------------------------------------------------------------------------------------------------------------");
@@ -39,6 +38,23 @@ public class LoggingErrorTools
         } catch (IOException e) {
             e.printStackTrace();
             log(e);
+        }
+    }
+    private static String generateWritePath (LocalDateTime localDateTime) {
+
+        switch(DMSApplication.getApplicationMode()) {
+            case ADMIN:
+                return SettingsManager.getServerErrorLogsPath()
+                        + File.separator
+                        + localDateTime.format(FILENAME_FORMATTER)+" - "+SettingsManager.getUsername()+".log";
+            case VIEWER:
+                return SettingsManager.getLocalErrorLogsPath()
+                        + File.separator
+                        + localDateTime.format(FILENAME_FORMATTER)+" - "+SettingsManager.getUsername()+".log";
+                default:
+                    return SettingsManager.getServerErrorLogsPath()
+                            + File.separator
+                            + localDateTime.format(FILENAME_FORMATTER)+" - "+SettingsManager.getUsername()+".log";
         }
     }
 }
