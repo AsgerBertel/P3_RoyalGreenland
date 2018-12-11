@@ -10,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlantAdminTabTest extends GUITest {
@@ -42,7 +44,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     @RepeatedTest(value = 2)
-    void disabledButtonsTest() {
+    void disabledMenuButtonsTest() {
         assertFalse(menuCreatePlantButton.isDisabled());
         assertTrue(menuEditPlantButton.isDisabled());
         assertTrue(deletePlantButton.isDisabled());
@@ -51,6 +53,19 @@ public class PlantAdminTabTest extends GUITest {
         assertFalse(menuCreatePlantButton.isDisabled());
         assertFalse(menuEditPlantButton.isDisabled());
         assertFalse(deletePlantButton.isDisabled());
+    }
+
+    @RepeatedTest(value = 2)
+    void disabledSaveEditButton(){
+        Button saveEditButton = findNode("#btnSavePlantEdit");
+        TextField nameTextField = findNode("#fieldEditPlantName");
+
+        clickOn(plant1Element);
+        clickOn(menuEditPlantButton);
+        assertTrue(saveEditButton.isDisabled());
+
+        writeInTextField(nameTextField, "Test");
+        assertFalse(saveEditButton.isDisabled());
     }
 
     @RepeatedTest(value = 2)
@@ -99,6 +114,7 @@ public class PlantAdminTabTest extends GUITest {
     void createPlantTest() {
         String newPlantName = "Test Factory";
         int newPlantID = 1000;
+        int startingListSize = plantController.getPlantVBox().getChildren().size();
         Plant newPlant = new Plant(newPlantID, newPlantName, new AccessModifier());
 
         TextField nameTextField = findNode("#fieldCreatePlantName");
@@ -110,8 +126,8 @@ public class PlantAdminTabTest extends GUITest {
 
         clickOn(saveEditButton);
 
-        assertEquals(2, plantController.getPlantVBox().getChildren().size());
-        assertEquals(newPlant, ((PlantElement)plantController.getPlantVBox().getChildren().get(1)).getPlant());
+        assertEquals(startingListSize + 1, plantController.getPlantVBox().getChildren().size());
+        assertEquals(newPlant, ((PlantElement)plantController.getPlantVBox().getChildren().get(startingListSize)).getPlant());
     }
 
     @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
@@ -143,13 +159,13 @@ public class PlantAdminTabTest extends GUITest {
         TextField nameTextField = findNode("#fieldEditPlantName");
         TextField idTextField = findNode("#fieldEditPlantId");
         Button showEditButton = findNode("#btnEditPlantSidebar");
-        Button saveEditButton = findNode("#btnCreatePlant");
+        Button saveEditButton = findNode("#btnSavePlantEdit");
 
         clickOn(plant1Element);
         clickOn(showEditButton);
 
         writeInTextField(nameTextField, plant2.getName());
-        writeInTextField(nameTextField, Integer.toString(plant2.getId()));
+        writeInTextField(idTextField, Integer.toString(plant2.getId()));
 
         clickOn(saveEditButton);
 
@@ -160,7 +176,63 @@ public class PlantAdminTabTest extends GUITest {
         assertNotEquals(plant2.getName(), plant1.getName());
     }
 
+    @RepeatedTest(value = 2)
+    void switchSelectedPlantWhileEditing(){
+        TextField nameTextField = findNode("#fieldEditPlantName");
+        TextField idTextField = findNode("#fieldEditPlantId");
+        Button showEditButton = findNode("#btnEditPlantSidebar");
+        Button saveEditButton = findNode("#btnSavePlantEdit");
 
+        String unsavedName = "Unsaved Name";
 
+        clickOn(plant1Element);
+        clickOn(showEditButton);
+        writeInTextField(nameTextField, unsavedName);
+
+        assertEquals(nameTextField.getText(), unsavedName);
+
+        // Check that the nothing changes when selecting the same plant again
+        clickOn(plant1Element);
+        assertEquals(nameTextField.getText(), unsavedName);
+
+        // Check that the changes have not been applied and that the fields has been reset to match the new plant
+        clickOn(plant2Element);
+        assertNotEquals(plant1.getName(), unsavedName);
+        assertEquals(plant2.getName(), nameTextField.getText());
+    }
+
+    @RepeatedTest(value = 2)
+    void deletePlantTest(){
+        Button deletePlantButton = findNode("#btnDeletePlant");
+        int originalListSize = plantController.getPlantVBox().getChildren().size();
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant2Element));
+
+        clickOn(plant1Element);
+        clickOn(deletePlantButton);
+        clickOn(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+
+        assertFalse(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant2Element));
+    }
+
+    @RepeatedTest(value = 2)
+    void deletePlantWhileEditingTest(){
+        Button deletePlantButton = findNode("#btnDeletePlant");
+        TextField nameTextField = findNode("#fieldEditPlantName");
+        Button showEditButton = findNode("#btnEditPlantSidebar");
+        String unsavedName = "Unsaved Name";
+
+        clickOn(plant1Element);
+        clickOn(showEditButton);
+        writeInTextField(nameTextField, unsavedName);
+
+        assertEquals(unsavedName, nameTextField.getText());
+        clickOn(deletePlantButton);
+        clickOn(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+
+        assertFalse(findNode("#editPane").isVisible());
+        assertTrue(showEditButton.isDisabled());
+    }
 
 }

@@ -102,7 +102,7 @@ public class PlantAdministrationController implements TabController {
             PlantElement plantElement = new PlantElement(plant, this);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
-            if(selectedPlantElement != null && plantElement.getText().equals(selectedPlantElement.getText()))
+            if(selectedPlantElement != null && plantElement.getPlant().getName().equals(selectedPlantElement.getPlant().getName()))
                 plantElement.setSelected(true);
         }
         plantVBox.getChildren().addAll(plantElements);
@@ -116,6 +116,9 @@ public class PlantAdministrationController implements TabController {
 
     //Select plant function
     private void onPlantToggle(PlantElement plantElement) {
+        if(selectedPlantElement != null && selectedPlantElement.equals(plantElement))
+            return;
+
         for (PlantElement element : plantElements) {
             element.setSelected(false);
         }
@@ -128,6 +131,8 @@ public class PlantAdministrationController implements TabController {
         fieldEditPlantName.setText(selectedPlantElement.getPlant().getName());
         fieldEditPlantId.setText(Integer.toString(selectedPlantElement.getPlant().getId()));
         lblPlantEdited.setText("");
+
+        btnSavePlantEdit.setDisable(true);
     }
 
     //Button function when "create plant" button in sidebar is pressed.
@@ -146,7 +151,6 @@ public class PlantAdministrationController implements TabController {
 
         fieldEditPlantName.setText(selectedPlantElement.getPlant().getName());
         fieldEditPlantId.setText("" + selectedPlantElement.getPlant().getId());
-        btnEditPlantSidebar.setDisable(true);
     }
 
 

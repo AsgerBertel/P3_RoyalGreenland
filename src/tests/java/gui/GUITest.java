@@ -47,6 +47,7 @@ public abstract class GUITest extends ApplicationTest {
         SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
+
     }
 
     @BeforeEach
