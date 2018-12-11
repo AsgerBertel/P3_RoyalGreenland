@@ -23,7 +23,7 @@
             </Button>
         </VBox>
         <VBox fx:id="leftSideVbox">
-            <TreeView fx:id="fileTreeView" minWidth="984" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
+            <TreeView fx:id="fileTreeView" id="Filetree" minWidth="984" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
         </VBox>
     </children>
 </HBox>
