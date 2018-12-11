@@ -132,7 +132,7 @@ class FileManagerTest extends FileTester {
 
         FileManager.getInstance().restoreFile(doc);
 
-        //todo restore doesnt restore file back into mainfiles
+        //todo restore doesnt restore file back into mainFiles
         //assertTrue(FileManager.getInstance().getMainFiles().contains(doc));
 
         //todo doesnt work with folders either
