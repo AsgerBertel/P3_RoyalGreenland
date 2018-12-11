@@ -4,10 +4,13 @@ import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
+import directory.plant.AccessModifier;
+import directory.plant.Plant;
 import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +25,10 @@ class DirectoryClonerTest extends FileTester {
     Document doc;
     Path folderPath = Paths.get("02_VINTERTØRRET FISK");
     Folder folder;
+    Path parentFolderPath = Paths.get("04_MASKINTØRRET FISK");
+    Folder parentFolder;
+    Path pathKalFolder = Paths.get("02_VINTERTØRRET FISK/KAL");
+    Folder KALFolder;
 
     @Override
     void setSettings(){
@@ -29,6 +36,8 @@ class DirectoryClonerTest extends FileTester {
         al = FileManager.getInstance().getMainFiles();
         doc = (Document) findInMainFiles(docPath);
         folder = (Folder) findInMainFiles(folderPath);
+        parentFolder = (Folder) findInMainFiles(parentFolderPath);
+        KALFolder = (Folder) findInMainFiles(pathKalFolder);
     }
 
     @Test
@@ -49,7 +58,7 @@ class DirectoryClonerTest extends FileTester {
 
     @Test
     void updateLocalFiles() throws Exception {
-        PlantManager.getInstance();
+        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
         al = AppFilesManager.loadPublishedFileList();
 
@@ -62,19 +71,69 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void removeOutdatedFiles() throws IOException {
+    void removeOutdatedFiles() throws Exception {
+        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
+        DirectoryCloner.publishFiles();
+
+        //deletes file
+        FileManager.getInstance().deleteFile(folder);
 
         ArrayList<AbstractFile> oldFiles = FileManager.getInstance().getMainFiles();
         ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
-        DirectoryCloner.removeOutdatedFiles(oldFiles, newFiles, FileManager.getInstance().getMainFilesRoot().getPath());
+
+        //asserts that file is deleted in mainFiles, but not published
+        //todo get archive files doesnt work
+        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(folder));
+        assertFalse(FileManager.getInstance().getMainFiles().contains(folder));
+        assertTrue(AppFilesManager.loadPublishedFileList().contains(folder));
+
+        //pushes files to local
+        ArrayList<AbstractFile> modifiedOldFiles = DirectoryCloner.removeOutdatedFiles(oldFiles, newFiles, FileManager.getInstance().getMainFilesRoot().getPath());
+
+        //asserts that file is now deletes in published.
+        assertFalse(modifiedOldFiles.contains(folder));
     }
 
     @Test
-    void addNewFiles() {
+    void addNewFiles() throws Exception {
+        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
+        DirectoryCloner.publishFiles();
+
+        //uploads new file to mainFiles
+        Folder newFolder = FileManager.getInstance().createFolder("new folder");
+
+        ArrayList<AbstractFile> oldFiles = FileManager.getInstance().getMainFiles();
+        ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
+
+        //asserts that file is in mainFiles but not published.
+        assertTrue(FileManager.getInstance().getMainFiles().contains(newFolder));
+        assertFalse(AppFilesManager.loadPublishedFileList().contains(newFolder));
+
+        //addNewFiles
+        ArrayList<AbstractFile> modifiedOldFiles = DirectoryCloner.addNewFiles(oldFiles, newFiles, Paths.get("root"), Paths.get("root"));
+
+        //asserts that file is now in published.
+        assertTrue(modifiedOldFiles.contains(newFolder));
     }
 
     @Test
-    void findMissingFiles() {
+    void findMissingFiles() throws Exception {
+        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
+        DirectoryCloner.publishFiles();
+
+        ArrayList<AbstractFile> originalFiles = FileManager.getInstance().getMainFiles();
+
+        FileManager.getInstance().renameFile(doc, "new Name");
+        FileManager.getInstance().createFolder("new folder");
+
+        ArrayList<AbstractFile> updatedFiles = FileManager.getInstance().getMainFiles();
+
+        ArrayList<AbstractFile> missingFiles = DirectoryCloner.findMissingFiles(originalFiles, updatedFiles);
+
+        for (AbstractFile af: missingFiles
+             ) {
+            System.out.println(af.toString());
+        }
     }
 
     @Test
