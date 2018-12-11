@@ -6,6 +6,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,6 @@ public class FileExplorer {
             }
         }
 
-
         return shownFiles;
     }
 
@@ -66,8 +66,8 @@ public class FileExplorer {
         if (currentFolder == null)
             return false;
 
-        // Find parent folder if it exists
-        Optional<Folder> folder = FileManager.findParent(currentFolder, FileManager.getInstance().getMainFilesRoot());
+        Folder root = new Folder("", files);
+        Optional<Folder> folder = FileManager.findParent(currentFolder, root);
         currentFolder = folder.orElse(null);
 
         return true;

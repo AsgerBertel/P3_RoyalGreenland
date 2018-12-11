@@ -36,7 +36,7 @@ public class FileOverviewController implements TabController {
 
     private ArrayList<Plant> plantList;
     private Plant selectedPlant;
-    private Plant universalPlant = new Plant(-1, "All plants", null); // todo language "All plants"
+    private Plant universalPlant = new Plant(-1, DMSApplication.getMessage("PlantAdmin.UniverselPlantName"), null);
 
     @FXML
     private TreeView<AbstractFile> fileTreeView;
@@ -169,8 +169,9 @@ public class FileOverviewController implements TabController {
 
     @FXML
     public void openPreviousFolder() {
-        fileExplorer.navigateBack();
-        updateDisplayedFiles();
+        if(fileExplorer.navigateBack()){
+            updateDisplayedFiles();
+        }
     }
 
     public String PathDisplayCorrection() {
@@ -238,6 +239,4 @@ public class FileOverviewController implements TabController {
             }
         }
     }
-
-    //todo dUpLiCaTe CoDe
 }

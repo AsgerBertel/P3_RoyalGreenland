@@ -7,7 +7,6 @@ import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
 
 import java.io.File;

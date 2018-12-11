@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -27,9 +28,17 @@ public class AlertBuilder {
     public static void fileNotFoundPopup() {
         buildAlert(
                 Alert.AlertType.ERROR,
-                DMSApplication.getMessage("Exception.fileNotFound.Title"),
-                DMSApplication.getMessage("Exception.fileNotFound.Header"),
+                DMSApplication.getMessage("Exception.FileNotFound.Title"),
+                DMSApplication.getMessage("Exception.FileNotFound.Header"),
                 null);
+        alert.showAndWait();
+    }
+    public static void programRestartPopup() {
+        buildAlert(Alert.AlertType.INFORMATION,
+                DMSApplication.getMessage("DMSApplication.restart.Title"),
+                null,
+                DMSApplication.getMessage("DMSApplication.restart.Context")
+        );
         alert.showAndWait();
     }
 
@@ -48,6 +57,22 @@ public class AlertBuilder {
         );
         alert.showAndWait();
     }
+    /**
+     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occured.
+     * @param targetPath
+     */
+    public static void IOExceptionPopupWithString(String targetPath) {
+        buildAlert(Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.IO.Title"),
+                DMSApplication.getMessage("Exception.IO.Header"),
+                DMSApplication.getMessage("Exception.IO.Target.Context1")+targetPath+"\n"
+                        + DMSApplication.getMessage("Exception.IO.Target.Context2")
+                        + SettingsManager.getServerErrorLogsPath()
+                        + File.separator
+                        + LocalDateTime.now().format(formatter)
+        );
+        alert.showAndWait();
+    }
 
     public static void customErrorPopUp(String customTitle, String customHeader, String customContext) {
         buildAlert(
@@ -61,7 +86,6 @@ public class AlertBuilder {
      * Displays an ERROR popup telling the user incase of InvalidNameException. Primarily in context of Files.move()
      * and Files.copy(), incase file already exists in the target path, or named an illegal name. Parameters consist of
      * the source path and target path.
-     *
      * @param src
      * @param target
      */

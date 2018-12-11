@@ -1,6 +1,7 @@
 package directory;
 
 import app.ApplicationMode;
+import gui.AlertBuilder;
 import gui.DMSApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,6 +45,8 @@ public class SettingsManager {
     private static String username = getComputerName();
     private static String serverPath;
     private static String localPath;
+    private static Path pathServer;
+    private static Path pathLocal;
 
     public static void loadSettings(ApplicationMode applicationMode) {
         serverPath = preferences.get(SERVER_PATH_PREF, DEFAULT_NULL_VALUE);
@@ -65,14 +68,13 @@ public class SettingsManager {
     }
 
     // Prompt the user for the path to both server and local storage
-    private static void initializeSettingsPrompt() {
+    public static void initializeSettingsPrompt() {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
 
             ResourceBundle bundle = ResourceBundle.getBundle("Messages", DMSApplication.getLanguage());
             fxmlLoader.setResources(bundle);
-            System.out.println(preferences.absolutePath());
 
             fxmlLoader.setLocation(SettingsManager.class.getResource(DMSApplication.fxmlPath + "Initialization.fxml"));
 
@@ -127,8 +129,12 @@ public class SettingsManager {
     public static Path getLocalAppFilesPath() {
         return getLocalPath().resolve(APP_FILES_PATH);
     }
-
-    public static Path getServerErrorLogsPath() { return getServerPath().resolve(ERROR_LOGS_PATH); }
+    public static Path getLocalErrorLogsPath() {
+        return getLocalPath().resolve(ERROR_LOGS_PATH);
+    }
+    public static Path getServerErrorLogsPath() {
+        return getServerPath().resolve(ERROR_LOGS_PATH);
+    }
 
     public static String getUsername() {
         return username;
@@ -176,7 +182,7 @@ public class SettingsManager {
     }
 
     public static String toString2() {
-        return "server path:           " + getServerPath() + System.getProperty("line.separator") +
+        return  "server path:           " + getServerPath() + System.getProperty("line.separator") +
                 "server documents path: " + getServerDocumentsPath() + System.getProperty("line.separator") +
                 "server app files path  " + getServerAppFilesPath() + System.getProperty("line.separator") +
                 "server archive path    " + getServerArchivePath() + System.getProperty("line.separator") +
