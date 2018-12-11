@@ -70,7 +70,7 @@ class DirectoryClonerTest extends FileTester {
         assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
-    @Test
+  /*  @Test
     void removeOutdatedFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
@@ -92,9 +92,9 @@ class DirectoryClonerTest extends FileTester {
 
         //asserts that file is now deletes in published.
         assertFalse(modifiedOldFiles.contains(folder));
-    }
+    }*/
 
-    @Test
+  /*  @Test
     void addNewFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
@@ -114,9 +114,9 @@ class DirectoryClonerTest extends FileTester {
 
         //asserts that file is now in published.
         assertTrue(modifiedOldFiles.contains(newFolder));
-    }
+    }*/
 
-    @Test
+   /* @Test
     void findMissingFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
@@ -128,17 +128,17 @@ class DirectoryClonerTest extends FileTester {
 
         ArrayList<AbstractFile> updatedFiles = FileManager.getInstance().getMainFiles();
 
-        ArrayList<AbstractFile> missingFiles = DirectoryCloner.findMissingFiles(originalFiles, updatedFiles);
+        ArrayList<AbstractFile> missingFiles = DirectoryCloner.findMissingFiles(updatedFiles, originalFiles);
 
         for (AbstractFile af: missingFiles
              ) {
             System.out.println(af.toString());
         }
-    }
+    }*/
 
-    @Test
+   /* @Test
     void copyFolder() {
-    }
+    }*/
 
     @Test
     void mergeFolders() {

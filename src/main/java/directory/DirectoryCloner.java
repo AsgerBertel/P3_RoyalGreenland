@@ -279,6 +279,7 @@ public class DirectoryCloner {
         return false;
     }
 
+    //Use Apache instead and delete dis
     public static void copyFolder(Path src, Path dst) {
         createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
