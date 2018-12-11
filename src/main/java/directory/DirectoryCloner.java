@@ -1,6 +1,5 @@
 package directory;
 
-import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
 
 public class DirectoryCloner {
 

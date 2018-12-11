@@ -23,7 +23,6 @@ public class FileExplorer {
     public FileExplorer(ArrayList<AbstractFile> files, Plant viewingPlant) {
         this.files = files;
         this.viewingPlant = viewingPlant;
-        rootFolder = (Folder) files.get(0);
     }
 
     public FileExplorer(ArrayList<AbstractFile> files) {

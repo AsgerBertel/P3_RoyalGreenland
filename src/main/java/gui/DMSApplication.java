@@ -1,15 +1,12 @@
 package gui;
 
 import app.ApplicationMode;
-import com.sun.javafx.binding.Logging;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.SettingsManager;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import json.AppFilesManager;
 
 import java.io.FileNotFoundException;
@@ -25,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import static gui.Tab.FILE_ADMINISTRATION;
 

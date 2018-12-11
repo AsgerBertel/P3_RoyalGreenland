@@ -163,7 +163,9 @@ public class DeletedFilesController implements TabController {
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);
         }
+        FileManager fileManager = FileManager.getInstance();
         update();
+        System.out.println("hey");
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {

@@ -21,7 +21,7 @@ public class PlantAdminTabTest extends GUITest {
     private Button menuCreatePlantButton, menuEditPlantButton, deletePlantButton;
 
     @BeforeEach
-    void setTab() {
+    void loadTab() {
         PlantManager.getInstance().getAllPlants().clear();
         PlantManager.getInstance().getAllPlants().add(plant1);
         PlantManager.getInstance().getAllPlants().add(plant2);
@@ -118,6 +118,7 @@ public class PlantAdminTabTest extends GUITest {
     void createDuplicatePlantTest() throws InterruptedException {
         String newPlantName = plant1.getName();
         int newPlantID = plant1.getId();
+        int startingListSize = plantController.getPlantVBox().getChildren().size();
 
         TextField nameTextField = findNode("#fieldCreatePlantName");
         TextField idTextField = findNode("#fieldCreatePlantId");
@@ -134,11 +135,8 @@ public class PlantAdminTabTest extends GUITest {
         // Assert that an error is show in both fields and that no plant was created
         assertTrue(nameTextField.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS));
         assertTrue(nameTextField.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS));
-        assertEquals(1, plantController.getPlantVBox().getChildren().size());
+        assertEquals(startingListSize, plantController.getPlantVBox().getChildren().size());
     }
-
-
-
 
     @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
     void editDuplicatePlantTest() throws InterruptedException {

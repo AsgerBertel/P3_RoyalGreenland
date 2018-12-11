@@ -296,7 +296,9 @@ public class FileManager {
 
         // Remove the folder from the archive files list
         Optional<Folder> parent = findParent(file, archiveRoot);
-        parent.ifPresent(parent1 -> parent1.getContents().remove(file));
+        if(parent.isPresent()){
+            parent.get().getContents().remove(file);
+        }
         removeEmptyFolders(archiveRoot);
         deleteEmptyDirectories(archiveRoot);
 
