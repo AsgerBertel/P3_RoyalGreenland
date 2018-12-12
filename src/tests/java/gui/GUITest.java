@@ -47,15 +47,12 @@ public abstract class GUITest extends ApplicationTest {
         SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
-
     }
-
-
 
     @AfterAll
     static void cleanUp(){
         // Reset path in settings
-        //SettingsManager.setServerPath(originalPath);
+        SettingsManager.setServerPath(originalPath);
     }
 
     void switchLanguageSetting()  {

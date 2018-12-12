@@ -1,6 +1,7 @@
 package gui.log;
 
 import directory.SettingsManager;
+import gui.AlertBuilder;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,11 +15,13 @@ import java.util.stream.Stream;
 public class LogManager {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+    private static final String logFileName = "logs.log";
 
     public static void log(LogEvent event) {
         List<String> listOfEvents = toStringArray(event);
+        Path pathToFile = SettingsManager.getServerAppFilesPath().resolve(logFileName);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerAppFilesPath().resolve("logs.log").toString(), true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerAppFilesPath().resolve(logFileName).toString(), true)))) {
             pw.println(listOfEvents.get(0) + "|" + listOfEvents.get(1) + "|" + listOfEvents.get(2));
 
         } catch (IOException e) {
