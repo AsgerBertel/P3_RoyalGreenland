@@ -132,7 +132,7 @@ public class FileAdminDragDropTest extends GUITest {
         assertEquals(originalHash, fileTree.getRoot().hashCode());
     }
 
-    @Test
+    @Test // Move folder back and forth
     void moveFolderTest() throws InterruptedException {
         TreeItem<AbstractFile> targetItem = fileTree.getRoot().getChildren().get(0);
         TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(1);
@@ -148,28 +148,21 @@ public class FileAdminDragDropTest extends GUITest {
         moveAndAssert(itemToMove, fileTree.getRoot());
     }
 
-    @Test
+    @RepeatedTest(value = 2) // Move document back and forth
     void moveDocumentTest() throws InterruptedException {
-        fileTree.getRoot().getChildren().get(1).setExpanded(true);
-        Thread.sleep(200); // Coordinates will be messed up if there is no pause between expanding and locating
-        moveAndAssert(fileTree.getRoot().getChildren().get(1).getChildren().get(0), fileTree.getRoot().getChildren().get(0));
-    }
+        TreeItem<AbstractFile> targetItem = fileTree.getRoot().getChildren().get(0);
+        TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(1).getChildren().get(0);
+        doubleClickOn(getTreeCell(fileTree, itemToMove.getParent()));
+        moveAndAssert(itemToMove, targetItem);
 
-    private void moveAndAssert(TreeItem<AbstractFile> itemToMove, TreeItem<AbstractFile> targetItem){
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
-        assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),fileTree.getRoot()));
-        TreeItem<AbstractFile> originalParent = itemToMove.getParent();
+        doubleClickOn(getTreeCell(fileTree, fileTree.getRoot().getChildren().get(0)));
 
-        // Drag folder 1 into folder 0
-        drag(getTreeCell(fileTree, itemToMove));
-        dropTo(getTreeCell(fileTree, targetItem));
+        TreeItem<AbstractFile> newParent = fileTree.getRoot().getChildren().get(0);
+        itemToMove = findChildWithName(newParent, itemToMove.getValue().getName());
+        if(itemToMove == null)
+            fail("Item was not moved correctly");
 
-        assertTrue(((Folder)targetItem.getValue()).getContents().contains(itemToMove.getValue()));
-        assertFalse(((Folder)originalParent.getValue()).getContents().contains(itemToMove.getValue()));
-
-        // Assert that the fileTree, the file list and the file system are all in sync
-        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
-        assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),fileTree.getRoot()));
+        moveAndAssert(itemToMove, fileTree.getRoot());
     }
 
     @RepeatedTest(value = 2)
@@ -195,6 +188,23 @@ public class FileAdminDragDropTest extends GUITest {
         assertEquals(originalFileListHash, fileTree.getRoot().getValue().hashCode());
         // Assert the file list still matches the file system
         assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
+    }
+
+    private void moveAndAssert(TreeItem<AbstractFile> itemToMove, TreeItem<AbstractFile> targetItem){
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
+        assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),fileTree.getRoot()));
+        TreeItem<AbstractFile> originalParent = itemToMove.getParent();
+
+        // Drag folder 1 into folder 0
+        drag(getTreeCell(fileTree, itemToMove));
+        dropTo(getTreeCell(fileTree, targetItem));
+
+        assertTrue(((Folder)targetItem.getValue()).getContents().contains(itemToMove.getValue()));
+        assertFalse(((Folder)originalParent.getValue()).getContents().contains(itemToMove.getValue()));
+
+        // Assert that the fileTree, the file list and the file system are all in sync
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
+        assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),fileTree.getRoot()));
     }
 
     private static TreeCell<AbstractFile> getTreeCell(TreeView<AbstractFile> tree, TreeItem<AbstractFile> treeItem){
