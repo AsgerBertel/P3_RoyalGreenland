@@ -1,6 +1,7 @@
 package directory;
 
 import app.ApplicationMode;
+import com.sun.scenario.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -70,95 +72,25 @@ class DirectoryClonerTest extends FileTester {
         assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
-  /*  @Test
-    void removeOutdatedFiles() throws Exception {
-        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
-        DirectoryCloner.publishFiles();
-
-        //deletes file
-        FileManager.getInstance().deleteFile(folder);
-
-        ArrayList<AbstractFile> oldFiles = FileManager.getInstance().getMainFiles();
-        ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
-
-        //asserts that file is deleted in mainFiles, but not published
-        //todo get archive files doesnt work
-        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(folder));
-        assertFalse(FileManager.getInstance().getMainFiles().contains(folder));
-        assertTrue(AppFilesManager.loadPublishedFileList().contains(folder));
-
-        //pushes files to local
-        ArrayList<AbstractFile> modifiedOldFiles = DirectoryCloner.removeOutdatedFiles(oldFiles, newFiles, FileManager.getInstance().getMainFilesRoot().getPath());
-
-        //asserts that file is now deletes in published.
-        assertFalse(modifiedOldFiles.contains(folder));
-    }*/
-
-  /*  @Test
-    void addNewFiles() throws Exception {
-        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
-        DirectoryCloner.publishFiles();
-
-        //uploads new file to mainFiles
-        Folder newFolder = FileManager.getInstance().createFolder("new folder");
-
-        ArrayList<AbstractFile> oldFiles = FileManager.getInstance().getMainFiles();
-        ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
-
-        //asserts that file is in mainFiles but not published.
-        assertTrue(FileManager.getInstance().getMainFiles().contains(newFolder));
-        assertFalse(AppFilesManager.loadPublishedFileList().contains(newFolder));
-
-        //addNewFiles
-        ArrayList<AbstractFile> modifiedOldFiles = DirectoryCloner.addNewFiles(oldFiles, newFiles, Paths.get("root"), Paths.get("root"));
-
-        //asserts that file is now in published.
-        assertTrue(modifiedOldFiles.contains(newFolder));
-    }*/
-
-   /* @Test
-    void findMissingFiles() throws Exception {
-        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
-        DirectoryCloner.publishFiles();
-
-        ArrayList<AbstractFile> originalFiles = FileManager.getInstance().getMainFiles();
-
-        FileManager.getInstance().renameFile(doc, "new Name");
-        FileManager.getInstance().createFolder("new folder");
-
-        ArrayList<AbstractFile> updatedFiles = FileManager.getInstance().getMainFiles();
-
-        ArrayList<AbstractFile> missingFiles = DirectoryCloner.findMissingFiles(updatedFiles, originalFiles);
-
-        for (AbstractFile af: missingFiles
-             ) {
-            System.out.println(af.toString());
-        }
-    }*/
-
-   /* @Test
-    void copyFolder() {
-    }*/
-
     @Test
     void mergeFolders() throws IOException {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
 
-        for (AbstractFile af: parentFolder.getContents()
-        ) {
-            System.out.println(af.toString());
-        }
-
-        System.out.println("-------------------------------------------------");
-
+        //merges folders in filesystem but not in contents of folders.
         DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),
-                SettingsManager.getServerDocumentsPath().resolve(parentFolder.getOSPath()), false);
+                SettingsManager.getServerDocumentsPath().resolve(parentFolder.getOSPath()), true);
 
-        for (AbstractFile af: parentFolder.getContents()
-             ) {
-            System.out.println(af.toString());
-        }
+        //assert that document is not moved in folder contents
+        assertFalse(parentFolder.getContents().contains(folder.getContents().get(1)));
+        assertTrue(folder.getContents().contains(folder.getContents().get(1)));
+
+        String trueString = parentFolder.getOSPath().resolve(folder.getContents().get(1).getName()).toString();
+        trueString = SettingsManager.getServerDocumentsPath().toString() + File.separator + trueString;
+
+        //assert that document is copied to folder through the filesystem, but still exists in old folder
+        assertTrue(Files.exists(Paths.get(trueString)));
+        assertTrue(Files.exists(SettingsManager.getServerDocumentsPath().resolve(folder.getContents().get(1).getOSPath())));
 
     }
 
