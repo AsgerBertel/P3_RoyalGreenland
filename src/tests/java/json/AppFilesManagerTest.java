@@ -12,12 +12,15 @@ import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +34,6 @@ class AppFilesManagerTest extends FileTester {
     @Override
     protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        folder = (Folder) findInMainFiles(pathToFolder);
         plant = new Plant(4321, "nice", new AccessModifier());
     }
 
@@ -58,7 +60,7 @@ class AppFilesManagerTest extends FileTester {
 
         assertNull(pm);
 
-        PlantManager.getInstance();
+        PlantManager.getInstance().addPlant(plant);
 
         pm = AppFilesManager.loadPlantManager();
 
@@ -107,6 +109,7 @@ class AppFilesManagerTest extends FileTester {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;
+        folder = (Folder) findInMainFiles(pathToFolder);
 
         //asserts that publishedFileList is empty
         al = AppFilesManager.loadPublishedFileList();
@@ -128,6 +131,7 @@ class AppFilesManagerTest extends FileTester {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;
+        folder = (Folder) findInMainFiles(pathToFolder);
 
         //asserts that localFileList is empty
         al = AppFilesManager.loadLocalFileList();
@@ -145,6 +149,8 @@ class AppFilesManagerTest extends FileTester {
 
     @Test
     void save(){
+        folder = (Folder) findInMainFiles(pathToFolder);
+
         FileManager fm = FileManager.getInstance();
         FileManager oldFm = fm;
 
@@ -172,10 +178,38 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void createServerDirectories() {
+    void createServerDirectories() throws IOException {
+        Path newServerPath = SettingsManager.getServerDocumentsPath();
+        Path wrongPath = Paths.get("hurgh/geburg/lurk");
+
+        SettingsManager.setServerPath(newServerPath);
+        AppFilesManager.createServerDirectories();
+
+        //asserts that new server path is added
+        assertEquals(newServerPath, SettingsManager.getServerPath());
+
+        SettingsManager.setServerPath(wrongPath);
+
+        //asserts that wrong server path is not possible
+        Executable test = AppFilesManager::createServerDirectories;
+        assertThrows(FileNotFoundException.class, test);
     }
 
     @Test
-    void createLocalDirectories() {
+    void createLocalDirectories() throws IOException {
+        Path newServerPath = SettingsManager.getServerDocumentsPath();
+        Path wrongPath = Paths.get("hurgh/geburg/lurk");
+
+        SettingsManager.setLocalPath(newServerPath);
+        AppFilesManager.createLocalDirectories();
+
+        //asserts that new local path is added
+        assertEquals(newServerPath, SettingsManager.getLocalPath());
+
+        SettingsManager.setLocalPath(wrongPath);
+
+        //asserts that wrong local path is not possible
+        Executable test = AppFilesManager::createLocalDirectories;
+        assertThrows(FileNotFoundException.class, test);
     }
 }

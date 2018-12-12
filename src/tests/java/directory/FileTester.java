@@ -23,12 +23,13 @@ public class FileTester {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         originalServerPath = SettingsManager.getServerPath();
         originalLocalPath = SettingsManager.getLocalPath();
-        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
-        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
     }
 
     @BeforeEach
     void resetBeforeEachMethod() throws IOException {
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
+        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
+
         TestUtil.resetTestFiles();
         FileManager.resetInstance();
 
