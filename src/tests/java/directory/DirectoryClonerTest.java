@@ -1,7 +1,6 @@
 package directory;
 
 import app.ApplicationMode;
-import com.sun.scenario.Settings;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;

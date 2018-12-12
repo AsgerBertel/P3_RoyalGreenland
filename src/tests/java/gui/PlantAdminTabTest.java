@@ -5,12 +5,14 @@ import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.plant_administration.PlantAdministrationController;
 import gui.settings.SettingsController;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseButton;
+import org.assertj.core.error.future.ShouldNotHaveFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -214,6 +216,8 @@ public class PlantAdminTabTest extends GUITest {
 
         assertFalse(plantController.getPlantVBox().getChildren().contains(plant1Element));
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant2Element));
+        assertTrue(menuEditPlantButton.isDisabled());
+        assertTrue(deletePlantButton.isDisabled());
     }
 
     @RepeatedTest(value = 2)
@@ -234,5 +238,103 @@ public class PlantAdminTabTest extends GUITest {
         assertFalse(findNode("#editPane").isVisible());
         assertTrue(showEditButton.isDisabled());
     }
+
+    @RepeatedTest(value = 2)
+    void cancelDeleteTest(){
+        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button showEditButton = findNode("#btnEditPlantSidebar");
+
+        clickOn(plant1Element);
+        clickOn(deletePlantButton);
+        clickOn(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
+
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        assertTrue(plant1Element.isSelected());
+        assertFalse(deletePlantButton.isDisabled());
+        assertFalse(showEditButton.isDisabled());
+    }
+
+    @RepeatedTest(value = 2)
+    void closeDeletePopupTest() throws InterruptedException {
+        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button showEditButton = findNode("#btnEditPlantSidebar");
+
+        clickOn(plant1Element);
+        clickOn(deletePlantButton);
+        moveTo(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
+        // todo This is a janky way to close the popup. It will break if the size of the popup changes
+        moveBy(35, -140);
+        clickOn(MouseButton.PRIMARY);
+
+        assertTrue(plant1Element.isSelected());
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        assertFalse(deletePlantButton.isDisabled());
+        assertFalse(showEditButton.isDisabled());
+    }
+
+    @RepeatedTest(value = 2)
+    void showContextMenuTest() throws InterruptedException {
+
+        rightClickOn(plant2Element);
+        clickOnContextMenuItem(1); // Edit plant
+        assertTrue(findNode("#editPane").isVisible());
+        assertFalse(findNode("#createPane").isVisible());
+
+        rightClickOn(plant1Element);
+        clickOnContextMenuItem(0); // Create plant
+        assertTrue(findNode("#createPane").isVisible());
+        assertFalse(findNode("#editPane").isVisible());
+
+        rightClickOn(plant2Element);
+        clickOnContextMenuItem(2); // Delete plant
+        clickOn(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+
+        assertFalse(plantController.getPlantVBox().getChildren().contains(plant2Element));
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+    }
+
+    @RepeatedTest(value = 2)
+    void deleteNewPlant(){
+        PlantElement newPlantElement = createNewPlant(1265, "Test");
+        assertTrue(plantController.getPlantVBox().getChildren().contains(newPlantElement));
+
+        clickOn(newPlantElement);
+        clickOn(deletePlantButton);
+        clickOn(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
+
+        assertFalse(plantController.getPlantVBox().getChildren().contains(newPlantElement));
+    }
+
+    @RepeatedTest(value = 2)
+    void rightClickNewPlant(){
+        TextField nameTextField = findNode("#fieldEditPlantName");
+        String newPlantName = "Right click";
+        PlantElement newPlantElement = createNewPlant(1265, newPlantName);
+        assertTrue(plantController.getPlantVBox().getChildren().contains(newPlantElement));
+
+        rightClickOn(newPlantElement);
+        clickOnContextMenuItem(1); // Edit
+        assertTrue(findNode("#editPane").isVisible());
+        assertEquals(nameTextField.getText(), newPlantName);
+    }
+
+    // Creates a new plant and returns the plantelement from the list
+    private PlantElement createNewPlant(int id, String name){
+        TextField nameTextField = findNode("#fieldCreatePlantName");
+        TextField idTextField = findNode("#fieldCreatePlantId");
+        Button saveEditButton = findNode("#btnCreatePlant");
+
+        writeInTextField(nameTextField, name);
+        writeInTextField(idTextField, Integer.toString(id));
+
+        clickOn(saveEditButton);
+
+        for(Node plantElement : plantController.getPlantVBox().getChildren()){
+            if(((PlantElement) plantElement).getPlant().getId() == id)
+                return (PlantElement) plantElement;
+        }
+        throw new RuntimeException("Could not create new plant and identify the corresponding plant element");
+    }
+
 
 }
