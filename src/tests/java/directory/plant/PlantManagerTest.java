@@ -1,26 +1,32 @@
 package directory.plant;
 
+import app.ApplicationMode;
+import directory.FileTester;
+import directory.SettingsManager;
+import gui.DMSApplication;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlantManagerTest {
+class PlantManagerTest extends FileTester {
 
-    @Test
-    void getInstance() {
+    @Override
+    protected void setSettings(){
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
     }
 
     @Test
     void resetInstance() {
+
     }
 
     @Test
     void getAllPlants() {
     }
 
-    @Test
+    /*@Test
     void getPlant() {
-    }
+    }*/
 
     @Test
     void addPlant() {
