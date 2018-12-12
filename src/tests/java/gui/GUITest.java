@@ -43,7 +43,7 @@ public abstract class GUITest extends ApplicationTest {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
 
         originalPath = SettingsManager.getServerPath();
-        SettingsManager.setServerPath(TestUtil.getTestDocuments());
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
@@ -86,6 +86,12 @@ public abstract class GUITest extends ApplicationTest {
         press(KeyCode.A);
         release(new KeyCode[]{});
         push(KeyCode.DELETE);
+    }
+
+    protected void clickOnContextMenuItem(int index){
+        moveBy(48, 18);
+        moveBy(0, 27 * index);
+        clickOn(MouseButton.PRIMARY);
     }
 
 

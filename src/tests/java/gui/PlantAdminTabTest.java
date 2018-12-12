@@ -293,12 +293,6 @@ public class PlantAdminTabTest extends GUITest {
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
     }
 
-    private void clickOnContextMenuItem(int index){
-        moveBy(48, 18);
-        moveBy(0, 27 * index);
-        clickOn(MouseButton.PRIMARY);
-    }
-
     @RepeatedTest(value = 2)
     void deleteNewPlant(){
         PlantElement newPlantElement = createNewPlant(1265, "Test");
