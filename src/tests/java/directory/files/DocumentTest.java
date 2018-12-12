@@ -23,7 +23,7 @@ class DocumentTest extends FileTester {
 
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
         docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);
