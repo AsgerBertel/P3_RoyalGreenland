@@ -33,7 +33,7 @@ class DirectoryClonerTest extends FileTester {
     Folder KALFolder;
 
     @Override
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         al = FileManager.getInstance().getMainFiles();
         doc = (Document) findInMainFiles(docPath);

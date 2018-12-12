@@ -35,7 +35,7 @@ public class FileTester {
         setSettings();
     }
 
-    void setSettings(){
+    protected void setSettings(){
 
     }
 
