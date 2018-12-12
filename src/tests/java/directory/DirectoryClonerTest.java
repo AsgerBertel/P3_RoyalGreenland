@@ -73,9 +73,7 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void mergeFolders() throws IOException {
-        PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
-        DirectoryCloner.publishFiles();
+    void mergeFolders() {
 
         //merges folders in filesystem but not in contents of folders.
         DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),
@@ -91,10 +89,16 @@ class DirectoryClonerTest extends FileTester {
         //assert that document is copied to folder through the filesystem, but still exists in old folder
         assertTrue(Files.exists(Paths.get(trueString)));
         assertTrue(Files.exists(SettingsManager.getServerDocumentsPath().resolve(folder.getContents().get(1).getOSPath())));
-
     }
 
     @Test
     void deleteFolder() {
+
+        //deletes in filesystem but not in our folder system
+        DirectoryCloner.deleteFolder(SettingsManager.getServerDocumentsPath().resolve(KALFolder.getOSPath()).toFile());
+
+        //assert that the folder exists in contents but not in the filesystem
+        assertTrue(folder.getContents().contains(KALFolder));
+        assertFalse(Files.exists(SettingsManager.getServerDocumentsPath().resolve(KALFolder.getOSPath())));
     }
 }
