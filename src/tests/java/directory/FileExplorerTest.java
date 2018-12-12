@@ -32,7 +32,7 @@ class FileExplorerTest extends FileTester {
     AccessModifier am;
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docInAM = DocumentBuilder.getInstance().createDocument(pathToDoc1);
         docFalse = DocumentBuilder.getInstance().createDocument(pathToDoc2);
