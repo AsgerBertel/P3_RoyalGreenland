@@ -7,6 +7,7 @@ import directory.files.Folder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
@@ -120,28 +121,23 @@ class FileManagerTest extends FileTester {
 
     @Test
     void restoreFile() throws IOException {
-
-        FileManager.getInstance().deleteFile(doc);
+        FileManager fileManager = FileManager.getInstance();
+        assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
+        fileManager.deleteFile(doc);
 
         //todo maybe i fucked up, should be doing contain on folder doc is in.
         //todo tried with parentFolder, still didnt work
         //todo getArchiveFiles doesnt work
 
-        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(doc));
-        assertFalse(FileManager.getInstance().getMainFiles().contains(doc));
+        assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
+        assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
 
+        doc = (Document) fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).get();
         FileManager.getInstance().restoreFile(doc);
 
-        //todo restore doesnt restore file back into mainFiles
-        //assertTrue(FileManager.getInstance().getMainFiles().contains(doc));
-
-        //todo doesnt work with folders either
-        FileManager.getInstance().deleteFile(folder1);
-
-        //assertTrue(FileManager.getInstance().getArchiveFiles().contains(folder1));
-        assertFalse(FileManager.getInstance().getMainFiles().contains(folder1));
-
-
+        //todo restore doesnt restore file back into mainfiles
+        assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
+        assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
     }
 
     @Test

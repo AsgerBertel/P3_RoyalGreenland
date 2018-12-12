@@ -360,10 +360,12 @@ public class FileAdminController implements TabController {
     }
 
     public void deleteFile() {
-        TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
-        FileManager.getInstance().deleteFile(selectedItem.getValue());
-        FileManager.getInstance().save();
-        update();
+        if(!(selectedFile.getOSPath().toString().equals(""))){
+            TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
+            FileManager.getInstance().deleteFile(selectedItem.getValue());
+            FileManager.getInstance().save();
+            update();
+        }
     }
 
     public void openFile() {
@@ -446,8 +448,6 @@ public class FileAdminController implements TabController {
 
         for (LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
-
-        lastUpdatedText.setText(LogManager.getLastPublished());
     }
 
     public void onPublishChanges() {
@@ -455,6 +455,7 @@ public class FileAdminController implements TabController {
             DirectoryCloner.publishFiles();
             LogManager.log(new LogEvent(LogManager.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
             update();
+            lastUpdatedText.setText(LogManager.getLastPublished());
         } catch (Exception e) {
             e.printStackTrace();
         }

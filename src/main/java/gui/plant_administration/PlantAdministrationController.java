@@ -31,6 +31,10 @@ import static gui.log.LogEventType.*;
 
 public class PlantAdministrationController implements TabController {
 
+    @FXML
+    public Button btnSavePlantEdit;
+    public Button btnCreatePlant;
+
     ArrayList<PlantElement> plantElements = new ArrayList<>();
 
     PlantElement selectedPlantElement = null;
@@ -98,6 +102,8 @@ public class PlantAdministrationController implements TabController {
             PlantElement plantElement = new PlantElement(plant, this);
             plantElement.setOnSelectedListener(() -> onPlantToggle(plantElement));
             plantElements.add(plantElement);
+            if(selectedPlantElement != null && plantElement.getPlant().getName().equals(selectedPlantElement.getPlant().getName()))
+                plantElement.setSelected(true);
         }
         plantVBox.getChildren().addAll(plantElements);
 
@@ -110,6 +116,9 @@ public class PlantAdministrationController implements TabController {
 
     //Select plant function
     private void onPlantToggle(PlantElement plantElement) {
+        if(selectedPlantElement != null && selectedPlantElement.equals(plantElement))
+            return;
+
         for (PlantElement element : plantElements) {
             element.setSelected(false);
         }
@@ -122,6 +131,8 @@ public class PlantAdministrationController implements TabController {
         fieldEditPlantName.setText(selectedPlantElement.getPlant().getName());
         fieldEditPlantId.setText(Integer.toString(selectedPlantElement.getPlant().getId()));
         lblPlantEdited.setText("");
+
+        btnSavePlantEdit.setDisable(true);
     }
 
     //Button function when "create plant" button in sidebar is pressed.
@@ -236,7 +247,6 @@ public class PlantAdministrationController implements TabController {
                 oldName = selectedPlant.getName();
                 oldID = selectedPlant.getId();
 
-
                 newName = fieldEditPlantName.getText();
                 newID = Integer.parseInt(fieldEditPlantId.getText());
 
@@ -250,14 +260,12 @@ public class PlantAdministrationController implements TabController {
                             continue;
 
                         valid = false;
-                        // Otherwise indicate that id or name is already in use
-                        if (plant.getId() == newID){
+                        if (plant.getId() == newID)
                             addErrorClass(fieldEditPlantId);
-                        }
 
-                        if (plant.getName().equals(newName)){
+                        if (plant.getName().equals(newName))
                             addErrorClass(fieldEditPlantName);
-                        }
+
                     }
                 }
 
@@ -268,24 +276,28 @@ public class PlantAdministrationController implements TabController {
                 selectedPlant.setName(newName);
                 selectedPlant.setId(newID);
 
+                btnSavePlantEdit.setDisable(true);
                 update();
 
                 lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.PlantEdited"));
                 String logmsg = "(" + DMSApplication.getMessage("Log.Plant") + ": " + oldName + ", " + oldID + " )" + " -> " + " (" + DMSApplication.getMessage("Log.Plant") + ", " + newName + ", " + newID + " )";
                 LogManager.log(new LogEvent(logmsg, PLANT_EDITED));
-
-
-
-                selectedPlantElement = null;
             } else {
                 lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.SelectPlant"));
             }
-
-            fieldEditPlantName.clear();
-            fieldEditPlantId.clear();
         } catch (NumberFormatException e) {
             lblPlantEdited.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
             addErrorClass(fieldEditPlantId);
+        }
+    }
+
+    private boolean inputHasError(){
+        if(editPane.isVisible()){
+            return fieldEditPlantId.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS) ||
+                    fieldEditPlantName.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS);
+        }else{
+            return fieldCreatePlantId.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS) ||
+                    fieldCreatePlantName.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS);
         }
     }
 
@@ -295,8 +307,7 @@ public class PlantAdministrationController implements TabController {
         if (event.getCode().equals(KeyCode.ENTER)) {
             createPlant();
         } else {
-            removeErrorClass(fieldCreatePlantName);
-            removeErrorClass(fieldCreatePlantId);
+            validateInputs();
         }
     }
 
@@ -306,11 +317,34 @@ public class PlantAdministrationController implements TabController {
         if (event.getCode().equals(KeyCode.ENTER)) {
             savePlantEdit();
         } else {
-            removeErrorClass(fieldEditPlantId);
-            removeErrorClass(fieldEditPlantName);
+            validateInputs();
+            btnSavePlantEdit.setDisable(inputHasError());
+        }
+    }
+
+    private void validateInputs(){
+        TextField nameTextField, idTextField;
+        Button saveButton;
+
+        if(editPane.isVisible()){
+            nameTextField = fieldEditPlantName;
+            idTextField = fieldEditPlantId;
+        }else{
+            nameTextField = fieldCreatePlantName;
+            idTextField = fieldCreatePlantId;
         }
 
+        removeErrorClass(nameTextField);
+        removeErrorClass(idTextField);
+
+        if(nameTextField.getText().isEmpty())
+            addErrorClass(nameTextField);
+
+        if(idTextField.getText().isEmpty() || !idTextField.getText().matches("[0-9]+"))
+            addErrorClass(idTextField);
     }
+
+
 
     //Making Alert deletePopUp for delete plant function.
     public void deletePopUp() {
