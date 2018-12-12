@@ -105,7 +105,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadPublishedFileList() throws IOException {
+    void loadPublishedFileList() throws IOException, InterruptedException {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;

@@ -30,6 +30,10 @@ public class PlantManager {
         return plantManager;
     }
 
+    public static void resetInstance(){
+        plantManager = null;
+    }
+
     /**
      * Use to retrieve all plants.
      * @return arrayList of all plants.

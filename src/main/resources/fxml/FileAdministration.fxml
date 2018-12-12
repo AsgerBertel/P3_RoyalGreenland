@@ -16,7 +16,7 @@
 
     <!-- Side menu -->
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-        <Button styleClass="menuButton" onAction="#uploadDocument">
+        <Button fx:id="uploadButton" styleClass="menuButton" onAction="#uploadDocument">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/adddocument.png"/>
@@ -24,7 +24,7 @@
             </graphic>
         </Button>
 
-        <Button styleClass="menuButton" onAction="#createFolder">
+        <Button fx:id="createFolderButton" styleClass="menuButton" onAction="#createFolder">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
                     <Image url="/icons/menu/addfolder.png"/>
@@ -76,7 +76,7 @@
             <VBox fx:id="changesVBox" styleClass="changesVBox" minWidth="${changesSection.width}"/>
         </ScrollPane>
 
-        <Button fx:id="saveChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
+        <Button fx:id="publishChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
     </VBox>
 </HBox>
 

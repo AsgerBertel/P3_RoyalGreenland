@@ -50,11 +50,6 @@ public abstract class GUITest extends ApplicationTest {
 
     }
 
-    @BeforeEach
-    final void setup() throws InterruptedException {
-
-    }
-
 
 
     @AfterAll

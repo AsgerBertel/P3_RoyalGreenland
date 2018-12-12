@@ -362,7 +362,7 @@ public class DirectoryCloner {
 
     private static void replaceIfExists(Path src, Path dst) throws IOException {
         if (!Files.exists(src))
-            throw new IllegalArgumentException("Given src file does not exist");
+            throw new IllegalArgumentException("Given src file does not exist : " + src.toString());
 
         if(!dst.toString().contains(DMSApplication.APP_TITLE))
             throw new IllegalArgumentException(

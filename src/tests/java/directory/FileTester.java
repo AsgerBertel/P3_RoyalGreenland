@@ -2,6 +2,7 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
+import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,6 +33,7 @@ public class FileTester {
 
         TestUtil.resetTestFiles();
         FileManager.resetInstance();
+        PlantManager.resetInstance();
 
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
