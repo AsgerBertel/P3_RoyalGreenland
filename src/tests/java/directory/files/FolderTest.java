@@ -14,8 +14,6 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FolderTest extends FileTester {
-    //private File resourcesDirectory = new File("src/tests/resTest" + File.separator);
-    //private Path pathToJsonTest = Paths.get(resourcesDirectory.getAbsolutePath() + File.separator + "Main Files Test/RLFiles/Server/App Files/allFiles.JSON");
     private Path pathToTestFolder = Paths.get("03_URENSET STENBIDERROGN");
     private Path pathToNewFolder = Paths.get("02_VINTERTØRRET FISK");
     private Path pathToDoc = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
@@ -25,11 +23,10 @@ class FolderTest extends FileTester {
     AccessModifier am;
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        folderTest = new Folder(pathToTestFolder.toString());
-        doc = DocumentBuilder.getInstance().createDocument(pathToDoc);
-        folderTest.getContents().add(doc);
+        folderTest = (Folder) findInMainFiles(pathToTestFolder);
+        doc = (Document) findInMainFiles(pathToDoc);
         am = new AccessModifier();
         plant = new Plant(1234, "plant", am);
     }
