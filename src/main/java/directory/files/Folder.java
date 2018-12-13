@@ -40,7 +40,7 @@ public class Folder extends AbstractFile {
             child.setPath(getPath().resolve(child.getName()));
     }
 
-    // Reads the content o path its given
+    // Reads the content from the path its given
     public ArrayList<AbstractFile> getContents(){
         return folderContents;
     }

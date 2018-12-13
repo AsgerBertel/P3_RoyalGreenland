@@ -3,12 +3,14 @@ package gui;
 import directory.FileManager;
 import directory.SettingsManager;
 import directory.files.AbstractFile;
+import directory.files.Document;
 import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.file_administration.FileAdminController;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeCell;
@@ -215,11 +217,72 @@ public class FileAdminDragDropTest extends GUITest {
     }
 
     private static TreeItem<AbstractFile> findChildWithName(TreeItem<AbstractFile> treeItem, String name){
-        for(TreeItem<AbstractFile> child : treeItem.getChildren()){
+        for(TreeItem<AbstractFile> child : treeItem.getChildren())
             if(child.getValue().getName().equals(name)) return child;
+
+        return null;
+    }
+
+    private static TreeItem<AbstractFile> findInTree(TreeItem<AbstractFile> root, AbstractFile file){
+        for(TreeItem<AbstractFile> childItem : root.getChildren()){
+            if(childItem.getValue().getOSPath().equals(file.getOSPath()))
+                return childItem;
+            TreeItem<AbstractFile> potentialFile = findInTree(childItem, file);
+            if(potentialFile != null) return potentialFile;
         }
         return null;
     }
+
+
+    //@Test
+    void moveAllFiles() throws InterruptedException {
+        //moveAllChildrenToOneFolder(fileTree.getRoot());
+        moveAllChildrenOut(fileTree.getRoot());
+    }
+
+    void moveAllChildrenToOneFolder(TreeItem<AbstractFile> root) throws InterruptedException {
+        if(!root.isExpanded())
+            doubleClickOn(getTreeCell(fileTree, root));
+
+        if(root.getChildren().size() < 1 || root.getChildren().get(0).getValue() instanceof Document)
+            return;
+
+        ObservableList<TreeItem<AbstractFile>> itemsToMove = root.getChildren();
+
+        for(TreeItem<AbstractFile> itemToMove : itemsToMove){
+            TreeCell cellToMove = getTreeCell(fileTree, findInTree(fileTree.getRoot(), itemToMove.getValue()));
+            TreeCell targetCell = getTreeCell(fileTree, findInTree(fileTree.getRoot(), itemToMove.getParent().getChildren().get(0).getValue()));
+            drag(cellToMove).dropTo(targetCell);
+        }
+
+        moveAllChildrenToOneFolder(findInTree(fileTree.getRoot(), root.getChildren().get(0).getValue()));
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
+    }
+
+    void moveAllChildrenOut(TreeItem<AbstractFile> root) throws InterruptedException {
+        if(root.getValue() instanceof Folder){
+            if(root.getChildren().get(0).getValue() instanceof Folder)
+                moveAllChildrenOut(root.getChildren().get(0));
+        }
+
+        drag(getTreeCell(fileTree, findInTree(fileTree.getRoot(), root.getValue()))).dropTo(getTreeCell(fileTree, fileTree.getRoot()));
+
+        ObservableList<TreeItem<AbstractFile>> itemsToMove = root.getChildren();
+
+        for(TreeItem<AbstractFile> itemToMove : itemsToMove){
+            if(itemToMove.getValue() instanceof Folder && itemToMove.getChildren().size() > 0)
+                if(itemToMove.getChildren().get(0).getValue() instanceof Folder)
+                    moveAllChildrenOut(itemToMove.getChildren().get(0));
+
+            TreeCell cellToMove = getTreeCell(fileTree, findInTree(fileTree.getRoot(), itemToMove.getValue()));
+            TreeCell targetCell = getTreeCell(fileTree, fileTree.getRoot());
+            drag(cellToMove).dropTo(targetCell);
+        }
+
+        assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
+    }
+
+
 
 
 }
