@@ -161,10 +161,16 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected())
+        if (plantElement.isSelected()){
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
-        else
+            LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_GIVEN));
+        }
+        else{
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
+            LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_REMOVED));
+        }
+
+        reloadChangesList();
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
