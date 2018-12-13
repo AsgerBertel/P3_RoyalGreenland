@@ -40,12 +40,19 @@ class FileUpdaterTest extends GUITest {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
     }*/
 
+   @BeforeEach
+   void setup() throws IOException {
+       TestUtil.resetTestFiles();
+       AppFilesManager.createLocalDirectories();
+       AppFilesManager.createServerDirectories();
+   }
 
     @Test
     void start() throws IOException, InterruptedException {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         FileManager.resetInstance();
         FileManager.getInstance();
+        PlantManager.resetInstance();
         PlantManager.getInstance();
         DirectoryCloner.publishFiles();
         FileUpdater fu = new FileUpdater(DMSApplication.getDMSApplication());
