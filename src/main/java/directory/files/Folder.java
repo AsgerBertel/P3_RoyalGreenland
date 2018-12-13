@@ -73,7 +73,7 @@ public class Folder extends AbstractFile {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Folder folder = (Folder) o;
-        return Objects.equals(folderContents, folder.folderContents);
+        return folderContents.containsAll(folderContents) && folder.folderContents.containsAll(folderContents);
     }
 
     @Override
