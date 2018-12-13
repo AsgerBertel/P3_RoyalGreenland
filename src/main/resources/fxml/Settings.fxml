@@ -35,10 +35,10 @@
     </VBox>
 
     <VBox styleClass="settingsVBox" stylesheets="/styles/menubar.css">
-        <Text styleClass="standardTitle" text="%Settings.Sprog"/>
+        <Text styleClass="standardTitle" text="%Settings.Language"/>
 
         <HBox translateY="10">
-            <ToggleButton translateX="10" text="%Settings.Dansk" styleClass="darkButton" fx:id="danishSettingsButton"
+            <ToggleButton translateX="10" text="%Settings.Danish" styleClass="darkButton" fx:id="danishSettingsButton"
                           onAction="#changeToDanish">
                 <graphic>
                     <ImageView fitWidth="24" fitHeight="24">
@@ -47,7 +47,7 @@
                 </graphic>
             </ToggleButton>
 
-            <ToggleButton translateX="25" text="%Settings.Grønlandsk" styleClass="darkButton" fx:id="greenlandicSettingsButton"
+            <ToggleButton translateX="25" text="%Settings.Greenlandic" styleClass="darkButton" fx:id="greenlandicSettingsButton"
                           onAction="#changeToGreenlandic">
                 <graphic >
                     <ImageView fitWidth="24" fitHeight="24">
