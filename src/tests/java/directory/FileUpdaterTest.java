@@ -47,6 +47,8 @@ class FileUpdaterTest extends GUITest {
        AppFilesManager.createServerDirectories();
    }
 
+   /*
+
     @Test
     void start() throws IOException, InterruptedException {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
@@ -69,6 +71,7 @@ class FileUpdaterTest extends GUITest {
         //assertEquals(FileManager.getInstance().getMainFiles(), AppFilesManager.loadLocalFileList());
 
         //publishes a renamed folder
+/*
         folder = (Folder) FileManager.getInstance().findFile(pathToFolder, FileManager.getInstance().getMainFiles()).get();
         FileManager.getInstance().renameFile(folder, "new name");
         DirectoryCloner.publishFiles();
@@ -83,5 +86,5 @@ class FileUpdaterTest extends GUITest {
         //assertTrue(al.contains(folder));
 
         fu.setRunning(false);
-    }
+    }*/
 }
