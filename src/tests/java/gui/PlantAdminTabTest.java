@@ -274,7 +274,6 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void showContextMenuTest() throws InterruptedException {
-
         rightClickOn(plant2Element);
         clickOnContextMenuItem(1); // Edit plant
         assertTrue(findNode("#editPane").isVisible());
