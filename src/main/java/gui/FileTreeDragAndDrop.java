@@ -134,8 +134,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
     }
 
     //
-    private void drop(DragEvent
-                              event, TreeCell<AbstractFile> destinationTreeCell, TreeView<AbstractFile> treeView) throws FileNotFoundException {
+    private void drop(DragEvent event, TreeCell<AbstractFile> destinationTreeCell, TreeView<AbstractFile> treeView) throws FileNotFoundException {
         // Do nothing if no item was dragged
         if (!event.getDragboard().hasContent(JAVA_FORMAT))
             return;
@@ -156,7 +155,11 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
             destinationFolder = (Folder) destinationFile;
         } else {
             // If the file is dropped on a document then set the destination to be the parent folder
-            Optional<Folder> destinationParent = FileManager.findParent(fileToMove, fileManager.getMainFilesRoot());
+            Optional<Folder> destinationParent = FileManager.findParent(destinationFile, fileManager.getMainFilesRoot());
+            // If the document is in the same directory, nothing should happen.
+            if(destinationParent.isPresent() && destinationParent.equals(FileManager.findParent(fileToMove, fileManager.getMainFilesRoot()))){
+                return;
+            }
             if (destinationParent.isPresent())
                 destinationFolder = destinationParent.get();
             else
