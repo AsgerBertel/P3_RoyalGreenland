@@ -120,7 +120,6 @@ public class AlertBuilder {
     /**
      *
      */
-    // todo check usages
     public static void interruptedExceptionPopUp (String threadName) {
         buildAlert(
                 Alert.AlertType.ERROR,

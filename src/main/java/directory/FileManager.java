@@ -142,7 +142,7 @@ public class FileManager {
             AppFilesManager.save(this);
             LogManager.log(new LogEvent(file.getName(), LogEventType.CREATED));
             return doc;
-        } catch (IOException e) { // todo catch properly
+        } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);

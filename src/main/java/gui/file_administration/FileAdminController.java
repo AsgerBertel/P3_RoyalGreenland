@@ -535,7 +535,7 @@ public class FileAdminController implements TabController {
         try {
             observer.initialize();
         } catch (Exception e) {
-            LoggingErrorTools.log(e);
+            LoggingErrorTools.log(e); // todo maybe Alert? -kristian
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
