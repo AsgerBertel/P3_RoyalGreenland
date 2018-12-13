@@ -38,7 +38,7 @@ public abstract class AbstractFile implements Serializable{
      * @return
      */
     public Path getOSPath() {
-        return Paths.get(path.replace("root" + File.separator,""));
+        return Paths.get(path.replace("root" + File.separator,"").replace("root" + "/", ""));
     }
 
     public Path getParentPath() {

@@ -222,6 +222,7 @@ public class DirectoryCloner {
             }
 
             if (addedFile instanceof Folder) {
+                Path ath = newFileRoot.resolve(addedFile.getOSPath());
                 FileUtils.copyDirectory(newFileRoot.resolve(addedFile.getOSPath()).toFile(), publishPath.toFile());
             } else {
                 Files.copy(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
