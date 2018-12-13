@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import json.AppFilesManager;
 
@@ -82,7 +83,8 @@ public class DMSApplication extends Application {
     private void loadRootElement()  {
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
-        root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
+        root.setPrefSize(Screen.getPrimary().getVisualBounds().getMaxX() - 200, Screen.getPrimary().getVisualBounds().getMaxY() -100);
+
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
         root.getStylesheets().add("/styles/masterSheet.css");
