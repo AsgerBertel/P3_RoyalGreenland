@@ -10,6 +10,7 @@ import gui.log.LogEventType;
 import gui.log.LoggingErrorTools;
 import gui.log.LogManager;
 import json.AppFilesManager;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
@@ -204,7 +205,7 @@ public class FileManager {
                 }
             } else {
                 if(Files.isDirectory(originalPath)) {
-                    DirectoryCloner.copyFolder(originalPath, archivePath);
+                    FileUtils.copyDirectory(originalPath.toFile(),archivePath.toFile());
                     DirectoryCloner.deleteFolder(originalPath.toFile());
                 } else {
                     Files.move(originalPath, archivePath);
