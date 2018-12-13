@@ -31,10 +31,6 @@ class PlantManagerTest extends FileTester {
         assertTrue(pm.getAllPlants().contains(plant));
     }
 
-    /*@Test
-    void getPlant() {
-    }*/
-
     @Test
     void addPlant() {
         PlantManager pm = PlantManager.getInstance();
