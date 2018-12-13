@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SettingsTabTest extends GUITest{
+public class SettingsTabAdminTest extends GUITest{
 
     @BeforeEach
     void setTab() throws InterruptedException {
@@ -27,15 +27,12 @@ public class SettingsTabTest extends GUITest{
         final String TEST_TEXT = "TEST";
 
         TextField serverField = findNode("#serverPathTextField");
-        TextField localField = findNode("#localPathTextField");
         TextField userField = findNode("#usernameTextField");
 
         enterText(serverField, TEST_TEXT);
-        enterText(localField, TEST_TEXT);
         enterText(userField, TEST_TEXT);
 
         assertEquals(serverField.getText(), TEST_TEXT);
-        assertEquals(localField.getText(), TEST_TEXT);
         assertEquals(userField.getText(), TEST_TEXT);
     }
 
@@ -68,13 +65,10 @@ public class SettingsTabTest extends GUITest{
     @RepeatedTest(value = 2)
     void saveChangesTest(){
         TextField serverField = findNode("#serverPathTextField");
-        TextField localField = findNode("#localPathTextField");
         TextField userField = findNode("#usernameTextField");
 
         saveTextValueTest(serverField, Paths.get("TestFolder/server/" + DMSApplication.APP_TITLE).toString(),
                 () -> SettingsManager.getServerPath().toString());
-        saveTextValueTest(localField, Paths.get("TestFolder/local/" + DMSApplication.APP_TITLE).toString(),
-                () -> SettingsManager.getLocalPath().toString());
         saveTextValueTest(userField, "SorenSmoke", () -> SettingsManager.getUsername());
     }
 
@@ -154,13 +148,11 @@ public class SettingsTabTest extends GUITest{
     @RepeatedTest(value = 2)
     void defaultValueTest(){
         TextField serverField = findNode("#serverPathTextField");
-        TextField localField = findNode("#localPathTextField");
         TextField userField = findNode("#usernameTextField");
         ToggleButton greenlandicButton = findNode("#greenlandicSettingsButton");
         ToggleButton danishButton = findNode("#danishSettingsButton");
 
         assertEquals(serverField.getText(), SettingsManager.getServerPath().toString());
-        assertEquals(localField.getText(), SettingsManager.getLocalPath().toString());
         assertEquals(userField.getText(), SettingsManager.getUsername());
 
         if(DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE)){

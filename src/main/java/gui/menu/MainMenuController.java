@@ -1,5 +1,6 @@
 package gui.menu;
 
+import app.ApplicationMode;
 import directory.SettingsManager;
 import gui.DMSApplication;
 import gui.Tab;
@@ -92,7 +93,11 @@ public class MainMenuController {
     }
 
     public void settings(ActionEvent actionEvent) {
-        dmsApplication.switchTab(Tab.SETTINGS);
+        if(DMSApplication.getApplicationMode() == ApplicationMode.ADMIN){
+            dmsApplication.switchTab(Tab.SETTINGS_ADMIN);
+        } else {
+            dmsApplication.switchTab(Tab.SETTINGS);
+        }
         settingsButton.setSelected(true);
     }
 
