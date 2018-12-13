@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DocumentTest extends FileTester {
-    //private File resourcesDirectory = new File(TestUtil.getTestDocuments().toString());
+    //private File resourcesDirectory = new File(TestUtil.getTestServerDocuments().toString());
     private Path pathToTestFileExt = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
     private Document docExt;
     private Path pathToWrongFile = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.doc");
@@ -23,7 +23,7 @@ class DocumentTest extends FileTester {
 
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docExt = DocumentBuilder.getInstance().createDocument(pathToTestFileExt);
         docWrong = DocumentBuilder.getInstance().createDocument(pathToWrongFile);

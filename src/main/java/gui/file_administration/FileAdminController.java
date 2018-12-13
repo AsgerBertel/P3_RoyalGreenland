@@ -43,7 +43,7 @@ import java.util.List;
 public class FileAdminController implements TabController {
 
     @FXML
-    public Button saveChangesButton;
+    public Button publishChangesButton;
     public VBox changesVBox;
     public Text lastUpdatedText;
     public ScrollPane changesScrollPane;
@@ -443,10 +443,10 @@ public class FileAdminController implements TabController {
         changesVBox.getChildren().clear();
         List<LogEvent> unpublishedChanges = LogManager.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
-            saveChangesButton.setDisable(true);
+            publishChangesButton.setDisable(true);
             return;
         } else {
-            saveChangesButton.setDisable(false);
+            publishChangesButton.setDisable(false);
         }
 
         for (LogEvent logEvent : unpublishedChanges)

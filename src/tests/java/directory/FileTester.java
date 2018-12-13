@@ -2,7 +2,7 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
-import gui.DMSApplication;
+import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,36 +16,42 @@ import java.nio.file.Paths;
 
 public class FileTester {
 
-    private static Path originalPath;
+    private static Path originalServerPath;
+    private static Path originalLocalPath;
 
     @BeforeAll @SuppressWarnings("Duplicates")
     static final void setupApplication() {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        originalPath = SettingsManager.getServerPath();
-        SettingsManager.setServerPath(TestUtil.getTestDocuments());
+        originalServerPath = SettingsManager.getServerPath();
+        originalLocalPath = SettingsManager.getLocalPath();
     }
 
     @BeforeEach
     void resetBeforeEachMethod() throws IOException {
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
+        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
+
         TestUtil.resetTestFiles();
         FileManager.resetInstance();
+        PlantManager.resetInstance();
 
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
         setSettings();
     }
 
-    void setSettings(){
+    protected void setSettings(){
 
     }
 
     @AfterAll
     static void onTestEnd(){
         // Reset path in settings
-        SettingsManager.setServerPath(originalPath);
+        SettingsManager.setServerPath(originalServerPath);
+        SettingsManager.setLocalPath(originalLocalPath);
     }
 
-    protected static AbstractFile findInMainFiles(Path path){
+    public static AbstractFile findInMainFiles(Path path){
         if (path.toString().startsWith(File.separator)){
             path = Paths.get(path.toString().substring(1));
         }

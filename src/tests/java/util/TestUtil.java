@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class TestUtil {
 
     private static final Path TEST_SERVER_PATH = Paths.get("TestingFiles/Server/");
+    private static final Path TEST_LOCAL_PATH = Paths.get("TestingFiles/Local/");
     private static final String APPLICATION_FOLDER_NAME = "RG DMS";
     private static final String REPLACEMENT_FOLDER_NAME = APPLICATION_FOLDER_NAME + " Original";
 
@@ -28,18 +29,27 @@ public class TestUtil {
     }
 
     public static void resetTestFiles() throws IOException { // Todo actually make test files that are independent of actual files
-        Path oldFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+        Path oldServerFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+        Path oldLocalFolder = TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
-        if (Files.exists(oldFolder) && oldFolder.toString().contains(APPLICATION_FOLDER_NAME)){
-            FileUtils.deleteDirectory(oldFolder.toFile());
+        if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)){
+            FileUtils.deleteDirectory(oldServerFolder.toFile());
         }
 
-        FileUtils.copyDirectory(replacementFolder.toFile(), oldFolder.toFile());
+        if (Files.exists(oldLocalFolder) && oldLocalFolder.toString().contains(APPLICATION_FOLDER_NAME)){
+            FileUtils.deleteDirectory(oldLocalFolder.toFile());
+        }
+
+        FileUtils.copyDirectory(replacementFolder.toFile(), oldServerFolder.toFile());
     }
 
-    public static final Path getTestDocuments() {
+    public static final Path getTestServerDocuments() {
         return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+    }
+
+    public static final Path getTestLocalDocuments(){
+        return TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
 
     /**

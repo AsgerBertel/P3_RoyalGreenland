@@ -72,6 +72,10 @@ public class PlantElement extends BorderPane {
         this.onSelected = onSelected;
     }
 
+    public String getText(){
+        return text.getText();
+    }
+
     // Called when the element is clicked
     protected void onClick(MouseEvent event){
         setFocused(true);

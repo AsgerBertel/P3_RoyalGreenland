@@ -30,6 +30,10 @@ public class PlantManager {
         return plantManager;
     }
 
+    public static void resetInstance(){
+        plantManager = null;
+    }
+
     /**
      * Use to retrieve all plants.
      * @return arrayList of all plants.
@@ -38,11 +42,13 @@ public class PlantManager {
         return allPlants;
     }
 
+    /* isnt used?
     /**
      * Used to retrieve a plant from a plant ID.
      * @param ID Plant ID.
      * @return Plant with ID int ID.
      */
+    /*
     public Plant getPlant(int ID){
         for(Plant plant : getInstance().allPlants){
             if (plant.getId() == ID){
@@ -50,7 +56,7 @@ public class PlantManager {
             }
         }
         return null;
-    }
+    }*/
 
     /**
      * Add a plant to the PlantManager and updates the JSON file.
