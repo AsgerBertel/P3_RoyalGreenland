@@ -8,6 +8,9 @@ import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.GUITest;
 import json.AppFilesManager;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.TestUtil;
 
@@ -20,8 +23,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileUpdaterTest extends GUITest {
 
-    Path pathToFolder = Paths.get("02_VINTERTØRRET FISK");
+  /*  Path pathToFolder = Paths.get("02_VINTERTØRRET FISK");
     Folder folder;
+
+    @BeforeEach
+    void resetBeforeEachMethod() throws IOException {
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
+        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
+
+        TestUtil.resetTestFiles();
+        FileManager.resetInstance();
+        PlantManager.resetInstance();
+
+        AppFilesManager.createServerDirectories();
+        AppFilesManager.createLocalDirectories();
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
+    }
+
 
     @Test
     void start() throws IOException, InterruptedException {
@@ -37,6 +55,8 @@ class FileUpdaterTest extends GUITest {
             assertEquals(FileManager.getInstance().getMainFiles().get(i).getName(),
                     AppFilesManager.loadLocalFileList().get(i).getName());
         }
+
+        //assertEquals(FileManager.getInstance().getMainFiles(), AppFilesManager.loadLocalFileList());
 
         //publishes a renamed folder
         folder = (Folder) FileManager.getInstance().findFile(pathToFolder, FileManager.getInstance().getMainFiles()).get();
@@ -56,6 +76,15 @@ class FileUpdaterTest extends GUITest {
     }
 
     @Test
-    void run() {
-    }
+    void run() throws InterruptedException {
+        FileUpdater fu = new FileUpdater(DMSApplication.getDMSApplication());
+
+        fu.setRunning(true);
+
+        fu.run();
+
+        Thread.sleep(500000);
+
+        fu.setRunning(false);
+    }*/
 }
