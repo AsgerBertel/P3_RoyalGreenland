@@ -1,6 +1,7 @@
 package gui;
 
 import directory.SettingsManager;
+import gui.log.LoggingErrorTools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,8 +25,28 @@ public class AlertBuilder {
                 null);
         alert.showAndWait();
     }
+    public static void updateFailExceptionPopUp () {
+        buildAlert(Alert.AlertType.INFORMATION,
+                DMSApplication.getMessage("Exception.UpdateFailException.Title"),
+                DMSApplication.getMessage("Exception.UpdateFailException.Header"),
+                DMSApplication.getMessage("Exception.UpdateFailException.Context"+"\n"
+                        +LoggingErrorTools.generateWritePath(LocalDateTime.now()))
+        );
+        alert.showAndWait();
+    }
+    public static void illegalFileExceptionPopUp (String targetPath) {
+        buildAlert(Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.IllegalFileException.Title"),
+                DMSApplication.getMessage("Exception.IllegalFileException.Header"),
+                DMSApplication.getMessage("Exception.IllegalFileException.Context1")
+                        +targetPath
+                        +LoggingErrorTools.generateWritePath(LocalDateTime.now())
+                        +DMSApplication.getMessage("Exception.IllegalFileException.Context2")
+        );
+        alert.showAndWait();
+    }
 
-    public static void fileNotFoundPopup() {
+    public static void fileNotFoundPopUp () {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.FileNotFound.Title"),
@@ -33,7 +54,7 @@ public class AlertBuilder {
                 null);
         alert.showAndWait();
     }
-    public static void programRestartPopup() {
+    public static void programRestartPopUp () {
         buildAlert(Alert.AlertType.INFORMATION,
                 DMSApplication.getMessage("DMSApplication.restart.Title"),
                 null,
@@ -53,7 +74,7 @@ public class AlertBuilder {
                 DMSApplication.getMessage("Exception.IO.Title"),
                 DMSApplication.getMessage("Exception.IO.Header"),
                 DMSApplication.getMessage("Exception.IO.Context") + "\n"
-                        + SettingsManager.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
+                        +LoggingErrorTools.generateWritePath(LocalDateTime.now())
         );
         alert.showAndWait();
     }
@@ -61,15 +82,13 @@ public class AlertBuilder {
      * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occured.
      * @param targetPath
      */
-    public static void IOExceptionPopupWithString(String targetPath) {
+    public static void IOExceptionPopUpWithString (String targetPath) {
         buildAlert(Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.IO.Title"),
                 DMSApplication.getMessage("Exception.IO.Header"),
                 DMSApplication.getMessage("Exception.IO.Target.Context1")+targetPath+"\n"
                         + DMSApplication.getMessage("Exception.IO.Target.Context2")
-                        + SettingsManager.getServerErrorLogsPath()
-                        + File.separator
-                        + LocalDateTime.now().format(formatter)
+                        + LoggingErrorTools.generateWritePath(LocalDateTime.now())
         );
         alert.showAndWait();
     }
@@ -101,12 +120,22 @@ public class AlertBuilder {
     /**
      *
      */
-    public static void interruptedExceptionPopup(String threadName) {
+    // todo check usages
+    public static void interruptedExceptionPopUp (String threadName) {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.Interrupted.Title"),
                 DMSApplication.getMessage("Exception.Interrupted.Header"),
                 threadName + ": " + DMSApplication.getMessage("Exception.Interrupted.Context")
+        );
+        alert.showAndWait();
+    }
+    public static void interruptedExceptionShutdownPopUp (String threadName) {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.Interrupted.Shutdown.Title"),
+                DMSApplication.getMessage("Exception.Interrupted.Shutdown.Header"),
+                threadName + ": " + DMSApplication.getMessage("Exception.Interrupted.Shutdown.Context")
         );
         alert.showAndWait();
     }
@@ -121,14 +150,7 @@ public class AlertBuilder {
         alert.showAndWait();
     }
 
-    private static void buildAlert(Alert.AlertType type, String title, String header, String context) {
-        alert.setAlertType(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(context);
-    }
-
-    public static Alert deletePlantPopup() {
+    public static Alert deletePlantPopUp () {
         buildAlert(
                 Alert.AlertType.CONFIRMATION,
                 DMSApplication.getMessage("PlantAdmin.Popup.DeleteTitle"),
@@ -137,6 +159,13 @@ public class AlertBuilder {
         ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Delete"));
         ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
         return alert;
+    }
+
+    private static void buildAlert(Alert.AlertType type, String title, String header, String context) {
+        alert.setAlertType(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(context);
     }
 
 }

@@ -40,7 +40,7 @@ public class LoggingErrorTools
             log(e);
         }
     }
-    private static String generateWritePath (LocalDateTime localDateTime) {
+    public static String generateWritePath (LocalDateTime localDateTime) {
 
         switch(DMSApplication.getApplicationMode()) {
             case ADMIN:

@@ -1,4 +1,4 @@
-package directory;
+package directory.update;
 
 import java.net.ConnectException;
 

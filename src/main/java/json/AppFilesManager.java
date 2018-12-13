@@ -84,7 +84,7 @@ public class AppFilesManager {
             return JsonParser.getJsonParser().fromJson(reader, classOfT);
         } catch (IOException e) {
             e.printStackTrace();
-            AlertBuilder.IOExceptionPopupWithString(path.toString());
+            AlertBuilder.IOExceptionPopUpWithString(path.toString());
             LoggingErrorTools.log(e);
             return null;
         }
@@ -104,7 +104,7 @@ public class AppFilesManager {
             JsonParser.getJsonParser().toJson(object, writer);
         } catch (IOException e) {
             e.printStackTrace();
-            AlertBuilder.IOExceptionPopupWithString(path.toString());
+            AlertBuilder.IOExceptionPopUpWithString(path.toString());
             LoggingErrorTools.log(e);
         }
     }

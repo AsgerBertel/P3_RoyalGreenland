@@ -1,9 +1,12 @@
 package directory;
 
+import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;
 import directory.files.Folder;
+import directory.update.DirectoryCloner;
+import directory.update.IllegalFileException;
 import gui.AlertBuilder;
 import gui.log.LogEvent;
 import gui.log.LogEventType;
@@ -50,14 +53,14 @@ public class FileManager {
         try {
             mainFilesRoot = findFiles(mainFilesRootPath);
         } catch (FileNotFoundException e) {
-            AlertBuilder.fileNotFoundPopup();
+            AlertBuilder.fileNotFoundPopUp();
         }
 
         Path archiveFilesRootPath = SettingsManager.getServerArchivePath();
         try {
             archiveRoot = findFiles(archiveFilesRootPath);
         } catch (FileNotFoundException e) {
-            AlertBuilder.fileNotFoundPopup();
+            AlertBuilder.fileNotFoundPopUp();
         }
     }
 
@@ -217,13 +220,15 @@ public class FileManager {
             parent.ifPresent(parent1 -> parent1.getContents().remove(file));
 
             AppFilesManager.save(this);
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
-            AlertBuilder.fileNotFoundPopup();
-            LoggingErrorTools.log(e);
+
+        } catch (FileNotFoundException e) {
+            AlertBuilder.fileNotFoundPopUp();
+        } catch (IllegalFileException e) {
+            AlertBuilder.illegalFileExceptionPopUp(originalPath.toString());
         } catch (IOException e) {
-            e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
+        } catch (Exception e) {
+            e.printStackTrace();
             LoggingErrorTools.log(e);
         }
     }
@@ -281,7 +286,13 @@ public class FileManager {
         } else {
             // Find new name if it's a document and it already exists
             if (Files.isDirectory(oldPath)) {
-                DirectoryCloner.mergeFolders(oldPath, newPath, false);
+                try {
+                    DirectoryCloner.mergeFolders(oldPath, newPath, false);
+                } catch(IllegalFileException e) {
+                    e.printStackTrace();
+                    AlertBuilder.illegalFileExceptionPopUp(oldPath.toString());
+                    LoggingErrorTools.log(e);
+                }
                 DirectoryCloner.deleteFolder(oldPath.toFile());
             } else {
                 newPath = generateUniqueFileName(newPath);

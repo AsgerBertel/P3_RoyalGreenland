@@ -1,8 +1,8 @@
 package gui;
 
 import app.ApplicationMode;
-import directory.DirectoryCloner;
-import directory.FileUpdater;
+import directory.update.DirectoryCloner;
+import directory.update.FileUpdater;
 import directory.SettingsManager;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
@@ -104,7 +104,7 @@ public class DMSApplication extends Application {
             mainMenu = fxmlLoader.load();
         } catch(IOException e) {
             e.printStackTrace();
-            AlertBuilder.IOExceptionPopupWithString(fxmlLoader.getLocation().getPath());
+            AlertBuilder.IOExceptionPopUpWithString(fxmlLoader.getLocation().getPath());
             LoggingErrorTools.log(e, 6);
             System.exit(6);
         }
@@ -182,7 +182,6 @@ public class DMSApplication extends Application {
             if(applicationMode.equals(ApplicationMode.VIEWER)) {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
-                DirectoryCloner.updateLocalFiles();
                 new FileUpdater(this).start();
             } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
@@ -190,7 +189,7 @@ public class DMSApplication extends Application {
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
-            AlertBuilder.fileNotFoundPopup();
+            AlertBuilder.fileNotFoundPopUp();
             SettingsManager.initializeSettingsPrompt();
         } catch(IOException e) {
             e.printStackTrace();

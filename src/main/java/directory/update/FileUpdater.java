@@ -1,11 +1,9 @@
-package directory;
+package directory.update;
 
 import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.log.LoggingErrorTools;
 import javafx.application.Platform;
-
-import java.io.IOException;
 
 public class FileUpdater extends Thread {
 
@@ -25,8 +23,8 @@ public class FileUpdater extends Thread {
         running = true;
         try {
             DirectoryCloner.updateLocalFiles();
-        } catch (IOException e) {
-            AlertBuilder.IOExceptionPopUp();
+        } catch (UpdateFailException e) {
+            AlertBuilder.updateFailExceptionPopUp();
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }
@@ -41,20 +39,18 @@ public class FileUpdater extends Thread {
         super.run();
         while(running){
             try {
-                Thread.sleep(UPDATE_INTERVAL_SECS * 1000);
                 DirectoryCloner.updateLocalFiles();
                 Platform.runLater(() -> dmsApplication.getCurrentTab().update());
+                Thread.sleep(UPDATE_INTERVAL_SECS * 1000);
             } catch (InterruptedException e) {
-                AlertBuilder.interruptedExceptionPopup("Updater Thread");
-                LoggingErrorTools.log(e);
                 e.printStackTrace();
-            } catch (IOException e) {
-                AlertBuilder.IOExceptionPopUp();
+                AlertBuilder.interruptedExceptionPopUp("Updater Thread");
                 LoggingErrorTools.log(e);
+            } catch (UpdateFailException e) {
                 e.printStackTrace();
+                AlertBuilder.updateFailExceptionPopUp();
+                LoggingErrorTools.log(e);
             }
         }
-
-
     }
 }

@@ -1,7 +1,7 @@
 package gui.file_administration;
 
 
-import directory.DirectoryCloner;
+import directory.update.DirectoryCloner;
 import directory.FileManager;
 import directory.SettingsManager;
 import directory.files.AbstractFile;
@@ -544,10 +544,10 @@ public class FileAdminController implements TabController {
                     observer.checkAndNotify();
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    AlertBuilder.interruptedExceptionPopup("FileMonitorThread");
-                    LoggingErrorTools.log(e, 2);
+                    AlertBuilder.interruptedExceptionShutdownPopUp("FileMonitor Thread");
+                    LoggingErrorTools.log(e, 22);
                     e.printStackTrace();
-                    System.exit(2);
+                    System.exit(22);
                 }
             }
         });
