@@ -61,10 +61,10 @@ class FileUpdaterTest extends GUITest {
 
         //asserts that all names are the same, cant equal objects because local files
         //have different modified variables (They were published)
-        /*for (int i = 0; i < FileManager.getInstance().getMainFiles().size(); i++){
+        for (int i = 0; i < FileManager.getInstance().getMainFiles().size(); i++){
             assertEquals(FileManager.getInstance().getMainFiles().get(i).getName(),
                     AppFilesManager.loadLocalFileList().get(i).getName());
-        }*/
+        }
 
         //assertEquals(FileManager.getInstance().getMainFiles(), AppFilesManager.loadLocalFileList());
 
@@ -76,7 +76,11 @@ class FileUpdaterTest extends GUITest {
 
         //asserts that folder is in localFileList
         ArrayList<AbstractFile> al = AppFilesManager.loadLocalFileList();
-        assertTrue(al.contains(folder));
+
+        System.out.println(((Folder) al.get(0)).folderContents.toString());
+        System.out.println(folder.folderContents.toString());
+        assertEquals(al.get(0), folder);
+        //assertTrue(al.contains(folder));
 
         fu.setRunning(false);
     }

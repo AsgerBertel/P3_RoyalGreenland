@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Folder extends AbstractFile {
-    private ArrayList<AbstractFile> folderContents = new ArrayList<>();
+    public ArrayList<AbstractFile> folderContents = new ArrayList<>();
 
     public Folder(String path) {
         super(path);
