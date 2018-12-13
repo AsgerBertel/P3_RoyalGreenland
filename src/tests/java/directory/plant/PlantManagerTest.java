@@ -20,23 +20,6 @@ class PlantManagerTest extends FileTester {
     }
 
     @Test
-    void resetInstance() {
-
-        PlantManager pm = PlantManager.getInstance();
-
-        pm.addPlant(plant);
-
-        assertNotNull(pm);
-
-        PlantManager.resetInstance();
-
-        pm = AppFilesManager.loadPlantManager();
-
-        //todo burde virke??
-        //assertNull(pm);
-    }
-
-    @Test
     void getAllPlants() {
         PlantManager pm = PlantManager.getInstance();
 
