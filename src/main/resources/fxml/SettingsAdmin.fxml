@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.settings.SettingsController"
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@/styles/masterSheet.css, @/styles/settings.css">
+
+    <!-- Server path setting -->
+    <VBox styleClass="settingsVBox">
+        <Text styleClass="standardTitle" text="%Settings.ServerPath"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="serverPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
+            <Button text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowseServerPath"/>
+        </HBox>
+    </VBox>
+
+    <VBox styleClass="settingsVBox">
+        <Text styleClass="standardTitle" text="%Settings.Username"/>
+        <HBox styleClass="settingsHBox">
+            <TextField fx:id="usernameTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
+        </HBox>
+    </VBox>
+
+    <VBox styleClass="settingsVBox" stylesheets="/styles/menubar.css">
+        <Text styleClass="standardTitle" text="%Settings.Sprog"/>
+
+        <HBox translateY="10">
+            <ToggleButton translateX="10" text="%Settings.Dansk" styleClass="darkButton" fx:id="danishSettingsButton"
+                          onAction="#changeToDanish">
+                <graphic>
+                    <ImageView fitWidth="24" fitHeight="24">
+                        <Image url="/icons/menu/danish.png"  />
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+
+            <ToggleButton translateX="25" text="%Settings.Grønlandsk" styleClass="darkButton" fx:id="greenlandicSettingsButton"
+                          onAction="#changeToGreenlandic">
+                <graphic >
+                    <ImageView fitWidth="24" fitHeight="24">
+                        <Image url="/icons/menu/greenlandic.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+        </HBox>
+
+    </VBox>
+
+    <Button text="%Settings.SaveChanges" fx:id="saveChangesButton" styleClass="darkButton" id="saveChangesButton" onAction="#onSaveChanges"/>
+
+</VBox>
