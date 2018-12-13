@@ -84,8 +84,11 @@ public class FileAdminController implements TabController {
             if (selectedFile != null) {
                 if (selectedFile.getOSPath().toString().equals("")) {
                     if (adminFilesContextMenu.getItems().size() == 5) {
-                        adminFilesContextMenu.getItems().remove(2);
-                        adminFilesContextMenu.getItems().remove(3);
+
+        adminFilesContextMenu.getItems().remove(1);
+           adminFilesContextMenu.getItems().remove(2);
+           adminFilesContextMenu.getItems().remove(1);
+
                     }
                 } else
                     fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
