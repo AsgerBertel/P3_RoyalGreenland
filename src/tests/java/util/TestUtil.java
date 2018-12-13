@@ -49,7 +49,7 @@ public class TestUtil {
     }
 
     public static final Path getTestLocalDocuments(){
-        return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
+        return TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
 
     /**

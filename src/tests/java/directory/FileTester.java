@@ -51,7 +51,7 @@ public class FileTester {
         SettingsManager.setLocalPath(originalLocalPath);
     }
 
-    protected static AbstractFile findInMainFiles(Path path){
+    public static AbstractFile findInMainFiles(Path path){
         if (path.toString().startsWith(File.separator)){
             path = Paths.get(path.toString().substring(1));
         }
