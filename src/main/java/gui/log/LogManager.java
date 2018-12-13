@@ -21,7 +21,7 @@ public class LogManager {
         List<String> listOfEvents = toStringArray(event);
         Path pathToFile = SettingsManager.getServerAppFilesPath().resolve(logFileName);
 
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(SettingsManager.getServerAppFilesPath().resolve(logFileName).toString(), true)))) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(pathToFile.toString(), true)))) {
             pw.println(listOfEvents.get(0) + "|" + listOfEvents.get(1) + "|" + listOfEvents.get(2));
 
         } catch (IOException e) {
