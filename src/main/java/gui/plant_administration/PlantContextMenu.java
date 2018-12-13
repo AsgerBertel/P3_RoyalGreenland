@@ -9,8 +9,6 @@ import javafx.scene.control.MenuItem;
 public class PlantContextMenu extends ContextMenu {
     private PlantAdministrationController plantAdministrationController;
 
-
-
     public PlantContextMenu(PlantAdministrationController plantAdministrationController) {
         this.plantAdministrationController = plantAdministrationController;
         initPlantContextMenu();

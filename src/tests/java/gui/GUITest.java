@@ -35,7 +35,7 @@ public abstract class GUITest extends ApplicationTest {
         release(new KeyCode[]{});
         release(new MouseButton[]{});
         Platform.runLater(() -> switchLanguageSetting());
-        Thread.sleep(200);
+        Thread.sleep(100);
     }
 
     @BeforeAll @SuppressWarnings("Duplicates")
@@ -43,24 +43,16 @@ public abstract class GUITest extends ApplicationTest {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
 
         originalPath = SettingsManager.getServerPath();
-        SettingsManager.setServerPath(TestUtil.getTestDocuments());
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
-
     }
-
-    @BeforeEach
-    final void setup() throws InterruptedException {
-
-    }
-
-
 
     @AfterAll
     static void cleanUp(){
         // Reset path in settings
-        //SettingsManager.setServerPath(originalPath);
+        SettingsManager.setServerPath(originalPath);
     }
 
     void switchLanguageSetting()  {
@@ -86,6 +78,12 @@ public abstract class GUITest extends ApplicationTest {
         press(KeyCode.A);
         release(new KeyCode[]{});
         push(KeyCode.DELETE);
+    }
+
+    protected void clickOnContextMenuItem(int index){
+        moveBy(48, 18);
+        moveBy(0, 27 * index);
+        clickOn(MouseButton.PRIMARY);
     }
 
 

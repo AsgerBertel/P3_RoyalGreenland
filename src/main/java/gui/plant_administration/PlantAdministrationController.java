@@ -166,9 +166,34 @@ public class PlantAdministrationController implements TabController {
     //Button function when "Delete plant" button in sidebar is pressed.
     @FXML
     void deletePlant() {
-        deletePopUp();
-        btnDeletePlant.setDisable(true);
-        btnDeletePlant.setOpacity(0.5);
+        if(confirmDeletePopup()){
+            plantElements.remove(selectedPlantElement);
+            PlantManager.getInstance().deletePlant(selectedPlantElement.getPlant().getId());
+            plantVBox.getChildren().remove(selectedPlantElement);
+            btnDeletePlant.setDisable(true);
+            plantCountText.setText("(" + plantElements.size() + ")");
+
+            LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
+            activatePane(createPane, editPane);
+
+            btnDeletePlant.setDisable(true);
+            btnEditPlantSidebar.setDisable(true);
+            selectedPlantElement = null;
+        }
+    }
+
+    //Making Alert confirmDeletePopup for delete plant function.
+    public boolean confirmDeletePopup() {
+        if (selectedPlantElement != null) {
+            Alert deletePopup = AlertBuilder.deletePlantPopup();
+            Optional<ButtonType> result = deletePopup.showAndWait();
+            if (!result.isPresent()){
+                deletePopup.close();
+                return false;
+            }
+            return result.get() == ButtonType.OK;
+        }
+        return false;
     }
 
     @FXML
@@ -217,6 +242,7 @@ public class PlantAdministrationController implements TabController {
             plantCountText.setText("(" + plantElements.size() + ")");
 
             LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + newPlant.getName() + ", " + newPlant.getId(), PLANT_CREATED));
+            update();
         } catch (NumberFormatException e) {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.ErrorMessagePlantID"));
             addErrorClass(fieldEditPlantId);
@@ -229,7 +255,8 @@ public class PlantAdministrationController implements TabController {
     }
 
     private void removeErrorClass(Node node) {
-        node.getStyleClass().remove(SettingsController.ERROR_STYLE_CLASS);
+        if (node.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS))
+            node.getStyleClass().remove(SettingsController.ERROR_STYLE_CLASS);
     }
 
     //Edit plant function checks if a plant is selected. If so, replaces the current name and
@@ -341,38 +368,6 @@ public class PlantAdministrationController implements TabController {
 
         if(idTextField.getText().isEmpty() || !idTextField.getText().matches("[0-9]+"))
             addErrorClass(idTextField);
-    }
-
-
-
-    //Making Alert deletePopUp for delete plant function.
-    public void deletePopUp() {
-        btnDeletePressedPopup();
-    }
-
-    //Popup function to determine action when pressed "OK" or "Cancel".
-    //Pressing yes, deletes the plant from the PlantManager and the Arraylist. Pressing no closes the Alert.
-    public PlantElement btnDeletePressedPopup() {
-        if (selectedPlantElement != null) {
-            Alert deletePopup = AlertBuilder.deletePlantPopUp();
-            Optional<ButtonType> result = deletePopup.showAndWait();
-            if (!result.isPresent())
-                deletePopup.close();
-            if (result.get() == ButtonType.OK) {
-                plantElements.remove(selectedPlantElement);
-                PlantManager.getInstance().deletePlant(selectedPlantElement.getPlant().getId());
-                plantVBox.getChildren().remove(selectedPlantElement);
-                btnDeletePlant.setDisable(true);
-                plantCountText.setText("(" + plantElements.size() + ")");
-
-                LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
-                activatePane(createPane, editPane);
-                return selectedPlantElement;
-            }
-            if (result.get() == ButtonType.CANCEL)
-                deletePopup.close();
-        }
-        return null;
     }
     public PlantElement previousSelectedPlant() {
         for (PlantElement element : plantElements) {

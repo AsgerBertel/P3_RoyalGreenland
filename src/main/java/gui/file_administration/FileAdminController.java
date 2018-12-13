@@ -43,7 +43,7 @@ import java.util.List;
 public class FileAdminController implements TabController {
 
     @FXML
-    public Button saveChangesButton;
+    public Button publishChangesButton;
     public VBox changesVBox;
     public Text lastUpdatedText;
     public ScrollPane changesScrollPane;
@@ -84,8 +84,11 @@ public class FileAdminController implements TabController {
             if (selectedFile != null) {
                 if (selectedFile.getOSPath().toString().equals("")) {
                     if (adminFilesContextMenu.getItems().size() == 5) {
-                        adminFilesContextMenu.getItems().remove(2);
-                        adminFilesContextMenu.getItems().remove(3);
+
+        adminFilesContextMenu.getItems().remove(1);
+           adminFilesContextMenu.getItems().remove(2);
+           adminFilesContextMenu.getItems().remove(1);
+
                     }
                 } else
                     fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
@@ -158,10 +161,16 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected())
+        if (plantElement.isSelected()){
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
-        else
+            LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_GIVEN));
+        }
+        else{
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
+            LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_REMOVED));
+        }
+
+        reloadChangesList();
     }
 
     // Called when an item (containing an AbstractFile) is clicked in the FileTreeView
@@ -440,10 +449,10 @@ public class FileAdminController implements TabController {
         changesVBox.getChildren().clear();
         List<LogEvent> unpublishedChanges = LogManager.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
-            saveChangesButton.setDisable(true);
+            publishChangesButton.setDisable(true);
             return;
         } else {
-            saveChangesButton.setDisable(false);
+            publishChangesButton.setDisable(false);
         }
 
         for (LogEvent logEvent : unpublishedChanges)

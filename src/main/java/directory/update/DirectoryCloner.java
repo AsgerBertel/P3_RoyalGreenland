@@ -341,7 +341,7 @@ public class DirectoryCloner {
         }
         return false;
     }
-
+    //Todo Use Apache instead and delete dis
     public static void copyFolder(Path src, Path dst) throws IOException {
         createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();

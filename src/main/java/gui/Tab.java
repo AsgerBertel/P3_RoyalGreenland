@@ -14,6 +14,7 @@ public enum Tab {
     PLANT_ADMINISTRATION("PlantAdministration.fxml"),
     LOG("Log.fxml"),
     DELETED_FILES("DeletedFiles.fxml"),
+    SETTINGS_ADMIN("SettingsAdmin.fxml"),
     SETTINGS("Settings.fxml");
 
     private String fxmlFileName;

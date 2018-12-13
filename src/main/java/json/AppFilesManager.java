@@ -33,7 +33,7 @@ public class AppFilesManager {
     /**
      * Loads the PlantManager instance stored in App Files. Returns null if no file is found or an error occurred
      * while reading the file.
-     * @return the instance of FileManager stored in the path. Returns null if no FileManager exists in the path.
+     * @return the instance of PlantManager stored in the path. Returns null if no PlantManager exists in the path.
      */
     public static PlantManager loadPlantManager(){
         Path path = SettingsManager.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
@@ -149,7 +149,7 @@ public class AppFilesManager {
      * @throws InvalidPathException if localRoot is initialized incorrectly due to error in Settings.
      */
     public static void createLocalDirectories() throws IOException, InvalidPathException{
-        Path localRoot = SettingsManager.getLocalPath();
+            Path localRoot = SettingsManager.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))
