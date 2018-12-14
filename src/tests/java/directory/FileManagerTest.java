@@ -133,6 +133,9 @@ class FileManagerTest extends FileTester {
         assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
 
+        //deletes parent folder to prove that it restores entire path
+        fileManager.deleteFile(parentFolder);
+
         //restores doc
         doc = (Document) fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).get();
         FileManager.getInstance().restoreFile(doc);
