@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DeletedFilesController implements TabController {
+public class ArchiveController implements TabController {
 
     private FileExplorer fileExplorer;
     private DMSApplication dmsApplication;

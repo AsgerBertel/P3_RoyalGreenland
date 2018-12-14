@@ -11,7 +11,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<HBox id="background" stylesheets="@/styles/archive.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.deleted_files.DeletedFilesController">
+<HBox id="background" stylesheets="@/styles/archive.css, @/styles/masterSheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.deleted_files.ArchiveController">
     <children>
         <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
             <Button styleClass="menuButton" fx:id="btnRestore" onAction="#restoreFile">

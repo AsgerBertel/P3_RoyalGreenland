@@ -36,10 +36,10 @@
                  </graphic>
              </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="deletedFilesButton" text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
+             <ToggleButton styleClass="menuButton" fx:id="archiveButton" text="%MainMenu.DeletedFiles" onAction="#archive">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
-                         <Image url="/icons/menu/deletedFiles.png" />
+                         <Image url="/icons/menu/archive.png" />
                      </ImageView>
                  </graphic>
              </ToggleButton>
