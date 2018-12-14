@@ -126,15 +126,20 @@ class FileManagerTest extends FileTester {
     @Test
     void restoreFile() throws IOException {
         FileManager fileManager = FileManager.getInstance();
+
+        //asserts that doc is not in archive
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         fileManager.deleteFile(doc);
 
+        //asserts that doc is in archive, and not ind main files
         assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
 
+        //restores doc
         doc = (Document) fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).get();
         FileManager.getInstance().restoreFile(doc);
 
+        //asserts that doc is not in archive files, and it is in main files
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
     }
