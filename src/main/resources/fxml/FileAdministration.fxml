@@ -25,7 +25,7 @@
         <Button fx:id="createFolderButton" onAction="#createFolder" styleClass="menuButton">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="/icons/menu/addFolder.png" />
+                    <Image url="/icons/menu/addfolder.png" />
                 </ImageView>
             </graphic>
         </Button>

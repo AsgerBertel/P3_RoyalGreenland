@@ -119,6 +119,8 @@ public class FileOverviewController implements TabController {
         filesToShow = fileExplorer.getShownFiles();
         for (AbstractFile file : filesToShow) {
             FileButton fileButton = createFileButton(file);
+            Tooltip tooltip = new Tooltip(fileButton.getText());
+            Tooltip.install(fileButton, tooltip);
             flpFileView.getChildren().add(fileButton);
         }
 

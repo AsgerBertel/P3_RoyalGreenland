@@ -33,6 +33,16 @@ public class AlertBuilder {
                 null);
         alert.showAndWait();
     }
+
+    public static void PreferencesNotResetPopup() {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.PreferencesNotReset.Title"),
+                DMSApplication.getMessage("Exception.PreferencesNotReset.Header"),
+                null);
+        alert.showAndWait();
+    }
+
     public static void programRestartPopup() {
         buildAlert(Alert.AlertType.INFORMATION,
                 DMSApplication.getMessage("DMSApplication.restart.Title"),
