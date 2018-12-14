@@ -2,14 +2,9 @@ package json;
 
 import directory.FileManager;
 import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.files.Document;
 import directory.plant.PlantManager;
 import gui.AlertBuilder;
 import gui.DMSApplication;
-import gui.log.LogEvent;
-import gui.log.LogEventType;
-import gui.log.LogManager;
 import gui.log.LoggingErrorTools;
 import javafx.application.Platform;
 import org.apache.commons.io.monitor.FileAlterationListener;
@@ -59,22 +54,12 @@ public class AppFilesChangeListener {
 
             @Override
             public void onFileChange(File file) {
-                // Don't register changes to temporary word files
-                if (file.getName().equals(AppFilesManager.FILES_LIST_FILE_NAME)) {
-                    if (!SettingsManager.getUsername().equals(AppFilesManager.getLastEditor())) {
-                        Platform.runLater(() -> {
-                            FileManager.resetInstance();
-                            dmsApplication.getCurrentTab().update();
-                        });
-                    }
-
-                } else if (file.getName().equals(AppFilesManager.FACTORY_LIST_FILE_NAME)) {
-                    if (!SettingsManager.getUsername().equals(AppFilesManager.getLastEditor())) {
-                        Platform.runLater(() -> {
-                            PlantManager.resetInstance();
-                            dmsApplication.getCurrentTab().update();
-                        });
-                    }
+                if (!SettingsManager.getUsername().equals(AppFilesManager.getLastEditor())) {
+                    Platform.runLater(() -> {
+                        FileManager.resetInstance();
+                        PlantManager.resetInstance();
+                        dmsApplication.getCurrentTab().update();
+                    });
                 }
             }
 
@@ -105,7 +90,7 @@ public class AppFilesChangeListener {
             while (running) {
                 try {
                     observer.checkAndNotify();
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     AlertBuilder.interruptedExceptionPopup("FileMonitorThread");
                     LoggingErrorTools.log(e, 2);

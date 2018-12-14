@@ -34,8 +34,8 @@ public class MainMenuTest extends GUITest {
             clickOn((ToggleButton) findNode("#administratePlantsButton"));
             assertEquals(dmsApplication.getCurrentTab(), Tab.PLANT_ADMINISTRATION);
 
-            clickOn((ToggleButton) findNode("#deletedFilesButton"));
-            assertEquals(dmsApplication.getCurrentTab(), Tab.DELETED_FILES);
+            clickOn((ToggleButton) findNode("#archiveButton"));
+            assertEquals(dmsApplication.getCurrentTab(), Tab.ARCHIVE);
 
             clickOn((ToggleButton) findNode("#logButton"));
             assertEquals(dmsApplication.getCurrentTab(), Tab.LOG);

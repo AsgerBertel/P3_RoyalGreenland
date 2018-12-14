@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class SettingsManager {
@@ -189,5 +190,14 @@ public class SettingsManager {
                 "local path:            " + getLocalFilesPath() + System.getProperty("line.separator") +
                 "local documents path:  " + getLocalFilesPath() + System.getProperty("line.separator") +
                 "local app files path:  " + System.getProperty("line.separator");
+    }
+
+    public static void resetPreferences(){
+        try {
+            preferences.clear();
+        } catch (BackingStoreException e) {
+            AlertBuilder.PreferencesNotResetPopup();
+            e.printStackTrace();
+        }
     }
 }

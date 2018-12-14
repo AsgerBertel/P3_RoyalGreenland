@@ -46,7 +46,7 @@ public class AlertBuilder {
         alert.showAndWait();
     }
 
-    public static void fileNotFoundPopUp () {
+    public static void fileNotFoundPopup() {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.FileNotFound.Title"),
@@ -54,7 +54,17 @@ public class AlertBuilder {
                 null);
         alert.showAndWait();
     }
-    public static void programRestartPopUp () {
+
+    public static void PreferencesNotResetPopup() {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.PreferencesNotReset.Title"),
+                DMSApplication.getMessage("Exception.PreferencesNotReset.Header"),
+                null);
+        alert.showAndWait();
+    }
+
+    public static void programRestartPopUp() {
         buildAlert(Alert.AlertType.INFORMATION,
                 DMSApplication.getMessage("DMSApplication.restart.Title"),
                 null,
@@ -79,7 +89,7 @@ public class AlertBuilder {
         alert.showAndWait();
     }
     /**
-     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occured.
+     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occurred.
      * @param targetPath
      */
     public static void IOExceptionPopUpWithString (String targetPath) {
@@ -102,8 +112,8 @@ public class AlertBuilder {
     }
 
     /**
-     * Displays an ERROR popup telling the user incase of InvalidNameException. Primarily in context of Files.move()
-     * and Files.copy(), incase file already exists in the target path, or named an illegal name. Parameters consist of
+     * Displays an ERROR popup telling the user in case of InvalidNameException. Primarily in context of Files.move()
+     * and Files.copy(), in case file already exists in the target path, or named an illegal name. Parameters consist of
      * the source path and target path.
      * @param src
      * @param target

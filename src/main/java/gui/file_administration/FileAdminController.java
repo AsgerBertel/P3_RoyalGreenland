@@ -47,10 +47,14 @@ public class FileAdminController implements TabController {
     public VBox changesVBox;
     public Text lastUpdatedText;
     public ScrollPane changesScrollPane;
+    @FXML
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
     private FileTreeDragAndDrop fileTreeDragAndDrop;
-
+    @FXML
+    private Button createFolderButton;
+    @FXML
+    private Button uploadButton;
     private DMSApplication dmsApplication;
 
     @FXML
@@ -71,30 +75,14 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(true);
-
-        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
-        fileTreeView.setContextMenu(adminFilesContextMenu);
-        fileTreeView.setOnMouseClicked(event -> {
-            fileTreeView.setContextMenu(adminFilesContextMenu);
-            if (selectedFile != null) {
-                if (selectedFile.getOSPath().toString().equals("")) {
-                    if (adminFilesContextMenu.getItems().size() == 5) {
-
-        adminFilesContextMenu.getItems().remove(1);
-           adminFilesContextMenu.getItems().remove(2);
-           adminFilesContextMenu.getItems().remove(1);
-
-                    }
-                } else
-                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
-                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
-            }
-        });
+        addToolTip();
+        setContextMenu();
         fileTreeView.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER)
                 openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
@@ -122,7 +110,6 @@ public class FileAdminController implements TabController {
     private void reloadFileTree() {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
-
         // Error here
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
@@ -161,11 +148,10 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected()){
+        if (plantElement.isSelected()) {
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
             LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_GIVEN));
-        }
-        else{
+        } else {
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
             LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_REMOVED));
         }
@@ -369,7 +355,7 @@ public class FileAdminController implements TabController {
     }
 
     public void deleteFile() {
-        if(!(selectedFile.getOSPath().toString().equals(""))){
+        if (!(selectedFile.getOSPath().toString().equals(""))) {
             TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
             FileManager.getInstance().deleteFile(selectedItem.getValue());
             FileManager.getInstance().save();
@@ -486,7 +472,7 @@ public class FileAdminController implements TabController {
     }
 
     /**
-     * Watches directory for changes, Listener only reacts on changes and calls update() incase invoked.
+     * Watches directory for changes, Listener only reacts on changes and calls update() in case invoked.
      * Thread sleeps for 0,2 hereafter, for good measure.
      *
      * @param root path to directory to watch
@@ -563,5 +549,32 @@ public class FileAdminController implements TabController {
         monitorThread.setName("FileMonitorThread");
         monitorThread.setDaemon(true);
         monitorThread.start();
+    }
+
+    private void addToolTip() {
+        Tooltip archiveToolTip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.Arkiver"));
+        Tooltip newFolderTooltip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.CreateFolder"));
+        Tooltip newDocumentTooltip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.UploadFile"));
+        Tooltip.install(deleteFileButton, archiveToolTip);
+        Tooltip.install(createFolderButton, newFolderTooltip);
+        Tooltip.install(uploadButton, newDocumentTooltip);
+    }
+    private void setContextMenu(){
+        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
+        fileTreeView.setContextMenu(adminFilesContextMenu);
+        fileTreeView.setOnMouseClicked(event -> {
+            fileTreeView.setContextMenu(adminFilesContextMenu);
+            if (selectedFile != null) {
+                if (selectedFile.getOSPath().toString().equals("")) {
+                    if (adminFilesContextMenu.getItems().size() == 5) {
+                        adminFilesContextMenu.getItems().remove(3);
+                        adminFilesContextMenu.getItems().remove(2);
+                        adminFilesContextMenu.getItems().remove(1);
+                    }
+                } else
+                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 }

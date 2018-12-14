@@ -7,6 +7,7 @@
 
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.FlowPane?>
+
 <BorderPane minHeight="${mainMenuFlowPane.height}" fx:id="menuBorderPane" styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
    <left>
       <FlowPane fx:id="mainMenuFlowPane" prefWidth="${menuBorderPane.width - 85}" maxHeight="44">
@@ -35,10 +36,10 @@
                  </graphic>
              </ToggleButton>
 
-             <ToggleButton styleClass="menuButton" fx:id="deletedFilesButton" text="%MainMenu.DeletedFiles" onAction="#deletedFiles">
+             <ToggleButton styleClass="menuButton" fx:id="archiveButton" text="%MainMenu.DeletedFiles" onAction="#archive">
                  <graphic>
                      <ImageView fitWidth="24" fitHeight="24">
-                         <Image url="/icons/menu/deletedFiles.png" />
+                         <Image url="/icons/menu/archive.png" />
                      </ImageView>
                  </graphic>
              </ToggleButton>

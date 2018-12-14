@@ -51,7 +51,7 @@ public class DocumentBuilder {
 
         try (BufferedReader reader = Files.newBufferedReader(currentIDPath)) {
             String str = reader.readLine();
-                currentID = Integer.parseInt(str);
+            currentID = Integer.parseInt(str);
         } catch (IOException e) {
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e);

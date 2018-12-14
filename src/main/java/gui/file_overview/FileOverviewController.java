@@ -36,7 +36,7 @@ public class FileOverviewController implements TabController {
 
     private ArrayList<Plant> plantList;
     private Plant selectedPlant;
-    private Plant universalPlant = new Plant(-1, DMSApplication.getMessage("PlantAdmin.UniverselPlantName"), null);
+    private Plant universalPlant = new Plant(-1, DMSApplication.getMessage("PlantAdmin.UniversalPlantName"), null);
 
     @FXML
     private TreeView<AbstractFile> fileTreeView;
@@ -119,6 +119,8 @@ public class FileOverviewController implements TabController {
         filesToShow = fileExplorer.getShownFiles();
         for (AbstractFile file : filesToShow) {
             FileButton fileButton = createFileButton(file);
+            Tooltip tooltip = new Tooltip(fileButton.getText());
+            Tooltip.install(fileButton, tooltip);
             flpFileView.getChildren().add(fileButton);
         }
 

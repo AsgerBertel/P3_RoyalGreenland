@@ -14,21 +14,21 @@
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.log.LogController" stylesheets="@/styles/log.css">
         <VBox fx:id="vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <HBox fx:id="topbar" spacing="5">
-                        <Button styleClass="menuButton" onAction="#sortByUser">
+                        <Button styleClass="menuButton"  fx:id="btnSortByUser" onAction="#sortByUser">
                             <graphic>
                                 <ImageView fitHeight="38" fitWidth="38">
                                     <Image url="/icons/menu/user.png" />
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button styleClass="menuButton" onAction="#sortByChangeType">
+                        <Button styleClass="menuButton"  fx:id="btnSortByChangeType" onAction="#sortByChangeType">
                             <graphic>
                                 <ImageView fitHeight="38" fitWidth="38">
                                     <Image url="/icons/menu/fileSort.png" />
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button styleClass="menuButton" onAction="#sortByTime">
+                        <Button styleClass="menuButton" fx:id="btnSortByTime" onAction="#sortByTime">
                             <graphic>
                                 <ImageView fx:id="searchImage" fitHeight="40" fitWidth="40"/>
                             </graphic>

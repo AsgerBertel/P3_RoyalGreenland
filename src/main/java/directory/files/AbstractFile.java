@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public abstract class AbstractFile implements Serializable{
-
+private String rootName = "Filer";
     private String path;
 
     AbstractFile(String path) {
@@ -27,8 +27,8 @@ public abstract class AbstractFile implements Serializable{
 
 
     private String artificialRootPath(String path) {
-        if(!path.contains("root"))
-            return "root" + File.separator + "".concat(path);
+        if(!path.contains(rootName))
+            return rootName + File.separator + "".concat(path);
         else
             return path;
     }
@@ -38,7 +38,7 @@ public abstract class AbstractFile implements Serializable{
      * @return
      */
     public Path getOSPath() {
-        return Paths.get(path.replace("root" + File.separator,""));
+        return Paths.get(path.replace("Filer" + File.separator,""));
     }
 
     public Path getParentPath() {

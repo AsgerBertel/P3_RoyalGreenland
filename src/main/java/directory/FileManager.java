@@ -36,7 +36,7 @@ public class FileManager {
 
             // If still null create new FileManager and save it on the server
             if (fileManager == null) {
-                fileManager = new FileManager();
+                fileManager = new FileManager(true);
                 AppFilesManager.save(fileManager);
             }
         }
@@ -47,10 +47,14 @@ public class FileManager {
         fileManager = null;
     }
 
-    // Private constructor for ensuring that no other class can create a new instance this class
     private FileManager() {
+    }
+
+    // Private constructor for ensuring that no other class can create a new instance this class
+    private FileManager(boolean generateTree) {
         // Create a list of AbstractFiles based on the files inside the server document path
         Path mainFilesRootPath = SettingsManager.getServerDocumentsPath();
+
         try {
             mainFilesRoot = findFiles(mainFilesRootPath);
         } catch (FileNotFoundException e) {

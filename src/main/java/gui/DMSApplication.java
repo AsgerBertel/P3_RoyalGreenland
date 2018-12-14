@@ -1,6 +1,8 @@
 package gui;
 
 import app.ApplicationMode;
+import directory.update.*;
+import app.DMSAdmin;
 import directory.update.DirectoryCloner;
 import directory.update.FileUpdater;
 import directory.SettingsManager;
@@ -11,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -18,11 +21,14 @@ import javafx.stage.Stage;
 import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.prefs.Preferences;
 
 import static gui.Tab.FILE_ADMINISTRATION;
 
@@ -56,12 +62,15 @@ public class DMSApplication extends Application {
     private FileUpdater localFileUpdater;
 
     private static DMSApplication dmsApplication;
-    // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
+    // This empty constructor needs to be here for reasons related to launching this Application from a separate class
     public DMSApplication() {
     }
 
     @Override
     public void start(Stage stage)  {
+        // Creates a new thread and checks for unexpected error codes. If so preferences are reset.
+        new ExitChecker();
+
         dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);
@@ -71,10 +80,13 @@ public class DMSApplication extends Application {
 
         primaryStage = stage;
 
+
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
+        // Set icon for program.
+        primaryStage.getIcons().add(new Image("icons/Logo.png"));
         primaryStage.show();
 
         if (applicationMode.equals(ApplicationMode.ADMIN)) {
@@ -206,7 +218,7 @@ public class DMSApplication extends Application {
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
-            AlertBuilder.fileNotFoundPopUp();
+            AlertBuilder.fileNotFoundPopup();
             SettingsManager.initializeSettingsPrompt();
         } catch(IOException e) {
             e.printStackTrace();
@@ -217,9 +229,11 @@ public class DMSApplication extends Application {
             alert.setHeaderText("Program shutting down");
             alert.showAndWait();
             System.exit(4);
+        } catch(UpdateFailException e) {
+            e.printStackTrace();
+            LoggingErrorTools.log(e);
         }
     }
-
 
     public static DMSApplication getDMSApplication(){
         return dmsApplication;

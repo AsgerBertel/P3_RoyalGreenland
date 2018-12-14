@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DeletedFilesController implements TabController {
+public class ArchiveController implements TabController {
 
     private FileExplorer fileExplorer;
     private DMSApplication dmsApplication;
@@ -45,7 +45,8 @@ public class DeletedFilesController implements TabController {
 
     @FXML
     private Button btnReturn;
-
+    @FXML
+    private Button btnRestore;
     @FXML
     private Label lblVisualPath;
 
@@ -64,6 +65,7 @@ public class DeletedFilesController implements TabController {
         fileTreeView.setRoot(new TreeItem<>());
 
         update();
+        addToolTip();
     }
 
     @Override
@@ -153,6 +155,7 @@ public class DeletedFilesController implements TabController {
         else
             return "MacOS";
     }
+
     public void restoreFile(ActionEvent event) {
         TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
         AbstractFile selectedFile = selectedItem.getValue();
@@ -183,5 +186,11 @@ public class DeletedFilesController implements TabController {
                 }
             }
         });
+    }
+    private void addToolTip() {
+        Tooltip restoreTooltip = new Tooltip(DMSApplication.getMessage("Archive.Tooltip.Restore"));
+
+        Tooltip.install(btnRestore, restoreTooltip);
+
     }
 }

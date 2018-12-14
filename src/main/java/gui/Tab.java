@@ -13,7 +13,7 @@ public enum Tab {
     FILE_ADMINISTRATION("FileAdministration.fxml"),
     PLANT_ADMINISTRATION("PlantAdministration.fxml"),
     LOG("Log.fxml"),
-    DELETED_FILES("DeletedFiles.fxml"),
+    ARCHIVE("Archive.fxml"),
     SETTINGS_ADMIN("SettingsAdmin.fxml"),
     SETTINGS("Settings.fxml");
 

@@ -3,7 +3,7 @@ package directory.update;
 import java.net.ConnectException;
 
 /**
- * Thrown if the server files are unavailble
+ * Thrown if the server files are unavailable
  */
 public class ServerUnavailableException extends ConnectException {
 

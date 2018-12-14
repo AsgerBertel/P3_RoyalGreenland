@@ -21,7 +21,7 @@ public class MainMenuController {
     @FXML
     ToggleButton administratePlantsButton;
     @FXML
-    ToggleButton deletedFilesButton;
+    ToggleButton archiveButton;
     @FXML
     ToggleButton logButton;
     @FXML
@@ -43,7 +43,7 @@ public class MainMenuController {
         if(administrateDocumentsButton != null) {
             administrateDocumentsButton.setToggleGroup(menuTG);
             administratePlantsButton.setToggleGroup(menuTG);
-            deletedFilesButton.setToggleGroup(menuTG);
+            archiveButton.setToggleGroup(menuTG);
             logButton.setToggleGroup(menuTG);
         }
 
@@ -82,9 +82,9 @@ public class MainMenuController {
         administratePlantsButton.setSelected(true);
     }
 
-    public void deletedFiles(ActionEvent actionEvent) {
-        dmsApplication.switchTab(Tab.DELETED_FILES);
-        deletedFilesButton.setSelected(true);
+    public void archive(ActionEvent actionEvent) {
+        dmsApplication.switchTab(Tab.ARCHIVE);
+        archiveButton.setSelected(true);
     }
 
     public void log(ActionEvent actionEvent) {
