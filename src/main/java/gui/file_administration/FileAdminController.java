@@ -81,24 +81,7 @@ public class FileAdminController implements TabController {
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(true);
         addToolTip();
-        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
-        fileTreeView.setContextMenu(adminFilesContextMenu);
-        fileTreeView.setOnMouseClicked(event -> {
-            fileTreeView.setContextMenu(adminFilesContextMenu);
-            if (selectedFile != null) {
-                if (selectedFile.getOSPath().toString().equals("")) {
-                    if (adminFilesContextMenu.getItems().size() == 5) {
-
-                        adminFilesContextMenu.getItems().remove(1);
-                        adminFilesContextMenu.getItems().remove(2);
-                        adminFilesContextMenu.getItems().remove(1);
-
-                    }
-                } else
-                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
-                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
-            }
-        });
+        setContextMenu();
         fileTreeView.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER)
                 openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
@@ -575,5 +558,23 @@ public class FileAdminController implements TabController {
         Tooltip.install(deleteFileButton, archiveToolTip);
         Tooltip.install(createFolderButton, newFolderTooltip);
         Tooltip.install(uploadButton, newDocumentTooltip);
+    }
+    private void setContextMenu(){
+        AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
+        fileTreeView.setContextMenu(adminFilesContextMenu);
+        fileTreeView.setOnMouseClicked(event -> {
+            fileTreeView.setContextMenu(adminFilesContextMenu);
+            if (selectedFile != null) {
+                if (selectedFile.getOSPath().toString().equals("")) {
+                    if (adminFilesContextMenu.getItems().size() == 5) {
+                        adminFilesContextMenu.getItems().remove(3);
+                        adminFilesContextMenu.getItems().remove(2);
+                        adminFilesContextMenu.getItems().remove(1);
+                    }
+                } else
+                    fileTreeView.setContextMenu(new AdminFilesContextMenu(this));
+                if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 }
