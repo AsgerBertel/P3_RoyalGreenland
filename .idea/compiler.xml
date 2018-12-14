@@ -12,9 +12,4 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
   </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="P3" options="--add-exports=java.desktop/com.apple.eawt=ALL-UNNAMED" />
-    </option>
-  </component>
 </project>
