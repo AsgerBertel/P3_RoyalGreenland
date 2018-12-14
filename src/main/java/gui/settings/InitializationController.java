@@ -103,7 +103,7 @@ public class InitializationController implements Initializable {
             inputTextField.setText(chosenDirectory.getAbsolutePath());
             removeError();
         } else if (!isLegalDirectory(chosenDirectory)) {
-            showError(DMSApplication.getMessage("Initialization.IllegalChoosenFile"));
+            showError(DMSApplication.getMessage("Initialization.IllegalChosenFile"));
         } else {
             showError(DMSApplication.getMessage("Initialization.EmptyInput"));
         }

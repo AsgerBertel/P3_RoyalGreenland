@@ -36,7 +36,7 @@ public class FileOverviewController implements TabController {
 
     private ArrayList<Plant> plantList;
     private Plant selectedPlant;
-    private Plant universalPlant = new Plant(-1, DMSApplication.getMessage("PlantAdmin.UniverselPlantName"), null);
+    private Plant universalPlant = new Plant(-1, DMSApplication.getMessage("PlantAdmin.UniversalPlantName"), null);
 
     @FXML
     private TreeView<AbstractFile> fileTreeView;

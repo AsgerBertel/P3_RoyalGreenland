@@ -1,7 +1,9 @@
 package gui.settings;
 
 import app.ApplicationMode;
+import directory.FileManager;
 import directory.SettingsManager;
+import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.TabController;
 import javafx.event.ActionEvent;
@@ -147,13 +149,15 @@ public class SettingsController implements TabController {
         // Save all changes and set allChangeSaved to false if a save failed
         allChangesSaved &= saveChange(usernameTextField, () -> SettingsManager.setUsername(usernameTextField.getText()));
         allChangesSaved &= saveChange(serverPathTextField, () -> SettingsManager.setServerPath(Paths.get(serverPathTextField.getText())));
-        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN){
+
+        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN)
             allChangesSaved &= saveChange(localPathTextField, () -> SettingsManager.setLocalPath(Paths.get(localPathTextField.getText())));
-        }
+
 
         // Only disable save button if all changes are saved correctly
         saveChangesButton.setDisable(allChangesSaved);
-
+        FileManager.resetInstance();
+        PlantManager.resetInstance();
         // Save language if different from the current language
         Locale language = danishSettingsButton.isSelected() ? DMSApplication.DK_LOCALE : DMSApplication.GL_LOCALE;
         if (!language.equals(DMSApplication.getLanguage())) {

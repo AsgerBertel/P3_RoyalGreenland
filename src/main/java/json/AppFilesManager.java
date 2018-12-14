@@ -170,7 +170,7 @@ public class AppFilesManager {
     }
 
     /**
-     * Creates the arraylist consisting of paths.
+     * Creates the ArrayList consisting of paths.
      * @param paths ArrayList consisting of all the directories to create.
      * @throws IOException if Files.createDirectories() fails.
      */

@@ -53,7 +53,7 @@ public class AlertBuilder {
     }
 
     /**
-     * Displays an ERROR popup informing the user of an IOException. Ressource context tells of plausible causes.
+     * Displays an ERROR popup informing the user of an IOException. Resource context tells of plausible causes.
      * Displays the given filepath of the error report.
      * Used in context of IOException and in cohesion with LoggingErrorTools of the throwable.
      */
@@ -68,7 +68,7 @@ public class AlertBuilder {
         alert.showAndWait();
     }
     /**
-     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occured.
+     * Identical to IOExceptionPopup(), however displays the path of the file for which the IOException occurred.
      * @param targetPath
      */
     public static void IOExceptionPopupWithString(String targetPath) {
@@ -93,8 +93,8 @@ public class AlertBuilder {
     }
 
     /**
-     * Displays an ERROR popup telling the user incase of InvalidNameException. Primarily in context of Files.move()
-     * and Files.copy(), incase file already exists in the target path, or named an illegal name. Parameters consist of
+     * Displays an ERROR popup telling the user in case of InvalidNameException. Primarily in context of Files.move()
+     * and Files.copy(), in case file already exists in the target path, or named an illegal name. Parameters consist of
      * the source path and target path.
      * @param src
      * @param target

@@ -274,7 +274,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     @RepeatedTest(value = 2)
-    void showContextMenuTest() throws InterruptedException {
+    void showContextMenuTest() {
         rightClickOn(plant2Element);
         clickOnContextMenuItem(1); // Edit plant
         assertTrue(findNode("#editPane").isVisible());
@@ -318,7 +318,7 @@ public class PlantAdminTabTest extends GUITest {
         assertEquals(nameTextField.getText(), newPlantName);
     }
 
-    // Creates a new plant and returns the plantelement from the list
+    // Creates a new plant and returns the plant element from the list
     private PlantElement createNewPlant(int id, String name){
         TextField nameTextField = findNode("#fieldCreatePlantName");
         TextField idTextField = findNode("#fieldCreatePlantId");
