@@ -15,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
 import java.io.FileNotFoundException;
@@ -52,6 +53,9 @@ public class DMSApplication extends Application {
 
     private SettingsManager settings;
     private Tab currentTab;
+
+    private AppFilesChangeListener externalUpdateListener;
+    private FileUpdater localFileUpdater;
 
     private static DMSApplication dmsApplication;
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
@@ -190,10 +194,20 @@ public class DMSApplication extends Application {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
                 DirectoryCloner.updateLocalFiles();
-                new FileUpdater(this).start();
+                if(localFileUpdater != null && localFileUpdater.isAlive())
+                    localFileUpdater.setRunning(false);
+
+                localFileUpdater = new FileUpdater(this);
+                localFileUpdater.start();
             } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
+                if(externalUpdateListener != null)
+                    externalUpdateListener.stop();
+
+                // Listen for changes made by other administrators
+                externalUpdateListener = new AppFilesChangeListener(this);
+                externalUpdateListener.start();
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();

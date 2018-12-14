@@ -25,36 +25,41 @@ class FileExplorerTest extends FileTester {
     Path pathToDoc1 = Paths.get("04_MASKINTØRRET FISK/FL 04 GR_02   Flowdiagram for produktion af maskintørret fisk.pdf");
     Path pathToDoc2 = Paths.get("04_MASKINTØRRET FISK/PB 04 GR_02   Procesbeskrivelse for produktion af maskintørret fisk.pdf");
     Path pathToFolder = Paths.get("04_MASKINTØRRET FISK");
-    Path pathToParentFolder = Paths.get(SettingsManager.getServerDocumentsPath().toString());
     Folder folder;
-    Folder parentFolder;
     Plant plant;
     AccessModifier am;
+
+    Path pathToKAL = Paths.get("02_VINTERTØRRET FISK/KAL");
+    Folder KALFolder;
+    Path pathToKALParent = Paths.get("02_VINTERTØRRET FISK");
+    Folder KALParentFolder;
+    Path pathToKALDoc = Paths.get("02_VINTERTØRRET FISK/KAL/GFL 02 GR_02 Flowdiagram for produktion af vintertørret fisk.pdf");
+    Document KALDoc;
 
     @BeforeEach
     protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        docInAM = DocumentBuilder.getInstance().createDocument(pathToDoc1);
-        docFalse = DocumentBuilder.getInstance().createDocument(pathToDoc2);
-        ArrayList<AbstractFile> al = new ArrayList<>();
-        al.add(docInAM);
-        al.add(docFalse);
+        docInAM = (Document) findInMainFiles(pathToDoc1);
+        docFalse = (Document) findInMainFiles(pathToDoc2);
+        KALDoc = (Document) findInMainFiles(pathToKALDoc);
         am = new AccessModifier();
         am.addDocument(docInAM.getID());
+        am.addDocument(KALDoc.getID());
         plant = new Plant(1234, "plant", am);
-        fe = new FileExplorer(al, plant);
-        folder = new Folder(pathToFolder.toString());
-        parentFolder = new Folder(pathToParentFolder.toString());
-        parentFolder.getContents().add(folder);
+        fe = new FileExplorer(FileManager.getInstance().getMainFiles(), plant);
+        folder = (Folder) findInMainFiles(pathToFolder);
+        KALFolder = (Folder) findInMainFiles(pathToKAL);
+        KALParentFolder = (Folder) findInMainFiles(pathToKALParent);
     }
 
     @Test
     void getShownFiles(){
+
         List<AbstractFile> shownFiles = fe.getShownFiles();
 
-        assertTrue(shownFiles.contains(docInAM));
+        assertTrue(shownFiles.contains(KALParentFolder));
 
-        assertEquals(1, shownFiles.size());
+        assertEquals(2, shownFiles.size());
 
         assertFalse(shownFiles.contains(docFalse));
     }
@@ -70,13 +75,11 @@ class FileExplorerTest extends FileTester {
 
     @Test
     void navigateBack() {
-        fe.navigateTo(folder);
+        fe.navigateTo(KALFolder);
 
         assertTrue(fe.navigateBack());
 
-        //todo navigateBack doesn't work WIP
-
-        //assertEquals(parentFolder.getOSPath().toString(), fe.getCurrentPath());
+        assertEquals(KALParentFolder.getOSPath().toString(), fe.getCurrentPath());
     }
 
     @Test
