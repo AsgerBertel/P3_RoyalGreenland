@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -58,7 +59,7 @@ public class DMSApplication extends Application {
     private FileUpdater localFileUpdater;
 
     private static DMSApplication dmsApplication;
-    // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
+    // This empty constructor needs to be here for reasons related to launching this Application from a separate class
     public DMSApplication() {
     }
 
@@ -80,6 +81,7 @@ public class DMSApplication extends Application {
         loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
+        primaryStage.getIcons().add(new Image("icons/Logo.png"));
         primaryStage.show();
 
         if (applicationMode.equals(ApplicationMode.ADMIN)) {

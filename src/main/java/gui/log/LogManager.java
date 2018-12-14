@@ -33,7 +33,7 @@ public class LogManager {
         // Date
         String eventDate = event.getLocalDateTime().format(FORMATTER);
 
-        // FILENAME blev EVENT
+        // FILENAME became EVENT
         String eventData = event.getPrefixString() + "|" + event.getEventType().toString() + "|" + event.getSuffixString();
 
         //USER

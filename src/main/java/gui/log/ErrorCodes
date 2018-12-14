@@ -1,4 +1,4 @@
-0: succesful
+0: successful
 2: shutdown due to interrupted exception in thread
 4: failed to create main directory (server or local)
 6: failed to load fxml file

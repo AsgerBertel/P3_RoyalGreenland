@@ -166,7 +166,7 @@ public class FileTreeDragAndDrop implements Callback<TreeView<AbstractFile>, Tre
                 throw new FileNotFoundException("The document that the file was dropped on does not have a parent");
         }
 
-        // Don't allow folder to be drag into on of its' subfolders
+        // Don't allow folder to be drag into on of its' sub folders
         if (fileToMove instanceof Folder && destinationFolder.isSubFolderOf((Folder) fileToMove))
             return;
 

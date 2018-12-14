@@ -486,7 +486,7 @@ public class FileAdminController implements TabController {
     }
 
     /**
-     * Watches directory for changes, Listener only reacts on changes and calls update() incase invoked.
+     * Watches directory for changes, Listener only reacts on changes and calls update() in case invoked.
      * Thread sleeps for 0,2 hereafter, for good measure.
      *
      * @param root path to directory to watch
