@@ -532,9 +532,9 @@ public class FileManager {
         Path oldPath = SettingsManager.getServerDocumentsPath().resolve(file.getOSPath().toString());
         Path newPath = oldPath.getParent().resolve(newName);
 
-        if (Files.exists(newPath)) {
+        if (Files.exists(newPath))
             throw new FileAlreadyExistsException("Name is already in use");
-        }
+
 
         if (oldPath.toFile().renameTo(newPath.toFile())) {
             if (file instanceof Folder) {
