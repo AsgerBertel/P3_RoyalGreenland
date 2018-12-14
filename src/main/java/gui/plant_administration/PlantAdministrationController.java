@@ -71,6 +71,9 @@ public class PlantAdministrationController implements TabController {
 
     @FXML
     private Button btnEditPlantSidebar;
+    @FXML
+    private Button btnCreatePlantSidebar;
+
 
     @FXML
     private Text plantCountText;
@@ -86,6 +89,7 @@ public class PlantAdministrationController implements TabController {
         //Setting standard
         createPane.toFront();
         createPane.setVisible(true);
+        addToolTip();
     }
 
 
@@ -375,5 +379,13 @@ public class PlantAdministrationController implements TabController {
                 return element;
         }
         return null;
+    }
+    private void addToolTip() {
+        Tooltip deletePlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.DeletePlant"));
+        Tooltip newPlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.CreatePlant"));
+        Tooltip editPlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.EditPlant"));
+        Tooltip.install(btnDeletePlant, deletePlantTooltip);
+        Tooltip.install(btnCreatePlantSidebar, newPlantTooltip);
+        Tooltip.install(btnEditPlantSidebar, editPlantTooltip);
     }
 }

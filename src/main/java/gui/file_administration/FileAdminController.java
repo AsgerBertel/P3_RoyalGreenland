@@ -47,10 +47,14 @@ public class FileAdminController implements TabController {
     public VBox changesVBox;
     public Text lastUpdatedText;
     public ScrollPane changesScrollPane;
+    @FXML
     public Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
     private FileTreeDragAndDrop fileTreeDragAndDrop;
-
+    @FXML
+    private Button createFolderButton;
+    @FXML
+    private Button uploadButton;
     private DMSApplication dmsApplication;
 
     @FXML
@@ -76,7 +80,7 @@ public class FileAdminController implements TabController {
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
         fileTreeView.setRoot(rootItem);
         fileTreeView.setShowRoot(true);
-
+        addToolTip();
         AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
         fileTreeView.setContextMenu(adminFilesContextMenu);
         fileTreeView.setOnMouseClicked(event -> {
@@ -85,9 +89,9 @@ public class FileAdminController implements TabController {
                 if (selectedFile.getOSPath().toString().equals("")) {
                     if (adminFilesContextMenu.getItems().size() == 5) {
 
-        adminFilesContextMenu.getItems().remove(1);
-           adminFilesContextMenu.getItems().remove(2);
-           adminFilesContextMenu.getItems().remove(1);
+                        adminFilesContextMenu.getItems().remove(1);
+                        adminFilesContextMenu.getItems().remove(2);
+                        adminFilesContextMenu.getItems().remove(1);
 
                     }
                 } else
@@ -161,11 +165,10 @@ public class FileAdminController implements TabController {
     private void onPlantToggle(PlantCheckboxElement plantElement) {
         Plant plant = plantElement.getPlant();
 
-        if (plantElement.isSelected()){
+        if (plantElement.isSelected()) {
             plant.getAccessModifier().addDocument(((Document) selectedFile).getID());
             LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_GIVEN));
-        }
-        else{
+        } else {
             plant.getAccessModifier().removeDocument(((Document) selectedFile).getID());
             LogManager.log(new LogEvent(plant.getName(), selectedFile.getName(), LogEventType.PLANT_ACCESS_REMOVED));
         }
@@ -369,7 +372,7 @@ public class FileAdminController implements TabController {
     }
 
     public void deleteFile() {
-        if(!(selectedFile.getOSPath().toString().equals(""))){
+        if (!(selectedFile.getOSPath().toString().equals(""))) {
             TreeItem<AbstractFile> selectedItem = fileTreeView.getSelectionModel().getSelectedItem();
             FileManager.getInstance().deleteFile(selectedItem.getValue());
             FileManager.getInstance().save();
@@ -563,5 +566,14 @@ public class FileAdminController implements TabController {
         monitorThread.setName("FileMonitorThread");
         monitorThread.setDaemon(true);
         monitorThread.start();
+    }
+
+    private void addToolTip() {
+        Tooltip archiveToolTip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.Arkiver"));
+        Tooltip newFolderTooltip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.CreateFolder"));
+        Tooltip newDocumentTooltip = new Tooltip(DMSApplication.getMessage("AdminFiles.Tooltip.UploadFile"));
+        Tooltip.install(deleteFileButton, archiveToolTip);
+        Tooltip.install(createFolderButton, newFolderTooltip);
+        Tooltip.install(uploadButton, newDocumentTooltip);
     }
 }

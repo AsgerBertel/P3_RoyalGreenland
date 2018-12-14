@@ -3,13 +3,12 @@ package gui.log;
 import gui.DMSApplication;
 import gui.TabController;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+
 import java.net.URL;
 import java.util.*;
 
@@ -25,7 +24,12 @@ public class LogController implements TabController {
 
     @FXML
     private TableColumn<LogEvent, String> time;
-
+    @FXML
+    private Button btnSortByUser;
+    @FXML
+    private Button btnSortByChangeType;
+    @FXML
+    private Button btnSortByTime;
     @FXML
     private ImageView searchImage;
 
@@ -44,7 +48,7 @@ public class LogController implements TabController {
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        searchImage.setImage(timeOld);
+        searchImage.setImage(timeOld);addToolTip();
     }
 
     @Override
@@ -54,7 +58,7 @@ public class LogController implements TabController {
 
     @Override
     public void update() {
-        tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         event.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("EventString")); // Calls getEventString() in the LogEvent
         user.setCellValueFactory(new PropertyValueFactory<LogEvent, String>("User")); // Calls getUser() in the LogEvent
@@ -67,45 +71,54 @@ public class LogController implements TabController {
     }
 
 
-
-
-    public void keyReleased(KeyEvent keyEvent){
+    public void keyReleased(KeyEvent keyEvent) {
         search(searchField.getText().toLowerCase());
     }
 
     private void search(String search) {
         List<LogEvent> foundEvents = new ArrayList<>();
-        for( LogEvent e : listOfEvents){
-            if(e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search) || e.getSuffixString().toLowerCase().contains(search)){
+        for (LogEvent e : listOfEvents) {
+            if (e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search) || e.getSuffixString().toLowerCase().contains(search)) {
                 foundEvents.add(e);
             }
         }
         tableView.getItems().setAll(foundEvents);
     }
 
-    public void sortByUser(){
+    public void sortByUser() {
         List<LogEvent> sortedList = listOfEvents;
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getUser));
         tableView.getItems().setAll(sortedList);
     }
-    public void sortByChangeType(){
+
+    public void sortByChangeType() {
         List<LogEvent> sortedList = listOfEvents;
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getEventType));
         tableView.getItems().setAll(sortedList);
     }
-    public void sortByTime(){
+
+    public void sortByTime() {
         List<LogEvent> sortedList = listOfEvents;
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getLocalDateTime));
 
-        if(sortedByTime){
+        if (sortedByTime) {
             searchImage.setImage(timeNew);
             tableView.getItems().setAll(sortedList);
             sortedByTime = false;
-        }else{
+        } else {
             Collections.reverse(sortedList);
             searchImage.setImage(timeOld);
             tableView.getItems().setAll(sortedList);
             sortedByTime = true;
         }
+    }
+
+    private void addToolTip() {
+        Tooltip sortByTimeTooltip = new Tooltip(DMSApplication.getMessage("Log.Tooltip.SortByTime"));
+        Tooltip sortByChangeType = new Tooltip(DMSApplication.getMessage("Log.Tooltip.SortByChangeType"));
+        Tooltip sortByUser = new Tooltip(DMSApplication.getMessage("Log.Tooltip.SortByUser"));
+        Tooltip.install(btnSortByTime, sortByTimeTooltip);
+        Tooltip.install(btnSortByChangeType, sortByChangeType);
+        Tooltip.install(btnSortByUser, sortByUser);
     }
 }
