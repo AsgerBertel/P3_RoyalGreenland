@@ -113,7 +113,11 @@ class FileManagerTest extends FileTester {
         Document duplicateFile1 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
         Document duplicateFile2 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
 
-        // todo should probably just assert that none of the files (originalFile, duplicate1 and duplicate2) have the same paths instead
+        // Asserts that the paths are not the same
+        assertNotEquals(originalFile.getOSPath(), duplicateFile1.getOSPath());
+        assertNotEquals(originalFile.getOSPath(), duplicateFile2.getOSPath());
+        assertNotEquals(duplicateFile1.getOSPath(), duplicateFile2.getOSPath());
+
         // Assert that a number has been appended to the end of the file name
         assertTrue(duplicateFile1.getName().endsWith("(1)." + duplicateFile1.getFileExtension()));
         assertTrue(duplicateFile2.getName().endsWith("(2)." + duplicateFile1.getFileExtension()));

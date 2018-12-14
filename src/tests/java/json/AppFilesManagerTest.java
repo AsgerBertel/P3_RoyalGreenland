@@ -119,8 +119,6 @@ class AppFilesManagerTest extends FileTester {
         FileManager.getInstance().renameFile(folder, "new folder");
         DirectoryCloner.publishFiles();
 
-        //todo when a changed file is published, then it is in root folder in the filesystem
-        //todo and all other folders are in the same folder as root?
         //asserts that folder is in publishedFileList
         al = AppFilesManager.loadPublishedFileList();
         assertTrue(al.contains(folder));
