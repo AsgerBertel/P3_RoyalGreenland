@@ -1,6 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
+import app.DMSAdmin;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.SettingsManager;
@@ -77,10 +78,12 @@ public class DMSApplication extends Application {
 
         primaryStage = stage;
 
+
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
+        // Set icon for program.
         primaryStage.getIcons().add(new Image("icons/Logo.png"));
         primaryStage.show();
 
