@@ -27,10 +27,7 @@ class DocumentBuilderTest extends FileTester {
         Document doc = DocumentBuilder.getInstance().createDocument(pathToTestFile);
         int IDafterIncrement = DocumentBuilder.getInstance().readAndUpdateCurrentID();
 
-        //the assert is IDafterIncrement - 2 because the ID updates two times before
+        //the assert is (IDafterIncrement - 2) because the ID updates two times before
         assertEquals(ID, IDafterIncrement - 2);
-
-        //asserts that file now exists
-        assertTrue(Files.exists(SettingsManager.getServerDocumentsPath().resolve(doc.getOSPath())));
     }
 }
