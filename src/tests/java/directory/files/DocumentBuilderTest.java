@@ -17,7 +17,7 @@ class DocumentBuilderTest extends FileTester {
 
     @Test
     void createDocumentANDreadAndUpdateCurrentID() {
-        DocumentBuilder.getInstance().setCurrentIDPath(pathToCurrentID);
+        //DocumentBuilder.getInstance().setCurrentIDPath(pathToCurrentID);
         int ID = DocumentBuilder.getInstance().readAndUpdateCurrentID();
         DocumentBuilder.getInstance().createDocument(pathToTestFile);
         int IDafterIncrement = DocumentBuilder.getInstance().readAndUpdateCurrentID();

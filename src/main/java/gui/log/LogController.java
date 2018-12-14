@@ -48,7 +48,8 @@ public class LogController implements TabController {
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        searchImage.setImage(timeOld);addToolTip();
+        searchImage.setImage(timeOld);
+        addToolTip();
     }
 
     @Override

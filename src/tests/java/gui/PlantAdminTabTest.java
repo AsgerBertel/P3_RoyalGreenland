@@ -35,9 +35,9 @@ public class PlantAdminTabTest extends GUITest {
         plant1Element = (PlantElement) plantController.getPlantVBox().getChildren().get(0);
         plant2Element = (PlantElement) plantController.getPlantVBox().getChildren().get(1);
 
-        menuCreatePlantButton = findNode("#sidebarBtnCreatePlant");
+        menuCreatePlantButton = findNode("#btnCreatePlantSidebar");
         menuEditPlantButton = findNode("#btnEditPlantSidebar");
-        deletePlantButton = findNode("#btnDeletePlant");
+        deletePlantButton = findNode("#btnDeletePlantSidebar");
     }
 
     private void writeInTextField(TextField textField, String text){
@@ -206,7 +206,7 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void deletePlantTest(){
-        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button deletePlantButton = findNode("#btnDeletePlantSidebar");
         int originalListSize = plantController.getPlantVBox().getChildren().size();
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant2Element));
@@ -223,7 +223,7 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void deletePlantWhileEditingTest(){
-        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button deletePlantButton = findNode("#btnDeletePlantSidebar");
         TextField nameTextField = findNode("#fieldEditPlantName");
         Button showEditButton = findNode("#btnEditPlantSidebar");
         String unsavedName = "Unsaved Name";
@@ -242,7 +242,7 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void cancelDeleteTest(){
-        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button deletePlantButton = findNode("#btnDeletePlantSidebar");
         Button showEditButton = findNode("#btnEditPlantSidebar");
 
         clickOn(plant1Element);
@@ -257,7 +257,7 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void closeDeletePopupTest() throws InterruptedException {
-        Button deletePlantButton = findNode("#btnDeletePlant");
+        Button deletePlantButton = findNode("#btnDeletePlantSidebar");
         Button showEditButton = findNode("#btnEditPlantSidebar");
 
         clickOn(plant1Element);

@@ -43,6 +43,7 @@ public class FileManager {
     public static void resetInstance(){
         fileManager = null;
     }
+
     private FileManager() {
     }
 

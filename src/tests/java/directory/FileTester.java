@@ -2,6 +2,7 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
+import directory.files.Folder;
 import directory.plant.PlantManager;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;

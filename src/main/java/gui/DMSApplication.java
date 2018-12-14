@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;

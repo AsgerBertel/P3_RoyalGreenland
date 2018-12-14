@@ -67,7 +67,7 @@ public class PlantAdministrationController implements TabController {
     private TextField fieldEditPlantId;
 
     @FXML
-    private Button btnDeletePlant;
+    private Button btnDeletePlantSidebar;
 
     @FXML
     private Button btnEditPlantSidebar;
@@ -111,7 +111,7 @@ public class PlantAdministrationController implements TabController {
         }
         plantVBox.getChildren().addAll(plantElements);
 
-        btnDeletePlant.setDisable(true);
+        btnDeletePlantSidebar.setDisable(true);
         btnEditPlantSidebar.setDisable(true);
 
         plantCountText.setText("(" + plantElements.size() + ")");
@@ -126,7 +126,7 @@ public class PlantAdministrationController implements TabController {
             element.setSelected(false);
         }
         plantElement.setSelected(true);
-        btnDeletePlant.setDisable(false);
+        btnDeletePlantSidebar.setDisable(false);
         btnEditPlantSidebar.setDisable(false);
 
         selectedPlantElement = plantElement;
@@ -173,13 +173,13 @@ public class PlantAdministrationController implements TabController {
             plantElements.remove(selectedPlantElement);
             PlantManager.getInstance().deletePlant(selectedPlantElement.getPlant().getId());
             plantVBox.getChildren().remove(selectedPlantElement);
-            btnDeletePlant.setDisable(true);
+            btnDeletePlantSidebar.setDisable(true);
             plantCountText.setText("(" + plantElements.size() + ")");
 
             LogManager.log(new LogEvent(DMSApplication.getMessage("Log.Plant") + " " + selectedPlantElement.getPlant().getName() + ", " + selectedPlantElement.getPlant().getId(), PLANT_DELETED));
             activatePane(createPane, editPane);
 
-            btnDeletePlant.setDisable(true);
+            btnDeletePlantSidebar.setDisable(true);
             btnEditPlantSidebar.setDisable(true);
             selectedPlantElement = null;
         }
@@ -384,7 +384,7 @@ public class PlantAdministrationController implements TabController {
         Tooltip deletePlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.DeletePlant"));
         Tooltip newPlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.CreatePlant"));
         Tooltip editPlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.EditPlant"));
-        Tooltip.install(btnDeletePlant, deletePlantTooltip);
+        Tooltip.install(btnDeletePlantSidebar, deletePlantTooltip);
         Tooltip.install(btnCreatePlantSidebar, newPlantTooltip);
         Tooltip.install(btnEditPlantSidebar, editPlantTooltip);
     }
