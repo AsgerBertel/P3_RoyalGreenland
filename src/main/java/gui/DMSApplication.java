@@ -220,7 +220,6 @@ public class DMSApplication extends Application {
         }
     }
 
-
     public static DMSApplication getDMSApplication(){
         return dmsApplication;
     }
