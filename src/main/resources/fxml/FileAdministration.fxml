@@ -10,32 +10,30 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="fileAdminHBox" stylesheets="@/styles/masterSheet.css,@/styles/fileAdministration.css"
-      xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.file_administration.FileAdminController">
+<HBox fx:id="fileAdminHBox" stylesheets="@/styles/masterSheet.css,@/styles/fileAdministration.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.file_administration.FileAdminController">
 
     <!-- Side menu -->
     <VBox styleClass="verticalMenu" stylesheets="@/styles/menubar.css">
-        <Button fx:id="uploadButton" styleClass="menuButton" onAction="#uploadDocument">
+        <Button fx:id="uploadButton" onAction="#uploadDocument" styleClass="menuButton">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="/icons/menu/adddocument.png"/>
+                    <Image url="/icons/menu/adddocument.png" />
                 </ImageView>
             </graphic>
         </Button>
 
-        <Button fx:id="createFolderButton" styleClass="menuButton" onAction="#createFolder">
+        <Button fx:id="createFolderButton" onAction="#createFolder" styleClass="menuButton">
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="/icons/menu/addfolder.png"/>
+                    <Image url="/icons/menu/addFolder.png" />
                 </ImageView>
             </graphic>
         </Button>
 
-        <Button fx:id="deleteFileButton" styleClass="menuButton" onAction="#deleteFile">
+        <Button fx:id="deleteFileButton" onAction="#deleteFile" styleClass="menuButton">
             <graphic>
                 <ImageView fitHeight="39" fitWidth="39">
-                    <Image url="/icons/menu/delete.png"/>
+                    <Image url="/icons/menu/delete.png" />
                 </ImageView>
             </graphic>
         </Button>
@@ -43,40 +41,38 @@
 
     <!-- File tree -->
     <VBox fx:id="leftSideVbox">
-        <HBox styleClass="filler" minHeight="40" maxHeight="40" prefWidth="${fileAdminHBox.width}">
-            <Text translateX="10" translateY="5" styleClass="darkGreyTitle" text="%AdminFiles.Files"/>
+        <HBox maxHeight="40" minHeight="40" prefWidth="${fileAdminHBox.width}" styleClass="filler">
+            <Text styleClass="darkGreyTitle" text="%AdminFiles.Files" translateX="10" translateY="5" />
         </HBox>
-        <TreeView fx:id="fileTreeView" minWidth="300" stylesheets="@/styles/fileTree.css"
-                  prefHeight="${leftSideVbox.height}"/>
+        <TreeView fx:id="fileTreeView" minWidth="300" prefHeight="${leftSideVbox.height}" stylesheets="@/styles/fileTree.css" />
 
     </VBox>
 
     <!-- Splitter -->
-    <Pane styleClass="verticalSplitter"/>
+    <Pane styleClass="verticalSplitter" />
 
     <!-- Factory list -->
     <VBox id="plantSection" stylesheets="@/styles/factoryList.css">
-        <HBox minHeight="30" maxHeight="30" styleClass="filler">
-            <Text text="%AdminFiles.Plants" fx:id="plantListTitle" styleClass="darkGreyTitle"/>
-            <Text text=" (0)" fx:id="plantCountText" styleClass="greyTitle"/>
+        <HBox maxHeight="30" minHeight="30" styleClass="filler">
+            <Text fx:id="plantListTitle" styleClass="darkGreyTitle" text="%AdminFiles.Plants" />
+            <Text fx:id="plantCountText" styleClass="greyTitle" text=" (0)" />
         </HBox>
         <ScrollPane id="plantScrollPane" translateY="10">
-            <VBox id="plantVBox" fx:id="plantVBox"/>
+            <VBox id="plantVBox" fx:id="plantVBox" />
         </ScrollPane>
     </VBox>
 
     <!-- Changes overview -->
-    <VBox fx:id="changesSection" id="changesSection" maxWidth="220" minWidth="220" prefWidth="220" translateY="30">
-        <Text text="%AdminFiles.Changes" styleClass="bigTitle"/>
-        <Text text="%AdminFiles.LastUpdated" styleClass="smallNote" translateY="3"/>
-        <Text text="%AdminFiles.LastUpdated" fx:id="lastUpdatedText" styleClass="smallNote" translateY="3"/>
-        <Text text="%AdminFiles.NewChanges" styleClass="standardText" translateY="15"/>
+    <VBox id="changesSection" fx:id="changesSection" maxWidth="220" minWidth="220" prefHeight="1670.0" prefWidth="216.0">
+        <Text styleClass="bigTitle" text="%AdminFiles.Changes" translateY="15"/>
+        <Text styleClass="smallNote" text="%AdminFiles.LastUpdated" translateY="13" />
+        <Text fx:id="lastUpdatedText" styleClass="smallNote" text="%AdminFiles.LastUpdated" translateY="13" />
+        <Text styleClass="standardText" text="%AdminFiles.NewChanges" translateY="15" />
 
-        <ScrollPane fx:id="changesScrollPane" id="changesScrollPane" maxHeight="${changesSection.height * 0.7}" minWidth="${changesSection.width}">
-            <VBox fx:id="changesVBox" styleClass="changesVBox" minWidth="${changesSection.width}"/>
+        <ScrollPane id="changesScrollPane" fx:id="changesScrollPane" maxHeight="${changesSection.height * 0.75}" minWidth="${changesSection.width}" translateY="30">
+            <VBox fx:id="changesVBox" minWidth="${changesSection.width}" styleClass="changesVBox" />
         </ScrollPane>
 
-        <Button fx:id="publishChangesButton" translateY="20" text="%AdminFiles.PublishChanges" styleClass="darkButton" onAction="#onPublishChanges"/>
+        <Button fx:id="publishChangesButton" onAction="#onPublishChanges" styleClass="darkButton" text="%AdminFiles.PublishChanges" translateY="50" />
     </VBox>
 </HBox>
-

@@ -1,15 +1,12 @@
 package directory;
 
 import app.ApplicationMode;
-import app.DMSAdmin;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.GUITest;
 import json.AppFilesManager;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.TestUtil;
@@ -26,26 +23,14 @@ class FileUpdaterTest extends GUITest {
     Path pathToFolder = Paths.get("02_VINTERTØRRET FISK");
     Folder folder;
 
-   /* @BeforeEach
-    void resetBeforeEachMethod() throws IOException {
-        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
-        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
-
+    @BeforeEach
+    void setup() throws IOException {
         TestUtil.resetTestFiles();
-        FileManager.resetInstance();
-        PlantManager.resetInstance();
-
-        AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
-        SettingsManager.loadSettings(ApplicationMode.ADMIN);
-    }*/
+        AppFilesManager.createServerDirectories();
+    }
 
-   @BeforeEach
-   void setup() throws IOException {
-       TestUtil.resetTestFiles();
-       AppFilesManager.createLocalDirectories();
-       AppFilesManager.createServerDirectories();
-   }
+
 
     @Test
     void start() throws IOException, InterruptedException {
@@ -58,15 +43,7 @@ class FileUpdaterTest extends GUITest {
         FileUpdater fu = new FileUpdater(DMSApplication.getDMSApplication());
         fu.start();
 
-
-        //asserts that all names are the same, cant equal objects because local files
-        //have different modified variables (They were published)
-        /*for (int i = 0; i < FileManager.getInstance().getMainFiles().size(); i++){
-            assertEquals(FileManager.getInstance().getMainFiles().get(i).getName(),
-                    AppFilesManager.loadLocalFileList().get(i).getName());
-        }*/
-
-        //assertEquals(FileManager.getInstance().getMainFiles(), AppFilesManager.loadLocalFileList());
+        assertEquals(FileManager.getInstance().getMainFiles(), AppFilesManager.loadLocalFileList());
 
         //publishes a renamed folder
         folder = (Folder) FileManager.getInstance().findFile(pathToFolder, FileManager.getInstance().getMainFiles()).get();

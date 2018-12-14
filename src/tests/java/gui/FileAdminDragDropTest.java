@@ -234,9 +234,9 @@ public class FileAdminDragDropTest extends GUITest {
     }
 
 
-    //@Test
+    @Test
     void moveAllFiles() throws InterruptedException {
-        //moveAllChildrenToOneFolder(fileTree.getRoot());
+        moveAllChildrenToOneFolder(fileTree.getRoot());
         moveAllChildrenOut(fileTree.getRoot());
     }
 

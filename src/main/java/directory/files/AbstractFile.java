@@ -51,7 +51,7 @@ public abstract class AbstractFile implements Serializable{
 
     public void setName(String name){
         String parent = Paths.get(path).getParent().toString();
-        this.path = parent + "/" + name;
+        this.path = parent + File.separator + name;
     }
 
     public void setPath(Path path) {

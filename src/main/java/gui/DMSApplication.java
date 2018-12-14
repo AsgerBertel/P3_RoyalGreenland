@@ -13,7 +13,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
 import java.io.FileNotFoundException;
@@ -50,6 +52,9 @@ public class DMSApplication extends Application {
     private SettingsManager settings;
     private Tab currentTab;
 
+    private AppFilesChangeListener externalUpdateListener;
+    private FileUpdater localFileUpdater;
+
     private static DMSApplication dmsApplication;
     // This empty constructor needs to be here for reasons related to launching this Application from a seperate class
     public DMSApplication() {
@@ -82,7 +87,8 @@ public class DMSApplication extends Application {
     private void loadRootElement()  {
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
-        root.setPrefSize(MIN_WIDTH, MIN_HEIGHT);
+        root.setPrefSize(Screen.getPrimary().getVisualBounds().getMaxX() - 200, Screen.getPrimary().getVisualBounds().getMaxY() -100);
+
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
         root.getStylesheets().add("/styles/masterSheet.css");
@@ -182,10 +188,21 @@ public class DMSApplication extends Application {
             if(applicationMode.equals(ApplicationMode.VIEWER)) {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
-                new FileUpdater(this).start();
+                DirectoryCloner.updateLocalFiles();
+                if(localFileUpdater != null && localFileUpdater.isAlive())
+                    localFileUpdater.setRunning(false);
+
+                localFileUpdater = new FileUpdater(this);
+                localFileUpdater.start();
             } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
+                if(externalUpdateListener != null)
+                    externalUpdateListener.stop();
+
+                // Listen for changes made by other administrators
+                externalUpdateListener = new AppFilesChangeListener(this);
+                externalUpdateListener.start();
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();

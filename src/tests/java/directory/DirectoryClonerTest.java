@@ -73,7 +73,7 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void mergeFolders() {
+    void mergeFolders() throws IOException {
 
         //merges folders in filesystem but not in contents of folders.
         DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),

@@ -272,10 +272,9 @@ public class DirectoryCloner {
                     }
                 }
             }
-
             try {
                 if (addedFile instanceof Folder) {
-                    copyFolder(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
+                    FileUtils.copyDirectory(newFileRoot.resolve(addedFile.getOSPath()).toFile(), publishPath.toFile());
                 } else {
                     Files.copy(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
                 }
@@ -341,24 +340,6 @@ public class DirectoryCloner {
         }
         return false;
     }
-    //Todo Use Apache instead and delete dis
-    public static void copyFolder(Path src, Path dst) throws IOException {
-        createDirectories(dst);
-        File[] fileToCopy = src.toFile().listFiles();
-        if(fileToCopy == null) return;
-        for(File file : fileToCopy){
-            if(file.isDirectory()){
-                copyFolder(src.resolve(file.getName()), dst.resolve(file.getName()));
-            } else {
-                try {
-                    Files.copy(file.toPath(), dst.resolve(file.getName()));
-                } catch(IOException e) {
-                    throw new IOException("Could not copy file: "+file.getPath(),e);
-                }
-            }
-        }
-    }
-
     /**
      * @param src the folder from which data is copied
      * @param dst the destination folder
@@ -384,7 +365,7 @@ public class DirectoryCloner {
                     mergeFolders(originalFile.toPath(), newFilePath, replace);
                 }else{
                     try {
-                        copyFolder(originalFile.toPath(), newFilePath);
+                        FileUtils.copyDirectory(originalFile.toPath().toFile(), newFilePath.toFile());
                     } catch(IOException e) {
                         e.printStackTrace();
                         LoggingErrorTools.log(e);

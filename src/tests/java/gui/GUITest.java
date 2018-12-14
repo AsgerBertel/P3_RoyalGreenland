@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
@@ -28,6 +27,7 @@ public abstract class GUITest extends ApplicationTest {
         stage.show();
         this.dmsApplication = DMSApplication.getDMSApplication();
     }
+
 
     @AfterEach
     void tearDown() throws TimeoutException, InterruptedException {
@@ -63,9 +63,8 @@ public abstract class GUITest extends ApplicationTest {
         }
     }
 
-
-    // Find a node by its' fx:id
-    protected  <T extends Node> T findNode(final String fxID) {
+    @SuppressWarnings("unchecked") // Find a node by its' fx:id
+     <T extends Node> T findNode(final String fxID) {
         return (T) lookup(fxID).queryAll().iterator().next();
     }
 

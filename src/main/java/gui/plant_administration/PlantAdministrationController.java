@@ -111,7 +111,6 @@ public class PlantAdministrationController implements TabController {
         btnEditPlantSidebar.setDisable(true);
 
         plantCountText.setText("(" + plantElements.size() + ")");
-
     }
 
     //Select plant function
