@@ -73,6 +73,6 @@
             <VBox fx:id="changesVBox" minWidth="${changesSection.width}" styleClass="changesVBox" />
         </ScrollPane>
 
-        <Button fx:id="publishChangesButton" onAction="#onPublishChanges" styleClass="darkButton" text="%AdminFiles.PublishChanges" translateY="50" />
+        <Button fx:id="publishChangesButton" id="publishChangesButton" onAction="#onPublishChanges" styleClass="darkButton" text="%AdminFiles.PublishChanges" translateY="50" />
     </VBox>
 </HBox>

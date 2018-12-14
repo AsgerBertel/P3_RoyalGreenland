@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.assertj.core.error.future.ShouldNotHaveFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -319,7 +320,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     // Creates a new plant and returns the plant element from the list
-    private PlantElement createNewPlant(int id, String name){
+    private PlantElement createNewPlant(int id, String name) {
         TextField nameTextField = findNode("#fieldCreatePlantName");
         TextField idTextField = findNode("#fieldCreatePlantId");
         Button saveEditButton = findNode("#btnCreatePlant");
@@ -329,12 +330,10 @@ public class PlantAdminTabTest extends GUITest {
 
         clickOn(saveEditButton);
 
-        for(Node plantElement : plantController.getPlantVBox().getChildren()){
-            if(((PlantElement) plantElement).getPlant().getId() == id)
+        for (Node plantElement : plantController.getPlantVBox().getChildren()) {
+            if (((PlantElement) plantElement).getPlant().getId() == id)
                 return (PlantElement) plantElement;
         }
         throw new RuntimeException("Could not create new plant and identify the corresponding plant element");
     }
-
-
 }
