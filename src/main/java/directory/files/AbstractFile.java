@@ -38,7 +38,7 @@ private String rootName = "Filer";
      * @return
      */
     public Path getOSPath() {
-        return Paths.get(path.replace("root" + File.separator,""));
+        return Paths.get(path.replace("Filer" + File.separator,""));
     }
 
     public Path getParentPath() {
