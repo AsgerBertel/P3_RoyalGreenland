@@ -75,6 +75,7 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
@@ -109,7 +110,6 @@ public class FileAdminController implements TabController {
     private void reloadFileTree() {
         // Copy current item expansion state
         TreeState oldTreeState = new TreeState(fileTreeView);
-
         // Error here
         rootItem = FileTreeUtil.generateTree(FileManager.getInstance().getMainFilesRoot());
         oldTreeState.replicateTreeExpansion(rootItem);
