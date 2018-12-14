@@ -232,7 +232,7 @@ public class DirectoryCloner {
                                                       ArrayList<AbstractFile> newFiles,
                                                       Path oldFilesRoot,
                                                       Path newFileRoot)
-            throws IllegalFileException, IOException {
+            throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
 
@@ -297,13 +297,13 @@ public class DirectoryCloner {
 
     private static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
                                                            ArrayList<AbstractFile> updatedFiles)
-            throws IllegalFileException {
+             {
         ArrayList<AbstractFile> missingFiles = new ArrayList<>();
         // Find files that should be added
         for (AbstractFile file : updatedFiles) {
-            if (!file.getOSPath().toString().contains(DMSApplication.APP_TITLE))
-                throw new IllegalFileException(
-                        "Tried to include a file outside of the programs scope. File: " +file.getOSPath());
+      //      if (!file.getOSPath().toString().contains(DMSApplication.APP_TITLE))
+        //        throw new IllegalFileException(
+                  //      "Tried to include a file outside of the programs scope. File: " +file.getOSPath());
             if (file instanceof Document) {
                 // If the old files doesn't have this file or if the lastUpdateDate does not match
                 if (!originalFiles.contains(file))

@@ -24,7 +24,6 @@ public class FileUpdater extends Thread {
         try {
             DirectoryCloner.updateLocalFiles();
         } catch (UpdateFailException e) {
-            AlertBuilder.updateFailExceptionPopUp();
             LoggingErrorTools.log(e);
             e.printStackTrace();
         }

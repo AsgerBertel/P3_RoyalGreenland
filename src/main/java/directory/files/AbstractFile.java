@@ -17,7 +17,7 @@ public abstract class AbstractFile implements Serializable{
     AbstractFile(String path) {
         this.path = artificialRootPath(path);
     }
-    AbstractFile (AbstractFile file) {
+    AbstractFile(AbstractFile file) {
         this.path = file.getPath().toString();
     }
 

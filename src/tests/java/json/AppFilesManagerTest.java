@@ -1,7 +1,7 @@
 package json;
 
 import app.ApplicationMode;
-import directory.DirectoryCloner;
+import directory.update.DirectoryCloner;
 import directory.FileManager;
 import directory.FileTester;
 import directory.SettingsManager;
@@ -11,6 +11,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import directory.update.UpdateFailException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -68,7 +69,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadLocalFactoryList() throws IOException {
+    void loadLocalFactoryList() {
         FileManager.getInstance();
         ArrayList<Plant> al;
 
@@ -78,8 +79,9 @@ class AppFilesManagerTest extends FileTester {
 
         PlantManager.getInstance().addPlant(plant);
 
-        DirectoryCloner.publishFiles();
-        DirectoryCloner.updateLocalFiles();
+        //asserts no exceptions are thrown
+        assertDoesNotThrow(DirectoryCloner::publishFiles);
+        assertDoesNotThrow(DirectoryCloner::updateLocalFiles);
 
         //asserts that localFactoryList now has the plant
         al = AppFilesManager.loadLocalFactoryList();
@@ -87,7 +89,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadPublishedFactoryList() throws IOException {
+    void loadPublishedFactoryList() {
         FileManager.getInstance();
         ArrayList<Plant> al;
 
@@ -97,7 +99,8 @@ class AppFilesManagerTest extends FileTester {
 
         PlantManager.getInstance().addPlant(plant);
 
-        DirectoryCloner.publishFiles();
+        //asserts no exceptions are thrown
+        assertDoesNotThrow(DirectoryCloner::publishFiles);
 
         //asserts that publishedFactoryList now has the plant
         al = AppFilesManager.loadPublishedFactoryList();
@@ -105,7 +108,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadPublishedFileList() throws IOException, InterruptedException {
+    void loadPublishedFileList() throws IOException, UpdateFailException {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;
@@ -117,6 +120,7 @@ class AppFilesManagerTest extends FileTester {
 
         //publishes a renamed folder
         FileManager.getInstance().renameFile(folder, "new folder");
+        assertDoesNotThrow(DirectoryCloner::publishFiles);
         DirectoryCloner.publishFiles();
 
         //asserts that folder is in publishedFileList
@@ -125,7 +129,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadLocalFileList() throws IOException {
+    void loadLocalFileList() throws IOException, UpdateFailException {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;
@@ -137,7 +141,11 @@ class AppFilesManagerTest extends FileTester {
 
         //publishes a renamed folder
         FileManager.getInstance().renameFile(folder, "new folder");
+
+        //assert no exceptions are thrown
+        assertDoesNotThrow(DirectoryCloner::publishFiles);
         DirectoryCloner.publishFiles();
+        assertDoesNotThrow(DirectoryCloner::updateLocalFiles);
         DirectoryCloner.updateLocalFiles();
 
         //asserts that folder is in localFileList

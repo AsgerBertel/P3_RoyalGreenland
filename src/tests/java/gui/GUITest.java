@@ -23,7 +23,7 @@ public abstract class GUITest extends ApplicationTest {
     protected DMSApplication dmsApplication;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.show();
         this.dmsApplication = DMSApplication.getDMSApplication();
     }
@@ -52,6 +52,7 @@ public abstract class GUITest extends ApplicationTest {
     @AfterAll
     static void cleanUp(){
         // Reset path in settings
+        DMSApplication.getDMSApplication().getExternalUpdateListener().stop();
         SettingsManager.setServerPath(originalPath);
     }
 

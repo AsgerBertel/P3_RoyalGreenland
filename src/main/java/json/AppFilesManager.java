@@ -148,6 +148,10 @@ public class AppFilesManager {
                 throw new IOException("Could not write to currentFileID file");
             }
         }
+        Path logPath = SettingsManager.getServerAppFilesPath().resolve("logs.log");
+        if(!Files.exists(logPath)) {
+            Files.createFile(logPath);
+        }
     }
     /**
      * Creates the local directories, throws IOException if .mkdirs fails.
@@ -160,7 +164,7 @@ public class AppFilesManager {
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))
-            throw new FileNotFoundException("Local Application folder could not be found");
+            throw new FileNotFoundException("Local Application folder could not be found"+localRoot.getParent().toString());
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
         applicationPaths.add(SettingsManager.getLocalFilesPath());

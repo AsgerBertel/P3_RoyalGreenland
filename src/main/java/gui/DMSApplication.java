@@ -4,6 +4,7 @@ import app.ApplicationMode;
 import directory.update.DirectoryCloner;
 import directory.update.FileUpdater;
 import directory.SettingsManager;
+import directory.update.UpdateFailException;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
@@ -217,6 +218,8 @@ public class DMSApplication extends Application {
             alert.setHeaderText("Program shutting down");
             alert.showAndWait();
             System.exit(4);
+        } catch(UpdateFailException e) {
+            e.printStackTrace();
         }
     }
 
@@ -225,4 +228,7 @@ public class DMSApplication extends Application {
         return dmsApplication;
     }
 
+    public AppFilesChangeListener getExternalUpdateListener () {
+        return externalUpdateListener;
+    }
 }
