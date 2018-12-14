@@ -1,6 +1,7 @@
 package gui;
 
 import app.ApplicationMode;
+import app.DMSAdmin;
 import directory.DirectoryCloner;
 import directory.FileUpdater;
 import directory.SettingsManager;
@@ -11,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -76,10 +78,13 @@ public class DMSApplication extends Application {
 
         primaryStage = stage;
 
+
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
+        // Set icon for program.
+        primaryStage.getIcons().add(new Image("icons/Logo.png"));
         primaryStage.show();
 
         if (applicationMode.equals(ApplicationMode.ADMIN)) {
