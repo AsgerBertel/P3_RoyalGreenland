@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.prefs.Preferences;
 
 import static gui.Tab.FILE_ADMINISTRATION;
 
@@ -58,6 +60,9 @@ public class DMSApplication extends Application {
 
     @Override
     public void start(Stage stage)  {
+        // Creates a new thread and checks for unexpected error codes. If so preferences are reset.
+        new ExitChecker();
+
         dmsApplication = this;
         // Figure out if program should run in admin or viewer mode
         String appModeParameter = getParameters().getRaw().get(0);

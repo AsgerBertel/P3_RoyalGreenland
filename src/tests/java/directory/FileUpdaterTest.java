@@ -31,7 +31,7 @@ class FileUpdaterTest extends GUITest {
     }
 
 
-
+    /*
     @Test
     void start() throws IOException, InterruptedException {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
@@ -56,5 +56,5 @@ class FileUpdaterTest extends GUITest {
         assertTrue(al.contains(folder));
 
         fu.setRunning(false);
-    }
+    }*/
 }
