@@ -103,7 +103,7 @@ public class FileAdminDragDropTest extends GUITest {
         TreeCell draggedCell = getTreeCell(fileTree, draggedItem);
         Path startingPath = draggedItem.getValue().getPath();
 
-        drag(draggedCell).moveBy(-400, 0).drop();
+        drag(draggedCell).moveBy(-600, 0).drop();
         assertEquals(startingPath, fileTree.getRoot().getChildren().get(0).getValue().getPath());
         // Assert that the file system and the file list are still in sync
         assertTrue(TestUtil.doesAbstractFileMatchFileSystem(draggedItem.getValue(), SettingsManager.getServerDocumentsPath()));
