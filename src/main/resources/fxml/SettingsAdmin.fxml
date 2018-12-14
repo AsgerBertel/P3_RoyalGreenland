@@ -20,14 +20,6 @@
     </VBox>
 
     <VBox styleClass="settingsVBox">
-        <Text styleClass="standardTitle" text="%Settings.LocalPath"/>
-        <HBox styleClass="settingsHBox">
-            <TextField fx:id="localPathTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>
-            <Button text="%Settings.Browse" styleClass="darkButton" onAction="#onBrowseLocalPath"/>
-        </HBox>
-    </VBox>
-
-    <VBox styleClass="settingsVBox">
         <Text styleClass="standardTitle" text="%Settings.Username"/>
         <HBox styleClass="settingsHBox">
             <TextField fx:id="usernameTextField" onAction="#onEnter" prefWidth="400" minWidth="400"/>

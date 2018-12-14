@@ -42,22 +42,6 @@ public class PlantManager {
         return allPlants;
     }
 
-    /* isnt used?
-    /**
-     * Used to retrieve a plant from a plant ID.
-     * @param ID Plant ID.
-     * @return Plant with ID int ID.
-     */
-    /*
-    public Plant getPlant(int ID){
-        for(Plant plant : getInstance().allPlants){
-            if (plant.getId() == ID){
-                return plant;
-            }
-        }
-        return null;
-    }*/
-
     /**
      * Add a plant to the PlantManager and updates the JSON file.
      * The JSON file has to be updated, so that it is updated on all machines.

@@ -1,5 +1,6 @@
 package gui.settings;
 
+import app.ApplicationMode;
 import directory.SettingsManager;
 import gui.DMSApplication;
 import gui.TabController;
@@ -39,7 +40,10 @@ public class SettingsController implements TabController {
         // Check validity of changes when
         usernameTextField.setOnKeyReleased(e -> onUserNameChanged());
         serverPathTextField.setOnKeyReleased(e -> onServerPathChanged());
-        localPathTextField.setOnKeyReleased(e -> onLocalPathChange());
+        // Local path is not used in the admin mode.
+        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN){
+            localPathTextField.setOnKeyReleased(e -> onLocalPathChange());
+        }
 
         greenlandicSettingsButton.setToggleGroup(languageGroup);
         danishSettingsButton.setToggleGroup(languageGroup);
@@ -54,7 +58,10 @@ public class SettingsController implements TabController {
     public void update() {
         usernameTextField.setText(SettingsManager.getUsername());
         serverPathTextField.setText(SettingsManager.getServerPath().toString());
-        localPathTextField.setText(SettingsManager.getLocalPath().toString());
+        // Local path is not used in the admin mode.
+        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN){
+            localPathTextField.setText(SettingsManager.getLocalPath().toString());
+        }
         if (DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE))
             languageGroup.selectToggle(danishSettingsButton);
         else
@@ -140,7 +147,9 @@ public class SettingsController implements TabController {
         // Save all changes and set allChangeSaved to false if a save failed
         allChangesSaved &= saveChange(usernameTextField, () -> SettingsManager.setUsername(usernameTextField.getText()));
         allChangesSaved &= saveChange(serverPathTextField, () -> SettingsManager.setServerPath(Paths.get(serverPathTextField.getText())));
-        allChangesSaved &= saveChange(localPathTextField, () -> SettingsManager.setLocalPath(Paths.get(localPathTextField.getText())));
+        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN){
+            allChangesSaved &= saveChange(localPathTextField, () -> SettingsManager.setLocalPath(Paths.get(localPathTextField.getText())));
+        }
 
         // Only disable save button if all changes are saved correctly
         saveChangesButton.setDisable(allChangesSaved);
@@ -169,9 +178,14 @@ public class SettingsController implements TabController {
     }
 
     protected boolean containsErrors() {
-        return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
-                || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
-                || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
+        if(DMSApplication.getApplicationMode() != ApplicationMode.ADMIN){
+            return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                    || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                    || localPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
+        } else {
+            return usernameTextField.getStyleClass().contains(ERROR_STYLE_CLASS)
+                    || serverPathTextField.getStyleClass().contains(ERROR_STYLE_CLASS);
+        }
     }
 
 

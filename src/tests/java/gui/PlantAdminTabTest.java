@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseButton;
+import org.apache.commons.io.FileUtils;
 import org.assertj.core.error.future.ShouldNotHaveFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -274,7 +275,6 @@ public class PlantAdminTabTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void showContextMenuTest() throws InterruptedException {
-
         rightClickOn(plant2Element);
         clickOnContextMenuItem(1); // Edit plant
         assertTrue(findNode("#editPane").isVisible());

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Folder extends AbstractFile {
-    private ArrayList<AbstractFile> folderContents = new ArrayList<>();
+    public ArrayList<AbstractFile> folderContents = new ArrayList<>();
 
     public Folder(String path) {
         super(path);
@@ -40,7 +40,7 @@ public class Folder extends AbstractFile {
             child.setPath(getPath().resolve(child.getName()));
     }
 
-    // Reads the content o path its given
+    // Reads the content from the path its given
     public ArrayList<AbstractFile> getContents(){
         return folderContents;
     }
@@ -73,7 +73,7 @@ public class Folder extends AbstractFile {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Folder folder = (Folder) o;
-        return Objects.equals(folderContents, folder.folderContents);
+        return folderContents.containsAll(folderContents) && folder.folderContents.containsAll(folderContents);
     }
 
     @Override

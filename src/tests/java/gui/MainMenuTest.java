@@ -41,7 +41,7 @@ public class MainMenuTest extends GUITest {
             assertEquals(dmsApplication.getCurrentTab(), Tab.LOG);
 
             clickOn((ToggleButton) findNode("#settingsButton"));
-            assertEquals(dmsApplication.getCurrentTab(), Tab.SETTINGS);
+            assertTrue(dmsApplication.getCurrentTab() == Tab.SETTINGS_ADMIN || dmsApplication.getCurrentTab() == Tab.SETTINGS);
         }
     }
 

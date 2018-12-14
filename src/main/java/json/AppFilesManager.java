@@ -19,6 +19,7 @@ public class AppFilesManager {
 
     public static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
     public static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
+    public static final String LAST_EDITOR_FILE_NAME = "lasteditor.txt";
 
     /**
      * Loads the FileManager instance stored in App Files. Returns null if no file is found or an error occurred
@@ -92,10 +93,12 @@ public class AppFilesManager {
 
     public static void save(FileManager fileManager){
         saveObjectToJson(fileManager, SettingsManager.getServerAppFilesPath().resolve(FILES_LIST_FILE_NAME));
+        saveObjectToJson(SettingsManager.getUsername(), SettingsManager.getServerAppFilesPath().resolve(LAST_EDITOR_FILE_NAME));
     }
 
     public static void save(PlantManager plantManager){
         saveObjectToJson(plantManager, SettingsManager.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME));
+        saveObjectToJson(SettingsManager.getUsername(), SettingsManager.getServerAppFilesPath().resolve(LAST_EDITOR_FILE_NAME));
     }
 
     private static void saveObjectToJson(Object object, Path path){
@@ -107,6 +110,10 @@ public class AppFilesManager {
             AlertBuilder.IOExceptionPopupWithString(path.toString());
             LoggingErrorTools.log(e);
         }
+    }
+
+    public static String getLastEditor(){
+        return loadInstanceFromJsonFile(SettingsManager.getServerAppFilesPath().resolve(LAST_EDITOR_FILE_NAME), String.class);
     }
 
     /**
@@ -149,7 +156,7 @@ public class AppFilesManager {
      * @throws InvalidPathException if localRoot is initialized incorrectly due to error in Settings.
      */
     public static void createLocalDirectories() throws IOException, InvalidPathException{
-        Path localRoot = SettingsManager.getLocalPath();
+            Path localRoot = SettingsManager.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))

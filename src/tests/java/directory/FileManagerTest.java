@@ -113,7 +113,11 @@ class FileManagerTest extends FileTester {
         Document duplicateFile1 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
         Document duplicateFile2 = FileManager.getInstance().uploadFile(originalFilePath, parentFolder);
 
-        // todo should probably just assert that none of the files (originalFile, duplicate1 and duplicate2) have the same paths instead
+        // Asserts that the paths are not the same
+        assertNotEquals(originalFile.getOSPath(), duplicateFile1.getOSPath());
+        assertNotEquals(originalFile.getOSPath(), duplicateFile2.getOSPath());
+        assertNotEquals(duplicateFile1.getOSPath(), duplicateFile2.getOSPath());
+
         // Assert that a number has been appended to the end of the file name
         assertTrue(duplicateFile1.getName().endsWith("(1)." + duplicateFile1.getFileExtension()));
         assertTrue(duplicateFile2.getName().endsWith("(2)." + duplicateFile1.getFileExtension()));
@@ -125,17 +129,12 @@ class FileManagerTest extends FileTester {
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         fileManager.deleteFile(doc);
 
-        //todo maybe i fucked up, should be doing contain on folder doc is in.
-        //todo tried with parentFolder, still didnt work
-        //todo getArchiveFiles doesnt work
-
         assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
 
         doc = (Document) fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).get();
         FileManager.getInstance().restoreFile(doc);
 
-        //todo restore doesnt restore file back into mainfiles
         assertFalse(fileManager.findFile(doc.getOSPath(), fileManager.getArchiveFiles()).isPresent());
         assertTrue(fileManager.findFile(doc.getOSPath(), fileManager.getMainFiles()).isPresent());
     }
@@ -145,11 +144,6 @@ class FileManagerTest extends FileTester {
         Folder folder = FileManager.findParent(doc, FileManager.getInstance().getMainFilesRoot()).get();
 
         assertEquals(parentFolder, folder);
-    }
-
-    @Test
-    void save() {
-        //todo do we need tests for this?
     }
 
     @Test

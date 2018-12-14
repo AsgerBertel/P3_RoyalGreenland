@@ -222,7 +222,8 @@ public class DirectoryCloner {
             }
 
             if (addedFile instanceof Folder) {
-                copyFolder(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
+                Path ath = newFileRoot.resolve(addedFile.getOSPath());
+                FileUtils.copyDirectory(newFileRoot.resolve(addedFile.getOSPath()).toFile(), publishPath.toFile());
             } else {
                 Files.copy(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
             }
@@ -277,26 +278,6 @@ public class DirectoryCloner {
         return false;
     }
 
-    //Todo Use Apache instead and delete dis
-    public static void copyFolder(Path src, Path dst) {
-        createDirectories(dst);
-        File[] fileToCopy = src.toFile().listFiles();
-        if(fileToCopy == null) return;
-        for(File file : fileToCopy){
-            if(file.isDirectory()){
-                copyFolder(src.resolve(file.getName()), dst.resolve(file.getName()));
-            }else{
-                try {
-                    Files.copy(file.toPath(), dst.resolve(file.getName()));
-                } catch(IOException e) {
-                    e.printStackTrace();
-                    AlertBuilder.IOExceptionPopupWithString(file.getPath());
-                    LoggingErrorTools.log(e);
-                }
-            }
-        }
-    }
-
     /**
      * @param src the folder from which data is copied
      * @param dst the destination folder
@@ -304,7 +285,7 @@ public class DirectoryCloner {
      *                will be generated for the src file.
      */
     // Merges src folder into dst folder.
-    public static void mergeFolders(Path src, Path dst, boolean replace) throws IllegalArgumentException {
+    public static void mergeFolders(Path src, Path dst, boolean replace) throws IllegalArgumentException, IOException {
         // Create folder in the new path in case it doesn't exist
         createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
@@ -319,7 +300,7 @@ public class DirectoryCloner {
                 if(Files.exists(newFilePath)){
                     mergeFolders(originalFile.toPath(), newFilePath, replace);
                 }else{
-                    copyFolder(originalFile.toPath(), newFilePath);
+                    FileUtils.copyDirectory(originalFile.toPath().toFile(), newFilePath.toFile());
                 }
             }else{
                 try {
