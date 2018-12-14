@@ -1,6 +1,9 @@
-package directory;
+package directory.update;
 
 import app.ApplicationMode;
+import directory.FileManager;
+import directory.FileTester;
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.Folder;
@@ -73,7 +76,7 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void mergeFolders() throws IOException {
+    void mergeFolders() throws IllegalFileException {
 
         //merges folders in filesystem but not in contents of folders.
         DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),

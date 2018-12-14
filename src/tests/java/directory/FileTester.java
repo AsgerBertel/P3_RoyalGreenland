@@ -3,6 +3,8 @@ package directory;
 import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
+import json.AppFilesChangeListener;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,6 +40,7 @@ public class FileTester {
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
         setSettings();
+
     }
 
     protected void setSettings(){

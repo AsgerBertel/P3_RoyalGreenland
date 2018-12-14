@@ -107,7 +107,7 @@ public class AppFilesChangeListener {
                     observer.checkAndNotify();
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    AlertBuilder.interruptedExceptionPopup("FileMonitorThread");
+                    AlertBuilder.interruptedExceptionShutdownPopUp("FileMonitorThread");
                     LoggingErrorTools.log(e, 2);
                     e.printStackTrace();
                     System.exit(2);
