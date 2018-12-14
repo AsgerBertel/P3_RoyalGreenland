@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileOverviewController implements TabController {
-
     private FileExplorer fileExplorer;
     private List<AbstractFile> filesToShow;
+
+    private FileButton selectedFileExplorer = null;
 
     private ArrayList<Plant> plantList;
     private Plant selectedPlant;
@@ -71,6 +72,8 @@ public class FileOverviewController implements TabController {
             plantList = AppFilesManager.loadLocalFactoryList();
             filesList = AppFilesManager.loadLocalFileList();
         }
+
+        selectedFileExplorer = null;
 
         reloadPlantDropDown();
         reloadFileTree();
@@ -148,9 +151,9 @@ public class FileOverviewController implements TabController {
     }
 
     private void onFileButtonClick(MouseEvent event) {
-        FileButton clickedButton = (FileButton) event.getSource();
+        selectedFileExplorer = (FileButton) event.getSource();
         if (event.getClickCount() == 2)
-            open(clickedButton);
+            open(selectedFileExplorer);
     }
 
     // Called when a fileButton is double clicked
@@ -240,5 +243,13 @@ public class FileOverviewController implements TabController {
                 e.printStackTrace();
             }
         }
+    }
+
+    public FileExplorer getFileExplorer() {
+        return fileExplorer;
+    }
+
+    public FileButton getSelectedFileExplorer() {
+        return selectedFileExplorer;
     }
 }
