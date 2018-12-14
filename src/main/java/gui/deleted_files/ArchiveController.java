@@ -168,7 +168,6 @@ public class ArchiveController implements TabController {
         }
         FileManager fileManager = FileManager.getInstance();
         update();
-        System.out.println("hey");
     }
 
     public void openFileTreeElement(TreeItem<AbstractFile> newValue) {

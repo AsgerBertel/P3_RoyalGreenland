@@ -7,10 +7,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LogController implements TabController {
     @FXML
@@ -73,33 +75,34 @@ public class LogController implements TabController {
 
 
     public void keyReleased(KeyEvent keyEvent) {
-        search(searchField.getText().toLowerCase());
+        search(searchField.getText().toLowerCase(), keyEvent);
     }
 
-    private void search(String search) {
+    private void search(String search, KeyEvent key) {
         List<LogEvent> foundEvents = new ArrayList<>();
         for (LogEvent e : listOfEvents) {
             if (e.getPrefixString().toLowerCase().contains(search) || e.getUser().toLowerCase().contains(search) || e.getSuffixString().toLowerCase().contains(search)) {
                 foundEvents.add(e);
             }
         }
+
         tableView.getItems().setAll(foundEvents);
     }
 
     public void sortByUser() {
-        List<LogEvent> sortedList = listOfEvents;
+        List<LogEvent> sortedList = new ArrayList<>(tableView.getItems());
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getUser));
         tableView.getItems().setAll(sortedList);
     }
 
     public void sortByChangeType() {
-        List<LogEvent> sortedList = listOfEvents;
+        List<LogEvent> sortedList = new ArrayList<>(tableView.getItems());
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getEventType));
         tableView.getItems().setAll(sortedList);
     }
 
     public void sortByTime() {
-        List<LogEvent> sortedList = listOfEvents;
+        List<LogEvent> sortedList = new ArrayList<>(tableView.getItems());
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getLocalDateTime));
 
         if (sortedByTime) {
