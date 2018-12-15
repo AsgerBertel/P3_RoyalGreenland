@@ -109,14 +109,6 @@ public class DMSApplication extends Application {
         }
     }
 
-    private void closeButtonAction(){
-        primaryStage.fireEvent(
-                new WindowEvent(
-                        primaryStage,
-                        WindowEvent.WINDOW_CLOSE_REQUEST
-                )
-        );
-    }
     private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
         Alert exitAlert = AlertBuilder.exitProgramPopup(this);
         Optional<ButtonType> closeResponse = exitAlert.showAndWait();
