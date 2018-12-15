@@ -203,7 +203,7 @@ public class DMSApplication extends Application {
         return applicationMode;
     }
 
-    private void initializeApplication() {
+    public void initializeApplication() {
         // Load settings and initialize paths if non are saved
         SettingsManager.loadSettings(applicationMode);
         locale = SettingsManager.getLanguage();
