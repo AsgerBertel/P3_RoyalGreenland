@@ -70,9 +70,7 @@ public class FileAdminDragDropTest extends GUITest {
     private void resetFiles() throws IOException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
-        System.out.println("Heya");
         TestUtil.resetTestFiles();
-        System.out.println("heyaa");
         FileManager.resetInstance();
         PlantManager.resetInstance();
     }

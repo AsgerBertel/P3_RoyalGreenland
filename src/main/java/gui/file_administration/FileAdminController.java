@@ -78,7 +78,6 @@ public class FileAdminController implements TabController {
     private static Thread monitorThread;
     private static FileAlterationObserver observer;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

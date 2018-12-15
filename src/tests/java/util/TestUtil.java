@@ -41,8 +41,6 @@ public class TestUtil {
         if(fileController != null)
             fileController.stopWatchThread();
 
-        System.out.println("Thread stopped");
-
         if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
             FileUtils.deleteDirectory(oldServerFolder.toFile());
         }
@@ -54,8 +52,6 @@ public class TestUtil {
         FileUtils.copyDirectory(replacementFolder.toFile(), oldServerFolder.toFile());
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
-
-        System.out.println("Thread not yet restarted");
 
         if(fileController != null);
             fileController.startWatchThread();
