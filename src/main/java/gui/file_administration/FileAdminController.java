@@ -71,6 +71,8 @@ public class FileAdminController implements TabController {
 
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
+    private boolean running = true;
+    Thread monitorThread;
 
 
     @Override
@@ -477,9 +479,10 @@ public class FileAdminController implements TabController {
      *
      * @param root path to directory to watch
      */
+    @SuppressWarnings("duplicate")
     private void watchRootFiles(Path root) {
+        running = true;
         FileManager fileManager = FileManager.getInstance();
-        Thread monitorThread;
         File directory = new File(root.toString());
         FileAlterationObserver observer = new FileAlterationObserver(directory);
         observer.addListener(new FileAlterationListener() {
@@ -534,7 +537,7 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
-            while (true) {
+            while (running) {
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
@@ -549,6 +552,12 @@ public class FileAdminController implements TabController {
         monitorThread.setName("FileMonitorThread");
         monitorThread.setDaemon(true);
         monitorThread.start();
+    }
+    public void stopRunning() {
+        this.running=false;
+    }
+    public void startRunning() {
+        watchRootFiles(SettingsManager.getServerDocumentsPath());
     }
 
     private void addToolTip() {
