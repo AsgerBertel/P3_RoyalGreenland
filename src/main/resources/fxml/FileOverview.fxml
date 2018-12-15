@@ -28,11 +28,8 @@
                     <children>
                         <HBox id="hBoxTop">
                             <children>
-                                <Button styleClass="menuButton" id="btnReturn" fx:id="btnReturn" mnemonicParsing="false"
-                                        onAction="#openPreviousFolder"/>
-
+                                <Button styleClass="menuButton" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviousFolder"/>
                                 <Label id="lblVisualPath" fx:id="lblVisualPath"/>
-
                             </children>
                         </HBox>
                         <Pane styleClass="horizontalSplitter"/>
