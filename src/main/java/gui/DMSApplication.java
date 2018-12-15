@@ -8,15 +8,20 @@ import directory.SettingsManager;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
@@ -25,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -54,6 +60,10 @@ public class DMSApplication extends Application {
 
     private static ApplicationMode applicationMode;
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     private SettingsManager settings;
     private Tab currentTab;
 
@@ -77,11 +87,15 @@ public class DMSApplication extends Application {
 
         initializeApplication();
 
+
         primaryStage = stage;
 
 
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
+
+        primaryStage.setOnCloseRequest(confirmCloseEventHandler);
+
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
         // Set icon for program.
@@ -94,6 +108,15 @@ public class DMSApplication extends Application {
             switchTab(Tab.FILE_OVERVIEW);
         }
     }
+
+    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
+        Alert exitAlert = AlertBuilder.exitProgramPopup(this);
+        Optional<ButtonType> closeResponse = exitAlert.showAndWait();
+        if (!ButtonType.OK.equals(closeResponse.get())) {
+            event.consume();
+        }
+    };
+
 
     private void loadRootElement()  {
         root = new VBox();

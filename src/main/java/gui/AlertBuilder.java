@@ -4,14 +4,17 @@ import directory.SettingsManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class AlertBuilder {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DMSApplication application = new DMSApplication();
 
     /**
      * Displays a WARNING popup informing the user that a given file already exists. Used in context of Files.exists()
@@ -148,5 +151,19 @@ public class AlertBuilder {
         ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
         return alert;
     }
+
+    public static Alert exitProgramPopup(DMSApplication dmsApplication){
+
+        buildAlert(
+                Alert.AlertType.CONFIRMATION,
+                DMSApplication.getMessage("MainMenu.ExitProgramPopup.Title"),
+                DMSApplication.getMessage("MainMenu.ExitProgramPopup.Header"),
+                DMSApplication.getMessage("MainMenu.ExitProgramPopup.YouSure"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("MainMenu.ExitProgramPopup.Exit"));
+        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("MainMenu.ExitProgramPopup.Cancel"));
+
+        return alert;
+    }
+
 
 }
