@@ -8,6 +8,7 @@ import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
 import directory.update.DirectoryCloner;
+import directory.update.IllegalFileException;
 import json.AppFilesManager;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +74,7 @@ class DirectoryClonerTest extends FileTester {
     }
 
     @Test
-    void mergeFolders() throws IOException {
+    void mergeFolders() throws IllegalFileException {
 
         //merges folders in filesystem but not in contents of folders.
         DirectoryCloner.mergeFolders(SettingsManager.getServerDocumentsPath().resolve(folder.getOSPath()),

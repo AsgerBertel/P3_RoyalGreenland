@@ -2,39 +2,29 @@ package gui;
 
 import app.ApplicationMode;
 import directory.update.*;
-import app.DMSAdmin;
 import directory.update.DirectoryCloner;
 import directory.update.FileUpdater;
 import directory.SettingsManager;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import json.AppFilesChangeListener;
 import json.AppFilesManager;
 
-import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.prefs.Preferences;
 
 import static gui.Tab.FILE_ADMINISTRATION;
 
@@ -233,7 +223,7 @@ public class DMSApplication extends Application {
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
-            AlertBuilder.fileNotFoundPopup();
+            AlertBuilder.fileNotFoundPopUp();
             SettingsManager.initializeSettingsPrompt();
         } catch(IOException e) {
             e.printStackTrace();

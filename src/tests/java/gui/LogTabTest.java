@@ -7,6 +7,7 @@ import directory.files.Document;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import gui.file_administration.FileAdminController;
 import gui.log.LogController;
 import gui.log.LogEventType;
 import gui.log.LogManager;
@@ -42,16 +43,18 @@ public class LogTabTest extends GUITest {
     private LogEvent latestChange;
 
     @BeforeEach
-    void setup() throws IOException, InterruptedException {
+    void setup() throws IOException {
         //Switch tab to Log
         clickOn((ToggleButton)findNode("#logButton"));
 
         //set logController
         logController = (LogController) dmsApplication.getCurrentTab().getTabController();
+        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).stopRunning();
 
         //clear previous work
         resetFiles();
         //logController.update();
+        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).startRunning();
     }
 
     private static TreeCell<AbstractFile> getTreeCell(TreeView<AbstractFile> tree, TreeItem<AbstractFile> treeItem){
@@ -143,7 +146,7 @@ public class LogTabTest extends GUITest {
     }
 
     @Test
-    void makeRenamedEvent() throws InterruptedException {
+    void makeRenamedEvent() {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
         treeItem = fileTree.getRoot().getChildren().get(0);
@@ -281,7 +284,7 @@ public class LogTabTest extends GUITest {
     }
 
     @Test
-    void makePlantAccessAndRemovedGivenEvent() throws InterruptedException {
+    void makePlantAccessAndRemovedGivenEvent() {
 
         //make plant
         Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
@@ -307,7 +310,7 @@ public class LogTabTest extends GUITest {
     }
 
     @Test
-    void testSearch() throws IOException, InterruptedException {
+    void testSearch() {
         populateLog();
         TextField textField = findNode("#searchField");
         TableView tableView = findNode("#tableView");
@@ -318,7 +321,7 @@ public class LogTabTest extends GUITest {
     }
 
     @Test
-    void testChangeTypeSort() throws IOException, InterruptedException {
+    void testChangeTypeSort() {
         populateLog();
         TableView tableview = findNode("#tableView");
         clickOn((Button)findNode("#btnSortByChangeType"));
@@ -327,7 +330,7 @@ public class LogTabTest extends GUITest {
     }
 
     @Test
-    void testTimeSort() throws IOException, InterruptedException {
+    void testTimeSort() {
         populateLog();
         TableView tableview = findNode("#tableView");
         clickOn((Button)findNode("#btnSortByTime"));
@@ -335,7 +338,7 @@ public class LogTabTest extends GUITest {
         assertTrue(firstEvent.getTime().matches(latestChange.getTime()));
     }
     @Test
-    void testUserSort() throws IOException, InterruptedException {
+    void testUserSort() {
         populateLog();
         TableView tableview = findNode("#tableView");
         clickOn((Button)findNode("#btnSortByUser"));

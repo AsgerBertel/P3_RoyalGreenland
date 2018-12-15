@@ -188,7 +188,7 @@ public class PlantAdministrationController implements TabController {
     //Making Alert confirmDeletePopup for delete plant function.
     public boolean confirmDeletePopup() {
         if (selectedPlantElement != null) {
-            Alert deletePopup = AlertBuilder.deletePlantPopup();
+            Alert deletePopup = AlertBuilder.deletePlantPopUp();
             Optional<ButtonType> result = deletePopup.showAndWait();
             if (!result.isPresent()){
                 deletePopup.close();
@@ -258,8 +258,7 @@ public class PlantAdministrationController implements TabController {
     }
 
     private void removeErrorClass(Node node) {
-        if (node.getStyleClass().contains(SettingsController.ERROR_STYLE_CLASS))
-            node.getStyleClass().remove(SettingsController.ERROR_STYLE_CLASS);
+        node.getStyleClass().remove(SettingsController.ERROR_STYLE_CLASS);
     }
 
     //Edit plant function checks if a plant is selected. If so, replaces the current name and

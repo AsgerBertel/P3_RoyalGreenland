@@ -1,7 +1,7 @@
 package json;
 
 import app.ApplicationMode;
-import directory.DirectoryCloner;
+import directory.update.DirectoryCloner;
 import directory.FileManager;
 import directory.FileTester;
 import directory.SettingsManager;
@@ -11,6 +11,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
+import directory.update.UpdateFailException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -68,7 +69,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadLocalFactoryList() throws IOException {
+    void loadLocalFactoryList() throws UpdateFailException {
         FileManager.getInstance();
         ArrayList<Plant> al;
 
@@ -87,7 +88,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadPublishedFactoryList() throws IOException {
+    void loadPublishedFactoryList() throws UpdateFailException {
         FileManager.getInstance();
         ArrayList<Plant> al;
 
@@ -105,7 +106,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadPublishedFileList() throws IOException, InterruptedException {
+    void loadPublishedFileList() throws IOException, UpdateFailException {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;
@@ -125,7 +126,7 @@ class AppFilesManagerTest extends FileTester {
     }
 
     @Test
-    void loadLocalFileList() throws IOException {
+    void loadLocalFileList() throws IOException, UpdateFailException {
         FileManager.getInstance();
         PlantManager.getInstance();
         ArrayList<AbstractFile> al;

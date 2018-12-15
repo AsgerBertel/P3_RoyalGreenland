@@ -2,6 +2,7 @@ package gui;
 
 import app.ApplicationMode;
 import directory.SettingsManager;
+import gui.file_administration.FileAdminController;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
@@ -23,7 +25,7 @@ public abstract class GUITest extends ApplicationTest {
     protected DMSApplication dmsApplication;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.show();
         this.dmsApplication = DMSApplication.getDMSApplication();
     }

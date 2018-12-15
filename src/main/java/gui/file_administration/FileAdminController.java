@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileAdminController implements TabController {
 
@@ -71,6 +72,9 @@ public class FileAdminController implements TabController {
 
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
+
+    private AtomicBoolean running = new AtomicBoolean();
+    private Thread monitorThread;
 
 
     @Override
@@ -478,8 +482,8 @@ public class FileAdminController implements TabController {
      * @param root path to directory to watch
      */
     private void watchRootFiles(Path root) {
+        running.set(true);
         FileManager fileManager = FileManager.getInstance();
-        Thread monitorThread;
         File directory = new File(root.toString());
         FileAlterationObserver observer = new FileAlterationObserver(directory);
         observer.addListener(new FileAlterationListener() {
@@ -534,7 +538,7 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
-            while (true) {
+            while (running.get()) {
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
@@ -576,5 +580,12 @@ public class FileAdminController implements TabController {
                 if (event.getClickCount() == 2) openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
             }
         });
+    }
+    public void stopRunning() {
+        running.set(false);
+    }
+    public void startRunning() {
+        if(!running.get())
+            watchRootFiles(SettingsManager.getServerDocumentsPath());
     }
 }

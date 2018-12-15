@@ -4,6 +4,8 @@ import app.ApplicationMode;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import directory.plant.PlantManager;
+import gui.DMSApplication;
+import gui.file_administration.FileAdminController;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

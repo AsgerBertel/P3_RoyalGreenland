@@ -45,8 +45,10 @@ public class FileAdminDragDropTest extends GUITest {
 
     @BeforeEach
     void setup() throws InterruptedException, IOException {
-        resetFiles();
         fileController = (FileAdminController) dmsApplication.getCurrentTab().getTabController();
+        fileController.stopRunning();
+        resetFiles();
+        fileController.startRunning();
         PlantManager.getInstance().addPlant(new Plant(1001, "Testing Plant 1", new AccessModifier()));
         PlantManager.getInstance().addPlant(new Plant(1002, "Testing Plant 2", new AccessModifier()));
         boolean updated = false;
@@ -67,7 +69,7 @@ public class FileAdminDragDropTest extends GUITest {
         plantElement2 = (PlantCheckboxElement) plantVBox.getChildren().get(1);
     }
 
-    private void resetFiles() throws IOException, InterruptedException {
+    private void resetFiles() throws IOException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
 
@@ -135,7 +137,7 @@ public class FileAdminDragDropTest extends GUITest {
     }
 
     @Test // Move folder back and forth
-    void moveFolderTest() throws InterruptedException {
+    void moveFolderTest() {
         TreeItem<AbstractFile> targetItem = fileTree.getRoot().getChildren().get(0);
         TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(1);
         moveAndAssert(itemToMove, targetItem);
@@ -151,7 +153,7 @@ public class FileAdminDragDropTest extends GUITest {
     }
 
     @RepeatedTest(value = 2) // Move document back and forth
-    void moveDocumentTest() throws InterruptedException {
+    void moveDocumentTest() {
         TreeItem<AbstractFile> targetItem = fileTree.getRoot().getChildren().get(0);
         TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(1).getChildren().get(0);
         doubleClickOn(getTreeCell(fileTree, itemToMove.getParent()));
@@ -240,7 +242,7 @@ public class FileAdminDragDropTest extends GUITest {
         moveAllChildrenOut(fileTree.getRoot());
     }*/
 
-    void moveAllChildrenToOneFolder(TreeItem<AbstractFile> root) throws InterruptedException {
+    void moveAllChildrenToOneFolder(TreeItem<AbstractFile> root) {
         if(!root.isExpanded())
             doubleClickOn(getTreeCell(fileTree, root));
 
@@ -259,7 +261,7 @@ public class FileAdminDragDropTest extends GUITest {
         assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
     }
 
-    void moveAllChildrenOut(TreeItem<AbstractFile> root) throws InterruptedException {
+    void moveAllChildrenOut(TreeItem<AbstractFile> root) {
         if(root.getValue() instanceof Folder){
             if(root.getChildren().get(0).getValue() instanceof Folder)
                 moveAllChildrenOut(root.getChildren().get(0));

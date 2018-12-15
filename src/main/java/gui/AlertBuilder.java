@@ -49,7 +49,7 @@ public class AlertBuilder {
         alert.showAndWait();
     }
 
-    public static void fileNotFoundPopup() {
+    public static void fileNotFoundPopUp () {
         buildAlert(
                 Alert.AlertType.ERROR,
                 DMSApplication.getMessage("Exception.FileNotFound.Title"),
