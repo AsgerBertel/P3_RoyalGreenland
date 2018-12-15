@@ -23,7 +23,6 @@ public class LoggingErrorTools
             pw.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
-            log(e);
         }
     }
     public static void log(Throwable throwable, int exitCode) {
@@ -37,7 +36,6 @@ public class LoggingErrorTools
             pw.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
-            log(e);
         }
     }
     public static String generateWritePath (LocalDateTime localDateTime) {

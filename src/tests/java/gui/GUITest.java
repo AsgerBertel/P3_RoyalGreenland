@@ -37,7 +37,7 @@ public abstract class GUITest extends ApplicationTest {
         release(new KeyCode[]{});
         release(new MouseButton[]{});
         Platform.runLater(() -> switchLanguageSetting());
-        Thread.sleep(100);
+        Thread.sleep(300);
     }
 
     @BeforeAll @SuppressWarnings("Duplicates")

@@ -41,6 +41,7 @@ public class FileTester {
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
         setSettings();
+        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).startRunning(); // todo -kristian
     }
 
     protected void setSettings(){
@@ -52,6 +53,7 @@ public class FileTester {
         // Reset path in settings
         SettingsManager.setServerPath(originalServerPath);
         SettingsManager.setLocalPath(originalLocalPath);
+        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).stopRunning();
     }
 
     public static AbstractFile findInMainFiles(Path path){

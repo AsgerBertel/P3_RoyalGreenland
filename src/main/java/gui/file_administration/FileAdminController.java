@@ -481,6 +481,7 @@ public class FileAdminController implements TabController {
      *
      * @param root path to directory to watch
      */
+    @SuppressWarnings("Duplicates")
     private void watchRootFiles(Path root) {
         running.set(true);
         FileManager fileManager = FileManager.getInstance();
