@@ -561,11 +561,11 @@ public class FileAdminController implements TabController {
     }
     private void setContextMenu(){
         AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
-     //   fileTreeView.setContextMenu(adminFilesContextMenu);
         fileTreeView.setOnMouseClicked(event -> {
-            fileTreeView.setContextMenu(adminFilesContextMenu);
+
             if (selectedFile != null) {
                 if (selectedFile.getOSPath().toString().equals("")) {
+                    fileTreeView.setContextMenu(adminFilesContextMenu);
                     if (adminFilesContextMenu.getItems().size() == 5) {
                         adminFilesContextMenu.getItems().remove(3);
                         adminFilesContextMenu.getItems().remove(2);
