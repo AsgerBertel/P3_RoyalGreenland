@@ -17,6 +17,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import util.TestUtil;
 
@@ -103,7 +104,7 @@ public class ViewFilesTest extends GUITest {
     }
 
     // Assert that the folder 03 is now inside the 02 folder.
-    @Test
+    @RepeatedTest(value = 2)
     void viewFilesExplorerTest(){
         // Open first folder
         doubleClickOn(flpFileView.getChildren().get(0));
@@ -115,7 +116,7 @@ public class ViewFilesTest extends GUITest {
         assertEquals(itemToMoveAdmin.getValue().getName(), fileController.getSelectedFileExplorer().getFile().getName());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void viewFilesTreeTest(){
         // Expand first folder
         selectedItem = fileTree.getRoot().getChildren().get(0);
@@ -129,7 +130,7 @@ public class ViewFilesTest extends GUITest {
         assertEquals(fileTree.getSelectionModel().getSelectedItem().getValue().getName(), itemToMoveAdmin.getValue().getName());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void selectPlantTest(){
         // Select first plant
         clickOn(drdPlant);
@@ -152,7 +153,7 @@ public class ViewFilesTest extends GUITest {
         assertEquals(fileController.getSelectedFileExplorer().getFile().getName(), itemAddedToPlant.getValue().getName());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void navigateExplorer() throws InterruptedException {
         // Select first file and save path.
         clickOn(flpFileView.getChildren().get(0));

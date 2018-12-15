@@ -8,6 +8,7 @@ import directory.files.Folder;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -52,7 +53,7 @@ class FileExplorerTest extends FileTester {
         KALParentFolder = (Folder) findInMainFiles(pathToKALParent);
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void getShownFiles(){
 
         List<AbstractFile> shownFiles = fe.getShownFiles();
@@ -64,7 +65,7 @@ class FileExplorerTest extends FileTester {
         assertFalse(shownFiles.contains(docFalse));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void navigateTo() {
         assertNotEquals(folder.getOSPath().toString(), fe.getCurrentPath());
 
@@ -73,7 +74,7 @@ class FileExplorerTest extends FileTester {
         assertEquals(folder.getOSPath().toString(), fe.getCurrentPath());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void navigateBack() {
         fe.navigateTo(KALFolder);
 
@@ -82,7 +83,7 @@ class FileExplorerTest extends FileTester {
         assertEquals(KALParentFolder.getOSPath().toString(), fe.getCurrentPath());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void getCurrentPath() {
         assertEquals("", fe.getCurrentPath());
 

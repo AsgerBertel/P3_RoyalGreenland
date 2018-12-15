@@ -10,6 +10,7 @@ import directory.plant.PlantManager;
 import directory.update.DirectoryCloner;
 import directory.update.IllegalFileException;
 import json.AppFilesManager;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -43,7 +44,7 @@ class DirectoryClonerTest extends FileTester {
         KALFolder = (Folder) findInMainFiles(pathKalFolder);
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void publishFiles() throws Exception {
         //asserting that both are equal when publishFiles() is used
         PlantManager.getInstance();
@@ -59,7 +60,7 @@ class DirectoryClonerTest extends FileTester {
         assertEquals(AppFilesManager.loadPublishedFileList(), FileManager.getInstance().getMainFiles());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void updateLocalFiles() throws Exception {
         PlantManager.getInstance().addPlant(new Plant(1234, "cool", new AccessModifier()));
         DirectoryCloner.publishFiles();
@@ -73,7 +74,7 @@ class DirectoryClonerTest extends FileTester {
         assertEquals(al, AppFilesManager.loadLocalFileList());
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void mergeFolders() throws IllegalFileException {
 
         //merges folders in filesystem but not in contents of folders.
@@ -92,7 +93,7 @@ class DirectoryClonerTest extends FileTester {
         assertTrue(Files.exists(SettingsManager.getServerDocumentsPath().resolve(folder.getContents().get(1).getOSPath())));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void deleteFolder() {
 
         //deletes in filesystem but not in our folder system

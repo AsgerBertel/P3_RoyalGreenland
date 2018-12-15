@@ -27,8 +27,6 @@ public class FileTester {
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
 
         TestUtil.resetTestFiles();
-        FileManager.resetInstance();
-        PlantManager.resetInstance();
 
         setSettings();
     }

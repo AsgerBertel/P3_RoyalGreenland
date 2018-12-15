@@ -36,15 +36,12 @@ class AppFilesManagerTest extends FileTester {
     protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         plant = new Plant(4321, "nice", new AccessModifier());
+
     }
 
     @Test
     void loadFileManager() {
         FileManager fm;
-
-        fm = AppFilesManager.loadFileManager();
-
-        assertNull(fm);
 
         FileManager.getInstance();
 
@@ -56,10 +53,6 @@ class AppFilesManagerTest extends FileTester {
     @Test
     void loadPlantManager() {
         PlantManager pm;
-
-        pm = AppFilesManager.loadPlantManager();
-
-        assertNull(pm);
 
         PlantManager.getInstance().addPlant(plant);
 

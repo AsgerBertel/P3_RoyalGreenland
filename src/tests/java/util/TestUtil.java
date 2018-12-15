@@ -1,11 +1,14 @@
 package util;
 
+import directory.FileManager;
 import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Folder;
+import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.Tab;
 import gui.file_administration.FileAdminController;
+import gui.log.LogManager;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -63,13 +66,18 @@ public class TestUtil {
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 
+        FileManager.resetInstance();
+        PlantManager.resetInstance();
+
+        FileManager.getInstance();
+        PlantManager.getInstance();
 
         if (fileController != null)
             fileController.startWatchThread();
     }
 
     private static void attemptDeletions(Path path) {
-        int maxAttempts = 6;
+        int maxAttempts = 20;
         int currentAttempts = 0;
         while (Files.exists(path) && path.toString().contains(APPLICATION_FOLDER_NAME) && currentAttempts < maxAttempts) {
             currentAttempts++;

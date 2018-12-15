@@ -31,7 +31,7 @@ class FileUpdaterTest extends GUITest {
     }
 
 
-    /*
+/*
     @Test
     void start() throws IOException, InterruptedException {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);

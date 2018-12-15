@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import util.TestUtil;
 import gui.log.LogEvent;
@@ -112,13 +113,13 @@ public class LogTabTest extends GUITest {
         return false;
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeCreatedEvent(){
         List<LogEventType> listOfTypes = new ArrayList<>();
         LogManager.log(new LogEvent("TestCreatedEVENT", LogEventType.CREATED));
         assertTrue(isEventTypePresent(LogEventType.CREATED));
     }
-    @Test
+    @RepeatedTest(value = 2)
     void makeArchivedEvent(){
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
@@ -128,7 +129,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.ARCHIVED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeChangedEvent() throws IOException, InterruptedException {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
@@ -144,7 +145,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.CHANGED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeRenamedEvent() {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
@@ -159,7 +160,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.RENAMED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeFolderRenamedEvent(){
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
@@ -172,7 +173,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.FOLDER_RENAMED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeChangesPublishedEvent(){
         //Cause event to publish
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
@@ -187,7 +188,7 @@ public class LogTabTest extends GUITest {
 
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeRestoredEvent(){
         //Archive event
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
@@ -205,7 +206,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.RESTORED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makePlantCreatedEvent(){
         //Navigate to Plant tab
         clickOn((ToggleButton) findNode("#administratePlantsButton"));
@@ -221,7 +222,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.PLANT_CREATED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makePlantEditedEvent(){
         //add plant
         Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
@@ -246,7 +247,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.PLANT_EDITED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makePlantDeletedEvent(){
         Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
         PlantElement plant1Element;
@@ -263,7 +264,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.PLANT_DELETED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makeFileMovedEvent(){
         clickOn((ToggleButton)findNode("#administrateDocumentsButton"));
 
@@ -282,7 +283,7 @@ public class LogTabTest extends GUITest {
 
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void makePlantAccessAndRemovedGivenEvent() {
 
         //make plant
@@ -308,7 +309,7 @@ public class LogTabTest extends GUITest {
         assertTrue(isEventTypePresent(LogEventType.PLANT_ACCESS_REMOVED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void testSearch() {
         populateLog();
         TextField textField = findNode("#searchField");
@@ -319,7 +320,7 @@ public class LogTabTest extends GUITest {
         enterText(textField,"");
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void testChangeTypeSort() {
         populateLog();
         TableView tableview = findNode("#tableView");
@@ -328,7 +329,7 @@ public class LogTabTest extends GUITest {
         assertSame(firstEvent.getEventType(), (LogEventType.CREATED));
     }
 
-    @Test
+    @RepeatedTest(value = 2)
     void testTimeSort() {
         populateLog();
         TableView tableview = findNode("#tableView");
@@ -336,7 +337,7 @@ public class LogTabTest extends GUITest {
         LogEvent firstEvent = (LogEvent) tableview.getItems().get(0);
         assertTrue(firstEvent.getTime().matches(latestChange.getTime()));
     }
-    @Test
+    @RepeatedTest(value = 2)
     void testUserSort() {
         populateLog();
         TableView tableview = findNode("#tableView");

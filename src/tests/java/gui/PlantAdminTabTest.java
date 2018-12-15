@@ -269,7 +269,11 @@ public class PlantAdminTabTest extends GUITest {
         clickOn(MouseButton.PRIMARY);
 
         assertTrue(plant1Element.isSelected());
-        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        boolean containsElement = false;
+        for(Node plantElement : plantController.getPlantVBox().getChildren()){
+            containsElement |= (((PlantElement) plantElement).getPlant().getName().equals(((PlantElement) plantElement).getPlant().getName()));
+        }
+        assertTrue(containsElement);
         assertFalse(deletePlantButton.isDisabled());
         assertFalse(showEditButton.isDisabled());
     }
