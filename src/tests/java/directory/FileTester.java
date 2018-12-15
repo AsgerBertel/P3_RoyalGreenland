@@ -21,13 +21,6 @@ public class FileTester {
     private static Path originalServerPath;
     private static Path originalLocalPath;
 
-    @BeforeAll @SuppressWarnings("Duplicates")
-    static final void setupApplication() {
-        SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        originalServerPath = SettingsManager.getServerPath();
-        originalLocalPath = SettingsManager.getLocalPath();
-    }
-
     @BeforeEach
     void resetBeforeEachMethod() throws IOException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
@@ -44,12 +37,6 @@ public class FileTester {
 
     }
 
-    @AfterAll
-    static void onTestEnd(){
-        // Reset path in settings
-        SettingsManager.setServerPath(originalServerPath);
-        SettingsManager.setLocalPath(originalLocalPath);
-    }
 
     public static AbstractFile findInMainFiles(Path path){
         if (path.toString().startsWith(File.separator)){

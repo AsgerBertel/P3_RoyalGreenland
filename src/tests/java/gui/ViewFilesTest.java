@@ -50,9 +50,8 @@ public class ViewFilesTest extends GUITest {
     void setup() throws IOException, InterruptedException {
         // Reset files
         resetFiles();
-
-        // Wait for reset files.
-        Thread.sleep(4000);
+        FileManager.resetInstance();
+        PlantManager.resetInstance();
 
         // Go to plants and add a plant
         clickOn((ToggleButton)findNode("#administratePlantsButton"));

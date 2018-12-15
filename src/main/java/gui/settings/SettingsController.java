@@ -165,7 +165,8 @@ public class SettingsController implements TabController {
         }else{
             update();
         }
-        dmsApplication.initializeApplication();
+        // dmsApplication.initializeApplication(); todo - Magnus  VIGITG!!
+
     }
 
     /* Executes the saveAction if the textField contains changes

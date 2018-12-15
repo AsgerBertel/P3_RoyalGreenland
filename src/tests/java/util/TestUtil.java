@@ -1,5 +1,6 @@
 package util;
 
+import directory.SettingsManager;
 import directory.files.AbstractFile;
 import directory.files.Folder;
 import gui.DMSApplication;
@@ -10,12 +11,18 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import json.AppFilesManager;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.opentest4j.AssertionFailedError;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.apache.commons.io.FileUtils.listFiles;
 
 public class TestUtil {
 
@@ -38,29 +45,62 @@ public class TestUtil {
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
         FileAdminController fileController = (FileAdminController) Tab.FILE_ADMINISTRATION.getTabController();
-        if(fileController != null)
+        if (fileController != null)
             fileController.stopWatchThread();
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
-            FileUtils.deleteDirectory(oldServerFolder.toFile());
-        }
-
-        if (Files.exists(oldLocalFolder) && oldLocalFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
-            FileUtils.deleteDirectory(oldLocalFolder.toFile());
-        }
+        attemptDeletions(oldServerFolder);
+        attemptDeletions(oldLocalFolder);
 
         FileUtils.copyDirectory(replacementFolder.toFile(), oldServerFolder.toFile());
+        while (!areDirsEqual(oldServerFolder.toFile(), replacementFolder.toFile())) {
+            try {
+                System.out.println("sleeping while copying");
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 
-        if(fileController != null)
+
+        if (fileController != null)
             fileController.startWatchThread();
+    }
+
+    private static void attemptDeletions(Path path) {
+        int maxAttempts = 6;
+        int currentAttempts = 0;
+        while (Files.exists(path) && path.toString().contains(APPLICATION_FOLDER_NAME) && currentAttempts < maxAttempts) {
+            currentAttempts++;
+            try {
+                FileUtils.deleteDirectory(path.toFile());
+            } catch (IOException e) {
+                System.out.println("Attempted to delete file " + path.toString() + " but failed");
+                if (currentAttempts == maxAttempts)
+                    e.printStackTrace();
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static boolean areDirsEqual(File dir1, File dir2) {
+        ArrayList<File> dir1List = new ArrayList<>(FileUtils.listFiles(dir1, null, true));
+        ArrayList<File> dir2List = new ArrayList<>(FileUtils.listFiles(dir2, null, true));
+
+        if (dir1List.size() != dir2List.size())
+            return false;
+
+        for (int i = 0; i < dir1List.size(); i++) {
+            if (!dir1List.get(i).getName().equals(dir2List.get(i).getName()))
+                return false;
+        }
+
+        return true;
     }
 
     public static final Path getTestServerDocuments() {
