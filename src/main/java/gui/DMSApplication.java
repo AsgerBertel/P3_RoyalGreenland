@@ -96,12 +96,6 @@ public class DMSApplication extends Application {
 
         primaryStage.setOnCloseRequest(confirmCloseEventHandler);
 
-        Button closeButton = new Button("Close Application");
-        closeButton.setOnAction(event ->
-               closeButtonAction()
-        );
-
-
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
         // Set icon for program.
