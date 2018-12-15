@@ -44,17 +44,16 @@ public class LogTabTest extends GUITest {
 
     @BeforeEach
     void setup() throws IOException {
+        //clear previous work
+        resetFiles();
+
         //Switch tab to Log
         clickOn((ToggleButton)findNode("#logButton"));
 
         //set logController
         logController = (LogController) dmsApplication.getCurrentTab().getTabController();
-        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).stopWatchThread();
+        logController.update();
 
-        //clear previous work
-        resetFiles();
-        //logController.update();
-        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).startWatchThread();
     }
 
     private static TreeCell<AbstractFile> getTreeCell(TreeView<AbstractFile> tree, TreeItem<AbstractFile> treeItem){

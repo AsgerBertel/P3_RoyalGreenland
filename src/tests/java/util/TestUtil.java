@@ -41,6 +41,12 @@ public class TestUtil {
         if(fileController != null)
             fileController.stopWatchThread();
 
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
             FileUtils.deleteDirectory(oldServerFolder.toFile());
         }
@@ -53,7 +59,7 @@ public class TestUtil {
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 
-        if(fileController != null);
+        if(fileController != null)
             fileController.startWatchThread();
     }
 

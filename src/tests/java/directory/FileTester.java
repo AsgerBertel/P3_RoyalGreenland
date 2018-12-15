@@ -49,7 +49,6 @@ public class FileTester {
         // Reset path in settings
         SettingsManager.setServerPath(originalServerPath);
         SettingsManager.setLocalPath(originalLocalPath);
-        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).stopWatchThread();
     }
 
     public static AbstractFile findInMainFiles(Path path){
