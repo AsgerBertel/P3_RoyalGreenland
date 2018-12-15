@@ -539,7 +539,7 @@ public class FileAdminController implements TabController {
             e.printStackTrace();
         }
         monitorThread = new Thread(() -> {
-            while (running.get()) {
+            while (true) {
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
