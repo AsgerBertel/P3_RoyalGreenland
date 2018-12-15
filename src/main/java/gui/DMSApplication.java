@@ -94,7 +94,6 @@ public class DMSApplication extends Application {
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
 
-        primaryStage.setOnCloseRequest(confirmCloseEventHandler);
 
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
@@ -109,13 +108,6 @@ public class DMSApplication extends Application {
         }
     }
 
-    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
-        Alert exitAlert = AlertBuilder.exitProgramPopup(this);
-        Optional<ButtonType> closeResponse = exitAlert.showAndWait();
-        if (!ButtonType.OK.equals(closeResponse.get())) {
-            event.consume();
-        }
-    };
 
 
     private void loadRootElement()  {

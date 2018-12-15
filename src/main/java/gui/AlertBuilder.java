@@ -152,18 +152,7 @@ public class AlertBuilder {
         return alert;
     }
 
-    public static Alert exitProgramPopup(DMSApplication dmsApplication){
 
-        buildAlert(
-                Alert.AlertType.CONFIRMATION,
-                DMSApplication.getMessage("MainMenu.ExitProgramPopup.Title"),
-                DMSApplication.getMessage("MainMenu.ExitProgramPopup.Header"),
-                DMSApplication.getMessage("MainMenu.ExitProgramPopup.YouSure"));
-        ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText(DMSApplication.getMessage("MainMenu.ExitProgramPopup.Exit"));
-        ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText(DMSApplication.getMessage("MainMenu.ExitProgramPopup.Cancel"));
-
-        return alert;
-    }
 
 
 }
