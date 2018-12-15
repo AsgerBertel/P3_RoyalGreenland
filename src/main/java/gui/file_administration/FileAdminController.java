@@ -561,7 +561,7 @@ public class FileAdminController implements TabController {
     }
     private void setContextMenu(){
         AdminFilesContextMenu adminFilesContextMenu = new AdminFilesContextMenu(this);
-        fileTreeView.setContextMenu(adminFilesContextMenu);
+     //   fileTreeView.setContextMenu(adminFilesContextMenu);
         fileTreeView.setOnMouseClicked(event -> {
             fileTreeView.setContextMenu(adminFilesContextMenu);
             if (selectedFile != null) {
