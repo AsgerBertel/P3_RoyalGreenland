@@ -1,6 +1,5 @@
 package directory;
 
-import com.sun.javafx.binding.Logging;
 import directory.files.AbstractFile;
 import directory.files.Document;
 import directory.files.DocumentBuilder;

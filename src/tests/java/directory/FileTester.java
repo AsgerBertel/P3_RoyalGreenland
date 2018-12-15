@@ -2,7 +2,6 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
-import directory.files.Folder;
 import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.file_administration.FileAdminController;
@@ -38,10 +37,7 @@ public class FileTester {
         FileManager.resetInstance();
         PlantManager.resetInstance();
 
-        AppFilesManager.createServerDirectories();
-        AppFilesManager.createLocalDirectories();
         setSettings();
-        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).startRunning(); // todo -kristian
     }
 
     protected void setSettings(){
@@ -53,7 +49,7 @@ public class FileTester {
         // Reset path in settings
         SettingsManager.setServerPath(originalServerPath);
         SettingsManager.setLocalPath(originalLocalPath);
-        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).stopRunning();
+        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).stopWatchThread();
     }
 
     public static AbstractFile findInMainFiles(Path path){

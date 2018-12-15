@@ -45,13 +45,11 @@ public class FileAdminDragDropTest extends GUITest {
 
     @BeforeEach
     void setup() throws InterruptedException, IOException {
-        fileController = (FileAdminController) dmsApplication.getCurrentTab().getTabController();
-        fileController.stopRunning();
         resetFiles();
-        fileController.startRunning();
         PlantManager.getInstance().addPlant(new Plant(1001, "Testing Plant 1", new AccessModifier()));
         PlantManager.getInstance().addPlant(new Plant(1002, "Testing Plant 2", new AccessModifier()));
         boolean updated = false;
+        fileController = (FileAdminController) dmsApplication.getCurrentTab().getTabController();
         Platform.runLater(() -> fileController.update());
         Thread.sleep(400);
 
@@ -72,13 +70,11 @@ public class FileAdminDragDropTest extends GUITest {
     private void resetFiles() throws IOException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
-
+        System.out.println("Heya");
         TestUtil.resetTestFiles();
+        System.out.println("heyaa");
         FileManager.resetInstance();
         PlantManager.resetInstance();
-
-        AppFilesManager.createServerDirectories();
-        AppFilesManager.createLocalDirectories();
     }
 
     private boolean containsChildWithName(Folder folder, String name){

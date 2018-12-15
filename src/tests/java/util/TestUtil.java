@@ -2,9 +2,13 @@ package util;
 
 import directory.files.AbstractFile;
 import directory.files.Folder;
+import gui.DMSApplication;
+import gui.Tab;
+import gui.file_administration.FileAdminController;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import json.AppFilesManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -28,27 +32,40 @@ public class TestUtil {
         resetTestFiles();
     }
 
-    public static void resetTestFiles() throws IOException { // Todo actually make test files that are independent of actual files
+    public static void resetTestFiles() throws IOException {
         Path oldServerFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path oldLocalFolder = TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
 
-        if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)){
+        FileAdminController fileController = (FileAdminController) Tab.FILE_ADMINISTRATION.getTabController();
+        if(fileController != null)
+            fileController.stopWatchThread();
+
+        System.out.println("Thread stopped");
+
+        if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
             FileUtils.deleteDirectory(oldServerFolder.toFile());
         }
 
-        if (Files.exists(oldLocalFolder) && oldLocalFolder.toString().contains(APPLICATION_FOLDER_NAME)){
+        if (Files.exists(oldLocalFolder) && oldLocalFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
             FileUtils.deleteDirectory(oldLocalFolder.toFile());
         }
 
         FileUtils.copyDirectory(replacementFolder.toFile(), oldServerFolder.toFile());
+        AppFilesManager.createServerDirectories();
+        AppFilesManager.createLocalDirectories();
+
+        System.out.println("Thread not yet restarted");
+
+        if(fileController != null);
+            fileController.startWatchThread();
     }
 
     public static final Path getTestServerDocuments() {
         return TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
 
-    public static final Path getTestLocalDocuments(){
+    public static final Path getTestLocalDocuments() {
         return TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
     }
 
@@ -62,7 +79,7 @@ public class TestUtil {
         if (file instanceof Folder) {
             for (AbstractFile child : ((Folder) file).getContents()) {
                 TreeItem<AbstractFile> childTreeItem = findMatchingTreeItem(treeItem.getChildren(), child);
-                if(!doesAbstractFileMatchTreeItem(child, childTreeItem))
+                if (!doesAbstractFileMatchTreeItem(child, childTreeItem))
                     return false;
             }
         }

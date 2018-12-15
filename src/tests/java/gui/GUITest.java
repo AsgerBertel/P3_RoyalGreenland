@@ -21,7 +21,6 @@ import java.util.concurrent.TimeoutException;
 
 public abstract class GUITest extends ApplicationTest {
 
-    private static Path originalPath;
     protected DMSApplication dmsApplication;
 
     @Override
@@ -29,7 +28,6 @@ public abstract class GUITest extends ApplicationTest {
         stage.show();
         this.dmsApplication = DMSApplication.getDMSApplication();
     }
-
 
     @AfterEach
     void tearDown() throws TimeoutException, InterruptedException {
@@ -42,19 +40,12 @@ public abstract class GUITest extends ApplicationTest {
 
     @BeforeAll @SuppressWarnings("Duplicates")
     static void setupApplication() throws Exception {
-        SettingsManager.loadSettings(ApplicationMode.ADMIN);
-
-        originalPath = SettingsManager.getServerPath();
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLanguage(DMSApplication.DK_LOCALE);
 
-        ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
-    }
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
 
-    @AfterAll
-    static void cleanUp(){
-        // Reset path in settings
-        SettingsManager.setServerPath(originalPath);
+        ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }
 
     void switchLanguageSetting()  {

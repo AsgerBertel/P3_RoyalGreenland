@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileAdminController implements TabController {
@@ -73,8 +74,9 @@ public class FileAdminController implements TabController {
     // The document last selected in the FileTree
     private AbstractFile selectedFile;
 
-    private AtomicBoolean running = new AtomicBoolean();
-    private Thread monitorThread;
+    private static AtomicBoolean running = new AtomicBoolean();
+    private static Thread monitorThread;
+    private static FileAlterationObserver observer;
 
 
     @Override
@@ -95,7 +97,7 @@ public class FileAdminController implements TabController {
 
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        watchRootFiles(SettingsManager.getServerDocumentsPath());
+        startWatchThread();
     }
 
     @Override
@@ -478,15 +480,17 @@ public class FileAdminController implements TabController {
     /**
      * Watches directory for changes, Listener only reacts on changes and calls update() in case invoked.
      * Thread sleeps for 0,2 hereafter, for good measure.
-     *
-     * @param root path to directory to watch
      */
     @SuppressWarnings("Duplicates")
-    private void watchRootFiles(Path root) {
+    public void startWatchThread() {
+        if(running.get())
+            return;
+        Path root = SettingsManager.getServerDocumentsPath();
         running.set(true);
+
         FileManager fileManager = FileManager.getInstance();
         File directory = new File(root.toString());
-        FileAlterationObserver observer = new FileAlterationObserver(directory);
+        observer = new FileAlterationObserver(directory);
         observer.addListener(new FileAlterationListener() {
             @Override
             public void onStart(FileAlterationObserver fileAlterationObserver) {
@@ -538,8 +542,13 @@ public class FileAdminController implements TabController {
             LoggingErrorTools.log(e); // todo maybe Alert? -kristian
             e.printStackTrace();
         }
+
         monitorThread = new Thread(() -> {
-            while (true) {
+            double lastTimeMillis = 0;
+            while (running.get()) {
+                /*System.out.println(System.currentTimeMillis() - lastTimeMillis);
+                System.out.println(System.currentTimeMillis());
+                System.out.println("watching");*/
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
@@ -554,6 +563,10 @@ public class FileAdminController implements TabController {
         monitorThread.setName("FileMonitorThread");
         monitorThread.setDaemon(true);
         monitorThread.start();
+    }
+
+    public void stopWatchThread() {
+        running.set(false);
     }
 
     private void addToolTip() {
@@ -582,11 +595,6 @@ public class FileAdminController implements TabController {
             }
         });
     }
-    public void stopRunning() {
-        running.set(false);
-    }
-    public void startRunning() {
-        if(!running.get())
-            watchRootFiles(SettingsManager.getServerDocumentsPath());
-    }
+
+
 }
