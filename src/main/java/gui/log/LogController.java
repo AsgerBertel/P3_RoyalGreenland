@@ -11,6 +11,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
+import java.text.Collator;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,7 @@ public class LogController implements TabController {
     private DMSApplication dmsApplication;
 
     LogManager lt = new LogManager();
-    private List<LogEvent> listOfEvents;
+    public List<LogEvent> listOfEvents=new ArrayList<>();
     private boolean sortedByTime = false;
     private boolean sortedByUser = false;
     private boolean sortedByFile = false;
@@ -85,13 +87,12 @@ public class LogController implements TabController {
                 foundEvents.add(e);
             }
         }
-
         tableView.getItems().setAll(foundEvents);
     }
 
     public void sortByUser() {
         List<LogEvent> sortedList = new ArrayList<>(tableView.getItems());
-        Collections.sort(sortedList, Comparator.comparing(LogEvent::getUser));
+        Collections.sort(sortedList, Comparator.comparing((LogEvent o) -> o.getUser().toLowerCase()));
         tableView.getItems().setAll(sortedList);
     }
 
