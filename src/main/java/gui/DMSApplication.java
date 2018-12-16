@@ -5,6 +5,7 @@ import directory.update.*;
 import directory.update.DirectoryCloner;
 import directory.update.FileUpdater;
 import directory.SettingsManager;
+import gui.file_administration.FileAdminController;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
@@ -58,16 +59,18 @@ public class DMSApplication extends Application {
     private SettingsManager settings;
     private Tab currentTab;
 
-    private AppFilesChangeListener externalUpdateListener;
-    private FileUpdater localFileUpdater;
+    private static AppFilesChangeListener externalUpdateListener;
+    private static FileUpdater localFileUpdater;
+
 
     private static DMSApplication dmsApplication;
+
     // This empty constructor needs to be here for reasons related to launching this Application from a separate class
     public DMSApplication() {
     }
 
     @Override
-    public void start(Stage stage)  {
+    public void start(Stage stage) {
         // Creates a new thread and checks for unexpected error codes. If so preferences are reset.
         new ExitChecker();
 
@@ -100,11 +103,10 @@ public class DMSApplication extends Application {
     }
 
 
-
-    private void loadRootElement()  {
+    private void loadRootElement() {
         root = new VBox();
         root.setMinSize(MIN_WIDTH, MIN_HEIGHT);
-        root.setPrefSize(Screen.getPrimary().getVisualBounds().getMaxX() - 200, Screen.getPrimary().getVisualBounds().getMaxY() -100);
+        root.setPrefSize(Screen.getPrimary().getVisualBounds().getMaxX() - 200, Screen.getPrimary().getVisualBounds().getMaxY() - 100);
 
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
@@ -125,7 +127,7 @@ public class DMSApplication extends Application {
 
         try {
             mainMenu = fxmlLoader.load();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUpWithString(fxmlLoader.getLocation().getPath());
             LoggingErrorTools.log(e, 6);
@@ -160,11 +162,12 @@ public class DMSApplication extends Application {
         }
     }
 
-    public Tab getCurrentTab(){
+    public Tab getCurrentTab() {
         return currentTab;
     }
 
-    public void restartApp()  {
+    public void restartApp() {
+        stopWatcherThreads();
         start(primaryStage);
     }
 
@@ -202,30 +205,28 @@ public class DMSApplication extends Application {
 
         // Create application folder if they are missing
         try {
-            if(applicationMode.equals(ApplicationMode.VIEWER)) {
+            if (applicationMode.equals(ApplicationMode.VIEWER)) {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
                 DirectoryCloner.updateLocalFiles();
-                if(localFileUpdater != null && localFileUpdater.isAlive())
+                if (localFileUpdater != null && localFileUpdater.isAlive())
                     localFileUpdater.setRunning(false);
 
-                localFileUpdater = new FileUpdater(this);
-                localFileUpdater.start();
+                startLocalFileUpdater();
             } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
                 AppFilesManager.createServerDirectories();
-                if(externalUpdateListener != null)
+                if (externalUpdateListener != null)
                     externalUpdateListener.stop();
 
                 // Listen for changes made by other administrators
-                externalUpdateListener = new AppFilesChangeListener(this);
-                externalUpdateListener.start();
+                startExternalChangeListener();
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
             AlertBuilder.fileNotFoundPopUp();
             SettingsManager.initializeSettingsPrompt();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
             LoggingErrorTools.log(e, 4);
@@ -234,14 +235,57 @@ public class DMSApplication extends Application {
             alert.setHeaderText("Program shutting down");
             alert.showAndWait();
             System.exit(4);
-        } catch(UpdateFailException e) {
+        } catch (UpdateFailException e) {
             e.printStackTrace();
             LoggingErrorTools.log(e);
         }
     }
 
-    public static DMSApplication getDMSApplication(){
+    public static DMSApplication getDMSApplication() {
         return dmsApplication;
+    }
+
+    public void startLocalFileUpdater() {
+        if (localFileUpdater != null && localFileUpdater.isRunning()) {
+            stopLocalFileUpdater();
+            System.out.println("Stopped local file updater to start a new file updater thread");
+        }
+        localFileUpdater = new FileUpdater(this);
+        localFileUpdater.start();
+    }
+
+    private void stopLocalFileUpdater() {
+        if (localFileUpdater != null)
+            localFileUpdater.setRunning(false);
+    }
+
+    private void startExternalChangeListener() {
+        if (externalUpdateListener != null && externalUpdateListener.isRunning()) {
+            stopExternalChangeListener();
+            System.out.println("Stopped existing externalUpdateListener to start a new externalChangeListener");
+        }
+        externalUpdateListener = new AppFilesChangeListener(this);
+        externalUpdateListener.start();
+    }
+
+    private void stopExternalChangeListener() {
+        if (externalUpdateListener != null)
+            externalUpdateListener.stop();
+    }
+
+    public void startWatcherThreads() {
+        if(applicationMode.equals(ApplicationMode.ADMIN))
+            startExternalChangeListener();
+        else
+            startLocalFileUpdater();
+    }
+
+    public void stopWatcherThreads() {
+        stopLocalFileUpdater();
+        stopExternalChangeListener();
+        FileAdminController fileAdminController = (FileAdminController) Tab.FILE_ADMINISTRATION.getTabController();
+        if(fileAdminController != null)
+            fileAdminController.stopWatchThread();
     }
 
 }

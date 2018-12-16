@@ -34,6 +34,10 @@ public class FileUpdater extends Thread {
         this.running = running;
     }
 
+    public boolean isRunning(){
+        return running;
+    }
+
     @Override
     public void run() {
         super.run();

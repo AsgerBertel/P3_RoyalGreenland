@@ -89,5 +89,14 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="testing" level="project" />
     <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/testing/openjfx-monocle-1.8.0_20.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

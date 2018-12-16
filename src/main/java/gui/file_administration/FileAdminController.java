@@ -80,7 +80,6 @@ public class FileAdminController implements TabController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         setFactoryListDisabled(true);
         fileTreeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onTreeItemSelected(oldValue, newValue));
@@ -92,7 +91,6 @@ public class FileAdminController implements TabController {
             if (event.getCode() == KeyCode.ENTER)
                 openFileTreeElement(fileTreeView.getSelectionModel().getSelectedItem());
         });
-
 
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
@@ -109,6 +107,7 @@ public class FileAdminController implements TabController {
         reloadFileTree();
         reloadPlantList();
         reloadChangesList();
+        startWatchThread();
     }
 
 

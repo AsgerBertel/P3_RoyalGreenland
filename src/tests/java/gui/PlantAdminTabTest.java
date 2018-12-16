@@ -1,5 +1,6 @@
 package gui;
 
+import directory.SettingsManager;
 import directory.plant.AccessModifier;
 import directory.plant.Plant;
 import directory.plant.PlantManager;
@@ -15,6 +16,9 @@ import org.assertj.core.error.future.ShouldNotHaveFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import util.TestUtil;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +31,10 @@ public class PlantAdminTabTest extends GUITest {
     private Button menuCreatePlantButton, menuEditPlantButton, deletePlantButton;
 
     @BeforeEach
-    void loadTab() {
+    void loadTab() throws IOException {
+        SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
+        SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
+        TestUtil.resetTestFiles();
         PlantManager.getInstance().getAllPlants().clear();
         PlantManager.getInstance().getAllPlants().add(plant1);
         PlantManager.getInstance().getAllPlants().add(plant2);
@@ -262,6 +269,10 @@ public class PlantAdminTabTest extends GUITest {
         Button showEditButton = findNode("#btnEditPlantSidebar");
 
         clickOn(plant1Element);
+
+        assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
+        assertFalse(deletePlantButton.isDisabled());
+
         clickOn(deletePlantButton);
         moveTo(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
         // todo This is a janky way to close the popup. It will break if the size of the popup changes
@@ -271,7 +282,7 @@ public class PlantAdminTabTest extends GUITest {
         assertTrue(plant1Element.isSelected());
         boolean containsElement = false;
         for(Node plantElement : plantController.getPlantVBox().getChildren()){
-            containsElement |= (((PlantElement) plantElement).getPlant().getName().equals(((PlantElement) plantElement).getPlant().getName()));
+            containsElement |= (((PlantElement) plantElement).getPlant().getName().equals(plant1Element.getPlant().getName()));
         }
         assertTrue(containsElement);
         assertFalse(deletePlantButton.isDisabled());

@@ -213,10 +213,5 @@ public class ViewFilesTest extends GUITest {
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
 
         TestUtil.resetTestFiles();
-        FileManager.resetInstance();
-        PlantManager.resetInstance();
-
-        AppFilesManager.createServerDirectories();
-        AppFilesManager.createLocalDirectories();
     }
 }
