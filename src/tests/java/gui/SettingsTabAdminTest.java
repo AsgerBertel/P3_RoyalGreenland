@@ -36,6 +36,7 @@ public class SettingsTabAdminTest extends GUITest{
         assertEquals(userField.getText(), TEST_TEXT);
     }
 
+    @SuppressWarnings("Duplicates")
     private void enterText(Control clickAbleElement, String text){
         clickOn(clickAbleElement);
         if(System.getProperty("os.name").contains("Mac")){
@@ -67,7 +68,7 @@ public class SettingsTabAdminTest extends GUITest{
         TextField serverField = findNode("#serverPathTextField");
         TextField userField = findNode("#usernameTextField");
 
-        saveTextValueTest(serverField, Paths.get("TestFolder/server/" + DMSApplication.APP_TITLE).toString(),
+        saveTextValueTest(serverField, Paths.get("TestingFiles/AlternateServer/" + DMSApplication.APP_TITLE).toString(),
                 () -> SettingsManager.getServerPath().toString());
         saveTextValueTest(userField, "SorenSmoke", () -> SettingsManager.getUsername());
     }

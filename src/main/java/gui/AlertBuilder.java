@@ -107,10 +107,7 @@ public class AlertBuilder {
     }
 
     public static void customErrorPopUp(String customTitle, String customHeader, String customContext) {
-        buildAlert(
-                Alert.AlertType.ERROR, customTitle, customHeader,customContext + "\n"
-                        + SettingsManager.getServerErrorLogsPath() + LocalDateTime.now().format(formatter)
-        );
+        buildAlert(Alert.AlertType.ERROR, customTitle, customHeader,customContext);
         alert.showAndWait();
     }
 

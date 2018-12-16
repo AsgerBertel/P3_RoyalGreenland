@@ -4,6 +4,7 @@ import app.ApplicationMode;
 import directory.FileManager;
 import directory.SettingsManager;
 import directory.plant.PlantManager;
+import gui.AlertBuilder;
 import gui.DMSApplication;
 import gui.TabController;
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -97,10 +99,6 @@ public class SettingsController implements TabController {
         return chosenFile;
     }
 
-    public static boolean isValidPath(String path) {
-        return path != null && !path.isEmpty();
-    }
-
     private void onUserNameChanged() {
         verifyNotEmpty(usernameTextField);
     }
@@ -146,6 +144,11 @@ public class SettingsController implements TabController {
     public void onSaveChanges(ActionEvent actionEvent) {
         boolean allChangesSaved = true;
 
+        if(!isValidPath(serverPathTextField.getText())){
+            AlertBuilder.customErrorPopUp(DMSApplication.getMessage("Settings.PopUp.InvalidPathTitle"), "", DMSApplication.getMessage("Settings.PopUp.InvalidPathContext"));
+            return;
+        }
+
         // Save all changes and set allChangeSaved to false if a save failed
         allChangesSaved &= saveChange(usernameTextField, () -> SettingsManager.setUsername(usernameTextField.getText()));
         allChangesSaved &= saveChange(serverPathTextField, () -> SettingsManager.setServerPath(Paths.get(serverPathTextField.getText())));
@@ -160,13 +163,17 @@ public class SettingsController implements TabController {
         PlantManager.resetInstance();
         // Save language if different from the current language
         Locale language = danishSettingsButton.isSelected() ? DMSApplication.DK_LOCALE : DMSApplication.GL_LOCALE;
-        if (!language.equals(DMSApplication.getLanguage())) {
+        if (!language.equals(DMSApplication.getLanguage()))
             dmsApplication.changeLanguage(language);
-        }else{
+        else
             update();
-        }
-        // dmsApplication.initializeApplication(); todo - Magnus  VIGITG!!
 
+        dmsApplication.initializeApplication();
+    }
+
+    public static boolean isValidPath(String path) {
+        if(path == null || path.isEmpty()) return false;
+        return Files.exists(SettingsManager.completeApplicationPath(Paths.get(path)).getParent());
     }
 
     /* Executes the saveAction if the textField contains changes

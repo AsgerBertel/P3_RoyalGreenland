@@ -152,7 +152,7 @@ public class SettingsManager {
     }
 
     // Adds the application folder name to the path if it's not already in there
-    private static Path completeApplicationPath(Path path) {
+    public static Path completeApplicationPath(Path path) {
         String completedPath = path.toString();
 
         // Append the application folder if it is not included in the given path
