@@ -172,10 +172,9 @@ public class FileAdminDragDropTest extends GUITest {
         assertTrue(TestUtil.doesAbstractFileMatchTreeItem(FileManager.getInstance().getMainFilesRoot(),fileTree.getRoot()));
 
         // Drag itemToMove folder into its' first subfolder
-        fileTree.getRoot().getChildren().get(0).setExpanded(true);
-        Thread.sleep(200);
+        doubleClickOn(getTreeCell(fileTree, fileTree.getRoot().getChildren().get(1)));
 
-        TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(0);
+        TreeItem<AbstractFile> itemToMove = fileTree.getRoot().getChildren().get(1);
         TreeItem<AbstractFile> targetItem = itemToMove.getChildren().get(0);
 
         FxRobot fxRobot = drag(getTreeCell(fileTree, itemToMove));

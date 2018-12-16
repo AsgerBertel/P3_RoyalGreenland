@@ -133,10 +133,10 @@ public class LogTabTest extends GUITest {
     void makeChangedEvent() throws IOException, InterruptedException {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         doubleClickOn(getTreeCell(fileTree,treeItem));
         //get child which is a file
-        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(0).getChildren().get(3);
+        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(1).getChildren().get(3);
 
         Path p1 = Paths.get(SettingsManager.getServerDocumentsPath().toString(),selectedFile.getValue().getOSPath().toString());
         Files.setLastModifiedTime(p1, FileTime.from(Instant.now()));
@@ -149,10 +149,10 @@ public class LogTabTest extends GUITest {
     void makeRenamedEvent() {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         doubleClickOn(getTreeCell(fileTree,treeItem));
         //get child which is a file
-        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(0).getChildren().get(3);
+        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(1).getChildren().get(3);
         rightClickOn(getTreeCell(fileTree,selectedFile));
         clickOnContextMenuItem(1);
         write("testFile");
@@ -164,7 +164,7 @@ public class LogTabTest extends GUITest {
     void makeFolderRenamedEvent(){
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         rightClickOn(getTreeCell(fileTree,treeItem));
         clickOnContextMenuItem(1);
         write("testFolder");
@@ -178,7 +178,7 @@ public class LogTabTest extends GUITest {
         //Cause event to publish
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         clickOn(getTreeCell(fileTree,treeItem));
         clickOn((Button)findNode("#deleteFileButton"));
 
@@ -193,14 +193,14 @@ public class LogTabTest extends GUITest {
         //Archive event
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         clickOn(getTreeCell(fileTree,treeItem));
         clickOn((Button)findNode("#deleteFileButton"));
 
         //Restore event
         clickOn((ToggleButton) findNode("#archiveButton"));
         TreeView<AbstractFile>secondTree = findNode("#Filetree");
-        TreeItem<AbstractFile>secondItem = secondTree.getRoot().getChildren().get(0);
+        TreeItem<AbstractFile>secondItem = secondTree.getRoot().getChildren().get(1);
         clickOn(getTreeCell(secondTree,secondItem));
         clickOn((Button)findNode("#btnRestore"));
         assertTrue(isEventTypePresent(LogEventType.RESTORED));
@@ -295,10 +295,10 @@ public class LogTabTest extends GUITest {
         clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
         //Select file to add
         fileTree = findNode("#fileTreeView");
-        treeItem = fileTree.getRoot().getChildren().get(0);
+        treeItem = fileTree.getRoot().getChildren().get(1);
         doubleClickOn(getTreeCell(fileTree,treeItem));
         //get child which is a file
-        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(0).getChildren().get(3);
+        TreeItem<AbstractFile> selectedFile = fileTree.getRoot().getChildren().get(1).getChildren().get(3);
         clickOn(getTreeCell(fileTree,selectedFile));
         //click plant to add file to plant
         VBox plantVBox = findNode("#plantVBox");
