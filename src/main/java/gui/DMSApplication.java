@@ -80,14 +80,10 @@ public class DMSApplication extends Application {
         applicationMode = ApplicationMode.valueOf(appModeParameter);
 
         initializeApplication();
-
-
         primaryStage = stage;
-
 
         // Load settings from preferences and prompt the user for new path if necessary
         loadRootElement();
-
 
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(new Scene(root));
@@ -208,10 +204,6 @@ public class DMSApplication extends Application {
             if (applicationMode.equals(ApplicationMode.VIEWER)) {
                 // Create any local app directories that might be missing
                 AppFilesManager.createLocalDirectories();
-                DirectoryCloner.updateLocalFiles();
-                if (localFileUpdater != null && localFileUpdater.isAlive())
-                    localFileUpdater.setRunning(false);
-
                 startLocalFileUpdater();
             } else if (applicationMode.equals(ApplicationMode.ADMIN)) {
                 // Create any server side directories that might be missing
@@ -235,9 +227,6 @@ public class DMSApplication extends Application {
             alert.setHeaderText("Program shutting down");
             alert.showAndWait();
             System.exit(4);
-        } catch (UpdateFailException e) {
-            e.printStackTrace();
-            LoggingErrorTools.log(e);
         }
     }
 

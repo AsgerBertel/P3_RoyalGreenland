@@ -39,31 +39,30 @@ public class DirectoryCloner {
                     SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
             replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
                     SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
-        } catch(IOException | IllegalFileException e) {
+        } catch (IOException | IllegalFileException e) {
             e.printStackTrace();
             throw new UpdateFailException(e);
         }
     }
 
     public static void updateLocalFiles() throws UpdateFailException {
-
         try {
-            if(!Files.exists(SettingsManager.getLocalAppFilesPath()) || !Files.exists(SettingsManager.getLocalFilesPath()))
+            if (!Files.exists(SettingsManager.getLocalAppFilesPath()) || !Files.exists(SettingsManager.getLocalFilesPath()))
                 AppFilesManager.createLocalDirectories();
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             LoggingErrorTools.log(e, 4);
             AlertBuilder.customErrorPopUp("Error",
                     "Local directory not found",
-                    "Local directories were not present before update"+
-                            "Error logged in: "+SettingsManager.getLocalErrorLogsPath());
-        } catch(IOException e) {
+                    "Local directories were not present before update" +
+                            "Error logged in: " + SettingsManager.getLocalErrorLogsPath());
+        } catch (IOException e) {
             e.printStackTrace();
             LoggingErrorTools.log(e);
             AlertBuilder.IOExceptionPopUp();
         }
         try {
-            if(!isUpdateAvailable())
+            if (!isUpdateAvailable())
                 return;
             ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
             ArrayList<AbstractFile> oldFiles = AppFilesManager.loadLocalFileList();
@@ -75,26 +74,25 @@ public class DirectoryCloner {
             replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
                     SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
 
-        } catch(IOException | IllegalFileException e) {
+        }catch (IOException | IllegalFileException e) {
             e.printStackTrace();
             throw new UpdateFailException(e);
         }
     }
 
     /**
-     *
      * @return true if an update is available.
-     * @throws IOException if unable to compare directories due to I/O error.
+     * @throws IOException                if unable to compare directories due to I/O error.
      * @throws ServerUnavailableException if unable to find server path.
      */
     private static boolean isUpdateAvailable() throws IOException {
         Path publishedFilesList = SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME);
         Path publishedPlantList = SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME);
 
-        if(!Files.exists(SettingsManager.getServerPath()))
-            throw new ServerUnavailableException();
+        if (!Files.exists(SettingsManager.getServerPath()))
+            return false;
 
-        if(!Files.exists(publishedFilesList) || !Files.exists(publishedPlantList))
+        if (!Files.exists(publishedFilesList) || !Files.exists(publishedPlantList))
             return false;
 
         File localFilesList = SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
@@ -102,7 +100,7 @@ public class DirectoryCloner {
         File serverFilesList = SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME).toFile();
         File serverFactoryList = SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME).toFile();
 
-        if(!localFactoryList.exists() || !localFilesList.exists())
+        if (!localFactoryList.exists() || !localFilesList.exists())
             return true;
 
         try {
@@ -115,7 +113,8 @@ public class DirectoryCloner {
 
     /**
      * Updates the oldFiles list to match the updatedFiles list and updates the corresponding files on the file system
-     * @throws IOException removeOutDatedFiles throws IOException
+     *
+     * @throws IOException          removeOutDatedFiles throws IOException
      * @throws IllegalFileException if a file which does not contain the DMSApplication.APP_TITLE is included in the update.
      */
     private static void applyUpdate(ArrayList<AbstractFile> oldFiles,
@@ -131,6 +130,7 @@ public class DirectoryCloner {
 
     /**
      * Compares oldFiles to newFiles and removes files from oldFiles that have been updated or deleted.
+     *
      * @return the files that does not need to be updated (the intersection of oldFiles and newFiles)
      * @throws IOException if
      */
@@ -166,10 +166,11 @@ public class DirectoryCloner {
 
     /**
      * Compares oldFiles to updatedFiles. Finds all files in oldFiles that are changed or deleted.
+     *
      * @return a list of files from oldFiles that are changed or no longer exists in new files.
      */
     private static ArrayList<AbstractFile> findOutdatedFiles(ArrayList<AbstractFile> oldFiles,
-                                                             ArrayList<AbstractFile> updatedFiles){
+                                                             ArrayList<AbstractFile> updatedFiles) {
         ArrayList<AbstractFile> filesToDelete = new ArrayList<>();
         for (AbstractFile file : oldFiles) {
             if (file instanceof Document) {
@@ -187,17 +188,15 @@ public class DirectoryCloner {
     }
 
     /**
-     *
-     * @param allFiles ArrayList of the files to delete from
+     * @param allFiles      ArrayList of the files to delete from
      * @param filesToDelete ArrayList of files to delete
-     * @param rootPath path from resolve from
+     * @param rootPath      path from resolve from
      * @return an ArrayList without the files from filesToDelete paramater.
-     *
      * @throws FileNotFoundException optional more specific IOException.
-     * Caused by org.apache.commons.io.FileUtils throwing FileNotFoundException.
-     * @throws IOException deletedFolder or Files.deleteIfExists is unsuccesful.
-     * @throws IllegalFileException if a file is not included in the DMSApplication domain,
-     * specifically if DMSApplication.APP_TITLE is not included in the file path.
+     *                               Caused by org.apache.commons.io.FileUtils throwing FileNotFoundException.
+     * @throws IOException           deletedFolder or Files.deleteIfExists is unsuccesful.
+     * @throws IllegalFileException  if a file is not included in the DMSApplication domain,
+     *                               specifically if DMSApplication.APP_TITLE is not included in the file path.
      */
     private static ArrayList<AbstractFile> deleteFilesFrom(ArrayList<AbstractFile> allFiles,
                                                            ArrayList<AbstractFile> filesToDelete,
@@ -209,13 +208,13 @@ public class DirectoryCloner {
             boolean success;
 
             // Fail safe to make sure only files inside the application folder are deleted
-            if(!fileToDeletePath.toString().contains(DMSApplication.APP_TITLE))
+            if (!fileToDeletePath.toString().contains(DMSApplication.APP_TITLE))
                 throw new IllegalFileException("Attempted to delete file that is not inside the DMS Application folder. File : ");
 
             // Remove file from disk
-            if(fileToDelete instanceof Folder){
+            if (fileToDelete instanceof Folder) {
                 success = deleteFolder(fileToDeletePath.toFile());
-            }else{
+            } else {
                 success = Files.deleteIfExists(fileToDeletePath);
             }
             FileUtils.deleteDirectory(fileToDeletePath.toFile());
@@ -229,9 +228,9 @@ public class DirectoryCloner {
     }
 
     private static ArrayList<AbstractFile> addNewFiles(ArrayList<AbstractFile> oldFiles,
-                                                      ArrayList<AbstractFile> newFiles,
-                                                      Path oldFilesRoot,
-                                                      Path newFileRoot)
+                                                       ArrayList<AbstractFile> newFiles,
+                                                       Path oldFilesRoot,
+                                                       Path newFileRoot)
             throws IOException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>();
         modifiedOldFiles.addAll(oldFiles);
@@ -268,7 +267,7 @@ public class DirectoryCloner {
                     try {
                         Files.delete(publishPath);
                     } catch (IOException e) {
-                        throw new IOException("Could not delete file: "+publishPath.toString()+" during update",e);
+                        throw new IOException("Could not delete file: " + publishPath.toString() + " during update", e);
                     }
                 }
             }
@@ -278,7 +277,7 @@ public class DirectoryCloner {
                 } else {
                     Files.copy(newFileRoot.resolve(addedFile.getOSPath()), publishPath);
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
                 throw new IOException(e);
             }
             modifiedOldFiles.add(addedFile);
@@ -288,7 +287,6 @@ public class DirectoryCloner {
     }
 
     /**
-     *
      * @param originalFiles
      * @param updatedFiles
      * @return
@@ -296,8 +294,7 @@ public class DirectoryCloner {
      */
 
     private static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
-                                                           ArrayList<AbstractFile> updatedFiles)
-        {
+                                                            ArrayList<AbstractFile> updatedFiles) {
         ArrayList<AbstractFile> missingFiles = new ArrayList<>();
         // Find files that should be added
         for (AbstractFile file : updatedFiles) {
@@ -312,6 +309,7 @@ public class DirectoryCloner {
         }
         return missingFiles;
     }
+
     private static boolean containsFolderWithPath(ArrayList<AbstractFile> files, Path path) {
         for (AbstractFile file : files) {
             if (file.getOSPath().equals(path))
@@ -337,43 +335,44 @@ public class DirectoryCloner {
         }
         return false;
     }
+
     /**
-     * @param src the folder from which data is copied
-     * @param dst the destination folder
+     * @param src     the folder from which data is copied
+     * @param dst     the destination folder
      * @param replace if true the method will overwrite any duplicate files with the files from src. If false a new name
      *                will be generated for the src file.
      * @throws IllegalFileException if the folder to merge is not within the application's domain.
      */
     // Merges src folder into dst folder.
-    public static void mergeFolders(Path src, Path dst, boolean replace) throws IllegalFileException{
+    public static void mergeFolders(Path src, Path dst, boolean replace) throws IllegalFileException {
         // Create folder in the new path in case it doesn't exist
         createDirectories(dst);
         File[] fileToCopy = src.toFile().listFiles();
-        if(fileToCopy == null) return;
-        for(File originalFile : fileToCopy){
+        if (fileToCopy == null) return;
+        for (File originalFile : fileToCopy) {
             Path newFilePath = dst.resolve(originalFile.getName());
 
-            if(!newFilePath.toString().contains(DMSApplication.APP_TITLE))
+            if (!newFilePath.toString().contains(DMSApplication.APP_TITLE))
                 throw new IllegalFileException(
                         "Attempted to delete file that is not inside the DMS Application folder. File : ");
 
-            if(originalFile.isDirectory()){
-                if(Files.exists(newFilePath)){
+            if (originalFile.isDirectory()) {
+                if (Files.exists(newFilePath)) {
                     mergeFolders(originalFile.toPath(), newFilePath, replace);
-                }else{
+                } else {
                     try {
                         FileUtils.copyDirectory(originalFile.toPath().toFile(), newFilePath.toFile());
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                         LoggingErrorTools.log(e);
                         AlertBuilder.IOExceptionPopUpWithString(
-                                originalFile.toString()+"\n"+newFilePath.toString());
+                                originalFile.toString() + "\n" + newFilePath.toString());
                     }
                 }
             } else {
                 try {
-                    if(Files.exists(newFilePath)) {
-                        if(replace) {
+                    if (Files.exists(newFilePath)) {
+                        if (replace) {
                             Files.delete(newFilePath);
                             Files.copy(originalFile.toPath(), newFilePath);
                         } else {
@@ -384,14 +383,15 @@ public class DirectoryCloner {
                     } else {
                         Files.copy(originalFile.toPath(), dst.resolve(originalFile.getName()));
                     }
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
-                    AlertBuilder.IOExceptionPopUpWithString(originalFile.toString()+"\n"+newFilePath);
+                    AlertBuilder.IOExceptionPopUpWithString(originalFile.toString() + "\n" + newFilePath);
                     LoggingErrorTools.log(e);
                 }
             }
         }
     }
+
     public static boolean deleteFolder(File folder) {
         boolean success = true;
         File[] files = folder.listFiles();
@@ -409,37 +409,39 @@ public class DirectoryCloner {
 
     /**
      * Method to replace a path with another, deleting the file at the destination path if it exists.
+     *
      * @param src path to source.
      * @param dst path to destination.
      * @throws FileNotFoundException optional more specific IOException if the src file does not exist.
-     * @throws IOException if Files.delete(dst) fails to delete dst path, incase this already exists.
-     * @throws IllegalFileException if the destination path does not include DMSApplication.APP_TITLE.
+     * @throws IOException           if Files.delete(dst) fails to delete dst path, incase this already exists.
+     * @throws IllegalFileException  if the destination path does not include DMSApplication.APP_TITLE.
      */
     private static void replaceIfExists(Path src, Path dst) throws IOException, IllegalFileException {
-        if(!Files.exists(src))
+        if (!Files.exists(src))
             throw new FileNotFoundException("Given src file does not exist");
 
-        if(!dst.toString().contains(DMSApplication.APP_TITLE))
+        if (!dst.toString().contains(DMSApplication.APP_TITLE))
             throw new IllegalFileException(
                     "Attempted to delete file that is not inside the DMS Application folder. File : " + dst.toString());
 
-        if(Files.exists(dst)) {
+        if (Files.exists(dst)) {
             try {
                 Files.delete(dst);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 throw new IOException("Could not delete file: " + dst.toString(), e);
             }
         }
         try {
             Files.copy(src, dst);
-        } catch(IOException e) {
-            throw new IOException("Could not copy file: "+src.toString(), e);
+        } catch (IOException e) {
+            throw new IOException("Could not copy file: " + src.toString(), e);
         }
     }
+
     private static void createDirectories(Path dst) {
         try {
             Files.createDirectories(dst);
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUpWithString(dst.toString());
             LoggingErrorTools.log(e);

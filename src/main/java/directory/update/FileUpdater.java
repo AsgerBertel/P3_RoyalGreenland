@@ -43,6 +43,7 @@ public class FileUpdater extends Thread {
         super.run();
         while(running){
             try {
+                System.out.println("Checking for updates");
                 DirectoryCloner.updateLocalFiles();
                 Platform.runLater(() -> dmsApplication.getCurrentTab().update());
                 Thread.sleep(UPDATE_INTERVAL_SECS * 1000);
