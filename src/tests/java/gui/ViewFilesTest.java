@@ -74,7 +74,6 @@ public class ViewFilesTest extends GUITest {
         itemToMoveAdmin = fileTree.getRoot().getChildren().get(1);
         drag(getTreeCell(fileTree, itemToMoveAdmin));
         dropTo(getTreeCell(fileTree, targetItemAdmin));
-
         // Click folder and add file to plant
         addFileToPlant();
 
@@ -191,9 +190,9 @@ public class ViewFilesTest extends GUITest {
     }
 
     private void addFileToPlant(){
-        doubleClickOn(getTreeCell(fileTree, fileTree.getRoot().getChildren().get(0)));
+        doubleClickOn(getTreeCell(fileTree, fileTree.getRoot().getChildren().get(1)));
 
-        itemAddedToPlant = fileTree.getRoot().getChildren().get(0).getChildren().get(2);
+        itemAddedToPlant = fileTree.getRoot().getChildren().get(1).getChildren().get(2);
 
         clickOn(getTreeCell(fileTree, itemAddedToPlant));
 

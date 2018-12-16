@@ -200,7 +200,7 @@ public class LogTabTest extends GUITest {
         //Restore event
         clickOn((ToggleButton) findNode("#archiveButton"));
         TreeView<AbstractFile>secondTree = findNode("#Filetree");
-        TreeItem<AbstractFile>secondItem = secondTree.getRoot().getChildren().get(1);
+        TreeItem<AbstractFile>secondItem = secondTree.getRoot().getChildren().get(0);
         clickOn(getTreeCell(secondTree,secondItem));
         clickOn((Button)findNode("#btnRestore"));
         assertTrue(isEventTypePresent(LogEventType.RESTORED));
