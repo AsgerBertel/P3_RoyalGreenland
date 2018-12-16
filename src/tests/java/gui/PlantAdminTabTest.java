@@ -6,10 +6,12 @@ import directory.plant.Plant;
 import directory.plant.PlantManager;
 import gui.plant_administration.PlantAdministrationController;
 import gui.settings.SettingsController;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.error.future.ShouldNotHaveFailed;
@@ -31,17 +33,23 @@ public class PlantAdminTabTest extends GUITest {
     private Button menuCreatePlantButton, menuEditPlantButton, deletePlantButton;
 
     @BeforeEach
-    void loadTab() throws IOException {
+    void loadTab() throws IOException, InterruptedException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
         TestUtil.resetTestFiles();
-        PlantManager.getInstance().getAllPlants().clear();
-        PlantManager.getInstance().getAllPlants().add(plant1);
-        PlantManager.getInstance().getAllPlants().add(plant2);
         clickOn((ToggleButton)findNode("#administratePlantsButton"));
         plantController = (PlantAdministrationController) dmsApplication.getCurrentTab().getTabController();
-        plant1Element = (PlantElement) plantController.getPlantVBox().getChildren().get(0);
-        plant2Element = (PlantElement) plantController.getPlantVBox().getChildren().get(1);
+
+        Platform.runLater(() -> {
+            PlantManager.getInstance().getAllPlants().add(plant1);
+            PlantManager.getInstance().getAllPlants().add(plant2);
+            plantController.update();
+            plant1Element = (PlantElement) plantController.getPlantVBox().getChildren().get(0);
+            plant2Element = (PlantElement) plantController.getPlantVBox().getChildren().get(1);
+        });
+        while(plant2Element == null){
+            Thread.sleep(100);
+        }
 
         menuCreatePlantButton = findNode("#btnCreatePlantSidebar");
         menuEditPlantButton = findNode("#btnEditPlantSidebar");
@@ -273,15 +281,20 @@ public class PlantAdminTabTest extends GUITest {
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
         assertFalse(deletePlantButton.isDisabled());
 
+        for(Node plantElement : plantController.getPlantVBox().getChildren())
+            System.out.println(((PlantElement)plantElement).getPlant().getName());
+
         clickOn(deletePlantButton);
         moveTo(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
         // todo This is a janky way to close the popup. It will break if the size of the popup changes
         moveBy(35, -140);
+        type(KeyCode.ESCAPE);
         clickOn(MouseButton.PRIMARY);
 
         assertTrue(plant1Element.isSelected());
         boolean containsElement = false;
         for(Node plantElement : plantController.getPlantVBox().getChildren()){
+            System.out.println(((PlantElement)plantElement).getPlant().getName());
             containsElement |= (((PlantElement) plantElement).getPlant().getName().equals(plant1Element.getPlant().getName()));
         }
         assertTrue(containsElement);
