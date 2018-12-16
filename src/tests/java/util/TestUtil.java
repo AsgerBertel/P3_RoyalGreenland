@@ -1,5 +1,6 @@
 package util;
 
+import app.ApplicationMode;
 import directory.FileManager;
 import directory.SettingsManager;
 import directory.files.AbstractFile;
@@ -39,6 +40,7 @@ public class TestUtil {
     }
 
     public static void main(String[] args) throws IOException {
+        SettingsManager.loadSettings(ApplicationMode.ADMIN);
         resetTestFiles();
     }
 

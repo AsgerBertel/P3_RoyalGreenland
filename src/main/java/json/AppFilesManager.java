@@ -156,7 +156,7 @@ public class AppFilesManager {
      * @throws InvalidPathException if localRoot is initialized incorrectly due to error in Settings.
      */
     public static void createLocalDirectories() throws IOException, InvalidPathException{
-            Path localRoot = SettingsManager.getLocalPath();
+        Path localRoot = SettingsManager.getLocalPath();
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))
