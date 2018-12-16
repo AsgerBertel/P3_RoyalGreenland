@@ -48,13 +48,17 @@ public class FileAdminController implements TabController {
 
     @FXML
     private Button publishChangesButton;
+    @FXML
     private VBox changesVBox;
+    @FXML
     private Text lastUpdatedText;
+    @FXML
     private ScrollPane changesScrollPane;
     @FXML
     private Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
     private DragAndDropTreeCellFactory dragAndDropTreeCellFactory;
+
     @FXML
     private Button createFolderButton;
     @FXML

@@ -20,10 +20,15 @@ public class InitializationController implements Initializable {
 
     @FXML
     private TextField inputTextField;
+    @FXML
     private Button browseButton;
+    @FXML
     private Text errorText;
+    @FXML
     private Text settingDescription;
+    @FXML
     private Button nextButton;
+    @FXML
     private Button previousButton;
 
     private State currentState;

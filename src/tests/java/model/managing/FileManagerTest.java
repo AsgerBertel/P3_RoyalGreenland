@@ -27,7 +27,7 @@ class FileManagerTest extends FileTester {
     private Folder parentFolder;
 
     @Override
-    void setSettings() {
+    protected void setSettings() {
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         folder1 = (Folder) findInMainFiles(folderPath);
         doc = (Document) findInMainFiles(docPath);

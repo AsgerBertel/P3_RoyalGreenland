@@ -20,7 +20,7 @@ class FolderTest extends FileTester {
     private AccessModifier am;
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         folderTest = (Folder) findInMainFiles(pathToTestFolder);
         doc = (Document) findInMainFiles(pathToDoc);

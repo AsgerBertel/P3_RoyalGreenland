@@ -25,13 +25,18 @@ public class SettingsController implements TabController {
 
     @FXML
     private TextField serverPathTextField;
+    @FXML
     private TextField localPathTextField;
+    @FXML
     private TextField usernameTextField;
+    @FXML
     private Button saveChangesButton;
 
     private static final String UNSAVED_CHANGE_STYLE_CLASS = "unsaved";
     public static final String ERROR_STYLE_CLASS = "error";
+    @FXML
     private ToggleButton greenlandicSettingsButton;
+    @FXML
     private ToggleButton danishSettingsButton;
     private final ToggleGroup languageGroup = new ToggleGroup();
 

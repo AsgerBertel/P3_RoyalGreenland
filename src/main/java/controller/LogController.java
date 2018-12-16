@@ -99,7 +99,7 @@ public class LogController implements TabController {
         tableView.getItems().setAll(sortedList);
     }
 
-    private void sortByTime() {
+    public void sortByTime() {
         List<LogEvent> sortedList = new ArrayList<>(tableView.getItems());
         Collections.sort(sortedList, Comparator.comparing(LogEvent::getLocalDateTime));
 

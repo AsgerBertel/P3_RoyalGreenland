@@ -54,7 +54,6 @@ class LogTabTest extends GUITest {
         //set logController
         logController = (LogController) dmsApplication.getCurrentTab().getTabController();
         logController.update();
-
     }
 
     private static TreeCell<AbstractFile> getTreeCell(TreeView<AbstractFile> tree, TreeItem<AbstractFile> treeItem){

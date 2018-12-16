@@ -11,7 +11,7 @@ class PlantTest extends FileTester {
     private Plant plant2;
 
 
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         plant = new Plant(1007, "Nuuk", new AccessModifier());
         plant2 = plant;

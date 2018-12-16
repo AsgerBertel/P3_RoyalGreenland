@@ -13,7 +13,7 @@ class DocumentBuilderTest extends FileTester {
     private final Path pathToTestFile = Paths.get("03_URENSET STENBIDERROGN/GMP 03 GR_02.pdf");
 
     @Override
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
     }
 

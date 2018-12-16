@@ -32,7 +32,7 @@ class FileExplorerTest extends FileTester {
     private Document KALDoc;
 
     @BeforeEach
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         docInAM = (Document) findInMainFiles(pathToDoc1);
         docFalse = (Document) findInMainFiles(pathToDoc2);

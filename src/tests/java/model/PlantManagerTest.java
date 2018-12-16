@@ -12,7 +12,7 @@ class PlantManagerTest extends FileTester {
     private Plant plant;
 
     @Override
-    void setSettings(){
+    protected void setSettings(){
         SettingsManager.loadSettings(ApplicationMode.ADMIN);
         plant = new Plant(4567, "plant", new AccessModifier());
     }
