@@ -40,8 +40,7 @@ class FileManagerTest extends FileTester {
 
         al = FileManager.getInstance().getMainFiles();
 
-        assertEquals(folder1.getOSPath(), al.get(0).getOSPath());
-
+        assertEquals(folder1.getOSPath(), al.get(1).getOSPath());
     }
 
     @Test
