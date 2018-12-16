@@ -1,0 +1,5 @@
+0: successful
+4: failed to create main io (server or local)
+6: failed to load fxml file
+20: shutdown due to interrupted exception in thread
+22: shutdown due to FileMonitor Thread interrupted.

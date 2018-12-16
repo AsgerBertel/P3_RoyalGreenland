@@ -1,21 +1,16 @@
 package gui;
 
-import directory.SettingsManager;
-import gui.log.LoggingErrorTools;
+import app.DMSApplication;
+import log.LoggingErrorTools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 public class AlertBuilder {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    DMSApplication application = new DMSApplication();
 
     /**
      * Displays a WARNING popup informing the user that a given file already exists. Used in context of Files.exists()

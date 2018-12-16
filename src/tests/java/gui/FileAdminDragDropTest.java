@@ -1,14 +1,15 @@
 package gui;
 
-import directory.FileManager;
-import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.files.Document;
-import directory.files.Folder;
-import directory.plant.AccessModifier;
-import directory.plant.Plant;
-import directory.plant.PlantManager;
-import gui.file_administration.FileAdminController;
+import gui.custom_node.PlantCheckboxElement;
+import model.managing.FileManager;
+import model.managing.SettingsManager;
+import model.AbstractFile;
+import model.Document;
+import model.Folder;
+import model.AccessModifier;
+import model.Plant;
+import model.managing.PlantManager;
+import controller.FileAdminController;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -18,7 +19,6 @@ import javafx.scene.control.TreeItem;
 
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
-import json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileAdminDragDropTest extends GUITest {
+class FileAdminDragDropTest extends GUITest {
 
     private Button uploadDocButton, createFolderButton, deleteFileButton;
     private Button publishButton;
@@ -75,7 +75,7 @@ public class FileAdminDragDropTest extends GUITest {
         PlantManager.resetInstance();
     }
 
-    private boolean containsChildWithName(Folder folder, String name){
+    boolean containsChildWithName(Folder folder, String name){
         for(AbstractFile child : folder.getContents())
             if(child.getName().equals(name)) return true;
         return false;
@@ -164,7 +164,7 @@ public class FileAdminDragDropTest extends GUITest {
     }
 
     @RepeatedTest(value = 2)
-    void dragIntoSubfolderTest() throws InterruptedException {
+    void dragIntoSubfolderTest() {
         int originalTreeHash = fileTree.getRoot().hashCode();
         int originalFileListHash = fileTree.getRoot().getValue().hashCode();
 
@@ -180,7 +180,7 @@ public class FileAdminDragDropTest extends GUITest {
         FxRobot fxRobot = drag(getTreeCell(fileTree, itemToMove));
         fxRobot.dropTo(getTreeCell(fileTree, targetItem));
 
-        // Assert that nothing has changed in the treeView and in the files list
+        // Assert that nothing has changed in the treeView and in the io list
         assertEquals(originalTreeHash, fileTree.getRoot().hashCode());
         assertEquals(originalFileListHash, fileTree.getRoot().getValue().hashCode());
         // Assert the file list still matches the file system
@@ -235,7 +235,7 @@ public class FileAdminDragDropTest extends GUITest {
         moveAllChildrenOut(fileTree.getRoot());
     }*/
 
-    void moveAllChildrenToOneFolder(TreeItem<AbstractFile> root) {
+    private void moveAllChildrenToOneFolder(TreeItem<AbstractFile> root) {
         if(!root.isExpanded())
             doubleClickOn(getTreeCell(fileTree, root));
 
@@ -254,7 +254,7 @@ public class FileAdminDragDropTest extends GUITest {
         assertTrue(TestUtil.doesAbstractFileMatchFileSystem(FileManager.getInstance().getMainFilesRoot(), SettingsManager.getServerDocumentsPath()));
     }
 
-    void moveAllChildrenOut(TreeItem<AbstractFile> root) {
+    private void moveAllChildrenOut(TreeItem<AbstractFile> root) {
         if(root.getValue() instanceof Folder){
             if(root.getChildren().get(0).getValue() instanceof Folder)
                 moveAllChildrenOut(root.getChildren().get(0));

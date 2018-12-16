@@ -1,24 +1,19 @@
 package gui;
 
-import directory.FileExplorer;
-import directory.FileManager;
-import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.plant.AccessModifier;
-import directory.plant.Plant;
-import directory.plant.PlantManager;
-import gui.file_overview.FileOverviewController;
-import gui.plant_administration.PlantAdministrationController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import model.managing.FileExplorer;
+import model.managing.FileManager;
+import model.managing.SettingsManager;
+import model.AbstractFile;
+import model.Plant;
+import model.managing.PlantManager;
+import controller.FileOverviewController;
+import controller.PlantAdministrationController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import util.TestUtil;
 
 import java.io.IOException;
@@ -27,10 +22,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class ViewFilesTest extends GUITest {
+class ViewFilesTest extends GUITest {
 
     private FileOverviewController fileController;
     private PlantAdministrationController plantAdminController;
@@ -49,7 +43,7 @@ public class ViewFilesTest extends GUITest {
 
     @BeforeEach
     void setup() throws IOException, InterruptedException {
-        // Reset files
+        // Reset io
         resetFiles();
         FileManager.resetInstance();
         PlantManager.resetInstance();
@@ -63,7 +57,7 @@ public class ViewFilesTest extends GUITest {
         writeInTextField(idTextField, Integer.toString(1010));
         clickOn(saveEditButton);
 
-        // Go to view files tab
+        // Go to view io tab
         clickOn((ToggleButton)findNode("#administrateDocumentsButton"));
 
         // Create reference for file tree
@@ -80,7 +74,7 @@ public class ViewFilesTest extends GUITest {
         // Publish changes.
         clickOn((Button)findNode("#publishChangesButton"));
 
-        // Go to view files tab
+        // Go to view io tab
         clickOn((ToggleButton)findNode("#viewDocumentsButton"));
 
         // Create reference to controller
@@ -207,7 +201,7 @@ public class ViewFilesTest extends GUITest {
         return ((TreeCell<AbstractFile>) cells.get(row));
     }
 
-    private void resetFiles() throws IOException, InterruptedException {
+    private void resetFiles() throws IOException {
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
 

@@ -1,5 +1,7 @@
 package gui;
 
+import app.DMSApplication;
+import controller.TabController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
@@ -17,7 +19,7 @@ public enum Tab {
     SETTINGS_ADMIN("SettingsAdmin.fxml"),
     SETTINGS("Settings.fxml");
 
-    private String fxmlFileName;
+    private final String fxmlFileName;
     private Pane node;
     private TabController tabController;
     private Locale lang;

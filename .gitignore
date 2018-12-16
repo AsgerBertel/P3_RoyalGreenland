@@ -1,4 +1,4 @@
-# .gitignore; universal ignored files for all personal settings
+# .gitignore; universal ignored io for all personal settings
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -9,10 +9,10 @@
 .idea/**/vcs.xml
 .idea/**/misc.xml
 
-# Generated files
+# Generated io
 .idea/**/contentModel.xml
 
-# Sensitive or high-churn files
+# Sensitive or high-churn io
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
@@ -21,7 +21,7 @@
 .idea/**/dbnavigator.xml
 
 # Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
+# When using Gradle or Maven with auto-import, you should exclude module io,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
 # .idea/modules.xml

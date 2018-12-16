@@ -1,9 +1,8 @@
 package gui;
 
-import directory.SettingsManager;
+import model.managing.SettingsManager;
 
 import java.security.Permission;
-import java.util.Set;
 
 
 public class ExitChecker {
@@ -32,7 +31,7 @@ public class ExitChecker {
 
     private static class ShutdownHook implements Runnable {
 
-        public static Integer EXIT_STATUS = null;
+        static Integer EXIT_STATUS = null;
 
         public void run() {
             if(EXIT_STATUS != null){

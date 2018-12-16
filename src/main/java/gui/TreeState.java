@@ -1,7 +1,7 @@
 package gui;
 
-import directory.files.AbstractFile;
-import directory.files.Folder;
+import model.AbstractFile;
+import model.Folder;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;

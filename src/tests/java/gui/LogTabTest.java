@@ -1,27 +1,27 @@
 package gui;
 
-import directory.FileManager;
-import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.files.Document;
-import directory.plant.AccessModifier;
-import directory.plant.Plant;
-import directory.plant.PlantManager;
-import gui.file_administration.FileAdminController;
-import gui.log.LogController;
-import gui.log.LogEventType;
-import gui.log.LogManager;
-import gui.plant_administration.PlantAdministrationController;
+import app.DMSApplication;
+import model.managing.FileManager;
+import model.managing.SettingsManager;
+import model.AbstractFile;
+import model.Document;
+import model.AccessModifier;
+import model.Plant;
+import model.managing.PlantManager;
+import controller.LogController;
+import gui.custom_node.PlantElement;
+import log.LogEventType;
+import log.LogManager;
+import controller.PlantAdministrationController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import json.AppFilesManager;
+import io.json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import util.TestUtil;
-import gui.log.LogEvent;
+import log.LogEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LogTabTest extends GUITest {
+class LogTabTest extends GUITest {
     private TreeView<AbstractFile> fileTree;
     private TreeItem<AbstractFile> treeItem;
     private Button btn;
@@ -73,6 +73,8 @@ public class LogTabTest extends GUITest {
         AppFilesManager.createLocalDirectories();
         new File("TestingFiles/Server/RG DMS/Working Directory/App Files/logs.log");
     }
+
+    @SuppressWarnings("Duplicates")
     private void enterText(Control clickAbleElement, String text){
         clickOn(clickAbleElement);
         if(System.getProperty("os.name").contains("Mac")){

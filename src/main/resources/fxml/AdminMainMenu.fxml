@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane minHeight="${mainMenuFlowPane.height}" fx:id="menuBorderPane" styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.menu.MainMenuController">
+<BorderPane minHeight="${mainMenuFlowPane.height}" fx:id="menuBorderPane" styleClass="horizontalMenu" stylesheets="@/styles/menubar.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainMenuController">
    <left>
       <FlowPane fx:id="mainMenuFlowPane" prefWidth="${menuBorderPane.width - 85}" maxHeight="44">
          <children>

@@ -1,6 +1,7 @@
 package gui;
 
-import directory.SettingsManager;
+import app.DMSApplication;
+import model.managing.SettingsManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
@@ -15,10 +16,10 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SettingsTabAdminTest extends GUITest{
+class SettingsTabAdminTest extends GUITest{
 
     @BeforeEach
-    void setTab() throws InterruptedException {
+    void setTab() {
         clickOn((ToggleButton)findNode("#settingsButton"));
     }
 
@@ -74,7 +75,7 @@ public class SettingsTabAdminTest extends GUITest{
     }
 
 
-    void saveTextValueTest(TextField textField, String newValue, Supplier<String> getSettingsValue){
+    private void saveTextValueTest(TextField textField, String newValue, Supplier<String> getSettingsValue){
         String defaultValue = getSettingsValue.get();
         Button saveButton = findNode("#saveChangesButton");
 
@@ -88,7 +89,7 @@ public class SettingsTabAdminTest extends GUITest{
     }
 
     @RepeatedTest(value = 2)
-    void changeLanguageTest() throws InterruptedException {
+    void changeLanguageTest() {
         ToggleButton greenlandicButton = findNode("#greenlandicSettingsButton");
         ToggleButton danishButton = findNode("#danishSettingsButton");
         Button saveButton = findNode("#saveChangesButton");
@@ -124,7 +125,7 @@ public class SettingsTabAdminTest extends GUITest{
     }
 
     @RepeatedTest(value = 2)
-    void noChangeLanguageTest() throws InterruptedException {
+    void noChangeLanguageTest() {
         ToggleButton greenlandicButton = findNode("#greenlandicSettingsButton");
         ToggleButton danishButton = findNode("#danishSettingsButton");
         Button saveButton = findNode("#saveChangesButton");

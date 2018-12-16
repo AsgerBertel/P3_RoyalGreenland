@@ -1,14 +1,14 @@
 package gui;
 
-import directory.FileManager;
-import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.plant.PlantManager;
-import gui.deleted_files.ArchiveController;
-import gui.file_administration.FileAdminController;
+import model.managing.FileManager;
+import model.managing.SettingsManager;
+import model.AbstractFile;
+import model.managing.PlantManager;
+import controller.ArchiveController;
+import controller.FileAdminController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import json.AppFilesManager;
+import io.json.AppFilesManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.TestUtil;
@@ -21,19 +21,19 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class ArchiveTabTest extends GUITest {
+class ArchiveTabTest extends GUITest {
 
     private ArchiveController fileController;
     private TreeView<AbstractFile> fileTree;
 
     @BeforeEach
-    void setup() throws IOException, InterruptedException {
+    void setup() throws IOException{
         resetFiles();
         clickOn((ToggleButton)findNode("#archiveButton"));
         fileController = (ArchiveController) dmsApplication.getCurrentTab().getTabController();
     }
 
-    private void resetFiles() throws IOException, InterruptedException {
+    private void resetFiles() throws IOException{
         SettingsManager.setServerPath(TestUtil.getTestServerDocuments());
         SettingsManager.setLocalPath(TestUtil.getTestLocalDocuments());
 

@@ -1,10 +1,11 @@
 package gui;
+import app.DMSApplication;
 import javafx.scene.control.ToggleButton;
 import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MainMenuTest extends GUITest {
+class MainMenuTest extends GUITest {
 
     @RepeatedTest(value = 2)
     void switchLanguageTest() throws InterruptedException {
@@ -23,7 +24,7 @@ public class MainMenuTest extends GUITest {
     }
 
     @RepeatedTest(value = 2)
-    void switchTabTest() throws InterruptedException {
+    void switchTabTest() {
         for (int i = 0; i < 2; i++) {
             clickOn((ToggleButton) findNode("#administrateDocumentsButton"));
             assertEquals(dmsApplication.getCurrentTab(), Tab.FILE_ADMINISTRATION);

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.settings.InitializationController"
-            prefHeight="250" prefWidth="600.0" minWidth="600"
-            stylesheets="/styles/settings.css, /styles/masterSheet.css">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.InitializationController"
+      prefHeight="250" prefWidth="600.0" minWidth="600"
+      stylesheets="/styles/settings.css, /styles/masterSheet.css">
 
     <VBox styleClass="settingsVBox">
         <Text fx:id="settingDescription" styleClass="standardTitle"/>

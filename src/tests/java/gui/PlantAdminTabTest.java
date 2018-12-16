@@ -1,11 +1,13 @@
 package gui;
 
-import directory.SettingsManager;
-import directory.plant.AccessModifier;
-import directory.plant.Plant;
-import directory.plant.PlantManager;
-import gui.plant_administration.PlantAdministrationController;
-import gui.settings.SettingsController;
+import app.DMSApplication;
+import model.managing.SettingsManager;
+import model.AccessModifier;
+import model.Plant;
+import model.managing.PlantManager;
+import controller.PlantAdministrationController;
+import controller.SettingsController;
+import gui.custom_node.PlantElement;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -13,21 +15,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import org.apache.commons.io.FileUtils;
-import org.assertj.core.error.future.ShouldNotHaveFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import util.TestUtil;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlantAdminTabTest extends GUITest {
+class PlantAdminTabTest extends GUITest {
 
-    private Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
-    private Plant plant2 = new Plant(1234, "Testing Factory 2", new AccessModifier());
+    private final Plant plant1 = new Plant(4321,"Testing factory 1", new AccessModifier());
+    private final Plant plant2 = new Plant(1234, "Testing Factory 2", new AccessModifier());
     private PlantElement plant1Element, plant2Element;
     private PlantAdministrationController plantController;
     private Button menuCreatePlantButton, menuEditPlantButton, deletePlantButton;
@@ -150,7 +149,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
-    void createDuplicatePlantTest() throws InterruptedException {
+    void createDuplicatePlantTest() {
         String newPlantName = plant1.getName();
         int newPlantID = plant1.getId();
         int startingListSize = plantController.getPlantVBox().getChildren().size();
@@ -174,7 +173,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     @RepeatedTest(value = 2) // Create plant with the same name and id as already existing plant
-    void editDuplicatePlantTest() throws InterruptedException {
+    void editDuplicatePlantTest() {
         TextField nameTextField = findNode("#fieldEditPlantName");
         TextField idTextField = findNode("#fieldEditPlantId");
         Button showEditButton = findNode("#btnEditPlantSidebar");
@@ -272,7 +271,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     @RepeatedTest(value = 2)
-    void closeDeletePopupTest() throws InterruptedException {
+    void closeDeletePopupTest() {
         Button deletePlantButton = findNode("#btnDeletePlantSidebar");
         Button showEditButton = findNode("#btnEditPlantSidebar");
 
@@ -348,6 +347,7 @@ public class PlantAdminTabTest extends GUITest {
     }
 
     // Creates a new plant and returns the plant element from the list
+    @SuppressWarnings("SameParameterValue")
     private PlantElement createNewPlant(int id, String name) {
         TextField nameTextField = findNode("#fieldCreatePlantName");
         TextField idTextField = findNode("#fieldCreatePlantId");

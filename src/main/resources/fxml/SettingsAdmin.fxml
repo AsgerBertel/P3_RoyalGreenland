@@ -7,7 +7,7 @@
 <?import javafx.scene.image.Image?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="gui.settings.SettingsController"
+      fx:controller="controller.SettingsController"
       prefHeight="400.0" prefWidth="600.0" stylesheets="@/styles/masterSheet.css, @/styles/settings.css">
 
     <!-- Server path setting -->

@@ -1,32 +1,23 @@
 package util;
 
 import app.ApplicationMode;
-import directory.FileManager;
-import directory.SettingsManager;
-import directory.files.AbstractFile;
-import directory.files.Folder;
-import directory.plant.PlantManager;
-import gui.DMSApplication;
+import model.managing.FileManager;
+import model.managing.SettingsManager;
+import model.AbstractFile;
+import model.Folder;
+import model.managing.PlantManager;
+import app.DMSApplication;
 import gui.Tab;
-import gui.file_administration.FileAdminController;
-import gui.log.LogManager;
+import controller.FileAdminController;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import json.AppFilesManager;
+import io.json.AppFilesManager;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.opentest4j.AssertionFailedError;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import static org.apache.commons.io.FileUtils.listFiles;
 
 public class TestUtil {
 
@@ -103,7 +94,7 @@ public class TestUtil {
         }
     }
 
-    public static boolean areDirsEqual(File dir1, File dir2) {
+    private static boolean areDirsEqual(File dir1, File dir2) {
         ArrayList<File> dir1List = new ArrayList<>(FileUtils.listFiles(dir1, null, true));
         ArrayList<File> dir2List = new ArrayList<>(FileUtils.listFiles(dir2, null, true));
 

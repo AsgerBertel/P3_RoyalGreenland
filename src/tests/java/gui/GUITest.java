@@ -1,27 +1,24 @@
 package gui;
 
 import app.ApplicationMode;
-import directory.SettingsManager;
-import gui.file_administration.FileAdminController;
+import app.DMSApplication;
+import model.managing.SettingsManager;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import util.TestUtil;
 
-import java.nio.file.Path;
 import java.util.concurrent.TimeoutException;
 
 public abstract class GUITest extends ApplicationTest {
 
-    protected DMSApplication dmsApplication;
+    DMSApplication dmsApplication;
 
     @Override
     public void start(Stage stage) {
@@ -59,7 +56,7 @@ public abstract class GUITest extends ApplicationTest {
         ApplicationTest.launch(DMSApplication.class, ApplicationMode.ADMIN.toString());
     }
 
-    void switchLanguageSetting()  {
+    private void switchLanguageSetting()  {
         if(DMSApplication.getLanguage().equals(DMSApplication.DK_LOCALE)){
             dmsApplication.changeLanguage(DMSApplication.GL_LOCALE);
         }else{
@@ -72,7 +69,7 @@ public abstract class GUITest extends ApplicationTest {
         return (T) lookup(fxID).queryAll().iterator().next();
     }
 
-    protected void selectAllAndDelete(){
+    void selectAllAndDelete(){
         if(System.getProperty("os.name").contains("Mac")){
             press(KeyCode.COMMAND);
         } else{
@@ -83,7 +80,7 @@ public abstract class GUITest extends ApplicationTest {
         push(KeyCode.DELETE);
     }
 
-    protected void clickOnContextMenuItem(int index){
+    void clickOnContextMenuItem(int index){
         moveBy(48, 18);
         moveBy(0, 27 * index);
         clickOn(MouseButton.PRIMARY);

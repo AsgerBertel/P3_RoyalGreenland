@@ -1,23 +1,18 @@
 package gui;
 
-import directory.files.AbstractFile;
-import directory.files.Document;
-import directory.files.Folder;
-import directory.plant.AccessModifier;
-import javafx.scene.control.Cell;
-import javafx.scene.control.TreeCell;
+import model.AbstractFile;
+import model.Document;
+import model.Folder;
+import model.AccessModifier;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class FileTreeUtil {
-    private static Image pdfImage = new Image("/icons/smallPdfIcon.png");
+    private static final Image pdfImage = new Image("/icons/smallPdfIcon.png");
     private static final Image folderImage = new Image("/icons/smallFolder.png");
     private static final Image documentImage = new Image("/icons/smallWordIcon.png");
     private static final Image genericIcon = new Image("/icons/genericIcon.png");
@@ -28,7 +23,7 @@ public class FileTreeUtil {
      * Generates a tree with the given folder as the root element
      *
      * @param root the root of the tree
-     * @return a TreeItem created from the given root folder, containing all child files
+     * @return a TreeItem created from the given root folder, containing all child io
      */
     public static TreeItem<AbstractFile> generateTree(Folder root) {
         return generateTree(root, null);
@@ -40,15 +35,15 @@ public class FileTreeUtil {
     }
 
     /**
-     * Generates dummy TreeItem as the root. Adds all given files and potential sub directories to the tree.
+     * Generates dummy TreeItem as the root. Adds all given io and potential sub directories to the tree.
      *
-     * @param files the list of files that will be included in the tree. Children of any folder will also be added to the tree.
-     * @return a dummy root element containing all the given files.
+     * @param files the list of io that will be included in the tree. Children of any folder will also be added to the tree.
+     * @return a dummy root element containing all the given io.
      */
     public static TreeItem<AbstractFile> generateTree(ArrayList<AbstractFile> files, AccessModifier accessModifier) {
         TreeItem<AbstractFile> root = new TreeItem<>();
 
-        // Add all files to the tree if they are contained in accessModifier or if no accessModifier is given
+        // Add all io to the tree if they are contained in accessModifier or if no accessModifier is given
         for (AbstractFile file : files) {
             if (file instanceof Folder) {
                 if (accessModifier == null || ((Folder) file).containsFromAccessModifier(accessModifier))
@@ -61,14 +56,14 @@ public class FileTreeUtil {
         return root;
     }
 
-    // Recursively generates a tree from a root folder. The tree will only contain files from the given access modifier
-    // If the access modifier is null all files will be shown in the tree
+    // Recursively generates a tree from a root folder. The tree will only contain io from the given access modifier
+    // If the access modifier is null all io will be shown in the tree
     private static TreeItem<AbstractFile> generateTree(Folder rootFolder, AccessModifier accessModifier) {
         // Add folder element to tree
         TreeItem<AbstractFile> rootItem = createTreeItem(rootFolder);
 
         List<AbstractFile> children = rootFolder.getContents();
-        // Sort to show files in order of file type and then name
+        // Sort to show io in order of file type and then name
         children.sort(FileTreeUtil::compareFiles);
 
         for (AbstractFile child : children) {
@@ -88,13 +83,13 @@ public class FileTreeUtil {
     }
 
     // Creates a single tree item with no children
-    public static TreeItem<AbstractFile> createTreeItem(AbstractFile file) {
+    private static TreeItem<AbstractFile> createTreeItem(AbstractFile file) {
         TreeItem<AbstractFile> docItem = new TreeItem<>(file);
         docItem.setGraphic(getImageView(file));
         return docItem;
     }
 
-    // Compare function for sorting files
+    // Compare function for sorting io
     private static int compareFiles(AbstractFile o1, AbstractFile o2) {
         if (o1.getClass().equals(o2.getClass())) {
             // Compare name if both classes are the same (both are folders or both are documents)
