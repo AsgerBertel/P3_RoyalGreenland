@@ -50,7 +50,8 @@ public class TestUtil {
         FileAdminController fileController = (FileAdminController) Tab.FILE_ADMINISTRATION.getTabController();
         if (fileController != null)
             fileController.stopWatchThread();
-        DMSApplication.getDMSApplication().stopWatcherThreads();
+        if(DMSApplication.getDMSApplication() != null)
+            DMSApplication.getDMSApplication().stopWatcherThreads();
 
         attemptDeletions(oldServerFolder);
         attemptDeletions(oldLocalFolder);
@@ -75,7 +76,9 @@ public class TestUtil {
 
         if (fileController != null)
             fileController.startWatchThread();
-        DMSApplication.getDMSApplication().startWatcherThreads();
+
+        if(DMSApplication.getDMSApplication() != null)
+            DMSApplication.getDMSApplication().startWatcherThreads();
     }
 
     private static void attemptDeletions(Path path) {
