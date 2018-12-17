@@ -1,5 +1,6 @@
 package log;
 
+import app.DMSApplication;
 import model.managing.SettingsManager;
 
 import java.io.*;
@@ -98,6 +99,6 @@ public class LogManager {
                 return allEvents.get(i).getTime();
             }
         }
-        return "--";
+        return DMSApplication.getMessage("FileOverview.NotAvailable");
     }
 }

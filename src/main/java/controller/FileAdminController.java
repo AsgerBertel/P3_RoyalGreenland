@@ -442,6 +442,8 @@ public class FileAdminController implements TabController {
 
     /* ---- Changelist ---- */
     private synchronized void reloadChangesList() {
+        lastUpdatedText.setText(LogManager.getLastPublished());
+
         changesVBox.getChildren().clear();
         List<LogEvent> unpublishedChanges = LogManager.getAllUnpublishedEvents();
         if (unpublishedChanges.size() <= 0) {
@@ -450,6 +452,7 @@ public class FileAdminController implements TabController {
         } else {
             publishChangesButton.setDisable(false);
         }
+
 
         for (LogEvent logEvent : unpublishedChanges)
             changesVBox.getChildren().add(new ChangeBox(logEvent));
@@ -460,7 +463,6 @@ public class FileAdminController implements TabController {
             DirectoryCloner.publishFiles();
             LogManager.log(new LogEvent(LogManager.getAllUnpublishedEvents().size() + " " + DMSApplication.getMessage("Log.Changes"), LogEventType.CHANGES_PUBLISHED));
             update();
-            lastUpdatedText.setText(LogManager.getLastPublished());
         } catch (Exception e) {
             e.printStackTrace();
         }

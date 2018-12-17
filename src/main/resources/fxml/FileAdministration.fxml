@@ -66,8 +66,7 @@
     <VBox id="changesSection" fx:id="changesSection" maxWidth="220" minWidth="220" prefHeight="1670.0" prefWidth="216.0">
         <Text styleClass="bigTitle" text="%AdminFiles.Changes" translateY="15"/>
         <Text styleClass="smallNote" text="%AdminFiles.LastUpdated" translateY="13" />
-        <Text fx:id="lastUpdatedText" styleClass="smallNote" text="%AdminFiles.LastUpdated" translateY="13" />
-        <Text styleClass="standardText" text="%AdminFiles.NewChanges" translateY="15" />
+        <Text fx:id="lastUpdatedText" styleClass="smallNote" text=" " translateY="13" />
 
         <ScrollPane id="changesScrollPane" fx:id="changesScrollPane" maxHeight="${changesSection.height * 0.75}" minWidth="${changesSection.width}" translateY="30">
             <VBox fx:id="changesVBox" minWidth="${changesSection.width}" styleClass="changesVBox" />
