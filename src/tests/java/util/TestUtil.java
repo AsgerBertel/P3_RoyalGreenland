@@ -30,11 +30,6 @@ public class TestUtil {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        SettingsManager.loadSettings(ApplicationMode.ADMIN);
-        resetTestFiles();
-    }
-
     public static void resetTestFiles() throws IOException {
         Path oldServerFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path oldLocalFolder = TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
@@ -50,14 +45,10 @@ public class TestUtil {
         attemptDeletions(oldLocalFolder);
 
         FileUtils.copyDirectory(replacementFolder.toFile(), oldServerFolder.toFile());
-        while (!areDirsEqual(oldServerFolder.toFile(), replacementFolder.toFile())) {
-            try {
-                System.out.println("sleeping while copying");
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        if (!areDirsEqual(oldServerFolder.toFile(), replacementFolder.toFile()))
+            System.err.println("Testing files were not correctly reset");
+
+
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 
