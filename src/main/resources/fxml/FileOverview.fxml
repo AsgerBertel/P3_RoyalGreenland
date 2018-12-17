@@ -28,20 +28,28 @@
                     <children>
                         <HBox id="hBoxTop">
                             <children>
-                                <Button styleClass="menuButton" fx:id="btnReturn" mnemonicParsing="false" onAction="#openPreviousFolder"/>
+                                <Button styleClass="menuButton" fx:id="btnReturn" mnemonicParsing="false"
+                                        onAction="#openPreviousFolder"/>
                                 <Label id="lblVisualPath" fx:id="lblVisualPath"/>
                             </children>
                         </HBox>
                         <Pane styleClass="horizontalSplitter"/>
                     </children>
                 </VBox>
-                <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600">
+                <ScrollPane id="scpFileView" fx:id="scpFileView" prefWidth="1600" VBox.vgrow="ALWAYS">
                     <content>
                         <FlowPane id="flpFileView" fx:id="flpFileView" prefWidth="${scpFileView.width}"/>
                     </content>
                 </ScrollPane>
 
+                <VBox alignment="CENTER_RIGHT">
+                    <Label fx:id="lastUpdateLabel" text=""/>
+                </VBox>
+
             </children>
         </VBox>
+
     </children>
 </HBox>
+
+

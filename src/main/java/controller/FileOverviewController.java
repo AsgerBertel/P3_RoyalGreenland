@@ -34,7 +34,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileOverviewController implements TabController {
+    @FXML
     public Button btnReturn;
+    @FXML
+    public Label lastUpdateLabel;
     private FileExplorer fileExplorer;
     private List<AbstractFile> filesToShow;
 
@@ -79,6 +82,13 @@ public class FileOverviewController implements TabController {
         }
 
         selectedFileExplorer = null;
+
+        if(DMSApplication.getApplicationMode() == ApplicationMode.ADMIN){
+            lastUpdateLabel.setVisible(false);
+        }else{
+            lastUpdateLabel.setVisible(true);
+            lastUpdateLabel.setText(DMSApplication.getMessage("FileOverview.LastUpdated") + " " + AppFilesManager.getLastLocalUpdateTime());
+        }
 
         reloadPlantDropDown();
         reloadFileTree();

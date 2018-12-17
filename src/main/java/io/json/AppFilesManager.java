@@ -1,6 +1,7 @@
 package io.json;
 
 
+import app.DMSApplication;
 import model.managing.FileManager;
 import model.managing.SettingsManager;
 import model.AbstractFile;
@@ -13,6 +14,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AppFilesManager {
@@ -20,6 +23,11 @@ public class AppFilesManager {
     public static final String FILES_LIST_FILE_NAME = "allFiles.JSON";
     public static final String FACTORY_LIST_FILE_NAME = "allPlants.JSON";
     private static final String LAST_EDITOR_FILE_NAME = "lasteditor.txt";
+    private static final String LAST_LOCAL_UPDATE_FILE_NAME = "lastUpdated.txt";
+
+
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+    private static String lastLocalUpdate;
 
     /**
      * Loads the FileManager instance stored in App Files. Returns null if no file is found or an error occurred
@@ -39,6 +47,18 @@ public class AppFilesManager {
     public static PlantManager loadPlantManager(){
         Path path = SettingsManager.getServerAppFilesPath().resolve(FACTORY_LIST_FILE_NAME);
         return loadInstanceFromJsonFile(path, PlantManager.class);
+    }
+
+    public static String getLastLocalUpdateTime(){
+        if(lastLocalUpdate == null)
+            lastLocalUpdate = loadInstanceFromJsonFile(SettingsManager.getLocalAppFilesPath().resolve(LAST_LOCAL_UPDATE_FILE_NAME), String.class);
+
+        return (lastLocalUpdate == null)? DMSApplication.getMessage("FileOverview.NotAvailable") : lastLocalUpdate;
+    }
+
+    public static void saveLocalUpdateTime(){
+        lastLocalUpdate = dateFormatter.format(LocalDateTime.now());
+        saveObjectToJson(lastLocalUpdate, SettingsManager.getLocalAppFilesPath().resolve(LAST_LOCAL_UPDATE_FILE_NAME));
     }
 
     public static ArrayList<Plant> loadLocalFactoryList(){

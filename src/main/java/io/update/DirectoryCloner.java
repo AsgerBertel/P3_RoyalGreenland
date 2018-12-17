@@ -74,6 +74,7 @@ public class DirectoryCloner {
             replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
                     SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME));
 
+            AppFilesManager.saveLocalUpdateTime();
         }catch (IOException | IllegalFileException e) {
             e.printStackTrace();
             throw new UpdateFailException(e);
