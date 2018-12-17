@@ -36,10 +36,11 @@ public class TestUtil {
         Path oldServerFolder = TEST_SERVER_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path oldLocalFolder = TEST_LOCAL_PATH.resolve(APPLICATION_FOLDER_NAME);
         Path replacementFolder = TEST_SERVER_PATH.resolve(REPLACEMENT_FOLDER_NAME);
+        //DMSApplication.getDMSApplication().getDocumentsChangeListener().stopRunning();
 
         FileAdminController fileController = (FileAdminController) Tab.FILE_ADMINISTRATION.getTabController();
         if(fileController != null)
-            fileController.stopWatchThread();
+            fileController.stopLogWatcher();
 
         if (Files.exists(oldServerFolder) && oldServerFolder.toString().contains(APPLICATION_FOLDER_NAME)) {
             FileUtils.deleteDirectory(oldServerFolder.toFile());
@@ -53,8 +54,10 @@ public class TestUtil {
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 
-        if(fileController != null);
-            fileController.startWatchThread();
+        if(fileController != null)
+            fileController.stopLogWatcher();
+
+        //DMSApplication.getDMSApplication().getDocumentsChangeListener().startRunning();
     }
 
     public static final Path getTestServerDocuments() {

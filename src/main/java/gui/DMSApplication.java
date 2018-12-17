@@ -5,6 +5,7 @@ import directory.update.*;
 import directory.update.DirectoryCloner;
 import directory.update.FileUpdater;
 import directory.SettingsManager;
+import gui.log.DocumentsChangeListener;
 import gui.log.LoggingErrorTools;
 import gui.menu.MainMenuController;
 import javafx.application.Application;
@@ -59,6 +60,7 @@ public class DMSApplication extends Application {
     private Tab currentTab;
 
     private AppFilesChangeListener externalUpdateListener;
+    private DocumentsChangeListener documentsChangeListener;
     private FileUpdater localFileUpdater;
 
     private static DMSApplication dmsApplication;
@@ -194,6 +196,10 @@ public class DMSApplication extends Application {
         return applicationMode;
     }
 
+    public DocumentsChangeListener getDocumentsChangeListener() {
+        return documentsChangeListener;
+    }
+
     public void initializeApplication() {
         // Load settings and initialize paths if non are saved
         SettingsManager.loadSettings(applicationMode);
@@ -216,10 +222,14 @@ public class DMSApplication extends Application {
                 AppFilesManager.createServerDirectories();
                 if(externalUpdateListener != null)
                     externalUpdateListener.stop();
+                if(documentsChangeListener != null)
+                    documentsChangeListener.stopRunning();
 
                 // Listen for changes made by other administrators
                 externalUpdateListener = new AppFilesChangeListener(this);
                 externalUpdateListener.start();
+                documentsChangeListener = new DocumentsChangeListener(this);
+                documentsChangeListener.startRunning();
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();

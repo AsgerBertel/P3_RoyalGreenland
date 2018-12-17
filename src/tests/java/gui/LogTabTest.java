@@ -49,12 +49,14 @@ public class LogTabTest extends GUITest {
 
         //set logController
         logController = (LogController) dmsApplication.getCurrentTab().getTabController();
-        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).stopWatchThread();
+        //((FileAdminController)dmsApplication.getCurrentTab().getTabController()).startLogWatcher();
 
         //clear previous work
+        dmsApplication.getDocumentsChangeListener().stopRunning();
         resetFiles();
-        //logController.update();
-        ((FileAdminController)dmsApplication.getCurrentTab().getTabController()).startWatchThread();
+        dmsApplication.getDocumentsChangeListener().startRunning();
+        logController.update();
+        //((FileAdminController)dmsApplication.getCurrentTab().getTabController()).startLogWatcher();
     }
 
     private static TreeCell<AbstractFile> getTreeCell(TreeView<AbstractFile> tree, TreeItem<AbstractFile> treeItem){

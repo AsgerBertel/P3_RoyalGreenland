@@ -96,7 +96,7 @@ public class FileAdminController implements TabController {
 
         changesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         fileTreeView.setCellFactory(new FileTreeDragAndDrop(this));
-        startWatchThread();
+        startLogWatcher();
     }
 
     @Override
@@ -475,19 +475,13 @@ public class FileAdminController implements TabController {
             }
         };
     }
-
-    /**
-     * Watches directory for changes, Listener only reacts on changes and calls update() in case invoked.
-     * Thread sleeps for 0,2 hereafter, for good measure.
-     */
     @SuppressWarnings("Duplicates")
-    public void startWatchThread() {
+    public void startLogWatcher() {
         if(running.get())
             return;
-        Path root = SettingsManager.getServerDocumentsPath();
         running.set(true);
 
-        FileManager fileManager = FileManager.getInstance();
+        Path root = SettingsManager.getServerAppFilesPath();
         File directory = new File(root.toString());
         observer = new FileAlterationObserver(directory);
         observer.addListener(new FileAlterationListener() {
@@ -514,16 +508,8 @@ public class FileAdminController implements TabController {
             @Override
             public void onFileChange(File file) {
                 // Don't register changes to temporary word files
-                if (!(file.getName().charAt(0) == '~') || Files.exists(file.toPath())) {
-                    Optional<AbstractFile> changedFile = fileManager.findInMainFiles(file.toPath());
-
-                    if (changedFile.isPresent() && changedFile.get() instanceof Document) {
-                        ((Document) changedFile.get()).setLastModified(LocalDateTime.now());
-                        Platform.runLater(() -> {
-                            LogManager.log(new LogEvent(changedFile.get().getName(), LogEventType.CHANGED));
-                            update();
-                        });
-                    }
+                if (file.getName().equals("logs")) {
+                    update();
                 }
             }
 
@@ -543,16 +529,12 @@ public class FileAdminController implements TabController {
         }
 
         monitorThread = new Thread(() -> {
-            double lastTimeMillis = 0;
             while (running.get()) {
-                /*System.out.println(System.currentTimeMillis() - lastTimeMillis);
-                System.out.println(System.currentTimeMillis());
-                System.out.println("watching");*/
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    AlertBuilder.interruptedExceptionShutdownPopUp("FileMonitor Thread");
+                    AlertBuilder.interruptedExceptionShutdownPopUp("LogMonitor Thread");
                     LoggingErrorTools.log(e, 22);
                     e.printStackTrace();
                     System.exit(22);
@@ -564,7 +546,7 @@ public class FileAdminController implements TabController {
         monitorThread.start();
     }
 
-    public void stopWatchThread() {
+    public void stopLogWatcher() {
         running.set(false);
     }
 
@@ -595,5 +577,7 @@ public class FileAdminController implements TabController {
         });
     }
 
-
+    public static Thread getMonitorThread() {
+        return monitorThread;
+    }
 }

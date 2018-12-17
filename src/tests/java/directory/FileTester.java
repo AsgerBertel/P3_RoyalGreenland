@@ -2,11 +2,13 @@ package directory;
 
 import app.ApplicationMode;
 import directory.files.AbstractFile;
+import directory.files.Folder;
 import directory.plant.PlantManager;
 import gui.DMSApplication;
 import gui.file_administration.FileAdminController;
 import json.AppFilesManager;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import util.TestUtil;
@@ -37,9 +39,10 @@ public class FileTester {
         FileManager.resetInstance();
         PlantManager.resetInstance();
 
+        AppFilesManager.createServerDirectories();
+        AppFilesManager.createLocalDirectories();
         setSettings();
     }
-
     protected void setSettings(){
 
     }
@@ -49,7 +52,6 @@ public class FileTester {
         // Reset path in settings
         SettingsManager.setServerPath(originalServerPath);
         SettingsManager.setLocalPath(originalLocalPath);
-        ((FileAdminController)DMSApplication.getDMSApplication().getCurrentTab().getTabController()).stopWatchThread();
     }
 
     public static AbstractFile findInMainFiles(Path path){

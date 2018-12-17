@@ -93,9 +93,9 @@ public class AppFilesChangeListener {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     AlertBuilder.interruptedExceptionPopUp("FileMonitorThread");
-                    LoggingErrorTools.log(e, 2);
+                    LoggingErrorTools.log(e, 20);
                     e.printStackTrace();
-                    System.exit(2);
+                    System.exit(20);
                 }
             }
         });

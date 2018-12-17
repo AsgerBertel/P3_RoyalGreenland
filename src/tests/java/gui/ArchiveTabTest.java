@@ -28,7 +28,9 @@ public class ArchiveTabTest extends GUITest {
 
     @BeforeEach
     void setup() throws IOException, InterruptedException {
+        dmsApplication.getDocumentsChangeListener().stopRunning();
         resetFiles();
+        dmsApplication.getDocumentsChangeListener().startRunning();
         clickOn((ToggleButton)findNode("#archiveButton"));
         fileController = (ArchiveController) dmsApplication.getCurrentTab().getTabController();
     }

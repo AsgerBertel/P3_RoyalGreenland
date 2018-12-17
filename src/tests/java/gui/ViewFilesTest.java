@@ -49,7 +49,9 @@ public class ViewFilesTest extends GUITest {
     @BeforeEach
     void setup() throws IOException, InterruptedException {
         // Reset files
+        dmsApplication.getDocumentsChangeListener().stopRunning();
         resetFiles();
+        dmsApplication.getDocumentsChangeListener().startRunning();
 
         // Wait for reset files.
         Thread.sleep(4000);
