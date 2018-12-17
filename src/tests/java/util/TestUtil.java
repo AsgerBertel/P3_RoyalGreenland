@@ -48,7 +48,6 @@ public class TestUtil {
         if (!areDirsEqual(oldServerFolder.toFile(), replacementFolder.toFile()))
             System.err.println("Testing files were not correctly reset");
 
-
         AppFilesManager.createServerDirectories();
         AppFilesManager.createLocalDirectories();
 

@@ -10,7 +10,7 @@ public class FileUpdater extends Thread {
     // The pause between each check for updates
     private static final int UPDATE_INTERVAL_SECS = 10;
     private final DMSApplication dmsApplication;
-    private boolean running = true;
+    private volatile boolean running = true;
 
     public FileUpdater(DMSApplication dmsApplication) {
         this.dmsApplication = dmsApplication;

@@ -15,7 +15,7 @@ import java.io.File;
 public class AppFilesChangeListener {
 
     private DMSApplication dmsApplication;
-    private boolean running = false;
+    private volatile boolean running = false;
     private FileAlterationObserver observer;
 
     public AppFilesChangeListener(DMSApplication dmsApplication) {
