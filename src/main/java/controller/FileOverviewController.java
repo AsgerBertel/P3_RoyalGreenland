@@ -95,21 +95,26 @@ public class FileOverviewController implements TabController {
         reloadFileExplorer();
     }
 
+
     private void reloadPlantDropDown(){
         EventHandler<ActionEvent> eventHandler = drdPlant.getOnAction();
+        // Temporarily disable select listener in order to set default plant without triggering the onPlantSelected() method
         drdPlant.setOnAction(null);
+
         ArrayList<Plant> selectablePlants = new ArrayList<>();
         selectablePlants.add(universalPlant);
         selectablePlants.addAll(plantList);
         drdPlant.setItems(FXCollections.observableList(selectablePlants));
 
-
         if(selectedPlant == null){
+            // Select the plant with access to all files as default
             drdPlant.getSelectionModel().select(universalPlant);
             selectedPlant = universalPlant;
         }else{
+            // Select the plant that the user had selected before the reload
             drdPlant.getSelectionModel().select(selectedPlant);
         }
+        // Add listener back in
         drdPlant.setOnAction(eventHandler);
     }
 
@@ -194,18 +199,20 @@ public class FileOverviewController implements TabController {
         }
     }
 
+    // Corrects the display so that it is not too long to fit in the textfield
     private String PathDisplayCorrection() {
         ArrayList<String> pathSteps = new ArrayList<>();
         String newString = "";
 
         String path;
 
-        if (getOperatingSystem() == "Windows") {
+        if (getOperatingSystem().equals("Windows")) {
             path = fileExplorer.getCurrentPath().replaceAll(File.separator + File.separator, "/");
         } else {
             path = fileExplorer.getCurrentPath().replaceAll(File.separator, " / ");
         }
 
+        // Separate all folders and documents into substrings
         String tempString = "";
         for (int i = 0; i < path.length(); ++i) {
             if (path.charAt(i) != '/') {
@@ -222,7 +229,7 @@ public class FileOverviewController implements TabController {
         }
 
         int bracketCount = pathSteps.size();
-
+        // If the path contains more than 3 folders/files only the last three of those will be display
         if (bracketCount > 3) {
             for (int i = pathSteps.size() - 3; i < pathSteps.size(); ++i) {
                 if (i == pathSteps.size() - 3) {
@@ -231,6 +238,7 @@ public class FileOverviewController implements TabController {
                 newString = newString + " / " + pathSteps.get(i);
             }
         } else {
+            // Otherwise show the entire path
             for (int i = 0; i < pathSteps.size(); ++i) {
                 newString = newString + " / " + pathSteps.get(i);
             }
@@ -244,7 +252,7 @@ public class FileOverviewController implements TabController {
         if (OS.startsWith("Windows"))
             return "Windows";
         else
-            return "MacOS";
+            return "Unknown";
     }
 
     private void openFileTreeElement(TreeItem<AbstractFile> newValue) {

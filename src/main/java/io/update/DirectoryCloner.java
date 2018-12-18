@@ -20,8 +20,8 @@ import java.util.Optional;
 
 public class DirectoryCloner {
 
+    // Clones files from working directory into the published file
     public static void publishFiles() throws UpdateFailException {
-
         FileManager fileManager = AppFilesManager.loadFileManager();
         if (fileManager == null)
             return;
@@ -34,7 +34,7 @@ public class DirectoryCloner {
                     SettingsManager.getPublishedDocumentsPath(),
                     SettingsManager.getServerDocumentsPath());
 
-            // Replace app io
+            // Replace app files
             replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME),
                     SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
             replaceIfExists(SettingsManager.getServerAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
@@ -45,6 +45,7 @@ public class DirectoryCloner {
         }
     }
 
+    // Clones files from published files into the local files if the server is available
     public static void updateLocalFiles() throws UpdateFailException {
         try {
             if (!Files.exists(SettingsManager.getLocalAppFilesPath()) || !Files.exists(SettingsManager.getLocalFilesPath()))
@@ -61,14 +62,17 @@ public class DirectoryCloner {
             LoggingErrorTools.log(e);
             AlertBuilder.IOExceptionPopUp();
         }
+
         try {
+            // Check if update is available
             if (!isUpdateAvailable())
                 return;
+
             ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
             ArrayList<AbstractFile> oldFiles = AppFilesManager.loadLocalFileList();
             applyUpdate(oldFiles, newFiles, SettingsManager.getLocalFilesPath(), SettingsManager.getServerDocumentsPath());
 
-            // Replace app io
+            // Replace application files
             replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME),
                     SettingsManager.getLocalAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME));
             replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FACTORY_LIST_FILE_NAME),
@@ -141,9 +145,9 @@ public class DirectoryCloner {
             throws IOException, IllegalFileException {
         ArrayList<AbstractFile> modifiedOldFiles = new ArrayList<>(oldFiles);
 
+        // Find and delete outdated files
         ArrayList<AbstractFile> filesToDelete = findOutdatedFiles(oldFiles, newFiles);
         modifiedOldFiles = deleteFilesFrom(modifiedOldFiles, filesToDelete, oldFilesRoot);
-        // ModifiedOldFiles should now be the intersection between oldFiles and newFiles
 
         // Recursively repeat procedure on any sub folders that are common between new and old
         for (AbstractFile oldFile : modifiedOldFiles) {
@@ -288,12 +292,9 @@ public class DirectoryCloner {
     }
 
     /**
-     * @param originalFiles
-     * @param updatedFiles
-     * @return
+     * @return a list of files in updatedFiles that are missing from originalFiles
      * @throws IllegalFileException if a file is outside of the application's domain.
      */
-
     private static ArrayList<AbstractFile> findMissingFiles(ArrayList<AbstractFile> originalFiles,
                                                             ArrayList<AbstractFile> updatedFiles) {
         ArrayList<AbstractFile> missingFiles = new ArrayList<>();

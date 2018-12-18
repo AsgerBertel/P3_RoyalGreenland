@@ -32,31 +32,24 @@ public class ArchiveController implements TabController {
     private FileExplorer fileExplorer;
     private DMSApplication dmsApplication;
     private TreeItem<AbstractFile> rootItem;
-
     private List<AbstractFile> filesToShow;
 
     @FXML
     private VBox leftSideVbox;
-
     @FXML
     private TreeView<AbstractFile> fileTreeView;
-
     @FXML
     private VBox vboxTop;
-
     @FXML
     private Button btnReturn;
     @FXML
     private Button btnRestore;
     @FXML
     private Label lblVisualPath;
-
     @FXML
     private ScrollPane scpFileView;
-
     @FXML
     private FlowPane flpFileView;
-
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         fileTreeView.setOnMouseClicked(event -> {
@@ -128,24 +121,6 @@ public class ArchiveController implements TabController {
     }
 
     private String PathDisplayCorrection() {
-        /*int BracketCounter = 0;
-        String NewString;
-        if (getOperatingSystem() == "Windows")
-            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator + File.separator, " > ");
-        else
-            NewString = fileExplorer.getCurrentFolder().getPath().toString().replaceAll(File.separator, " > ");
-
-        for (int i = 0; i < NewString.length(); i++) {
-            if (NewString.charAt(i) == '>')
-                BracketCounter++;
-        }
-        if (BracketCounter > 2) {
-            //NewString = fileExplorer.getCurrentFolder().getPath().getParent().toString() + fileExplorer.getCurrentFolder().getPath().toString();
-        } else {
-            NewString = NewString.substring(NewString.indexOf("Archive"));
-
-        }*/
-
         return fileExplorer.getCurrentPath();
     }
 

@@ -16,6 +16,7 @@ public class Folder extends AbstractFile {
         super(path);
         this.folderContents = content;
     }
+
     public Folder(Folder folder) {
         super(folder.getPath().toString());
         this.folderContents = new ArrayList<>(folder.getContents());

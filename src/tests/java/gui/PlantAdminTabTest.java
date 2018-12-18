@@ -280,22 +280,18 @@ class PlantAdminTabTest extends GUITest {
         assertTrue(plantController.getPlantVBox().getChildren().contains(plant1Element));
         assertFalse(deletePlantButton.isDisabled());
 
-        for(Node plantElement : plantController.getPlantVBox().getChildren())
-            System.out.println(((PlantElement)plantElement).getPlant().getName());
-
         clickOn(deletePlantButton);
         moveTo(DMSApplication.getMessage("PlantAdmin.Popup.Cancel"));
-        // todo This is a janky way to close the popup. It will break if the size of the popup changes
+
         moveBy(35, -140);
         type(KeyCode.ESCAPE);
         clickOn(MouseButton.PRIMARY);
 
         assertTrue(plant1Element.isSelected());
         boolean containsElement = false;
-        for(Node plantElement : plantController.getPlantVBox().getChildren()){
-            System.out.println(((PlantElement)plantElement).getPlant().getName());
+        for(Node plantElement : plantController.getPlantVBox().getChildren())
             containsElement |= (((PlantElement) plantElement).getPlant().getName().equals(plant1Element.getPlant().getName()));
-        }
+
         assertTrue(containsElement);
         assertFalse(deletePlantButton.isDisabled());
         assertFalse(showEditButton.isDisabled());

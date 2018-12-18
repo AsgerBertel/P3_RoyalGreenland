@@ -57,7 +57,6 @@ public class FileAdminController implements TabController {
     @FXML
     private Button deleteFileButton;
     private ArrayList<PlantCheckboxElement> plantElements = new ArrayList<>();
-    private DragAndDropTreeCellFactory dragAndDropTreeCellFactory;
 
     @FXML
     private Button createFolderButton;
@@ -545,16 +544,13 @@ public class FileAdminController implements TabController {
         try {
             observer.initialize();
         } catch (Exception e) {
-            LoggingErrorTools.log(e); // todo maybe Alert? -kristian
+            LoggingErrorTools.log(e);
             e.printStackTrace();
         }
 
         monitorThread = new Thread(() -> {
             double lastTimeMillis = 0;
             while (running.get()) {
-                /*System.out.println(System.currentTimeMillis() - lastTimeMillis);
-                System.out.println(System.currentTimeMillis());
-                System.out.println("watching");*/
                 try {
                     observer.checkAndNotify();
                     Thread.sleep(200);

@@ -209,17 +209,21 @@ public class PlantAdministrationController implements TabController {
     //both thePlantManager and the ArrayList of plants.
     private void createPlant() {
         try {
+            // Create plant from the input given in the text fields
             Plant newPlant = new Plant(Integer.parseInt(fieldCreatePlantId.getText()), fieldCreatePlantName.getText(), new AccessModifier());
+
+            // Check all plants for potential duplicates
             for (PlantElement element : plantElements) {
                 Plant oldPlant = element.getPlant();
                 if (oldPlant.getName().equals(newPlant.getName()) || oldPlant.getId() == newPlant.getId()) {
                     lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.IdAlreadyExists"));
                     lblPlantCreated.setVisible(true);
+
+                    // Add error class to text fields to indicate error to the user
                     if(oldPlant.getId() == newPlant.getId()){
                         addErrorClass(fieldCreatePlantId);
                         fieldCreatePlantId.requestFocus();
                     }
-
                     if (oldPlant.getName().equals(newPlant.getName())) {
                         addErrorClass(fieldCreatePlantName);
                         fieldCreatePlantName.requestFocus();
@@ -228,6 +232,7 @@ public class PlantAdministrationController implements TabController {
                 }
             }
 
+            // Create PlantElement and add it to the view
             PlantElement newPlantElement = new PlantElement(newPlant);
             PlantManager.getInstance().addPlant(newPlant);
             plantElements.add(newPlantElement);
@@ -236,6 +241,7 @@ public class PlantAdministrationController implements TabController {
             lblPlantCreated.setText(DMSApplication.getMessage("PlantAdmin.PlantCreated"));
             lblPlantCreated.setVisible(true);
 
+            // Reset create plant text fields
             fieldCreatePlantName.setText("");
             fieldCreatePlantId.setText("");
             plantCountText.setText("(" + plantElements.size() + ")");
@@ -283,20 +289,20 @@ public class PlantAdministrationController implements TabController {
                         if (plant.getId() == oldID && plant.getName().equals(oldName))
                             continue;
 
+                        // Add error class to indicate duplicate name or id to the user
                         valid = false;
                         if (plant.getId() == newID)
                             addErrorClass(fieldEditPlantId);
 
                         if (plant.getName().equals(newName))
                             addErrorClass(fieldEditPlantName);
-
                     }
                 }
 
                 if(!valid)
                     return;
 
-                // Save the change
+                // Save the changes
                 selectedPlant.setName(newName);
                 selectedPlant.setId(newID);
 
@@ -346,6 +352,8 @@ public class PlantAdministrationController implements TabController {
         }
     }
 
+    // Validates the inputs in the text fields.
+    // Add error indication if the input is invalid. Remove error if input is valid.
     private void validateInputs(){
         TextField nameTextField, idTextField;
         Button saveButton;
@@ -367,6 +375,8 @@ public class PlantAdministrationController implements TabController {
         if(idTextField.getText().isEmpty() || !idTextField.getText().matches("[0-9]+"))
             addErrorClass(idTextField);
     }
+
+
     public PlantElement previousSelectedPlant() {
         for (PlantElement element : plantElements) {
             if (element.isSelected())
@@ -374,6 +384,7 @@ public class PlantAdministrationController implements TabController {
         }
         return null;
     }
+
     private void addToolTip() {
         Tooltip deletePlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.DeletePlant"));
         Tooltip newPlantTooltip = new Tooltip(DMSApplication.getMessage("PlantAdmin.Tooltip.CreatePlant"));
