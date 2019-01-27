@@ -42,7 +42,7 @@ public class DragAndDropTreeCellFactory implements Callback<TreeView<AbstractFil
 
     @Override
     public TreeCell<AbstractFile> call(TreeView<AbstractFile> treeView) {
-        TextFieldTreeCell<AbstractFile> cell = new TextFieldTreeCell<>() {
+        TextFieldTreeCell<AbstractFile> cell = new TextFieldTreeCell<AbstractFile>() {
             @Override
             public void updateItem(AbstractFile item, boolean empty) {
                 super.updateItem(item, empty);
