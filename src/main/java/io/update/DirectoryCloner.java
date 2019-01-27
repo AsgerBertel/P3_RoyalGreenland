@@ -81,7 +81,7 @@ public class DirectoryCloner {
             AppFilesManager.saveLocalUpdateTime();
         }catch (IOException | IllegalFileException e) {
             e.printStackTrace();
-            throw new UpdateFailException(e);
+            System.out.println("Local file update failed");
         }
     }
 
