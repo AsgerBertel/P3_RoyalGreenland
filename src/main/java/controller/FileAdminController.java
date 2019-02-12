@@ -213,11 +213,8 @@ public class FileAdminController implements TabController {
     public void uploadDocument() {
         FileManager fileManager = FileManager.getInstance();
 
-        File chosenFile = chooseFilePrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
-        if (chosenFile == null) {
-            return;
-        } else if (chosenFile.isDirectory()) {
-            AlertBuilder.uploadDocumentPopUp();
+        ArrayList<File> chosenFiles = chooseFilePrompt(DMSApplication.getMessage("AdminFiles.PopUpUpload.ChooseDoc"));
+        if (chosenFiles == null) {
             return;
         }
         if (selectedFile == null)
@@ -228,21 +225,33 @@ public class FileAdminController implements TabController {
         Folder parent;
         if (selectedFile instanceof Document) {
             Optional<Folder> parentOpt = FileManager.findParent(selectedFile, FileManager.getInstance().getMainFilesRoot());
-            if (parentOpt.isPresent()) {
-                dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(chosenFile.getName());
-                parent = parentOpt.get();
-            } else {
-                dstPath = SettingsManager.getServerDocumentsPath().resolve(chosenFile.getName());
-                parent = FileManager.getInstance().getMainFilesRoot();
+            for(File file : chosenFiles) {
+                if (parentOpt.isPresent()) {
+                    dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(file.getName());
+                    parent = parentOpt.get();
+                    checkFileAlreadyExists(dstPath);
+                    fileManager.uploadFile(file.toPath(), parent);
+                } else {
+                    dstPath = SettingsManager.getServerDocumentsPath().resolve(file.getName());
+                    parent = FileManager.getInstance().getMainFilesRoot();
+                    checkFileAlreadyExists(dstPath);
+                    fileManager.uploadFile(file.toPath(), parent);
+                }
             }
         } else {
-            dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(chosenFile.getName());
-            parent = (Folder) selectedFile;
+            for(File file : chosenFiles) {
+                dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(file.getName());
+                parent = (Folder) selectedFile;
+                fileManager.uploadFile(file.toPath(), parent);
+                checkFileAlreadyExists(dstPath);
+            }
         }
-
-
+        fileManager.save();
+        update();
+    }
+    private void checkFileAlreadyExists(Path dstPath) {
         if (FileManager.getInstance().fileExists(dstPath)) {
-            int i = OverwriteFilePopUP();
+            int i = OverwriteFilePopUP(dstPath.getFileName().toString());
             if (i == 1) {
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(dstPath);
                 FileManager.getInstance().deleteFile(oldFile.get());
@@ -250,17 +259,12 @@ public class FileAdminController implements TabController {
                 return;
             }
         }
-
-        Document uploadedDoc = fileManager.uploadFile(chosenFile.toPath(), parent);
-
-        fileManager.save();
-        update();
     }
 
-    private int OverwriteFilePopUP() {
+    private int OverwriteFilePopUP(String fileName) {
         Alert txtInputDia = new Alert(Alert.AlertType.CONFIRMATION);
         txtInputDia.setTitle(DMSApplication.getMessage("FileManager.PopUpOverwrite.Warning"));
-        txtInputDia.setHeaderText(DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
+        txtInputDia.setHeaderText(fileName+"\n"+DMSApplication.getMessage("FileManager.PopUpOverwrite.Info"));
         ButtonType buttonTypeOverwrite = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Overwrite"));
         ButtonType buttonTypeKeep = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Keep"));
         ButtonType buttonTypeCancel = new ButtonType(DMSApplication.getMessage("FileManager.PopUpOverwrite.Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -278,12 +282,12 @@ public class FileAdminController implements TabController {
     }
 
     // Prompts the user to choose a file (return null if cancelled)
-    private File chooseFilePrompt(String message) {
+    private ArrayList<File> chooseFilePrompt(String message) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(message);
-        File chosenFile = fileChooser.showOpenDialog(new Stage());
-        if (chosenFile == null) return null;
-        return chosenFile;
+        ArrayList<File> chosenFiles = new ArrayList<>(fileChooser.showOpenMultipleDialog(new Stage()));
+        if (chosenFiles == null || chosenFiles.isEmpty()) return null;
+        return chosenFiles;
     }
 
     public void createFolder() {
