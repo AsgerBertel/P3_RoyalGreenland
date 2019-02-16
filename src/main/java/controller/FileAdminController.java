@@ -288,9 +288,9 @@ public class FileAdminController implements TabController {
     private ArrayList<File> chooseFilePrompt(String message) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(message);
-        ArrayList<File> chosenFiles = new ArrayList<>(fileChooser.showOpenMultipleDialog(new Stage()));
-        if (chosenFiles == null || chosenFiles.isEmpty()) return null;
-        return chosenFiles;
+        List<File> promptFiles = fileChooser.showOpenMultipleDialog(new Stage());
+        if (promptFiles == null || promptFiles.isEmpty()) return null;
+        return new ArrayList<>(promptFiles);
     }
 
     public void createFolder() {
