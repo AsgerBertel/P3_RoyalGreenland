@@ -294,6 +294,10 @@ public class FileAdminController implements TabController {
     public void createFolder() {
         FileManager fileManager = FileManager.getInstance();
         Optional<String> folderName = createFolderPopUP();
+
+        if(folderName.isPresent() && folderName.get().isEmpty())
+            return;
+
         if (folderName.isPresent()) {
             if (selectedFile == null) {
                 String name = folderName.get();
