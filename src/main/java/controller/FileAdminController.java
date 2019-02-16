@@ -229,37 +229,39 @@ public class FileAdminController implements TabController {
                 if (parentOpt.isPresent()) {
                     dstPath = SettingsManager.getServerDocumentsPath().resolve(parentOpt.get().getOSPath()).resolve(file.getName());
                     parent = parentOpt.get();
-                    checkFileAlreadyExists(dstPath);
-                    fileManager.uploadFile(file.toPath(), parent);
+                    boolean continueUpload = checkFileAlreadyExists(dstPath);
+                    if(continueUpload) fileManager.uploadFile(file.toPath(), parent);
                 } else {
                     dstPath = SettingsManager.getServerDocumentsPath().resolve(file.getName());
                     parent = FileManager.getInstance().getMainFilesRoot();
-                    checkFileAlreadyExists(dstPath);
-                    fileManager.uploadFile(file.toPath(), parent);
+                    boolean continueUpload = checkFileAlreadyExists(dstPath);
+                    if(continueUpload) fileManager.uploadFile(file.toPath(), parent);
                 }
             }
         } else {
             for(File file : chosenFiles) {
                 dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(file.getName());
                 parent = (Folder) selectedFile;
-                checkFileAlreadyExists(dstPath);
-                fileManager.uploadFile(file.toPath(), parent);
+                boolean continueUpload = checkFileAlreadyExists(dstPath);
+                if(continueUpload) fileManager.uploadFile(file.toPath(), parent);
             }
         }
 
         fileManager.save();
         update();
     }
-    private void checkFileAlreadyExists(Path dstPath) {
+    private boolean checkFileAlreadyExists(Path dstPath) {
         if (FileManager.getInstance().fileExists(dstPath)) {
             int i = OverwriteFilePopUP(dstPath.getFileName().toString());
             if (i == 1) {
                 Optional<AbstractFile> oldFile = FileManager.getInstance().findInMainFiles(dstPath);
                 FileManager.getInstance().deleteFile(oldFile.get());
-            } else if (i != 0) {
-                return;
+                return true;
+            } else if (i == -1) {
+                return false;
             }
         }
+        return true;
     }
 
     private int OverwriteFilePopUP(String fileName) {
