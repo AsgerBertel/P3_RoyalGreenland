@@ -242,10 +242,11 @@ public class FileAdminController implements TabController {
             for(File file : chosenFiles) {
                 dstPath = SettingsManager.getServerDocumentsPath().resolve(selectedFile.getOSPath()).resolve(file.getName());
                 parent = (Folder) selectedFile;
-                fileManager.uploadFile(file.toPath(), parent);
                 checkFileAlreadyExists(dstPath);
+                fileManager.uploadFile(file.toPath(), parent);
             }
         }
+
         fileManager.save();
         update();
     }
