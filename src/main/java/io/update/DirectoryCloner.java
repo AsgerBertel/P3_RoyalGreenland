@@ -70,7 +70,7 @@ public class DirectoryCloner {
 
             ArrayList<AbstractFile> newFiles = AppFilesManager.loadPublishedFileList();
             ArrayList<AbstractFile> oldFiles = AppFilesManager.loadLocalFileList();
-            applyUpdate(oldFiles, newFiles, SettingsManager.getLocalFilesPath(), SettingsManager.getServerDocumentsPath());
+            applyUpdate(oldFiles, newFiles, SettingsManager.getLocalFilesPath(), SettingsManager.getPublishedDocumentsPath());
 
             // Replace application files
             replaceIfExists(SettingsManager.getPublishedAppFilesPath().resolve(AppFilesManager.FILES_LIST_FILE_NAME),
@@ -224,7 +224,7 @@ public class DirectoryCloner {
             }
             FileUtils.deleteDirectory(fileToDeletePath.toFile());
 
-            if (!success)
+            if (Files.exists(fileToDeletePath))
                 throw new IOException("Could not delete file " + fileToDelete.getOSPath() + " from " + rootPath.toString());
             // A custom .remove() is used as the folders .equals() does not fit this use case
             removeFileWithPath(newFilesList, fileToDelete.getOSPath());
