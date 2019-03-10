@@ -3,9 +3,11 @@ package model.managing;
 import app.ApplicationMode;
 import gui.AlertBuilder;
 import app.DMSApplication;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +84,18 @@ public class SettingsManager {
             Scene scene = new Scene(fxmlLoader.load());
             stage.setTitle(DMSApplication.APP_TITLE);
             stage.setScene(scene);
+
+            // Exit if the doesn't complete the settings initialization
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    System.exit(0);
+                }
+            });
             stage.showAndWait();
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

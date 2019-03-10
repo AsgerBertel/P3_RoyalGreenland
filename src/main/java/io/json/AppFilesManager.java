@@ -177,10 +177,11 @@ public class AppFilesManager {
      */
     public static void createLocalDirectories() throws IOException, InvalidPathException{
         Path localRoot = SettingsManager.getLocalPath();
+        System.out.println(localRoot.toString());
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))
-            throw new FileNotFoundException("Local Application folder could not be found");
+            throw new FileNotFoundException("Local Application parent folder could not be found: " + localRoot.toString());
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
         applicationPaths.add(SettingsManager.getLocalFilesPath());
