@@ -53,6 +53,15 @@ public class AlertBuilder {
         alert.showAndWait();
     }
 
+    public static void fileNotFoundPopUp (String customMsg) {
+        buildAlert(
+                Alert.AlertType.ERROR,
+                DMSApplication.getMessage("Exception.FileNotFound.Title"),
+                customMsg,
+                null);
+        alert.showAndWait();
+    }
+
     public static void PreferencesNotResetPopup() {
         buildAlert(
                 Alert.AlertType.ERROR,

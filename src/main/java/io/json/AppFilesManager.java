@@ -181,7 +181,7 @@ public class AppFilesManager {
 
         // Throw exception if application installation path is invalid
         if(!Files.exists(localRoot.getParent()))
-            throw new FileNotFoundException("Local Application parent folder could not be found: " + localRoot.toString());
+            throw new FileNotFoundException("De lokale programfiler kunne ikke findes: " + localRoot.toString());
 
         ArrayList<Path> applicationPaths = new ArrayList<>();
         applicationPaths.add(SettingsManager.getLocalFilesPath());

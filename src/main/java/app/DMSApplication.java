@@ -216,8 +216,9 @@ public class DMSApplication extends Application {
             }
         } catch (InvalidPathException | FileNotFoundException e) {
             e.printStackTrace();
-            AlertBuilder.fileNotFoundPopUp();
+            AlertBuilder.fileNotFoundPopUp(e.getMessage());
             SettingsManager.initializeSettingsPrompt();
+            startLocalFileUpdater();
         } catch (IOException e) {
             e.printStackTrace();
             AlertBuilder.IOExceptionPopUp();
